@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>BB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Bootstrap -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style type="text/css">
+        #signout {
+            max-width: 300px;
+            padding: 19px 29px 29px;
+            margin: 0 auto 20px;
+            background-color: #fff;
+            border: 1px solid #e5e5e5;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        }
+    </style>
+    <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <div class="navbar navbar-static-top">
+        <div class="navbar-inner">
+            <a class="brand" href="#">BB</a>
+            <ul class="nav pull-right">
+                <li>
+                    <a href="/login" class="active" title="Login">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container">
+        <div class="content">
+            <div id="signout">
+                <h1>Sign out</h1>
+                <p>You can <a href="/login">sign in</a> after <span id="count_text">5</span> seconds.</p>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript">
+      var timerId;
+      function countDown(elem) {
+          if (elem.innerHTML < 2) {
+              clearInterval(timerId);
+              window.location='/login';
+          }
+          else
+              elem.innerHTML--; 
+      }
+      
+      window.onload = function() { 
+        timerId = setInterval('countDown(document.getElementById(\'count_text\'))', 1000);
+      }
+    </script>
+</body>
+</html>
