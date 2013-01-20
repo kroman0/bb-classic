@@ -1,0 +1,4 @@
+cron:
+ - description: add a new key to the keyring 
+   url: /addkey
+   schedule: every 24 hours
