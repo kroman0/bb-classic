@@ -1,8 +1,8 @@
 $(function(){
-    var error_handling = function(xhr, options) {
+//     var error_handling = function(xhr, options) {
 //         // window.console && window.console.log($.parseJSON(xhr.responseText).error);
-        window.console && window.console.log(xhr.responseText);
-    };
+//         window.console && window.console.log(xhr.responseText);
+//     };
     uniq_hash = [];
     var add_hash=function(){
         var cur_hashs=_.uniq(_.map($("a"),function(i){return i.hash}));
@@ -144,11 +144,8 @@ $(function(){
             this.collection.fetch()
         },
         template: _.template($('#time-report-template').html()),
-        name: function() {
-            return "Time report"
-        },
+        name: function() {return "Time report"},
         render: function () {
-            $('title').html(this.name()+" - BB");
             this.$el.html(this.template());
             if (this.collection.filter_report) {
                 this.$el.find('form#makereport').deserialize(this.collection.filter_report)
@@ -166,14 +163,8 @@ $(function(){
             return this
         },
         template: _.template($('#people-template').html()),
-        name: function() {
-            return "People"
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return "People"},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var ProjectsView = Backbone.View.extend({
         deps: function() {
@@ -183,11 +174,7 @@ $(function(){
             return this
         },
         template: _.template($('#projects-template').html()),
-        render: function () {
-            $('title').html("Projects - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return "Projects"},
     });
     var ProjectView = Backbone.View.extend({
         deps: function() {
@@ -197,14 +184,8 @@ $(function(){
             return this
         },
         template: _.template($('#project-template').html()),
-        name: function () {
-            return this.model.get('name')
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function () {return this.model.get('name')},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var CompaniesView = Backbone.View.extend({
         deps: function() {
@@ -214,14 +195,8 @@ $(function(){
             return this
         },
         template: _.template($('#companies-template').html()),
-        name: function() {
-            return "Companies"
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return "Companies"},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var CompanyView = Backbone.View.extend({
         deps: function() {
@@ -235,14 +210,8 @@ $(function(){
             return this
         },
         template: _.template($('#company-template').html()),
-        name: function() {
-            return this.model.get('name')
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return this.model.get('name')},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var PeopleView = Backbone.View.extend({
         deps: function() {
@@ -256,14 +225,8 @@ $(function(){
             return this
         },
         template: _.template($('#project-people-template').html()),
-        name: function() {
-            return this.model.get('name')+" > People"
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return this.model.get('name')+" > People"},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var TimeEntriesView = Backbone.View.extend({
         deps: function() {
@@ -276,14 +239,8 @@ $(function(){
             return this
         },
         template: _.template($('#project-time-template').html()),
-        name: function() {
-            return this.model.get('name')+" > Time"
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return this.model.get('name')+" > Time"},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var PostsView = Backbone.View.extend({
         deps: function() {
@@ -295,14 +252,8 @@ $(function(){
             return this
         },
         template: _.template($('#project-posts-template').html()),
-        name: function() {
-            return this.model.get('name')+" > Posts"
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return this.model.get('name')+" > Posts"},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var FilesView = Backbone.View.extend({
         deps: function() {
@@ -318,14 +269,8 @@ $(function(){
             return this
         },
         template: _.template($('#project-files-template').html()),
-        name: function() {
-            return this.model.get('name')+" > Files"
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return this.model.get('name')+" > Files"},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var CalendarView = Backbone.View.extend({
         deps: function() {
@@ -337,14 +282,8 @@ $(function(){
             return this
         },
         template: _.template($('#project-calendar-template').html()),
-        name: function() {
-            return this.model.get('name')+" > Calendar"
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return this.model.get('name')+" > Calendar"},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var CategoriesView = Backbone.View.extend({
         deps: function() {
@@ -356,14 +295,8 @@ $(function(){
             return this
         },
         template: _.template($('#project-categories-template').html()),
-        name: function() {
-            return this.model.get('name')+" > Categories"
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function() {return this.model.get('name')+" > Categories"},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var PersonView = Backbone.View.extend({
         deps: function() {
@@ -375,14 +308,8 @@ $(function(){
             return this
         },
         template: _.template($('#person-template').html()),
-        name: function () {
-            return this.model.name()
-        },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        name: function () {return this.model.name()},
+        render: function () {this.$el.html(this.template()); return this}
     });
     var TodosView = Backbone.View.extend({
         deps: function() {
@@ -421,11 +348,7 @@ $(function(){
             if (this.collection.responsible_party=="") return "Unassigned";
             return "All"
         },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        render: function () {this.$el.html(this.template()); return this}
     });
     var TodoListsView = Backbone.View.extend({
         deps: function() {
@@ -441,11 +364,7 @@ $(function(){
             var todo_items=this.options.collections.todo_items;
             var td=_.map(this.collection.pluck('id'), function(id){return todo_items.get_or_create(id)});
             var ftd=_.first(td.filter(function(i){return !i.fetched}));
-            if(ftd){
-                ftd.fetched=true;
-                ftd.fetch();
-                console.log("sub", ftd.parent_id);
-            }
+            if(ftd) {ftd.fetched=true; ftd.fetch()}
         },
         name: function() {
             if (this.collection.parent_id) {
@@ -453,11 +372,7 @@ $(function(){
             }
             return "To-dos"
         },
-        render: function () {
-            $('title').html(this.name()+" - BB");
-            this.$el.html(this.template());
-            return this;
-        }
+        render: function () {this.$el.html(this.template()); return this}
     });
 //     var EditItemView = Backbone.View.extend({
 //         initialize:function () {
@@ -515,34 +430,15 @@ $(function(){
         },
         url: "/api/me.xml"
     });
-//     var LoginView = Backbone.View.extend({
-//         template: _.template($('#login-template').html()),
-//         events: {
-//             "click button[type=submit]": "login"
-//         },
-//         login: function(e){
-//             e.preventDefault();
-//             this.options.onlogin(this)
-//         },
-//         render: function () {
-//             $('title').html("Login - BB");
-//             this.$el.html(this.template());
-//             return this;
-//         }
-//     });
     var NavView = Backbone.View.extend({
         template: _.template($('#nav-template').html()),
         initialize: function(){
             this.model.bind("change", this.render, this);
         },
+//         render: function () {this.$el.html(this.template()); return this}
         render: function () {
-            if (!this.model.id) {
-                $("body").css("background-color", "#f5f5f5");
-            } else {
-                $("body").css("background-color", "#FFFFFF");
-            };
             this.$el.html(this.template());
-            $(_.filter($(".navbar ul.nav li").removeClass("active"),function(i){return $(i).find("a:visible")[0]&&document.location.hash.indexOf($(i).find("a:visible")[0].hash)!==-1})).addClass("active")
+//             $(_.filter($(".navbar ul.nav li").removeClass("active"),function(i){return $(i).find("a:visible")[0]&&document.location.hash.indexOf($(i).find("a:visible")[0].hash)!==-1})).addClass("active")
             return this;
         }
     });
@@ -560,9 +456,6 @@ $(function(){
     collections.times = new TimeEntries();
     views = {};
     views.current = null;
-//     views.project = {};
-//     views.company = {};
-//     views.person = {};
     views.projects = new ProjectsView({collection: collections.projects, el: '.content', collections: collections});
     views.companies = new CompaniesView({collection: collections.companies, el: '.content', collections: collections});
     views.people = new AllPeopleView({collection: collections.people, el: '.content', collections: collections});
@@ -618,16 +511,19 @@ $(function(){
 //         return collections.project_categories[id]
 //     };
 //     views.login_view = new LoginView({model: models.mydata, el: '.content'});
-    views.project_view = new ProjectView({model: models.project, el: '.content', collections: collections});
-    views.company_view = new CompanyView({model: models.company, el: '.content', collections: collections});
-    views.person_view = new PersonView({model: models.person, el: '.content', collections: collections})
-    views.project_people = new PeopleView({model: models.project, el: '.content', collections: collections});
-    views.project_categories = new CategoriesView({model: models.project, el: '.content', collections: collections})
-    views.project_posts = new PostsView({model: models.project, el: '.content', collections: collections})
-    views.project_todo_lists = new TodoListsView({model: models.project, el: '.content', collections: collections})
-    views.project_calendar = new CalendarView({model: models.project, el: '.content', collections: collections})
-    views.project_files = new FilesView({model: models.project, el: '.content', collections: collections})
-    views.project_time_entries = new TimeEntriesView({model: models.project, el: '.content', collections: collections})
+    var oproject = {model: models.project, el: '.content', collections: collections};
+    var ocompany = {model: models.company, el: '.content', collections: collections};
+    var operson = {model: models.person, el: '.content', collections: collections};
+    views.project_view = new ProjectView(oproject);
+    views.company_view = new CompanyView(ocompany);
+    views.person_view = new PersonView(operson)
+    views.project_people = new PeopleView(oproject);
+    views.project_categories = new CategoriesView(oproject)
+    views.project_posts = new PostsView(oproject)
+    views.project_todo_lists = new TodoListsView(oproject)
+    views.project_calendar = new CalendarView(oproject)
+    views.project_files = new FilesView(oproject)
+    views.project_time_entries = new TimeEntriesView(oproject)
     collections.projects.on("reset",function(){
         this.each(function(p){
             collections.project_people.get_or_create(p.id);
@@ -665,6 +561,7 @@ $(function(){
     });
     workspace = new Workspace();
     workspace.on("all", function(action) {
+        views.current && $('title').html(views.current.name()+" - BB");
         add_hash();
         views.current&&views.current.deps&&views.current.deps();
         $(_.filter($(".navbar ul.nav li").removeClass("active"),function(i){return $(i).find("a:visible")[0]&&document.location.hash.indexOf($(i).find("a:visible")[0].hash)!==-1})).addClass("active")
