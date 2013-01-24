@@ -3,6 +3,15 @@ $(function(){
 //         // window.console && window.console.log($.parseJSON(xhr.responseText).error);
 //         window.console && window.console.log(xhr.responseText);
 //     };
+    Backbone.Collection.prototype.fetchonce=function(){
+        var fetched = this.fetched;
+        if (!fetched) {
+            this.fetch();
+            this.fetched=true
+        }
+        return fetched
+    };
+    Backbone.View.prototype.render=function () {this.$el.html(this.template()); return this};
     uniq_hash = [];
     var add_hash=function(){
         var cur_hashs=_.uniq(_.map($("a"),function(i){return i.hash}));
@@ -88,8 +97,8 @@ $(function(){
 //         `filter_project_id` restricts the entries to those for the given project,
 //         and `filter_company_id` restricts the entries to those for the given company.
         url: function() {
-            if (this.parent_id&&this.parent=='project') return '/api/projects/'+this.parent_id+'/time_entries.xml';
             if (this.parent_id&&this.parent=='todo') return '/api/todo_items/'+this.parent_id+'/time_entries.xml';
+            if (this.parent_id) return '/api/projects/'+this.parent_id+'/time_entries.xml';
             if (this.filter_report) return '/api/time_entries/report.xml?'+this.filter_report;
             return '/api/time_entries/report.xml';
         },
@@ -123,17 +132,7 @@ $(function(){
     });
     var TimeReportView = Backbone.View.extend({
         deps: function() {
-            if(!this.collection.fetched) {
-                this.collection.fetch();
-                this.collection.fetched=true;
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            } else if(this.options.collections.people.isEmpty()) {
-                this.options.collections.people.fetch();
-            } else if(this.options.collections.companies.isEmpty()) {
-                this.options.collections.companies.fetch();
-            }
-            return this
+            this.collection.fetchonce()&&this.options.collections.projects.fetchonce()&&this.options.collections.people.fetchonce()&&this.options.collections.companies.fetchonce()
         },
         events: {
             "click #getreport": "getreport"
@@ -155,172 +154,91 @@ $(function(){
     });
     var AllPeopleView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            } else if (this.options.collections.companies.isEmpty()) {
-                this.options.collections.companies.fetch();
-            }
-            return this
+            this.collection.fetchonce()&&this.options.collections.companies.fetchonce()
         },
         template: _.template($('#people-template').html()),
-        name: function() {return "People"},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function() {return "People"}
     });
     var ProjectsView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            }
-            return this
+            this.collection.fetchonce();
         },
         template: _.template($('#projects-template').html()),
-        name: function() {return "Projects"},
+        name: function() {return "Projects"}
     });
     var ProjectView = Backbone.View.extend({
         deps: function() {
-            if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            }
-            return this
+            this.options.collections.projects.fetchonce()
         },
         template: _.template($('#project-template').html()),
-        name: function () {return this.model.get('name')},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function () {return this.model.get('name')}
     });
     var CompaniesView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            }
-            return this
+            this.collection.fetchonce()
         },
         template: _.template($('#companies-template').html()),
-        name: function() {return "Companies"},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function() {return "Companies"}
     });
     var CompanyView = Backbone.View.extend({
         deps: function() {
-            if (this.options.collections.companies.isEmpty()) {
-                this.options.collections.companies.fetch();
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            } else if(this.options.collections.people.isEmpty()) {
-                this.options.collections.people.fetch();
-            }
-            return this
+            this.options.collections.companies.fetchonce()&&this.options.collections.projects.fetchonce()&&this.options.collections.people.fetchonce()
         },
         template: _.template($('#company-template').html()),
-        name: function() {return this.model.get('name')},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function() {return this.model.get('name')}
     });
     var PeopleView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            } else if (this.options.collections.companies.isEmpty()) {
-                this.options.collections.companies.fetch();
-            }
-            return this
+            this.collection.fetchonce()&&this.options.collections.projects.fetchonce()&&this.options.collections.companies.fetchonce()
         },
         template: _.template($('#project-people-template').html()),
-        name: function() {return this.model.get('name')+" > People"},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function() {return this.model.get('name')+" > People"}
     });
     var TimeEntriesView = Backbone.View.extend({
         deps: function() {
-            if(!this.collection.fetched) {
-                this.collection.fetch();
-                this.collection.fetched=true;
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            }
-            return this
+            this.collection.fetchonce()&&this.options.collections.projects.fetchonce()
         },
         template: _.template($('#project-time-template').html()),
-        name: function() {return this.model.get('name')+" > Time"},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function() {return this.model.get('name')+" > Time"}
     });
     var PostsView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            }
-            return this
+            this.collection.fetchonce()&&this.options.collections.projects.fetchonce()
         },
         template: _.template($('#project-posts-template').html()),
-        name: function() {return this.model.get('name')+" > Posts"},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function() {return this.model.get('name')+" > Posts"}
     });
     var FilesView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            } else if(this.options.collections.people.isEmpty()) {
-                this.options.collections.people.fetch();
-            } else if(this.options.collections.project_categories.get_or_create(this.model.id).isEmpty()) {
-                this.options.collections.project_categories.get_or_create(this.model.id).fetch();
-            }
-            return this
+            this.collection.fetchonce()&&this.options.collections.projects.fetchonce()&&this.options.collections.people.fetchonce()&&this.options.collections.project_categories.get_or_create(this.model.id).fetchonce()
         },
         template: _.template($('#project-files-template').html()),
-        name: function() {return this.model.get('name')+" > Files"},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function() {return this.model.get('name')+" > Files"}
     });
     var CalendarView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            }
-            return this
+            this.collection.fetchonce()&&this.options.collections.projects.fetchonce()
         },
         template: _.template($('#project-calendar-template').html()),
-        name: function() {return this.model.get('name')+" > Calendar"},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function() {return this.model.get('name')+" > Calendar"}
     });
     var CategoriesView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            }
-            return this
+            this.collection.fetchonce()&&this.options.collections.projects.fetchonce()
         },
         template: _.template($('#project-categories-template').html()),
-        name: function() {return this.model.get('name')+" > Categories"},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function() {return this.model.get('name')+" > Categories"}
     });
     var PersonView = Backbone.View.extend({
         deps: function() {
-            if(this.options.collections.people.isEmpty()) {
-                this.options.collections.people.fetch();
-            } else if (this.options.collections.companies.isEmpty()) {
-                this.options.collections.companies.fetch();
-            }
-            return this
+            this.options.collections.people.fetchonce()&&this.options.collections.companies.fetchonce()
         },
         template: _.template($('#person-template').html()),
-        name: function () {return this.model.name()},
-        render: function () {this.$el.html(this.template()); return this}
+        name: function () {return this.model.name()}
     });
     var TodosView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            } else if(this.options.collections.people.isEmpty()) {
-                this.options.collections.people.fetch();
-            }
-            return this
+            this.collection.fetchonce()&&this.options.collections.projects.fetchonce()&&this.options.collections.people.fetchonce()
         },
         events: {
             "change select[name='target']": "selectTarget"
@@ -347,17 +265,11 @@ $(function(){
             if (this.collection.responsible_party==null) return "My";
             if (this.collection.responsible_party=="") return "Unassigned";
             return "All"
-        },
-        render: function () {this.$el.html(this.template()); return this}
+        }
     });
     var TodoListsView = Backbone.View.extend({
         deps: function() {
-            if(this.collection.isEmpty()) {
-                this.collection.fetch();
-            } else if(this.options.collections.projects.isEmpty()) {
-                this.options.collections.projects.fetch();
-            } else this.sub();
-            return this
+            this.collection.fetchonce()&&this.options.collections.projects.fetchonce()&&this.sub()
         },
         template: _.template($('#project-todo-lists-template').html()),
         sub: function() {
@@ -371,8 +283,7 @@ $(function(){
                 return this.model.get('name')+" > To-dos"
             }
             return "To-dos"
-        },
-        render: function () {this.$el.html(this.template()); return this}
+        }
     });
 //     var EditItemView = Backbone.View.extend({
 //         initialize:function () {
@@ -434,12 +345,6 @@ $(function(){
         template: _.template($('#nav-template').html()),
         initialize: function(){
             this.model.bind("change", this.render, this);
-        },
-//         render: function () {this.$el.html(this.template()); return this}
-        render: function () {
-            this.$el.html(this.template());
-//             $(_.filter($(".navbar ul.nav li").removeClass("active"),function(i){return $(i).find("a:visible")[0]&&document.location.hash.indexOf($(i).find("a:visible")[0].hash)!==-1})).addClass("active")
-            return this;
         }
     });
     models = {};
@@ -563,7 +468,7 @@ $(function(){
     workspace.on("all", function(action) {
         views.current && $('title').html(views.current.name()+" - BB");
         add_hash();
-        views.current&&views.current.deps&&views.current.deps();
+        action!=='route'&&views.current&&views.current.deps&&views.current.deps();
         $(_.filter($(".navbar ul.nav li").removeClass("active"),function(i){return $(i).find("a:visible")[0]&&document.location.hash.indexOf($(i).find("a:visible")[0].hash)!==-1})).addClass("active")
 //     }).on("route:login", function() {
 //         views.current = views.login_view.render()
@@ -659,6 +564,8 @@ $(function(){
     });
     views.navbar = new NavView({model: models.mydata, el: '.navbar'}).render();
     models.mydata.fetch();
-    Backbone.history.start();
+    models.mydata.once("sync",function(){
+        Backbone.history.start();
+    })
 //     window.console && window.console.log({'jQuery':jQuery().jquery,'Underscore':_.VERSION,'Backbone':Backbone.VERSION});
 });
