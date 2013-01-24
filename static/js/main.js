@@ -1,14 +1,10 @@
 $(function(){
-//     var error_handling = function(xhr, options) {
-//         // window.console && window.console.log($.parseJSON(xhr.responseText).error);
-//         window.console && window.console.log(xhr.responseText);
-//     };
+    var onReset = function(){
+        Backbone.history.loadUrl();
+    };
     Backbone.Collection.prototype.fetchonce=function(){
         var fetched = this.fetched;
-        if (!fetched) {
-            this.fetch();
-            this.fetched=true
-        }
+        if (!fetched) {this.fetch(); this.fetched=true}
         return fetched
     };
     Backbone.View.prototype.render=function () {this.$el.html(this.template()); return this};
@@ -19,7 +15,6 @@ $(function(){
             if(uniq_hash.indexOf(i)==-1){uniq_hash.push(i)}
         });
     };
-    // Backbone.emulateHTTP = true;
     var Project = Backbone.Model.extend({
         icon: function() {
             switch (this.get('status')) {
@@ -279,59 +274,10 @@ $(function(){
             if(ftd) {ftd.fetched=true; ftd.fetch()}
         },
         name: function() {
-            if (this.collection.parent_id) {
-                return this.model.get('name')+" > To-dos"
-            }
+            if (this.collection.parent_id) {return this.model.get('name')+" > To-dos"}
             return "To-dos"
         }
     });
-//     var EditItemView = Backbone.View.extend({
-//         initialize:function () {
-//             this.model.bind("change", this.render, this);
-//         },
-//         template: _.template($('#edit-template').html()),
-//         events: {
-//             "click button[type=submit]": "save",
-//             "click button[type=button]": "back"
-//         },
-//         save: function (e) {
-//             e.preventDefault();
-//             var valid = $('form').valid();
-//             if (!valid) return false;
-//             this.model.save({
-//                 fname:$('[name=fname]').val(),
-//                 lname:$('[name=lname]').val(),
-//                 cname:$('[name=cname]').val(),
-//                 email:$('[name=email]').val(),
-//                 active:$('[name=active]').is(':checked')
-//             });
-//         },
-//         back: function (e) {
-//             e.preventDefault();
-//             history.back();
-//         },
-//         render:function () {
-//             this.$el.html(this.template($.extend({}, this.model.toJSON(), {
-//                 "name": this.model.isNew()?'Add':'Edit',
-//                 "action": this.model.isNew()?'Add':'Save'
-//             })));
-//             $('form').validate({
-//                 rules: {
-//                     email: {
-//                         required: true,
-//                         email: true
-//                     },
-//                 },
-//                 highlight: function(label) {
-//                     $(label).closest('.control-group').addClass('error');
-//                 },
-//                 success: function(label) {
-//                     label.text('OK!').addClass('valid').closest('.control-group').addClass('success');
-//                 }
-//             });
-//             return this;
-//         }
-//     });
     var MyModel = Backbone.Model.extend({
         defaults: {
             id: null,
@@ -349,8 +295,8 @@ $(function(){
     });
     models = {};
     collections = {};
+    var viewdata = {el: '.content', collections: collections};
     models.mydata = new MyModel();
-    // default project
     models.project = new Project();
     models.company = new Company();
     models.person = new Person();
@@ -361,36 +307,12 @@ $(function(){
     collections.times = new TimeEntries();
     views = {};
     views.current = null;
-    views.projects = new ProjectsView({collection: collections.projects, el: '.content', collections: collections});
-    views.companies = new CompaniesView({collection: collections.companies, el: '.content', collections: collections});
-    views.people = new AllPeopleView({collection: collections.people, el: '.content', collections: collections});
-    views.times = new TimeReportView({collection: collections.times, el: '.content', collections: collections});
-    views.todos = new TodosView({collection: collections.todos, el: '.content', collections: collections, mydata: models.mydata});
-    // default project views
-    var onReset = function(){
-        console.log("onReset", views.current);
-        Backbone.history.loadUrl();
-//         views.current&&views.current.render();
-//         views.current&&views.current.deps&&views.current.deps();
-    };
+    views.projects = new ProjectsView(_.extend({collection: collections.projects}, viewdata));
+    views.companies = new CompaniesView(_.extend({collection: collections.companies}, viewdata));
+    views.people = new AllPeopleView(_.extend({collection: collections.people}, viewdata));
+    views.times = new TimeReportView(_.extend({collection: collections.times}, viewdata));
+    views.todos = new TodosView(_.extend({collection: collections.todos, mydata: models.mydata}, viewdata));
     for(i in collections) {collections[i].on("reset", onReset)};
-//     todo_lists = new TodoLists();
-    collections.project_people = {};
-    collections.project_categories = {};
-    collections.project_posts = {};
-    collections.project_files = {};
-    collections.project_todo_lists = {};
-    collections.project_calendar = {};
-    collections.project_time_entries = {};
-    collections.project_people[0] = new People();
-    collections.project_categories[0] = new Categories();
-    collections.project_posts[0] = new Posts();
-    collections.project_files[0] = new Attachments();
-    collections.project_todo_lists[0] = new TodoLists();
-    collections.project_calendar[0] = new Calendar();
-    collections.project_time_entries[0] = new TimeEntries();
-    collections.todo_items = {};
-    collections.todo_items[0] = new TodoItems();
     Object.prototype.get_or_create=function (id){
         if(!this[id]&&this[0]){
             this[id]=this[0].clone();
@@ -399,29 +321,18 @@ $(function(){
         }
         return this[id]
     };
-//     collections.project_people.get = function (id){
-//         if(!collections.project_people[id]){
-//             collections.project_people[id]=collections.project_people[0].clone();
-//             collections.project_people[id].parent_id=id;
-//             collections.project_people[id].on("reset",onReset);
-//         }
-//         return collections.project_people[id]
-//     };
-//     collections.project_categories.get = function (id){
-//         if(!collections.project_categories[id]){
-//             collections.project_categories[id]=collections.project_categories[0].clone();
-//             collections.project_categories[id].parent_id=id;
-//             collections.project_categories[id].on("reset",onReset);
-//         }
-//         return collections.project_categories[id]
-//     };
-//     views.login_view = new LoginView({model: models.mydata, el: '.content'});
-    var oproject = {model: models.project, el: '.content', collections: collections};
-    var ocompany = {model: models.company, el: '.content', collections: collections};
-    var operson = {model: models.person, el: '.content', collections: collections};
+    collections.project_people = {0: new People()};
+    collections.project_categories = {0: new Categories()};
+    collections.project_posts = {0: new Posts()};
+    collections.project_files = {0: new Attachments()};
+    collections.project_todo_lists = {0: new TodoLists()};
+    collections.project_calendar = {0: new Calendar()};
+    collections.project_time_entries = {0: new TimeEntries()};
+    collections.todo_items = {0: new TodoItems()};
+    views.company_view = new CompanyView(_.extend({model: models.company}, viewdata));
+    views.person_view = new PersonView(_.extend({model: models.person}, viewdata));
+    var oproject = _.extend({model: models.project}, viewdata);
     views.project_view = new ProjectView(oproject);
-    views.company_view = new CompanyView(ocompany);
-    views.person_view = new PersonView(operson)
     views.project_people = new PeopleView(oproject);
     views.project_categories = new CategoriesView(oproject)
     views.project_posts = new PostsView(oproject)
@@ -443,8 +354,6 @@ $(function(){
     });
     var Workspace = Backbone.Router.extend({
         routes: {
-//             "login": "login",
-//             "logout": "logout",
             "projects": "projects",
             "projects/:id": "project",
             "projects/:id/todo_lists": "project_todo_lists",
@@ -470,29 +379,6 @@ $(function(){
         add_hash();
         action!=='route'&&views.current&&views.current.deps&&views.current.deps();
         $(_.filter($(".navbar ul.nav li").removeClass("active"),function(i){return $(i).find("a:visible")[0]&&document.location.hash.indexOf($(i).find("a:visible")[0].hash)!==-1})).addClass("active")
-//     }).on("route:login", function() {
-//         views.current = views.login_view.render()
-//         views.current = new LoginView({
-//             el: '.content',
-//             onlogin: function(view){
-//                 view.model.fetch({
-//                     headers: {"Authorization": "Basic " + btoa(view.$("[name=username]").val()+":"+view.$("[name=password]").val())},
-//                     success: function(model, xhr, options) {
-//                         workspace.navigate("projects", {trigger: true});
-//                     },
-//                     error: function (model, xhr, options) {
-//                         console.log(xhr.responseText)
-//                     }
-//                 })
-//             },
-//             model: models.mydata
-//         }).render()
-//         views.current.delegateEvents({
-//             "click button[type=submit]": "login"
-//         });
-//     }).on("route:logout", function() {
-//         $('title').html("Logout &middot; BB");
-//         mydata.save({username: ""});
     }).on("route:projects", function() {
         views.current = views.projects.render()
     }).on("route:project", function(id) {
@@ -543,22 +429,6 @@ $(function(){
         if(collections.projects.get(id)){views.project_todo_lists.model=collections.projects.get(id)}else{views.project_todo_lists.model.id=id}
         views.project_todo_lists.collection=collections.project_todo_lists.get_or_create(id);
         views.current = views.project_todo_lists.render()
-//     }).on("route:edit", function(uuid) {
-//         $('title').html("Edit Customer &middot; CRM");
-//         var item = customers.get(uuid)
-//         item.on("sync", function() {
-//             workspace.navigate("customer/", {trigger: true});
-//         });
-//         $('.content').html(new EditItemView({model: item}).render().el);
-//     }).on("route:add", function() {
-//         $('title').html("Add Customer &middot; CRM");
-//         var item = new Customer();
-//         item.on("sync", function() {
-//             customers.add(this);
-//             workspace.navigate("customer/", {trigger: true});
-//             this.off("sync");
-//         });
-//         $('.content').html(new EditItemView({model: item}).render().el);
     }).on("route:defaultRoute", function(action) {
         this.navigate("projects", {trigger: true});
     });
@@ -567,5 +437,5 @@ $(function(){
     models.mydata.once("sync",function(){
         Backbone.history.start();
     })
-//     window.console && window.console.log({'jQuery':jQuery().jquery,'Underscore':_.VERSION,'Backbone':Backbone.VERSION});
+    window.console && window.console.log({'jQuery':jQuery().jquery,'Underscore':_.VERSION,'Backbone':Backbone.VERSION});
 });
