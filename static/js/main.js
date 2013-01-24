@@ -566,9 +566,4 @@ $(function () {
     models.mydata.once("sync", function () {
         Backbone.history.start();
     })
-    window.console && window.console.log({
-        'jQuery': jQuery().jquery,
-        'Underscore': _.VERSION,
-        'Backbone': Backbone.VERSION
-    });
 });
