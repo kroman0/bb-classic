@@ -105,14 +105,14 @@ body {
           url: '/login',
           data: form.serialize(),
           success: function(data, textStatus) {
-            status_line.text('Signed!');
+            status_line.text('Success!');
             status_line.removeClass('alert-info').addClass('alert-success');
             // go to the main page
             window.location = '/';
           },
           error: function(req, textStatus) {
             if (req.status === 401) {
-              status_line.text('Unable to Sign-in!');
+              status_line.text('Unable to log-in!');
               status_line.removeClass('alert-info').addClass('alert-error');
             } else {
               status_line.text('Problems with server response.');
