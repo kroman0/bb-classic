@@ -363,7 +363,7 @@ $(function () {
     views.people = new AllPeopleView(_.extend({
         collection: collections.people
     }, viewdata));
-    views.times = new TimeReportView(_.extend({
+    views.time_report = new TimeReportView(_.extend({
         collection: collections.times
     }, viewdata));
     views.todos = new TodosView(_.extend({
@@ -450,30 +450,40 @@ $(function () {
             "people": "people",
             "people/:id": "person",
             "me": "me",
-            "todo_lists": "todo_lists",
-            "time_entries/report": "timereport",
+            "todos": "todos",
+            "time_report": "time_report",
             "*actions": "defaultRoute"
         }
     });
     workspace = new Workspace();
-    workspace.on("all", function (action) {
+    workspace.on("route", function (route, params) {
+        console.log("route", route, params)
+        if (["projects","companies","people","time_report","todos"].indexOf(route)!==-1) {
+            views.current = views[route].render()
+        } else if (["project_people","project_categories","project_time_entries","project_posts","project_files","project_calendar","project_todo_lists"].indexOf(route)!==-1) {
+            var id = parseInt(params[0]);
+            if (collections.projects.get(id)) {
+                views[route].model = collections.projects.get(id)
+            } else {
+                views[route].model.id = id
+            }
+            views[route].collection = collections[route].get_or_create(id);
+            views.current = views[route].render()
+        }
         views.current && $('title').html(views.current.name() + " - BB");
         add_hash();
-        action !== 'route' && views.current && views.current.deps && views.current.deps();
+        views.current && views.current.deps && views.current.deps();
         $(_.filter($(".navbar ul.nav li").removeClass("active"), function (i) {
             return $(i).find("a:visible")[0] && document.location.hash.indexOf($(i).find("a:visible")[0].hash) !== -1
         })).addClass("active")
-    }).on("route:projects", function () {
-        views.current = views.projects.render()
     }).on("route:project", function (id) {
+        console.log("route:project",id)
         if (collections.projects.get(id)) {
             views.project_view.model = collections.projects.get(id)
         } else {
             views.project_view.model.id = id
         }
         views.current = views.project_view.render()
-    }).on("route:companies", function () {
-        views.current = views.companies.render()
     }).on("route:company", function (id) {
         if (collections.companies.get(id)) {
             views.company_view.model = collections.companies.get(id)
@@ -481,8 +491,6 @@ $(function () {
             views.company_view.model.id = id
         }
         views.current = views.company_view.render()
-    }).on("route:people", function () {
-        views.current = views.people.render()
     }).on("route:person", function (id) {
         if (collections.people.get(id)) {
             views.person_view.model = collections.people.get(id)
@@ -493,66 +501,6 @@ $(function () {
     }).on("route:me", function () {
         views.person_view.model = models.mydata
         views.current = views.person_view.render()
-    }).on("route:timereport", function () {
-        views.current = views.times.render()
-    }).on("route:todo_lists", function () {
-        views.current = views.todos.render()
-    }).on("route:project_people", function (id) {
-        if (collections.projects.get(id)) {
-            views.project_people.model = collections.projects.get(id)
-        } else {
-            views.project_people.model.id = id
-        }
-        views.project_people.collection = collections.project_people.get_or_create(id);
-        views.current = views.project_people.render()
-    }).on("route:project_categories", function (id) {
-        if (collections.projects.get(id)) {
-            views.project_categories.model = collections.projects.get(id)
-        } else {
-            views.project_categories.model.id = id
-        }
-        views.project_categories.collection = collections.project_categories.get_or_create(id);
-        views.current = views.project_categories.render()
-    }).on("route:project_time_entries", function (id) {
-        if (collections.projects.get(id)) {
-            views.project_time_entries.model = collections.projects.get(id)
-        } else {
-            views.project_time_entries.model.id = id
-        }
-        views.project_time_entries.collection = collections.project_time_entries.get_or_create(id);
-        views.current = views.project_time_entries.render()
-    }).on("route:project_posts", function (id) {
-        if (collections.projects.get(id)) {
-            views.project_posts.model = collections.projects.get(id)
-        } else {
-            views.project_posts.model.id = id
-        }
-        views.project_posts.collection = collections.project_posts.get_or_create(id);
-        views.current = views.project_posts.render()
-    }).on("route:project_files", function (id) {
-        if (collections.projects.get(id)) {
-            views.project_files.model = collections.projects.get(id)
-        } else {
-            views.project_files.model.id = id
-        }
-        views.project_files.collection = collections.project_files.get_or_create(id);
-        views.current = views.project_files.render()
-    }).on("route:project_calendar", function (id) {
-        if (collections.projects.get(id)) {
-            views.project_calendar.model = collections.projects.get(id)
-        } else {
-            views.project_calendar.model.id = id
-        }
-        views.project_calendar.collection = collections.project_calendar.get_or_create(id);
-        views.current = views.project_calendar.render()
-    }).on("route:project_todo_lists", function (id) {
-        if (collections.projects.get(id)) {
-            views.project_todo_lists.model = collections.projects.get(id)
-        } else {
-            views.project_todo_lists.model.id = id
-        }
-        views.project_todo_lists.collection = collections.project_todo_lists.get_or_create(id);
-        views.current = views.project_todo_lists.render()
     }).on("route:defaultRoute", function (action) {
         this.navigate("projects", {
             trigger: true
