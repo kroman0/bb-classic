@@ -475,7 +475,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var tt=this.collection;
+    <% var tt=this.collection; var prid=this.model.id;
     if (tt.isEmpty()) { %>
     <div class="alert alert-info">
         No time entries...
@@ -497,7 +497,11 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <td><%- item.get('hours') %></td>
                 <td><a href="#people/<%- item.get('person-id') %>"><%- item.get('person-name') %></a></td>
                 <td>
-                    <% if (item.get('todo-item-id')) { %><a href="#todo_items/<%- item.get('todo-item-id') %>"><%- item.get('todo-item-id') %></a><br /><% } %>
+                    <% if (item.get('todo-item-id')) { %>
+                        <a href="#todo_items/<%- item.get('todo-item-id') %>/time_entries"><i class="icon-file"></i></a>
+                    <% } else { %>
+                        <a href="#projects/<%- prid %>/time_entries"><i class="icon-folder-close"></i></a>
+                    <% } %>
                     <%- item.get('description') %>
                 </td>
             </tr>
@@ -799,60 +803,6 @@ and `filter_company_id` restricts the entries to those for the given company.
     </ul>
     <% } %>
 </div>
-</script>
-<script type="text/template" id="edit-template">
-    <div class="page-header">
-        <h1><%- name %> Customer</h1>
-    </div>
-    <form class="form-horizontal" action="#customer/">
-        <div class="control-group">
-            <label class="control-label" for="inputName">Name</label>
-            <div class="controls">
-                <input type="text" id="inputName" name="fname" placeholder="First" class="span2" value="<%- fname %>">
-                <input type="text" name="lname" placeholder="Last" class="span2" value="<%- lname %>">
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputCompany">Company</label>
-            <div class="controls">
-                <input type="text" name="cname" id="inputCompany" placeholder="Company" class="span3" value="<%- cname %>"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputEmail">Email</label>
-            <div class="controls">
-                <input type="email" name="email" id="inputEmail" placeholder="Email" class="span3" value="<%- email %>" required />
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">Comment</label>
-            <div class="controls">
-                <textarea name="memo" placeholder="Comment" rows="5" class="span3"><%- memo %></textarea>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <label class="checkbox">
-                    <input type="checkbox" name="active" value="" <%= active ? 'checked': '' %>>
-                    Active
-                </label>
-            </div>
-        </div>
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary"><%- action %></button>
-            <button type="button" class="btn">Cancel</button>
-        </div>
-    </form>
-</script>
-<script type="text/template" id="listempty-template">
-    <tr>
-        <td colspan="5">
-        <div class="alert alert-info">
-                No customers...
-        </div>
-        </td>
-    </tr>
-</script>
 </script>
 </body>
 </html>

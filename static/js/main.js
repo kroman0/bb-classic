@@ -441,7 +441,6 @@ $(function () {
     });
     workspace = new Workspace();
     workspace.on("route", function (route, params) {
-        console.log("route", route, params)
         if (["projects","companies","people","time_report","todos"].indexOf(route)!==-1) {
             views.current = views[route].render()
         } else if (["project_people","project_categories","project_time_entries","project_posts","project_files","project_calendar","project_todo_lists"].indexOf(route)!==-1) {
