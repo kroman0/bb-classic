@@ -30,12 +30,21 @@
             </div>
         </div>
     </div>
+{% if dev %}
 <script src="/static/js/jquery-1.7.2.js"></script>
+<script src="/static/js/jquery.deserialize.js"></script>
+<script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/underscore.js"></script>
+<script src="/static/js/backbone.js"></script>
+<script src="/static/js/main.js"></script>
+{% else %}
+<script src="/static/js/jquery-1.7.2.min.js"></script>
 <script src="/static/js/jquery.deserialize.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
 <script src="/static/js/underscore-min.js"></script>
 <script src="/static/js/backbone-min.js"></script>
 <script src="/static/js/main-min.js"></script>
+{% endif %}
 <script type="text/template" id="time-report-template">
     <div class="page-header">
         <h1>Time report</h1>
@@ -730,7 +739,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var td=this.collection; var todo_items=this.options.collections.todo_items;
+    <% var td=this.collection; var todo_items=this.options.collections.todo_items; var prid=this.model.id;
     if (td.isEmpty()) { %>
     <div class="alert alert-info">
         No todo lists...
@@ -739,7 +748,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <dl>
         <% td.each(function (list) { %>
         <dt id="td<%- list.id %>">
-            <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#todo_lists/<%- list.id %>">
+            <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
                 <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
             </a>
             <small><%= list.get('description') %></small>
@@ -764,8 +773,8 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="nav">
         <li><a href="#projects">Projects</a></li>
         <li><a href="#companies">Companies</a></li>
-        <li><a href="#todo_lists">To-Dos</a></li>
-        <li><a href="#time_entries/report">Time</a></li>
+        <li><a href="#todos">To-Dos</a></li>
+        <li><a href="#time_report">Time</a></li>
         <li><a href="#people">People</a></li>
     </ul>
     <ul class="nav pull-right">
@@ -775,8 +784,8 @@ and `filter_company_id` restricts the entries to those for the given company.
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                 <li><a href="#me"><i class="icon-user"></i> My profile</a></li>
-                <li><a href="#todo_lists"><i class="icon-tasks"></i> My todos</a></li>
-                <li><a href="#time_entries/report"><i class="icon-time"></i> My time</a></li>
+                <li><a href="#todos"><i class="icon-tasks"></i> My todos</a></li>
+                <li><a href="#time_report"><i class="icon-time"></i> My time</a></li>
                 <li class="divider"></li>
                 <li><a href="/logout"><i class="icon-eject"></i> Logout</a></li>
             </ul>

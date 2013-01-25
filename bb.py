@@ -43,7 +43,7 @@ class MainPage(webapp2.RequestHandler):
 
     def get(self):
         self.auth_check()
-        self.response.out.write(template.render(_('index.html'), {}))
+        self.response.out.write(template.render(_('index.html'), {'dev':os.environ['SERVER_SOFTWARE'].startswith('Development')}))
 
 class LoginPage(webapp2.RequestHandler):
     def getSubjectId(self, username, password, subdomain):
@@ -57,8 +57,6 @@ class LoginPage(webapp2.RequestHandler):
         creds = username + u':' + password
         creds = "Basic " + base64.encodestring(creds.encode('utf-8')).strip()
         headers["Authorization"] = creds
-        #BOBO
-        #return '2762670'
         result = urlfetch.fetch(url=absoluteUrl(subdomain, '/me.xml'), method=urlfetch.GET, headers=headers)
         if result.status_code == 200:
             dom = minidom.parseString(result.content)
@@ -80,11 +78,11 @@ class LoginPage(webapp2.RequestHandler):
            return
 
         # make a request to the Basecamp API
-        #try:
-        subject_id = self.getSubjectId(login, pwd, subdomain)
-        #except:
-            #self.error(401)
-            #return
+        try:
+            subject_id = self.getSubjectId(login, pwd, subdomain)
+        except:
+            self.error(401)
+            return
 
         # save login information in a cookie
         data = [login, pwd, subject_id, subdomain]
