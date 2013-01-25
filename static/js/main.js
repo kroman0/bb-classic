@@ -10,6 +10,14 @@ $(function () {
         }
         return fetched
     };
+    Backbone.Collection.prototype.get_or_create = function (id) {
+        if (!this[id]) {
+            this[id] = this.clone();
+            this[id].parent_id = id;
+            this[id].on("reset", onReset);
+        }
+        return this[id]
+    };
     Backbone.View.prototype.render = function () {
         this.$el.html(this.template());
         return this
@@ -373,38 +381,14 @@ $(function () {
     for (i in collections) {
         collections[i].on("reset", onReset)
     };
-    Object.prototype.get_or_create = function (id) {
-        if (!this[id] && this[0]) {
-            this[id] = this[0].clone();
-            this[id].parent_id = id;
-            this[id].on("reset", onReset);
-        }
-        return this[id]
-    };
-    collections.project_people = {
-        0: new People()
-    };
-    collections.project_categories = {
-        0: new Categories()
-    };
-    collections.project_posts = {
-        0: new Posts()
-    };
-    collections.project_files = {
-        0: new Attachments()
-    };
-    collections.project_todo_lists = {
-        0: new TodoLists()
-    };
-    collections.project_calendar = {
-        0: new Calendar()
-    };
-    collections.project_time_entries = {
-        0: new TimeEntries()
-    };
-    collections.todo_items = {
-        0: new TodoItems()
-    };
+    collections.project_people = new People();
+    collections.project_categories = new Categories();
+    collections.project_posts = new Posts();
+    collections.project_files = new Attachments();
+    collections.project_todo_lists = new TodoLists();
+    collections.project_calendar = new Calendar();
+    collections.project_time_entries = new TimeEntries();
+    collections.todo_items = new TodoItems();
     views.company_view = new CompanyView(_.extend({
         model: models.company
     }, viewdata));
