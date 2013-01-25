@@ -460,7 +460,6 @@ $(function () {
             return $(i).find("a:visible")[0] && document.location.hash.indexOf($(i).find("a:visible")[0].hash) !== -1
         })).addClass("active")
     }).on("route:project", function (id) {
-        console.log("route:project",id)
         if (collections.projects.get(id)) {
             views.project_view.model = collections.projects.get(id)
         } else {
@@ -493,8 +492,8 @@ $(function () {
         model: models.mydata,
         el: '.navbar'
     }).render();
-    models.mydata.fetch();
     models.mydata.once("sync", function () {
         Backbone.history.start();
-    })
+    });
+    models.mydata.fetch()
 });
