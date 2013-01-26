@@ -24,14 +24,18 @@ $(function () {
     };
     uniq_hash = [];
     var add_hash = function () {
-        var cur_hashs = _.uniq(_.map($("a"), function (i) {
-            return i.hash
-        }));
-        cur_hashs.map(function (i) {
-            if (uniq_hash.indexOf(i) == -1) {
-                uniq_hash.push(i)
+        if(window.workspace){
+            var rs = /^[#\/]|\s+$/g;
+            var rr = _.map(_.filter(_.keys(workspace.routes),function(i){return i.indexOf("*")===-1}),function(i){return workspace._routeToRegExp(i)});
+            var cur_hashs = _.uniq(_.map($("a"), function (i) {return i.hash.replace(rs,'')}));
+            while ((h = cur_hashs.pop())) {
+                if (_.every(rr,function(i){return !i.test(h)})) {
+                    if (uniq_hash.indexOf(h) == -1) {
+                        uniq_hash.push(h)
+                    }
+                }
             }
-        });
+        }
     };
     var Project = Backbone.Model.extend({
         icon: function () {
@@ -421,17 +425,26 @@ $(function () {
     var Workspace = Backbone.Router.extend({
         routes: {
             "projects": "projects",
+            "projects:tab": "projects",
             "projects/:id": "project",
             "projects/:id/todo_lists": "project_todo_lists",
+            "projects/:id/todo_lists/:tlid": "project_todo_list",
+            "projects/:id/todo_lists/:tlid/todo_items/:tiid": "project_todo_item",
             "projects/:id/time_entries": "project_time_entries",
             "projects/:id/people": "project_people",
             "projects/:id/posts": "project_posts",
+            "projects/:id/posts/:pid": "project_post",
             "projects/:id/files": "project_files",
-            "projects/:id/milestones": "project_calendar",
+            "projects/:id/files/:fid": "project_file",
+            "projects/:id/calendar": "project_calendar",
+            "projects/:id/calendar/:cid": "project_calendar_event",
             "projects/:id/categories": "project_categories",
+            "projects/:id/categories/:cid": "project_category",
+            "todo_items/:id/time_entries": "todo_time_entries",
             "companies": "companies",
             "companies/:id": "company",
             "people": "people",
+            "people:tab": "people",
             "people/:id": "person",
             "me": "me",
             "todos": "todos",

@@ -151,22 +151,22 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="nav nav-pills offset8">
     <% var fprst=_.first(pp.pluck('status'));
        _.each(_.uniq(pp.pluck('status')), function (status) { %>
-        <li class="prstatus<% if (fprst==status) { %> active<% } %>"><a href="#<%- status %>" data-toggle="tab"><%- status %></a></li>
+        <li class="prstatus<% if (fprst==status) { %> active<% } %>"><a href="#projects_<%- status %>" data-toggle="tab"><%- status %></a></li>
     <% }) %>
     </ul>
     <div class="tab-content">
     <% _.each(pp.groupBy(function(i){ return i.get('status')}), function (plist, status) { %>
-        <div class="tab-pane<% if (fprst==status) { %> active<% } %>" id="<%- status %>">
+        <div class="tab-pane<% if (fprst==status) { %> active<% } %>" id="projects_<%- status %>">
             <div class="tabbable">
             <ul class="nav nav-list span4 pull-right">
             <% var fprcoid=_.first(plist).get('company').id;
             _.each(_.groupBy(plist, function(item){ return item.get('company').id}), function (list, coid) { %>
-                <li<% if (fprcoid==coid) { %> class="active"<% } %>><a href="#<%- status %><%- coid %>" data-toggle="tab"><%- _.first(list).get('company').name %></a></li>
+                <li<% if (fprcoid==coid) { %> class="active"<% } %>><a href="#projects_<%- status %>_<%- coid %>" data-toggle="tab"><%- _.first(list).get('company').name %></a></li>
             <% }) %>
             </ul>
             <div class="tab-content">
             <% _.each(_.groupBy(plist, function(item){ return item.get('company').id}), function (list, coid) { %>
-                <div class="tab-pane<% if (fprcoid==coid) { %> active<% } %>" id="<%- status %><%- coid %>">
+                <div class="tab-pane<% if (fprcoid==coid) { %> active<% } %>" id="projects_<%- status %>_<%- coid %>">
                     <ul class="unstyled">
                     <% _.each(list, function (item) { %>
                         <li>
@@ -193,7 +193,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li class="active"><a href="#projects/<%- this.model.id %>">Overview</a></li>
         <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
         <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/milestones">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
         <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
         <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
@@ -325,12 +325,12 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="nav nav-tabs span3">
     <% var fcoid=_.first(pp.pluck('company-id'));
        this.options.collections.companies.each(function (item) { %>
-        <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#c<%- item.id %>" data-toggle="tab"><%- item.get('name') %></a></li>
+        <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#people_c<%- item.id %>" data-toggle="tab"><%- item.get('name') %></a></li>
     <% }) %>
     </ul>
     <div class="tab-content">
     <% this.options.collections.companies.each(function (cc) { %>
-        <div class="tab-pane<% if (fcoid==cc.id) { %> active<% } %>" id="c<%- cc.id %>">
+        <div class="tab-pane<% if (fcoid==cc.id) { %> active<% } %>" id="people_c<%- cc.id %>">
             <% var cp=pp.where({'company-id':cc.id}); if (_.isEmpty(cp)) { %>
             <div class="alert alert-info">
                 No people in company...
@@ -378,7 +378,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
         <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
         <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/milestones">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
         <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
         <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
         <li class="active pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
@@ -422,12 +422,12 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="nav nav-tabs span3">
     <% var pc=_.uniq(pp.pluck('company-id')); var fcoid=_.first(pc); 
     _.each(pc, function (id) { %>
-        <li<% if (fcoid==id) { %> class="active"<% } %>><a href="#c<%- id %>" data-toggle="tab"><%- cc.get(id)?cc.get(id).get('name'):id %></a></li>
+        <li<% if (fcoid==id) { %> class="active"<% } %>><a href="#people_c<%- id %>" data-toggle="tab"><%- cc.get(id)?cc.get(id).get('name'):id %></a></li>
     <% }) %>
     </ul>
     <div class="tab-content">
     <% _.each(pc, function (id) { %>
-        <div class="tab-pane<% if (fcoid==id) { %> active<% } %>" id="c<%- id %>">
+        <div class="tab-pane<% if (fcoid==id) { %> active<% } %>" id="people_c<%- id %>">
             <ul class="media-list">
             <% _.each(pp.where({'company-id':id}), function (item) { %>
                 <li class="media well well-small">
@@ -469,7 +469,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
         <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
         <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/milestones">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
         <li class="active"><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
         <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
@@ -519,7 +519,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
         <li class="active"><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
         <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/milestones">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
         <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
         <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
@@ -555,7 +555,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
         <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
         <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/milestones">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
         <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
         <li class="active"><a href="#projects/<%- this.model.id %>/files">Files</a></li>
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
@@ -571,7 +571,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="media-list">
     <% ff.each(function (item) { %>
         <li class="media well well-small">
-            <h3><a href="#projects/<%- prid %>/file/<%- item.id %>/<%- item.get('name') %>"><%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
+            <h3><a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
             <small>
                 by <a href="#people/<%- item.get('person-id') %>"><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %></a>
                 <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- cc.get(item.get('category-id'))?cc.get(item.get('category-id')).get('name'):item.get('category-id') %></a><% } %>
@@ -594,7 +594,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
         <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
         <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/milestones">Calendar</a></li>
+        <li class="active"><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
         <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
         <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
@@ -637,7 +637,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
         <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
         <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/milestones">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
         <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
         <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
@@ -737,7 +737,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
         <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
         <li class="active"><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/milestones">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
         <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
         <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
         <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
@@ -761,7 +761,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             <dl>
             <% todo_items.get_or_create(list.id).each(function (item) { %>
             <dd>
-                <a href="#todo_items/<%- item.id %>"><%= item.get('content') %></a>
+                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/todo_items/<%- item.id %>"><%= item.get('content') %></a>
             </dd>
             <% }) %>
             </dl>
