@@ -242,6 +242,18 @@ $(function () {
             return this.model.get('name') + " > Posts"
         }
     });
+    var PostView = Backbone.View.extend({
+        cur_item: null,
+        deps: function () {
+            this.collection.fetchonce() && this.options.collections.projects.fetchonce()
+        },
+        template: _.template($('#project-post-template').html()),
+        name: function () {
+            var item=this.cur_item&&this.collection.get(this.cur_item);
+            var title=item&&item.get('title');
+            return this.model.get('name') + " > Posts > " + title
+        }
+    });
     var FilesView = Backbone.View.extend({
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce()
@@ -249,6 +261,18 @@ $(function () {
         template: _.template($('#project-files-template').html()),
         name: function () {
             return this.model.get('name') + " > Files"
+        }
+    });
+    var FileView = Backbone.View.extend({
+        cur_item: null,
+        deps: function () {
+            this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce()
+        },
+        template: _.template($('#project-file-template').html()),
+        name: function () {
+            var item=this.cur_item&&this.collection.get(this.cur_item);
+            var title=item&&item.get('name');
+            return this.model.get('name') + " > Files > " + title
         }
     });
     var CalendarView = Backbone.View.extend({
@@ -260,6 +284,18 @@ $(function () {
             return this.model.get('name') + " > Calendar"
         }
     });
+    var CalendarEntryView = Backbone.View.extend({
+        cur_item: null,
+        deps: function () {
+            this.collection.fetchonce() && this.options.collections.projects.fetchonce()
+        },
+        template: _.template($('#project-calendar-entry-template').html()),
+        name: function () {
+            var item=this.cur_item&&this.collection.get(this.cur_item);
+            var title=item&&item.get('title');
+            return this.model.get('name') + " > Calendar > " + title
+        }
+    });
     var CategoriesView = Backbone.View.extend({
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce()
@@ -267,6 +303,18 @@ $(function () {
         template: _.template($('#project-categories-template').html()),
         name: function () {
             return this.model.get('name') + " > Categories"
+        }
+    });
+    var CategoryView = Backbone.View.extend({
+        cur_item: null,
+        deps: function () {
+            this.collection.fetchonce() && this.options.collections.projects.fetchonce()
+        },
+        template: _.template($('#project-category-template').html()),
+        name: function () {
+            var item=this.cur_item&&this.collection.get(this.cur_item);
+            var title=item&&item.get('name');
+            return this.model.get('name') + " > Categories > " + title
         }
     });
     var PersonView = Backbone.View.extend({
@@ -405,10 +453,14 @@ $(function () {
     views.project_view = new ProjectView(oproject);
     views.project_people = new PeopleView(oproject);
     views.project_categories = new CategoriesView(oproject)
+    views.project_category = new CategoryView(oproject)
     views.project_posts = new PostsView(oproject)
+    views.project_post = new PostView(oproject)
     views.project_todo_lists = new TodoListsView(oproject)
     views.project_calendar = new CalendarView(oproject)
+    views.project_calendar_entry = new CalendarEntryView(oproject)
     views.project_files = new FilesView(oproject)
+    views.project_file = new FileView(oproject)
     views.project_time_entries = new TimeEntriesView(oproject)
     collections.projects.on("reset", function () {
         this.each(function (p) {
@@ -437,7 +489,7 @@ $(function () {
             "projects/:id/files": "project_files",
             "projects/:id/files/:fid": "project_file",
             "projects/:id/calendar": "project_calendar",
-            "projects/:id/calendar/:cid": "project_calendar_event",
+            "projects/:id/calendar/:cid": "project_calendar_entry",
             "projects/:id/categories": "project_categories",
             "projects/:id/categories/:cid": "project_category",
             "todo_items/:id/time_entries": "todo_time_entries",
@@ -464,6 +516,27 @@ $(function () {
                 views[route].model.id = id
             }
             views[route].collection = collections[route].get_or_create(id);
+            views.current = views[route].render()
+        } else if (["project_post","project_file","project_calendar_entry","project_category"].indexOf(route)!==-1) {
+            var id = parseInt(params[0]);
+            var cur_item = parseInt(params[1]);
+            if (collections.projects.get(id)) {
+                views[route].model = collections.projects.get(id);
+                views[route].cur_item = cur_item;
+            } else {
+                views[route].model.id = id
+                views[route].cur_item = cur_item;
+            }
+            switch (route) {
+                case "project_calendar_entry":
+                    views[route].collection = collections["project_calendar"].get_or_create(id);
+                    break;
+                case "project_category":
+                    views[route].collection = collections["project_categories"].get_or_create(id);
+                    break;
+                default:
+                    views[route].collection = collections[route+"s"].get_or_create(id);
+            } 
             views.current = views[route].render()
         }
         views.current && $('title').html(views.current.name() + " - BB");

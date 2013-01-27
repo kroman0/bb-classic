@@ -546,6 +546,40 @@ and `filter_company_id` restricts the entries to those for the given company.
      </ul>
     <% } %>
 </script>
+<script type="text/template" id="project-post-template">
+    <div class="page-header">
+        <h1><%- this.name() %></h1>
+        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+    </div>
+    <ul class="nav nav-tabs">
+        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
+        <li class="active"><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+    </ul>
+    <% var pp=this.collection; var prid=this.model.id; var item=pp.get(this.cur_item);
+    if (pp.isEmpty()) { %>
+    <div class="alert alert-info">
+        No posts...
+    </div>
+    <% } else { %>
+    <ul class="unstyled">
+        <li class="thumbnail">
+            <h3><a href="#projects/<%- prid %>/posts/<%- item.id %>"><%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
+            <small>
+                by <a href="#people/<%- item.get('author-id') %>"><%- item.get('author-name') %></a>
+                <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
+                on: <%- new Date(item.get('posted-on')) %>
+            </small>
+            <p><%= item.get('display-body') %></p>
+        </li>
+     </ul>
+    <% } %>
+</script>
 <script type="text/template" id="project-files-template">
     <div class="page-header">
         <h1><%- this.name() %></h1>
@@ -582,6 +616,43 @@ and `filter_company_id` restricts the entries to those for the given company.
             <a class="btn btn-success" href="<%- item.get('download-url') %>">Download</a>
         </li>
     <% }) %>
+     </ul>
+    <% } %>
+</script>
+<script type="text/template" id="project-file-template">
+    <div class="page-header">
+        <h1><%- this.name() %></h1>
+        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+    </div>
+    <ul class="nav nav-tabs">
+        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
+        <li class="active"><a href="#projects/<%- this.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+    </ul>
+    <% var ff=this.collection; var prid=this.model.id; var pp=this.options.collections.people;
+    var cc=this.options.collections.project_categories.get_or_create(this.model.id); var item=ff.get(this.cur_item);
+    if (ff.isEmpty()) { %>
+    <div class="alert alert-info">
+        No files...
+    </div>
+    <% } else { %>
+    <ul class="media-list">
+        <li class="media well well-small">
+            <h3><a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
+            <small>
+                by <a href="#people/<%- item.get('person-id') %>"><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %></a>
+                <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- cc.get(item.get('category-id'))?cc.get(item.get('category-id')).get('name'):item.get('category-id') %></a><% } %>
+                on <%- new Date(item.get('created-on')) %>,
+                <%- item.get('byte-size') %>B
+            </small>
+            <br/>
+            <a class="btn btn-success" href="<%- item.get('download-url') %>">Download</a>
+        </li>
      </ul>
     <% } %>
 </script>
@@ -628,6 +699,47 @@ and `filter_company_id` restricts the entries to those for the given company.
      </ul>
     <% } %>
 </script>
+<script type="text/template" id="project-calendar-entry-template">
+    <div class="page-header">
+        <h1><%- this.name() %></h1>
+        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+    </div>
+    <ul class="nav nav-tabs">
+        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
+        <li class="active"><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+    </ul>
+    <% var cc=this.collection; var prid=this.model.id; var item=cc.get(this.cur_item);
+    if (cc.isEmpty()) { %>
+    <div class="alert alert-info">
+        No events...
+    </div>
+    <% } else { %>
+    <ul class="unstyled">
+        <li class="thumbnail">
+            <h3><a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/calendar/<%- item.id %>"><%- item.get('title') %></a></h3>
+            <small>
+                <% if (item.get('responsible-party-id')) { %>
+                <a href="#<%- item.get('responsible-party-type')=='Company'?'companies':'people' %>/<%- item.get('responsible-party-id') %>"><%- item.get('responsible-party-name') %></a><br />
+                <% } %>
+                Type: <%- item.get('type') %><br />
+                <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
+                <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
+                <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
+                Created by <a href="#people/<%- item.get('creator-id') %>"><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
+                <% if (item.get('completed')) { %><br />
+                Completed by <a href="#people/<%- item.get('completer-id') %>"><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
+                <% } %>
+            </small>
+        </li>
+     </ul>
+    <% } %>
+</script>
 <script type="text/template" id="project-categories-template">
     <div class="page-header">
         <h1><%- this.name() %></h1>
@@ -656,7 +768,36 @@ and `filter_company_id` restricts the entries to those for the given company.
             <%- item.get('type') %><br />Elements: <%- item.get('elements-count') %>
         </dd>
     <% }) %>
-     </ul>
+    </dl>
+    <% } %>
+</script>
+<script type="text/template" id="project-category-template">
+    <div class="page-header">
+        <h1><%- this.name() %></h1>
+        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+    </div>
+    <ul class="nav nav-tabs">
+        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
+        <li class="active pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+    </ul>
+    <% var cc=this.collection; var prid=this.model.id; var item=cc.get(this.cur_item);
+    if (cc.isEmpty()) { %>
+    <div class="alert alert-info">
+        No categories...
+    </div>
+    <% } else { %>
+    <dl>
+        <dt><h3><a href="#projects/<%- prid %>/categories/<%- item.id %>"><%- item.get('name') %></a></h3></dt>
+        <dd>
+            <%- item.get('type') %><br />Elements: <%- item.get('elements-count') %>
+        </dd>
+    </dl>
     <% } %>
 </script>
 <script type="text/template" id="person-template">
@@ -749,25 +890,57 @@ and `filter_company_id` restricts the entries to those for the given company.
         No todo lists...
     </div>
     <% } else { %>
-    <dl>
-        <% td.each(function (list) { %>
-        <dt id="td<%- list.id %>">
-            <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
-                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
-            </a>
-            <small><%= list.get('description') %></small>
-        </dt>
-        <dd>
-            <dl>
-            <% todo_items.get_or_create(list.id).each(function (item) { %>
-            <dd>
-                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/todo_items/<%- item.id %>"><%= item.get('content') %></a>
-            </dd>
+    <div class="tabbable">
+    <ul class="nav nav-pills offset8">
+    <% var ftdst=_.first(td.pluck('completed'));
+       _.each(_.uniq(td.pluck('completed')), function (status) { %>
+        <li class="prstatus<% if (ftdst==status) { %> active<% } %>">
+            <% if (status) { %>
+            <a class="muted" href="#projects_<%- status %>" data-toggle="tab">Completed</a>
+            <% } else { %>
+            <a href="#projects_<%- status %>" data-toggle="tab">Active</a>
+            <% } %>
+        </li>
+    <% }) %>
+    </ul>
+    <div class="tab-content">
+    <% _.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
+        <div class="tab-pane<% if (ftdst.toString()==status) { %> active<% } %>" id="projects_<%- status %>">
+            <div class="tabbable">
+            <ul class="nav nav-list span4 pull-right">
+            <% var ftdgrid=_.first(tlgroup).id;
+            _.each(tlgroup, function (list) { %>
+                <li<% if (ftdgrid==list.id) { %> class="active"<% } %>>
+                    <a href="#projects_<%- status %>_<%- list.id %>" data-toggle="tab">
+                        <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+                    </a>
+                </li>
             <% }) %>
-            </dl>
-        </dd>
-        <% }) %>
-    </dl>
+            </ul>
+            <div class="tab-content">
+            <% _.each(tlgroup, function (list) { %>
+                <div class="tab-pane<% if (ftdgrid==list.id) { %> active<% } %>" id="projects_<%- status %>_<%- list.id %>">
+                    <dl>
+                        <dt id="td<%- list.id %>">
+                            <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
+                                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+                            </a>
+                            <small><%= list.get('description') %></small>
+                        </dt>
+                        <% todo_items.get_or_create(list.id).each(function (item) { %>
+                        <dd>
+                            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/todo_items/<%- item.id %>"><%= item.get('content') %></a>
+                        </dd>
+                        <% }) %>
+                    </dl>
+                </div>
+            <% }) %>
+            </div>
+            </div>
+        </div>
+    <% }) %>
+    </div>
+    </div>
     <% } %>
 </script>
 <script type="text/template" id="nav-template">
