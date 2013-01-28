@@ -382,6 +382,18 @@ $(function () {
             return "To-dos"
         }
     });
+    var TodoListView = Backbone.View.extend({
+        cur_item: null,
+        deps: function () {
+            this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
+        },
+        template: _.template($('#project-todo-lists-template').html()),
+        name: function () {
+            var item=this.cur_item&&this.collection.get(this.cur_item);
+            var title=item&&item.get('name');
+            return this.model.get('name') + " > To-dos > " + title
+        }
+    });
     var MyModel = Backbone.Model.extend({
         defaults: {
             id: null,
@@ -457,6 +469,7 @@ $(function () {
     views.project_posts = new PostsView(oproject)
     views.project_post = new PostView(oproject)
     views.project_todo_lists = new TodoListsView(oproject)
+    views.project_todo_list = new TodoListView(oproject)
     views.project_calendar = new CalendarView(oproject)
     views.project_calendar_entry = new CalendarEntryView(oproject)
     views.project_files = new FilesView(oproject)
@@ -517,7 +530,7 @@ $(function () {
             }
             views[route].collection = collections[route].get_or_create(id);
             views.current = views[route].render()
-        } else if (["project_post","project_file","project_calendar_entry","project_category"].indexOf(route)!==-1) {
+        } else if (["project_post","project_file","project_calendar_entry","project_category","project_todo_list"].indexOf(route)!==-1) {
             var id = parseInt(params[0]);
             var cur_item = parseInt(params[1]);
             if (collections.projects.get(id)) {

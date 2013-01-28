@@ -892,8 +892,8 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } else { %>
     <div class="tabbable">
     <ul class="nav nav-list span4 pull-right">
-    <% var ftdst=_.first(td.pluck('completed')); var ftdgrid=td.first().id;
-    _.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
+    <% var ftdgrid=this.cur_item?td.get(this.cur_item).id:td.first().id;
+    this.cur_item||_.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
         <% if (status==="true") { %>
         <li class="nav-header">Completed</li>
         <% } else { %>
