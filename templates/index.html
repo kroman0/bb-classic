@@ -891,54 +891,41 @@ and `filter_company_id` restricts the entries to those for the given company.
     </div>
     <% } else { %>
     <div class="tabbable">
-    <ul class="nav nav-pills offset8">
-    <% var ftdst=_.first(td.pluck('completed'));
-       _.each(_.uniq(td.pluck('completed')), function (status) { %>
-        <li class="prstatus<% if (ftdst==status) { %> active<% } %>">
-            <% if (status) { %>
-            <a class="muted" href="#projects_<%- status %>" data-toggle="tab">Completed</a>
-            <% } else { %>
-            <a href="#projects_<%- status %>" data-toggle="tab">Active</a>
-            <% } %>
+    <ul class="nav nav-list span4 pull-right">
+    <% var ftdst=_.first(td.pluck('completed')); var ftdgrid=td.first().id;
+    _.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
+        <% if (status==="true") { %>
+        <li class="nav-header">Completed</li>
+        <% } else { %>
+        <li class="nav-header">Active</li>
+        <% } %>
+        <% _.each(tlgroup, function (list) { %>
+        <li<% if (ftdgrid==list.id) { %> class="active"<% } %>>
+            <a href="#projects_<%- list.id %>" data-toggle="tab">
+                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+            </a>
         </li>
+        <% }) %>
     <% }) %>
     </ul>
     <div class="tab-content">
-    <% _.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
-        <div class="tab-pane<% if (ftdst.toString()==status) { %> active<% } %>" id="projects_<%- status %>">
-            <div class="tabbable">
-            <ul class="nav nav-list span4 pull-right">
-            <% var ftdgrid=_.first(tlgroup).id;
-            _.each(tlgroup, function (list) { %>
-                <li<% if (ftdgrid==list.id) { %> class="active"<% } %>>
-                    <a href="#projects_<%- status %>_<%- list.id %>" data-toggle="tab">
+        <% td.each(function (list) { %>
+        <div class="tab-pane fade<% if (ftdgrid==list.id) { %> in active<% } %>" id="projects_<%- list.id %>">
+            <dl>
+                <dt id="td<%- list.id %>">
+                    <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
                         <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
                     </a>
-                </li>
-            <% }) %>
-            </ul>
-            <div class="tab-content">
-            <% _.each(tlgroup, function (list) { %>
-                <div class="tab-pane<% if (ftdgrid==list.id) { %> active<% } %>" id="projects_<%- status %>_<%- list.id %>">
-                    <dl>
-                        <dt id="td<%- list.id %>">
-                            <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
-                                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
-                            </a>
-                            <small><%= list.get('description') %></small>
-                        </dt>
-                        <% todo_items.get_or_create(list.id).each(function (item) { %>
-                        <dd>
-                            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/todo_items/<%- item.id %>"><%= item.get('content') %></a>
-                        </dd>
-                        <% }) %>
-                    </dl>
-                </div>
-            <% }) %>
-            </div>
-            </div>
+                    <small><%= list.get('description') %></small>
+                </dt>
+                <% todo_items.get_or_create(list.id).each(function (item) { %>
+                <dd>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/todo_items/<%- item.id %>"><%= item.get('content') %></a>
+                </dd>
+                <% }) %>
+            </dl>
         </div>
-    <% }) %>
+        <% }) %>
     </div>
     </div>
     <% } %>
