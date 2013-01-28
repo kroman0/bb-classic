@@ -156,7 +156,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     </ul>
     <div class="tab-content">
     <% _.each(pp.groupBy(function(i){ return i.get('status')}), function (plist, status) { %>
-        <div class="tab-pane<% if (fprst==status) { %> active<% } %>" id="projects_<%- status %>">
+        <div class="tab-pane fade<% if (fprst==status) { %> in active<% } %>" id="projects_<%- status %>">
             <div class="tabbable">
             <ul class="nav nav-list span4 pull-right">
             <% var fprcoid=_.first(plist).get('company').id;
@@ -166,7 +166,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             </ul>
             <div class="tab-content">
             <% _.each(_.groupBy(plist, function(item){ return item.get('company').id}), function (list, coid) { %>
-                <div class="tab-pane<% if (fprcoid==coid) { %> active<% } %>" id="projects_<%- status %>_<%- coid %>">
+                <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">
                     <ul class="unstyled">
                     <% _.each(list, function (item) { %>
                         <li>
@@ -330,7 +330,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     </ul>
     <div class="tab-content">
     <% this.options.collections.companies.each(function (cc) { %>
-        <div class="tab-pane<% if (fcoid==cc.id) { %> active<% } %>" id="people_c<%- cc.id %>">
+        <div class="tab-pane fade<% if (fcoid==cc.id) { %> in active<% } %>" id="people_c<%- cc.id %>">
             <% var cp=pp.where({'company-id':cc.id}); if (_.isEmpty(cp)) { %>
             <div class="alert alert-info">
                 No people in company...
@@ -427,7 +427,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     </ul>
     <div class="tab-content">
     <% _.each(pc, function (id) { %>
-        <div class="tab-pane<% if (fcoid==id) { %> active<% } %>" id="people_c<%- id %>">
+        <div class="tab-pane fade<% if (fcoid==id) { %> in active<% } %>" id="people_c<%- id %>">
             <ul class="media-list">
             <% _.each(pp.where({'company-id':id}), function (item) { %>
                 <li class="media well well-small">
