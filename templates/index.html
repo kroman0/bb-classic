@@ -541,7 +541,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
                 <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
                 on: <%- new Date(item.get('posted-on')) %>
-                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a>
+                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
             </small>
             <p><%= item.get('display-body') %></p>
         </li>
@@ -577,7 +577,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
                 <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
                 on: <%- new Date(item.get('posted-on')) %>
-                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a>
+                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
             </small>
             <p><%= item.get('display-body') %></p>
         </li>
@@ -608,7 +608,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
                 <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
                 on: <%- new Date(item.get('posted-on')) %>
-                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a>
+                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
             </small>
             <p><%= item.get('display-body') %></p>
         </li>
@@ -731,7 +731,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 </a><br />
                 <% } %>
                 Type: <%- item.get('type') %>
-                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a><br />
+                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a><br />
                 <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
                 <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
                 <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
@@ -777,7 +777,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 </a><br />
                 <% } %>
                 Type: <%- item.get('type') %>
-                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a><br />
+                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a><br />
                 <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
                 <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
                 <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
@@ -818,7 +818,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 </a><br />
                 <% } %>
                 Type: <%- item.get('type') %>
-                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a><br />
+                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a><br />
                 <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
                 <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
                 <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
@@ -1019,7 +1019,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <% todo_items.get_or_create(list.id).each(function (item) { %>
                 <dd>
                     <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.get('content') %></a>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
                 </dd>
                 <% }) %>
             </dl>
