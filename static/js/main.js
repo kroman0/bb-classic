@@ -146,6 +146,15 @@ $(function () {
         },
         model: TodoList
     });
+    var Comment = Backbone.Model.extend();
+    var Comments = Backbone.Collection.extend({
+        parent_id: null, // parent id
+        parent_type: null, // posts|milestones|todo_items
+        url: function () {
+            return '/api/' + this.parent_type + '/' + this.parent_id + '/comments.xml';
+        },
+        model: Comment
+    });
     var TimeReportView = Backbone.View.extend({
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce()
@@ -231,6 +240,30 @@ $(function () {
         template: _.template($('#project-time-template').html()),
         name: function () {
             return this.model.get('name') + " > Time"
+        }
+    });
+    var PostCommentsView = Backbone.View.extend({
+        cur_item: null,
+        deps: function () {
+            this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce()
+        },
+        template: _.template($('#project-post-comments-template').html()),
+        name: function () {
+            var item=this.cur_item&&this.options.collections.project_posts.get_or_create(this.model.id).get(this.cur_item);
+            var title=item&&item.get('title');
+            return this.model.get('name') + " > Posts > " + title + " > Comments"
+        }
+    });
+    var CalendarEntryCommentsView = Backbone.View.extend({
+        cur_item: null,
+        deps: function () {
+            this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce()
+        },
+        template: _.template($('#project-calendar-entry-comments-template').html()),
+        name: function () {
+            var item=this.cur_item&&this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item);
+            var title=item&&item.get('title');
+            return this.model.get('name') + " > Calendar > " + title + " > Comments"
         }
     });
     var PostsView = Backbone.View.extend({
@@ -453,6 +486,9 @@ $(function () {
     collections.project_calendar = new Calendar();
     collections.project_time_entries = new TimeEntries();
     collections.todo_items = new TodoItems();
+    collections.project_todo_item_comments = new Comments({parent_type:"todo_items"});
+    collections.project_post_comments = new Comments({parent_type:"posts"});
+    collections.project_calendar_entry_comments = new Comments({parent_type:"milestones"});
     views.company_view = new CompanyView(_.extend({
         model: models.company
     }, viewdata));
@@ -475,6 +511,8 @@ $(function () {
     views.project_files = new FilesView(oproject)
     views.project_file = new FileView(oproject)
     views.project_time_entries = new TimeEntriesView(oproject)
+    views.project_post_comments = new PostCommentsView(oproject)
+    views.project_calendar_entry_comments = new CalendarEntryCommentsView(oproject)
     collections.projects.on("reset", function () {
         this.each(function (p) {
             collections.project_people.get_or_create(p.id);
@@ -494,8 +532,8 @@ $(function () {
             "projects/:id": "project",
             "projects/:id/todo_lists": "project_todo_lists",
             "projects/:id/todo_lists/:tlid": "project_todo_list",
-            "projects/:id/todo_lists/:tlid/:tiid": "project_todo_item", //TODO
-            "projects/:id/todo_lists/:tlid/:tiid/comments": "project_todo_item_comments", //TODO
+            "projects/:id/todo_lists/:tlid/:tiid": "project_todo_item", //TODO projects/:id/todo_items/:tiid
+            "projects/:id/todo_lists/:tlid/:tiid/comments": "project_todo_item_comments", //TODO projects/:id/todo_items/:tiid/comments
             "projects/:id/time_entries": "project_time_entries",
             "projects/:id/people": "project_people",
             "projects/:id/posts": "project_posts",
@@ -534,15 +572,15 @@ $(function () {
             views[route].collection = collections[route].get_or_create(id);
             views.current = views[route].render()
         } else if (["project_post","project_file","project_calendar_entry","project_category","project_todo_list"].indexOf(route)!==-1) {
+            // project_todo_item
             var id = parseInt(params[0]);
             var cur_item = parseInt(params[1]);
             if (collections.projects.get(id)) {
                 views[route].model = collections.projects.get(id);
-                views[route].cur_item = cur_item;
             } else {
                 views[route].model.id = id
-                views[route].cur_item = cur_item;
             }
+            views[route].cur_item = cur_item;
             switch (route) {
                 case "project_calendar_entry":
                     views[route].collection = collections["project_calendar"].get_or_create(id);
@@ -553,6 +591,18 @@ $(function () {
                 default:
                     views[route].collection = collections[route+"s"].get_or_create(id);
             } 
+            views.current = views[route].render()
+        } else if (["project_calendar_entry_comments","project_post_comments"].indexOf(route)!==-1) {
+            // project_todo_item_comments
+            var id = parseInt(params[0]);
+            var parent_id = parseInt(params[1]);
+            if (collections.projects.get(id)) {
+                views[route].model = collections.projects.get(id);
+            } else {
+                views[route].model.id = id
+            }
+            views[route].cur_item = parent_id;
+            views[route].collection = collections[route].get_or_create(parent_id);
             views.current = views[route].render()
         }
         views.current && $('title').html(views.current.name() + " - BB");
