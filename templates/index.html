@@ -122,7 +122,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             <tr <% if(item.get('hours')>2){ %>class="warning"<% } %>>
                 <td><%- item.get('date') %></td>
                 <td><%- item.get('hours') %></td>
-                <td><a href="#people/<%- item.get('person-id') %>"><%- item.get('person-name') %></a></td>
+                <td><a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- item.get('person-name') %></a></td>
                 <td>
                     <% if (item.get('todo-item-id')) { %>
                         <a href="#todo_items/<%- item.get('todo-item-id') %>/time_entries"><i class="icon-file"></i></a>
@@ -263,7 +263,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             <% } else { %>
             <ul class="unstyled">
             <% _.each(pp.filter(function(i){return i.get('company-id')==cid}), function (item) { %>
-                <li><a href="#people/<%- item.id %>"><%- item.get('first-name') %> <%- item.get('last-name') %></a></li>
+                <li><a href="#people/<%- item.id %>"><i class="icon-user"></i><%- item.name() %></a></li>
             <% }) %>
             </ul>
             <% } %>
@@ -297,20 +297,20 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="media-list">
     <% pp.each(function (item) { %>
         <li class="media well well-small">
-            <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.get('first-name') %> <%- item.get('last-name') %>">
-                <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.get('first-name') %> <%- item.get('last-name') %>">
+            <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
+                <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
             </a>
             <div class="media-body">
                 <h4 class="media-heading">
-                    <a href="#people/<%- item.id %>" title="<%- item.get('first-name') %> <%- item.get('last-name') %>">
-                        <%- item.get('first-name') %> <%- item.get('last-name') %>
+                    <a href="#people/<%- item.id %>" title="<%- item.name() %>">
+                        <%- item.name() %>
                     </a>
                     <% if (item.get('title')) { %>
                     <small><%- item.get('title') %></small>
                     <% } %>
                 </h4>
                 <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
-                <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.get('first-name') %> <%- item.get('last-name') %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
+                <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
                 <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
                 <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
                 <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
@@ -339,20 +339,20 @@ and `filter_company_id` restricts the entries to those for the given company.
             <ul class="media-list">
             <% _.each(cp, function (item) { %>
                 <li class="media well well-small">
-                    <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.get('first-name') %> <%- item.get('last-name') %>">
-                        <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.get('first-name') %> <%- item.get('last-name') %>">
+                    <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
+                        <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
                     </a>
                     <div class="media-body">
                         <h4 class="media-heading">
-                            <a href="#people/<%- item.id %>" title="<%- item.get('first-name') %> <%- item.get('last-name') %>">
-                                <%- item.get('first-name') %> <%- item.get('last-name') %>
+                            <a href="#people/<%- item.id %>" title="<%- item.name() %>">
+                                <%- item.name() %>
                             </a>
                             <% if (item.get('title')) { %>
                             <small><%- item.get('title') %></small>
                             <% } %>
                         </h4>
                         <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
-                        <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.get('first-name') %> <%- item.get('last-name') %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
+                        <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
                         <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
                         <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
                         <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
@@ -394,20 +394,20 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="media-list">
     <% pp.each(function (item) { %>
         <li class="media well well-small">
-            <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.get('first-name') %> <%- item.get('last-name') %>">
-                <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.get('first-name') %> <%- item.get('last-name') %>">
+            <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
+                <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
             </a>
             <div class="media-body">
                 <h4 class="media-heading">
-                    <a href="#people/<%- item.id %>" title="<%- item.get('first-name') %> <%- item.get('last-name') %>">
-                        <%- item.get('first-name') %> <%- item.get('last-name') %>
+                    <a href="#people/<%- item.id %>" title="<%- item.name() %>">
+                        <%- item.name() %>
                     </a>
                     <% if (item.get('title')) { %>
                     <small><%- item.get('title') %></small>
                     <% } %>
                 </h4>
                 <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
-                <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.get('first-name') %> <%- item.get('last-name') %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
+                <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
                 <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
                 <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
                 <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
@@ -431,20 +431,20 @@ and `filter_company_id` restricts the entries to those for the given company.
             <ul class="media-list">
             <% _.each(pp.where({'company-id':id}), function (item) { %>
                 <li class="media well well-small">
-                    <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.get('first-name') %> <%- item.get('last-name') %>">
-                        <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.get('first-name') %> <%- item.get('last-name') %>">
+                    <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
+                        <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
                     </a>
                     <div class="media-body">
                         <h4 class="media-heading">
-                            <a href="#people/<%- item.id %>" title="<%- item.get('first-name') %> <%- item.get('last-name') %>">
-                                <%- item.get('first-name') %> <%- item.get('last-name') %>
+                            <a href="#people/<%- item.id %>" title="<%- item.name() %>">
+                                <%- item.name() %>
                             </a>
                             <% if (item.get('title')) { %>
                             <small><%- item.get('title') %></small>
                             <% } %>
                         </h4>
                         <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
-                        <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.get('first-name') %> <%- item.get('last-name') %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
+                        <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
                         <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
                         <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
                         <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
@@ -495,7 +495,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             <tr <% if(item.get('hours')>2){ %>class="warning"<% } %>>
                 <td><%- item.get('date') %></td>
                 <td><%- item.get('hours') %></td>
-                <td><a href="#people/<%- item.get('person-id') %>"><%- item.get('person-name') %></a></td>
+                <td><a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- item.get('person-name') %></a></td>
                 <td>
                     <% if (item.get('todo-item-id')) { %>
                         <a href="#todo_items/<%- item.get('todo-item-id') %>/time_entries"><i class="icon-file"></i></a>
@@ -534,11 +534,14 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="unstyled">
     <% pp.each(function (item) { %>
         <li class="thumbnail">
-            <h3><a href="#projects/<%- prid %>/posts/<%- item.id %>"><%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
+            <h3>
+                <a href="#projects/<%- prid %>/posts/<%- item.id %>"><%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a>
+            </h3>
             <small>
-                by <a href="#people/<%- item.get('author-id') %>"><%- item.get('author-name') %></a>
+                by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
                 <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
                 on: <%- new Date(item.get('posted-on')) %>
+                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a>
             </small>
             <p><%= item.get('display-body') %></p>
         </li>
@@ -571,9 +574,10 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li class="thumbnail">
             <h3><a href="#projects/<%- prid %>/posts/<%- item.id %>"><%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
             <small>
-                by <a href="#people/<%- item.get('author-id') %>"><%- item.get('author-name') %></a>
+                by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
                 <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
                 on: <%- new Date(item.get('posted-on')) %>
+                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a>
             </small>
             <p><%= item.get('display-body') %></p>
         </li>
@@ -607,7 +611,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li class="media well well-small">
             <h3><a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
             <small>
-                by <a href="#people/<%- item.get('person-id') %>"><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %></a>
+                by <a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %></a>
                 <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- cc.get(item.get('category-id'))?cc.get(item.get('category-id')).get('name'):item.get('category-id') %></a><% } %>
                 on <%- new Date(item.get('created-on')) %>,
                 <%- item.get('byte-size') %>B
@@ -645,7 +649,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <li class="media well well-small">
             <h3><a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
             <small>
-                by <a href="#people/<%- item.get('person-id') %>"><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %></a>
+                by <a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %></a>
                 <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- cc.get(item.get('category-id'))?cc.get(item.get('category-id')).get('name'):item.get('category-id') %></a><% } %>
                 on <%- new Date(item.get('created-on')) %>,
                 <%- item.get('byte-size') %>B
@@ -683,15 +687,19 @@ and `filter_company_id` restricts the entries to those for the given company.
             <h3><a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/calendar/<%- item.id %>"><%- item.get('title') %></a></h3>
             <small>
                 <% if (item.get('responsible-party-id')) { %>
-                <a href="#<%- item.get('responsible-party-type')=='Company'?'companies':'people' %>/<%- item.get('responsible-party-id') %>"><%- item.get('responsible-party-name') %></a><br />
+                <a href="#<%- item.get('responsible-party-type')=='Company'?'companies':'people' %>/<%- item.get('responsible-party-id') %>">
+                    <% if (item.get('responsible-party-type')=='Person') { %><i class="icon-user"></i><% } %>
+                    <%- item.get('responsible-party-name') %>
+                </a><br />
                 <% } %>
-                Type: <%- item.get('type') %><br />
+                Type: <%- item.get('type') %>
+                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a><br />
                 <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
                 <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
                 <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
-                Created by <a href="#people/<%- item.get('creator-id') %>"><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
+                Created by <a href="#people/<%- item.get('creator-id') %>"><i class="icon-user"></i><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
                 <% if (item.get('completed')) { %><br />
-                Completed by <a href="#people/<%- item.get('completer-id') %>"><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
+                Completed by <a href="#people/<%- item.get('completer-id') %>"><i class="icon-user"></i><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
                 <% } %>
             </small>
         </li>
@@ -725,15 +733,19 @@ and `filter_company_id` restricts the entries to those for the given company.
             <h3><a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/calendar/<%- item.id %>"><%- item.get('title') %></a></h3>
             <small>
                 <% if (item.get('responsible-party-id')) { %>
-                <a href="#<%- item.get('responsible-party-type')=='Company'?'companies':'people' %>/<%- item.get('responsible-party-id') %>"><%- item.get('responsible-party-name') %></a><br />
+                <a href="#<%- item.get('responsible-party-type')=='Company'?'companies':'people' %>/<%- item.get('responsible-party-id') %>">
+                    <% if (item.get('responsible-party-type')=='Person') { %><i class="icon-user"></i><% } %>
+                    <%- item.get('responsible-party-name') %>
+                </a><br />
                 <% } %>
-                Type: <%- item.get('type') %><br />
+                Type: <%- item.get('type') %>
+                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a><br />
                 <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
                 <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
                 <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
-                Created by <a href="#people/<%- item.get('creator-id') %>"><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
+                Created by <a href="#people/<%- item.get('creator-id') %>"><i class="icon-user"></i><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
                 <% if (item.get('completed')) { %><br />
-                Completed by <a href="#people/<%- item.get('completer-id') %>"><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
+                Completed by <a href="#people/<%- item.get('completer-id') %>"><i class="icon-user"></i><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
                 <% } %>
             </small>
         </li>
@@ -857,7 +869,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             <dl>
             <% _.each(list.get('todo-items'), function (item) { %>
             <dd>
-                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/todo_items/<%- item.id %>"><%= item.content %></a>
+                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.content %></a>
             </dd>
             <% }) %>
             </dl>
@@ -892,12 +904,12 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } else { %>
     <div class="tabbable">
     <ul class="nav nav-list span4 pull-right">
-    <% var ftdgrid=this.cur_item?td.get(this.cur_item).id:td.first().id;
-    this.cur_item||_.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
+    <% var ci=this.cur_item; var ftdgrid=ci?td.get(ci).id:td.first().id;
+    ci||_.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
         <% if (status==="true") { %>
-        <li class="nav-header">Completed</li>
+        <li class="nav-header">Finished</li>
         <% } else { %>
-        <li class="nav-header">Active</li>
+        <li class="nav-header">Pending</li>
         <% } %>
         <% _.each(tlgroup, function (list) { %>
         <li<% if (ftdgrid==list.id) { %> class="active"<% } %>>
@@ -920,7 +932,8 @@ and `filter_company_id` restricts the entries to those for the given company.
                 </dt>
                 <% todo_items.get_or_create(list.id).each(function (item) { %>
                 <dd>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/todo_items/<%- item.id %>"><%= item.get('content') %></a>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.get('content') %></a>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments"><i class="icon-comment"></i><%- item.get('comments-count') %></a>
                 </dd>
                 <% }) %>
             </dl>
