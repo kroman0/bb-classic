@@ -494,18 +494,21 @@ $(function () {
             "projects/:id": "project",
             "projects/:id/todo_lists": "project_todo_lists",
             "projects/:id/todo_lists/:tlid": "project_todo_list",
-            "projects/:id/todo_lists/:tlid/todo_items/:tiid": "project_todo_item",
+            "projects/:id/todo_lists/:tlid/:tiid": "project_todo_item", //TODO
+            "projects/:id/todo_lists/:tlid/:tiid/comments": "project_todo_item_comments", //TODO
             "projects/:id/time_entries": "project_time_entries",
             "projects/:id/people": "project_people",
             "projects/:id/posts": "project_posts",
             "projects/:id/posts/:pid": "project_post",
+            "projects/:id/posts/:pid/comments": "project_post_comments", //TODO
             "projects/:id/files": "project_files",
             "projects/:id/files/:fid": "project_file",
             "projects/:id/calendar": "project_calendar",
             "projects/:id/calendar/:cid": "project_calendar_entry",
+            "projects/:id/calendar/:cid/comments": "project_calendar_entry_comments", //TODO
             "projects/:id/categories": "project_categories",
             "projects/:id/categories/:cid": "project_category",
-            "todo_items/:id/time_entries": "todo_time_entries",
+            "todo_items/:id/time_entries": "todo_time_entries", //TODO
             "companies": "companies",
             "companies/:id": "company",
             "people": "people",
