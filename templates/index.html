@@ -544,6 +544,16 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
             </small>
             <p><%= item.get('display-body') %></p>
+            <% if (item.get('attachments')) { %>
+            <ul>
+                <% _.each(item.get('attachments'),function (a) { %>
+                <li>
+                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
+                    <small><%- a['byte-size'] %> <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
+                </li>
+                <% }) %>
+            </ul>
+            <% } %>
         </li>
     <% }) %>
      </ul>
@@ -580,6 +590,16 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
             </small>
             <p><%= item.get('display-body') %></p>
+            <% if (item.get('attachments')) { %>
+            <ul>
+                <% _.each(item.get('attachments'),function (a) { %>
+                <li>
+                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
+                    <small><%- a['byte-size'] %> <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
+                </li>
+                <% }) %>
+            </ul>
+            <% } %>
         </li>
      </ul>
     <% } %>
@@ -611,6 +631,16 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
             </small>
             <p><%= item.get('display-body') %></p>
+            <% if (item.get('attachments')) { %>
+            <ul>
+                <% _.each(item.get('attachments'),function (a) { %>
+                <li>
+                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
+                    <small><%- a['byte-size'] %> <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
+                </li>
+                <% }) %>
+            </ul>
+            <% } %>
         </li>
      </ul>
     <% } %>
@@ -619,7 +649,24 @@ and `filter_company_id` restricts the entries to those for the given company.
         No comments...
     </div>
     <% } else { %>
-        Comments
+    <ul class="unstyled">
+        <% ccc.each(function (item) { %>
+        <li class="thumbnail">
+            <small><a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a> <%- new Date(item.get('created-at')) %></small>
+            <p><%- item.get('body') %></p>
+            <% if (item.get('attachments')) { %>
+            <ul>
+                <% _.each(item.get('attachments'),function (a) { %>
+                <li>
+                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
+                    <small><%- a['byte-size'] %> <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
+                </li>
+                <% }) %>
+            </ul>
+            <% } %>
+        </li>
+        <% }) %>
+    </ul>
     <% } %>
 </script>
 <script type="text/template" id="project-files-template">
@@ -835,7 +882,25 @@ and `filter_company_id` restricts the entries to those for the given company.
         No comments...
     </div>
     <% } else { %>
-        Comments
+    <ul class="unstyled">
+        <% ccc.each(function (item) { %>
+        <li class="thumbnail">
+            <h3><a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/calendar/<%- item.id %>"><%- item.get('title') %></a></h3>
+            <small></small>
+            <p><%- item.get('body') %></p>
+            <% if (item.get('attachments')) { %>
+            <ul>
+                <% _.each(item.get('attachments'),function (a) { %>
+                <li>
+                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
+                    <small><%- a['byte-size'] %> <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
+                </li>
+                <% }) %>
+            </ul>
+            <% } %>
+        </li>
+        <% }) %>
+    </ul>
     <% } %>
 </script>
 <script type="text/template" id="project-categories-template">

@@ -155,6 +155,15 @@ $(function () {
         },
         model: Comment
     });
+    var PostComments = Comments.extend({
+        parent_type: 'posts'
+    });
+    var TodoComments = Comments.extend({
+        parent_type: 'todo_items'
+    });
+    var CalendarEntryComments = Comments.extend({
+        parent_type: 'milestones'
+    });
     var TimeReportView = Backbone.View.extend({
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce()
@@ -486,9 +495,9 @@ $(function () {
     collections.project_calendar = new Calendar();
     collections.project_time_entries = new TimeEntries();
     collections.todo_items = new TodoItems();
-    collections.project_todo_item_comments = new Comments({parent_type:"todo_items"});
-    collections.project_post_comments = new Comments({parent_type:"posts"});
-    collections.project_calendar_entry_comments = new Comments({parent_type:"milestones"});
+    collections.project_todo_item_comments = new TodoComments();
+    collections.project_post_comments = new PostComments();
+    collections.project_calendar_entry_comments = new CalendarEntryComments();
     views.company_view = new CompanyView(_.extend({
         model: models.company
     }, viewdata));
