@@ -137,7 +137,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <td><a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- item.get('person-name') %></a></td>
                 <td>
                     <% if (item.get('todo-item-id')) { %>
-                        <a href="#todo_items/<%- item.get('todo-item-id') %>/time_entries"><i class="icon-file"></i></a>
+                        <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.get('todo-item-id') %>"><i class="icon-file"></i></a>
                     <% } else { %>
                         <a href="#projects/<%- prid %>/time_entries"><i class="icon-folder-close"></i></a>
                     <% } %>
@@ -510,7 +510,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <td><a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- item.get('person-name') %></a></td>
                 <td>
                     <% if (item.get('todo-item-id')) { %>
-                        <a href="#todo_items/<%- item.get('todo-item-id') %>/time_entries"><i class="icon-file"></i></a>
+                        <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.get('todo-item-id') %>"><i class="icon-file"></i></a>
                     <% } else { %>
                         <a href="#projects/<%- prid %>/time_entries"><i class="icon-folder-close"></i></a>
                     <% } %>
@@ -1099,18 +1099,13 @@ and `filter_company_id` restricts the entries to those for the given company.
                 </dt>
                 <% todo_items.get_or_create(list.id).each(function (item) { %>
                 <dd>
-                    <% if (false) { if (item.get('completed')) { %>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/uncomplete"><i class="icon-check"></i></a>
-                    <% } else { %>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/complete"><i class="icon-repeat"></i></a>
-                    <% }} %>
                     <% if (item.get('completed')) { %>
                     <i class="icon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
                     <% } else { %>
                     <i class="icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
                     <% } %>
                     <% if (list.get('tracked')) { %>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/time_entries"><i class="icon-time"></i></a>
+                    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
                     <% } %>
                     <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.get('content') %></a>
                     <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
@@ -1147,6 +1142,14 @@ and `filter_company_id` restricts the entries to those for the given company.
         No todo items...
     </div>
     <% } else { %>
+    <% if (item.get('completed')) { %>
+    <i class="icon-completed" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
+    <% } else { %>
+    <i class="icon-uncompleted" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
+    <% } %>
+    <% if (td.get(list_id).get('tracked')) { %>
+    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
+    <% } %>
     <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>"><%= item.get('content') %></a>
     <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
     <% } %>
@@ -1176,6 +1179,14 @@ and `filter_company_id` restricts the entries to those for the given company.
         No todo items...
     </div>
     <% } else { %>
+    <% if (item.get('completed')) { %>
+    <i class="icon-completed" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
+    <% } else { %>
+    <i class="icon-uncompleted" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
+    <% } %>
+    <% if (td.get(list_id).get('tracked')) { %>
+    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
+    <% } %>
     <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>"><%= item.get('content') %></a>
     <% } %>
     <% if (ccc.isEmpty()) { %>
