@@ -403,6 +403,30 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.sub()
         },
+        events: {
+            "click .icon-completed": "uncomplete",
+            "click .icon-uncompleted": "complete"
+        },
+        complete: function (e) {
+            var target = $(e.target);
+            var todolist_id = parseInt(target.data('todolist-id'));
+            var todoitem_id = parseInt(target.data('todoitem-id'));
+            var todo_items = this.options.collections.todo_items;
+            var items = todo_items.get_or_create(todolist_id);
+            var item = items.get(todoitem_id);
+            item.set('completed', true);
+            this.render()
+        },
+        uncomplete: function (e) {
+            var target = $(e.target);
+            var todolist_id = parseInt(target.data('todolist-id'));
+            var todoitem_id = parseInt(target.data('todoitem-id'));
+            var todo_items = this.options.collections.todo_items;
+            var items = todo_items.get_or_create(todolist_id);
+            var item = items.get(todoitem_id);
+            item.set('completed', false);
+            this.render()
+        },
         template: _.template($('#project-todo-lists-template').html()),
         sub: function () {
             var todo_items = this.options.collections.todo_items;
