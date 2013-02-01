@@ -1,0 +1,5 @@
+/**
+ * @author Maxim Vasiliev
+ * Date: 21.01.2010
+ * Time: 14:00
+ */(function(e){function t(t,n,r){var i=decodeURIComponent(n).split("&"),s=0,o=null,u=null,a=null,f=null;r&&(e('input[type="checkbox"],input[type="radio"]',t).removeAttr("checked"),e('select,input[type="text"],input[type="password"],input[type="hidden"],textarea',t).val(""));var l={};while(o=i[s++])f=o.split("="),u=f[0]||"",a=(f[1]||"").replace(/\+/g," "),u!=""&&(u in l?(e.type(l[u])!=="array"&&(l[u]=[l[u]]),l[u].push(a)):l[u]=a);for(u in l)a=l[u],e('input[type="checkbox"][name="'+u+'"][value="'+a+'"],input[type="radio"][name="'+u+'"][value="'+a+'"]',t).attr("checked","checked"),e('select[name="'+u+'"],input[type="text"][name="'+u+'"],input[type="password"][name="'+u+'"],input[type="hidden"][name="'+u+'"],textarea[name="'+u+'"]',t).val(a)}e.fn.deserialize=function(e,n){this.each(function(){t(this,e,!!n)})}})(jQuery);
