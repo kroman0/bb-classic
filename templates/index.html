@@ -48,6 +48,8 @@
 <script src="/static/js/bootstrap.js"></script>
 <script src="/static/js/underscore.js"></script>
 <script src="/static/js/backbone.js"></script>
+<script src="/static/js/backbone.fetch-cache.js"></script>
+<script src="/static/js/backbone-pageable.js"></script>
 <script src="/static/js/main.js"></script>
 {% else %}
 <script src="/static/js/jquery-1.7.2.min.js"></script>
@@ -55,6 +57,8 @@
 <script src="/static/js/bootstrap.min.js"></script>
 <script src="/static/js/underscore-min.js"></script>
 <script src="/static/js/backbone-min.js"></script>
+<script src="/static/js/backbone.fetch-cache.min.js"></script>
+<script src="/static/js/backbone-pageable.min.js"></script>
 <script src="/static/js/main-min.js"></script>
 {% endif %}
 <script type="text/template" id="time-report-template">
@@ -115,6 +119,14 @@ The `subject_id` parameter lets you constrain the result to a single person’s 
 `filter_project_id` restricts the entries to those for the given project,
 and `filter_company_id` restricts the entries to those for the given company.
     </pre>
+    <ul class="pager">
+        <li class="previous<% if(!tt.hasPrevious()){ %> disabled<% } %>">
+            <a href="#time_report">&larr; Previous Page</a>
+        </li>
+        <li class="next<% if(!tt.hasNext()){ %> disabled<% } %>">
+            <a href="#time_report">Next Page &rarr;</a>
+        </li>
+    </ul>
     <table class="table table-hover table-condensed table-bordered">
         <thead>
             <tr>
@@ -148,6 +160,14 @@ and `filter_company_id` restricts the entries to those for the given company.
             <% }) %>
         </tbody>
     </table>
+    <ul class="pager">
+        <li class="previous<% if(!tt.hasPrevious()){ %> disabled<% } %>">
+            <a href="#time_report">&larr; Previous Page</a>
+        </li>
+        <li class="next<% if(!tt.hasNext()){ %> disabled<% } %>">
+            <a href="#time_report">Next Page &rarr;</a>
+        </li>
+    </ul>
     <% } %>
 </script>
 <script type="text/template" id="projects-template">
@@ -1100,9 +1120,79 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <% todo_items.get_or_create(list.id).each(function (item) { %>
                 <dd>
                     <% if (item.get('completed')) { %>
-                    <i class="icon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
+                    <i class="project-todo-lists icon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
                     <% } else { %>
-                    <i class="icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
+                    <i class="project-todo-lists icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
+                    <% } %>
+                    <% if (list.get('tracked')) { %>
+                    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
+                    <% } %>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.get('content') %></a>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
+                </dd>
+                <% }) %>
+            </dl>
+        </div>
+        <% }) %>
+    </div>
+    </div>
+    <% } %>
+</script>
+<script type="text/template" id="project-todo-list-template">
+    <div class="page-header">
+        <h1><%- this.name() %></h1>
+        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+    </div>
+    <ul class="nav nav-tabs">
+        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
+        <li class="active"><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+    </ul>
+    <% var td=this.collection; var todo_items=this.options.collections.todo_items; var prid=this.model.id;
+    if (td.isEmpty()) { %>
+    <div class="alert alert-info">
+        No todo lists...
+    </div>
+    <% } else { %>
+    <div class="tabbable">
+    <ul class="nav nav-list span4 pull-right">
+    <% var ci=this.cur_item; var ftdgrid=ci?td.get(ci).id:td.first().id;
+    ci||_.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
+        <% if (status==="true") { %>
+        <li class="nav-header">Finished</li>
+        <% } else { %>
+        <li class="nav-header">Pending</li>
+        <% } %>
+        <% _.each(tlgroup, function (list) { %>
+        <li<% if (ftdgrid==list.id) { %> class="active"<% } %>>
+            <a href="#projects_<%- list.id %>" data-toggle="tab">
+                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+            </a>
+        </li>
+        <% }) %>
+    <% }) %>
+    </ul>
+    <div class="tab-content">
+        <% td.each(function (list) { %>
+        <div class="tab-pane fade<% if (ftdgrid==list.id) { %> in active<% } %>" id="projects_<%- list.id %>">
+            <dl>
+                <dt id="td<%- list.id %>">
+                    <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
+                        <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+                    </a>
+                    <small><%= list.get('description') %></small>
+                </dt>
+                <% todo_items.get_or_create(list.id).each(function (item) { %>
+                <dd>
+                    <% if (item.get('completed')) { %>
+                    <i class="project-todo-list icon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
+                    <% } else { %>
+                    <i class="project-todo-list icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
                     <% } %>
                     <% if (list.get('tracked')) { %>
                     <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
@@ -1143,9 +1233,9 @@ and `filter_company_id` restricts the entries to those for the given company.
     </div>
     <% } else { %>
     <% if (item.get('completed')) { %>
-    <i class="icon-completed" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
+    <i class="project-todo-item icon-completed" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
     <% } else { %>
-    <i class="icon-uncompleted" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
+    <i class="project-todo-item icon-uncompleted" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
     <% } %>
     <% if (td.get(list_id).get('tracked')) { %>
     <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
@@ -1180,9 +1270,9 @@ and `filter_company_id` restricts the entries to those for the given company.
     </div>
     <% } else { %>
     <% if (item.get('completed')) { %>
-    <i class="icon-completed" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
+    <i class="project-todo-item-comments icon-completed" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
     <% } else { %>
-    <i class="icon-uncompleted" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
+    <i class="project-todo-item-comments icon-uncompleted" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
     <% } %>
     <% if (td.get(list_id).get('tracked')) { %>
     <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>

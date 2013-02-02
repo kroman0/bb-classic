@@ -5,8 +5,8 @@ $(function () {
     Backbone.Collection.prototype.fetchonce = function () {
         var fetched = this.fetched;
         if (!fetched) {
-            this.fetch();
             this.fetched = true
+            this.fetch({cache:true});
         }
         return fetched
     };
@@ -104,7 +104,8 @@ $(function () {
         model: Category
     });
     var TimeEntry = Backbone.Model.extend();
-    var TimeEntries = Backbone.Collection.extend({
+    var TimeEntries = Backbone.PageableCollection.extend({
+        mode: 'client',
         parent_id: null, // project id
         parent: 'projects',
         filter_report: null, // report filter
@@ -171,12 +172,22 @@ $(function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce()
         },
         events: {
+            "click .previous": "previous",
+            "click .next": "next",
             "click #getreport": "getreport"
+        },
+        previous: function (e) {
+            e.preventDefault();
+            this.collection.hasPrevious() && this.collection.getPreviousPage();
+        },
+        next: function (e) {
+            e.preventDefault();
+            this.collection.hasNext() && this.collection.getNextPage();
         },
         getreport: function (e) {
             e.preventDefault();
             this.collection.filter_report = this.$('form#makereport').serialize();
-            this.collection.fetch()
+            this.collection.fetch({cache:true})
         },
         template: _.template($('#time-report-template').html()),
         name: function () {
@@ -379,7 +390,7 @@ $(function () {
         },
         selectTarget: function (e) {
             this.collection.responsible_party = $(e.target).val();
-            this.collection.fetch()
+            this.collection.fetch({cache:true})
         },
         template: _.template($('#todo-lists-template').html()),
         name: function () {
@@ -406,8 +417,8 @@ $(function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.sub()
         },
         events: {
-            "click .icon-completed": "uncomplete",
-            "click .icon-uncompleted": "complete"
+            "click .project-todo-lists.icon-completed": "uncomplete",
+            "click .project-todo-lists.icon-uncompleted": "complete"
         },
         complete: function (e) {
             var target = $(e.target);
@@ -440,7 +451,7 @@ $(function () {
             }));
             if (ftd) {
                 ftd.fetched = true;
-                ftd.fetch()
+                ftd.fetch({cache:true})
             }
         },
         name: function () {
@@ -455,7 +466,31 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
-        template: _.template($('#project-todo-lists-template').html()),
+        events: {
+            "click .project-todo-list.icon-completed": "uncomplete",
+            "click .project-todo-list.icon-uncompleted": "complete"
+        },
+        complete: function (e) {
+            var target = $(e.target);
+            var todolist_id = parseInt(target.data('todolist-id'));
+            var todoitem_id = parseInt(target.data('todoitem-id'));
+            var todo_items = this.options.collections.todo_items;
+            var items = todo_items.get_or_create(todolist_id);
+            var item = items.get(todoitem_id);
+            item.set('completed', true);
+            this.render()
+        },
+        uncomplete: function (e) {
+            var target = $(e.target);
+            var todolist_id = parseInt(target.data('todolist-id'));
+            var todoitem_id = parseInt(target.data('todoitem-id'));
+            var todo_items = this.options.collections.todo_items;
+            var items = todo_items.get_or_create(todolist_id);
+            var item = items.get(todoitem_id);
+            item.set('completed', false);
+            this.render()
+        },
+        template: _.template($('#project-todo-list-template').html()),
         name: function () {
             var item=this.cur_item&&this.collection.get(this.cur_item);
             var title=item&&item.get('name');
@@ -467,6 +502,30 @@ $(function () {
         cur_item: null,
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
+        },
+        events: {
+            "click .project-todo-item.icon-completed": "uncomplete",
+            "click .project-todo-item.icon-uncompleted": "complete"
+        },
+        complete: function (e) {
+            var target = $(e.target);
+            var todolist_id = parseInt(target.data('todolist-id'));
+            var todoitem_id = parseInt(target.data('todoitem-id'));
+            var todo_items = this.options.collections.todo_items;
+            var items = todo_items.get_or_create(todolist_id);
+            var item = items.get(todoitem_id);
+            item.set('completed', true);
+            this.render()
+        },
+        uncomplete: function (e) {
+            var target = $(e.target);
+            var todolist_id = parseInt(target.data('todolist-id'));
+            var todoitem_id = parseInt(target.data('todoitem-id'));
+            var todo_items = this.options.collections.todo_items;
+            var items = todo_items.get_or_create(todolist_id);
+            var item = items.get(todoitem_id);
+            item.set('completed', false);
+            this.render()
         },
         template: _.template($('#project-todo-item-template').html()),
         name: function () {
@@ -482,6 +541,30 @@ $(function () {
         cur_item: null,
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
+        },
+        events: {
+            "click .project-todo-item-comments.icon-completed": "uncomplete",
+            "click .project-todo-item-comments.icon-uncompleted": "complete"
+        },
+        complete: function (e) {
+            var target = $(e.target);
+            var todolist_id = parseInt(target.data('todolist-id'));
+            var todoitem_id = parseInt(target.data('todoitem-id'));
+            var todo_items = this.options.collections.todo_items;
+            var items = todo_items.get_or_create(todolist_id);
+            var item = items.get(todoitem_id);
+            item.set('completed', true);
+            this.render()
+        },
+        uncomplete: function (e) {
+            var target = $(e.target);
+            var todolist_id = parseInt(target.data('todolist-id'));
+            var todoitem_id = parseInt(target.data('todoitem-id'));
+            var todo_items = this.options.collections.todo_items;
+            var items = todo_items.get_or_create(todolist_id);
+            var item = items.get(todoitem_id);
+            item.set('completed', false);
+            this.render()
         },
         template: _.template($('#project-todo-item-comments-template').html()),
         name: function () {
