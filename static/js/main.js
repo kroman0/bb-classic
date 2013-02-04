@@ -19,7 +19,7 @@ $(function () {
         return this[id]
     };
     Backbone.View.prototype.render = function () {
-        this.$el.html(this.template());
+        this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
         return this
     };
     uniq_hash = [];
@@ -189,12 +189,12 @@ $(function () {
             this.collection.filter_report = this.$('form#makereport').serialize();
             this.collection.fetch({cache:true})
         },
-        template: _.template($('#time-report-template').html()),
+        template: '#time-report-template',
         name: function () {
             return "Time report"
         },
         render: function () {
-            this.$el.html(this.template());
+            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
             if (this.collection.filter_report) {
                 this.$el.find('form#makereport').deserialize(this.collection.filter_report)
             }
@@ -205,7 +205,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.companies.fetchonce()
         },
-        template: _.template($('#people-template').html()),
+        template: '#people-template',
         name: function () {
             return "People"
         }
@@ -214,7 +214,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce();
         },
-        template: _.template($('#projects-template').html()),
+        template: '#projects-template',
         name: function () {
             return "Projects"
         }
@@ -223,7 +223,7 @@ $(function () {
         deps: function () {
             this.options.collections.projects.fetchonce()
         },
-        template: _.template($('#project-template').html()),
+        template: '#project-template',
         name: function () {
             return this.model.get('name')
         }
@@ -232,7 +232,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce()
         },
-        template: _.template($('#companies-template').html()),
+        template: '#companies-template',
         name: function () {
             return "Companies"
         }
@@ -241,7 +241,7 @@ $(function () {
         deps: function () {
             this.options.collections.companies.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce()
         },
-        template: _.template($('#company-template').html()),
+        template: '#company-template',
         name: function () {
             return this.model.get('name')
         }
@@ -250,7 +250,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce()
         },
-        template: _.template($('#project-people-template').html()),
+        template: '#project-people-template',
         name: function () {
             return this.model.get('name') + " > People"
         }
@@ -259,7 +259,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce()
         },
-        template: _.template($('#project-time-template').html()),
+        template: '#project-time-template',
         name: function () {
             return this.model.get('name') + " > Time"
         }
@@ -269,7 +269,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce()
         },
-        template: _.template($('#project-post-comments-template').html()),
+        template: '#project-post-comments-template',
         name: function () {
             var item=this.cur_item&&this.options.collections.project_posts.get_or_create(this.model.id).get(this.cur_item);
             var title=item&&item.get('title');
@@ -281,7 +281,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce()
         },
-        template: _.template($('#project-calendar-entry-comments-template').html()),
+        template: '#project-calendar-entry-comments-template',
         name: function () {
             var item=this.cur_item&&this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item);
             var title=item&&item.get('title');
@@ -292,7 +292,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce()
         },
-        template: _.template($('#project-posts-template').html()),
+        template: '#project-posts-template',
         name: function () {
             return this.model.get('name') + " > Posts"
         }
@@ -302,7 +302,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce()
         },
-        template: _.template($('#project-post-template').html()),
+        template: '#project-post-template',
         name: function () {
             var item=this.cur_item&&this.collection.get(this.cur_item);
             var title=item&&item.get('title');
@@ -313,7 +313,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce()
         },
-        template: _.template($('#project-files-template').html()),
+        template: '#project-files-template',
         name: function () {
             return this.model.get('name') + " > Files"
         }
@@ -323,7 +323,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce()
         },
-        template: _.template($('#project-file-template').html()),
+        template: '#project-file-template',
         name: function () {
             var item=this.cur_item&&this.collection.get(this.cur_item);
             var title=item&&item.get('name');
@@ -334,7 +334,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce()
         },
-        template: _.template($('#project-calendar-template').html()),
+        template: '#project-calendar-template',
         name: function () {
             return this.model.get('name') + " > Calendar"
         }
@@ -344,7 +344,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce()
         },
-        template: _.template($('#project-calendar-entry-template').html()),
+        template: '#project-calendar-entry-template',
         name: function () {
             var item=this.cur_item&&this.collection.get(this.cur_item);
             var title=item&&item.get('title');
@@ -355,7 +355,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce()
         },
-        template: _.template($('#project-categories-template').html()),
+        template: '#project-categories-template',
         name: function () {
             return this.model.get('name') + " > Categories"
         }
@@ -365,7 +365,7 @@ $(function () {
         deps: function () {
             this.collection.fetchonce() && this.options.collections.projects.fetchonce()
         },
-        template: _.template($('#project-category-template').html()),
+        template: '#project-category-template',
         name: function () {
             var item=this.cur_item&&this.collection.get(this.cur_item);
             var title=item&&item.get('name');
@@ -376,7 +376,7 @@ $(function () {
         deps: function () {
             this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce()
         },
-        template: _.template($('#person-template').html()),
+        template: '#person-template',
         name: function () {
             return this.model.name()
         }
@@ -392,7 +392,7 @@ $(function () {
             this.collection.responsible_party = $(e.target).val();
             this.collection.fetch({cache:true})
         },
-        template: _.template($('#todo-lists-template').html()),
+        template: '#todo-lists-template',
         name: function () {
             if (this.collection.responsible_party) {
                 var person = this.options.collections.people && this.options.collections.people.get(this.collection.responsible_party);
@@ -440,7 +440,7 @@ $(function () {
             item.set('completed', false);
             this.render()
         },
-        template: _.template($('#project-todo-lists-template').html()),
+        template: '#project-todo-lists-template',
         sub: function () {
             var todo_items = this.options.collections.todo_items;
             var td = _.map(this.collection.pluck('id'), function (id) {
@@ -490,7 +490,7 @@ $(function () {
             item.set('completed', false);
             this.render()
         },
-        template: _.template($('#project-todo-list-template').html()),
+        template: '#project-todo-list-template',
         name: function () {
             var item=this.cur_item&&this.collection.get(this.cur_item);
             var title=item&&item.get('name');
@@ -527,7 +527,7 @@ $(function () {
             item.set('completed', false);
             this.render()
         },
-        template: _.template($('#project-todo-item-template').html()),
+        template: '#project-todo-item-template',
         name: function () {
             var list=this.cur_item&&this.collection.get(this.cur_item);
             var title=list&&list.get('name');
@@ -566,7 +566,7 @@ $(function () {
             item.set('completed', false);
             this.render()
         },
-        template: _.template($('#project-todo-item-comments-template').html()),
+        template: '#project-todo-item-comments-template',
         name: function () {
             var list=this.cur_item&&this.todo_lists.get(this.cur_item);
             var title=list&&list.get('name');
@@ -585,7 +585,7 @@ $(function () {
         url: "/api/me.xml"
     });
     var NavView = Backbone.View.extend({
-        template: _.template($('#nav-template').html()),
+        template: '#nav-template',
         initialize: function () {
             this.model.bind("change", this.render, this);
         }

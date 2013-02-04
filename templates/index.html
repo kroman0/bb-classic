@@ -65,7 +65,7 @@
     <div class="page-header">
         <h1>Time report</h1>
     </div>
-    <% var tt=this.collection; var pp=this.options.collections.people; var pr=this.options.collections.projects; var cc=this.options.collections.companies; %>
+    <% var tt=view.collection; var pp=view.options.collections.people; var pr=view.options.collections.projects; var cc=view.options.collections.companies; %>
     <form class="form-inline" id="makereport">
         <div class="input-prepend">
             <span class="add-on">From</span>
@@ -137,7 +137,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             </tr>
         </thead>
         <tbody>
-            <% var prs=this.options.collections.projects;
+            <% var prs=view.options.collections.projects;
             _.each(_.uniq(tt.pluck('project-id')), function (prid) { %>
             <tr class="info">
                 <td colspan="4"><a href="#projects/<%- prid %>/time_entries"><%- prs.get(prid)?prs.get(prid).get('name'):prid %></a></td>
@@ -174,7 +174,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <div class="page-header">
         <h1>Projects</h1>
     </div>
-    <% var pp=this.collection; if (pp.isEmpty()) { %>
+    <% var pp=view.collection; if (pp.isEmpty()) { %>
     <div class="alert alert-info">
         No projects...
     </div>
@@ -218,26 +218,26 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-template">
     <div class="page-header">
-        <h1><%- this.model.get('name') %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.model.get('name') %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% if (this.model.get('announcement')) { %><p><%= this.model.get('announcement') %></p><% } %>
+    <% if (view.model.get('announcement')) { %><p><%= view.model.get('announcement') %></p><% } %>
 </script>
 <script type="text/template" id="companies-template">
     <div class="page-header">
         <h1>Companies</h1>
     </div>
-    <% cc=this.collection; if (cc.isEmpty()) { %>
+    <% cc=view.collection; if (cc.isEmpty()) { %>
     <div class="alert alert-info">
         No companies...
     </div>
@@ -269,12 +269,12 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="company-template">
     <div class="page-header">
-        <h1><%- this.model.get('name') %></h1>
+        <h1><%- view.model.get('name') %></h1>
     </div>
     <div class="row">
         <div class="span4">
             <h2>Projects</h2>
-            <% var cid = this.model.id; var pp=this.options.collections.projects; if (pp.isEmpty()) { %>
+            <% var cid = view.model.id; var pp=view.options.collections.projects; if (pp.isEmpty()) { %>
             <div class="alert alert-info">
                 No projects...
             </div>
@@ -288,7 +288,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         </div>
         <div class="span4">
             <h2>People</h2>
-            <% var pp=this.options.collections.people; if (pp.isEmpty()) { %>
+            <% var pp=view.options.collections.people; if (pp.isEmpty()) { %>
             <div class="alert alert-info">
                 No people...
             </div>
@@ -302,24 +302,24 @@ and `filter_company_id` restricts the entries to those for the given company.
         </div>
         <div class="span4">
             <h2>Contact</h2>
-            <% if (this.model.get('web-address')) { %><a href="<%- this.model.get('web-address') %>"><b><%- this.model.get('web-address') %></b></a><br /><% } %>
-            <% if (this.model.get('time-zone-id')) { %>Time zone: <%- this.model.get('time-zone-id') %><br /><% } %>
-            <% if (this.model.get('locale')) { %>Locale: <%- this.model.get('locale') %><% } %>
-            <% if (this.model.get('country')) { %><%- this.model.get('country') %><br /><% } %>
-            <% if (this.model.get('city')) { %><%- this.model.get('city') %> <%- this.model.get('zip') %><br /><% } %>
-            <% if (this.model.get('address-one')) { %><%- this.model.get('address-one') %><br /><% } %>
-            <% if (this.model.get('address-two')) { %><%- this.model.get('address-two') %><% } %>
-            <% if (this.model.get('state')) { %>State: <%- this.model.get('state') %><br /><% } %>
-            <% if (this.model.get('phone-number-office')) { %>Office phone: <%- this.model.get('phone-number-office') %><br /><% } %>
-            <% if (this.model.get('phone-number-fax')) { %>Fax phone: <%- this.model.get('phone-number-fax') %><br /><% } %>
+            <% if (view.model.get('web-address')) { %><a href="<%- view.model.get('web-address') %>"><b><%- view.model.get('web-address') %></b></a><br /><% } %>
+            <% if (view.model.get('time-zone-id')) { %>Time zone: <%- view.model.get('time-zone-id') %><br /><% } %>
+            <% if (view.model.get('locale')) { %>Locale: <%- view.model.get('locale') %><% } %>
+            <% if (view.model.get('country')) { %><%- view.model.get('country') %><br /><% } %>
+            <% if (view.model.get('city')) { %><%- view.model.get('city') %> <%- view.model.get('zip') %><br /><% } %>
+            <% if (view.model.get('address-one')) { %><%- view.model.get('address-one') %><br /><% } %>
+            <% if (view.model.get('address-two')) { %><%- view.model.get('address-two') %><% } %>
+            <% if (view.model.get('state')) { %>State: <%- view.model.get('state') %><br /><% } %>
+            <% if (view.model.get('phone-number-office')) { %>Office phone: <%- view.model.get('phone-number-office') %><br /><% } %>
+            <% if (view.model.get('phone-number-fax')) { %>Fax phone: <%- view.model.get('phone-number-fax') %><br /><% } %>
         </div>
     </div>
 </script>
 <script type="text/template" id="people-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
+        <h1><%- view.name() %></h1>
     </div>
-    <% var pp=this.collection; var co=this.options.collections.companies;
+    <% var pp=view.collection; var co=view.options.collections.companies;
     if (pp.isEmpty()) { %>
     <div class="alert alert-info">
         No people...
@@ -356,12 +356,12 @@ and `filter_company_id` restricts the entries to those for the given company.
     <div class="tabbable tabs-left">
     <ul class="nav nav-tabs span3">
     <% var fcoid=_.first(pp.pluck('company-id'));
-       this.options.collections.companies.each(function (item) { %>
+       view.options.collections.companies.each(function (item) { %>
         <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#people_c<%- item.id %>" data-toggle="tab"><%- item.get('name') %></a></li>
     <% }) %>
     </ul>
     <div class="tab-content">
-    <% this.options.collections.companies.each(function (cc) { %>
+    <% view.options.collections.companies.each(function (cc) { %>
         <div class="tab-pane fade<% if (fcoid==cc.id) { %> in active<% } %>" id="people_c<%- cc.id %>">
             <% var cp=pp.where({'company-id':cc.id}); if (_.isEmpty(cp)) { %>
             <div class="alert alert-info">
@@ -403,20 +403,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-people-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="active pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="active pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var pp=this.collection;  var cc=this.options.collections.companies;
+    <% var pp=view.collection;  var cc=view.options.collections.companies;
     if (pp.isEmpty()) { %>
     <div class="alert alert-info">
         No people...
@@ -494,20 +494,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-time-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var tt=this.collection; var prid=this.model.id;
+    <% var tt=view.collection; var prid=view.model.id;
     if (tt.isEmpty()) { %>
     <div class="alert alert-info">
         No time entries...
@@ -544,20 +544,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-posts-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var pp=this.collection; var prid=this.model.id;
+    <% var pp=view.collection; var prid=view.model.id;
     if (pp.isEmpty()) { %>
     <div class="alert alert-info">
         No posts...
@@ -593,20 +593,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-post-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var pp=this.collection; var prid=this.model.id; var item=pp.get(this.cur_item);
+    <% var pp=view.collection; var prid=view.model.id; var item=pp.get(view.cur_item);
     if (pp.isEmpty()) { %>
     <div class="alert alert-info">
         No posts...
@@ -640,20 +640,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-post-comments-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var prid=this.model.id; var pp=this.options.collections.project_posts.get_or_create(prid); var item=pp.get(this.cur_item); var ccc=this.collection;
+    <% var prid=view.model.id; var pp=view.options.collections.project_posts.get_or_create(prid); var item=pp.get(view.cur_item); var ccc=view.collection;
     if (item) { %>
     <ul class="unstyled">
         <li class="thumbnail">
@@ -704,21 +704,21 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-files-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var ff=this.collection; var prid=this.model.id; var pp=this.options.collections.people;
-    var cc=this.options.collections.project_categories.get_or_create(this.model.id);
+    <% var ff=view.collection; var prid=view.model.id; var pp=view.options.collections.people;
+    var cc=view.options.collections.project_categories.get_or_create(view.model.id);
     if (ff.isEmpty()) { %>
     <div class="alert alert-info">
         No files...
@@ -743,21 +743,21 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-file-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var ff=this.collection; var prid=this.model.id; var pp=this.options.collections.people;
-    var cc=this.options.collections.project_categories.get_or_create(this.model.id); var item=ff.get(this.cur_item);
+    <% var ff=view.collection; var prid=view.model.id; var pp=view.options.collections.people;
+    var cc=view.options.collections.project_categories.get_or_create(view.model.id); var item=ff.get(view.cur_item);
     if (ff.isEmpty()) { %>
     <div class="alert alert-info">
         No files...
@@ -780,20 +780,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-calendar-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var cc=this.collection; var prid=this.model.id;
+    <% var cc=view.collection; var prid=view.model.id;
     if (cc.isEmpty()) { %>
     <div class="alert alert-info">
         No events...
@@ -829,20 +829,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-calendar-entry-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var cc=this.collection; var prid=this.model.id; var item=cc.get(this.cur_item);
+    <% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);
     if (cc.isEmpty()) { %>
     <div class="alert alert-info">
         No events...
@@ -876,20 +876,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-calendar-entry-comments-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var prid=this.model.id; var cc=this.options.collections.project_calendar.get_or_create(prid); var item=cc.get(this.cur_item); var ccc=this.collection;
+    <% var prid=view.model.id; var cc=view.options.collections.project_calendar.get_or_create(prid); var item=cc.get(view.cur_item); var ccc=view.collection;
     if (item) { %>
     <ul class="unstyled">
         <li class="thumbnail">
@@ -941,20 +941,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-categories-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="active pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="active pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var cc=this.collection; var prid=this.model.id;
+    <% var cc=view.collection; var prid=view.model.id;
     if (cc.isEmpty()) { %>
     <div class="alert alert-info">
         No categories...
@@ -972,20 +972,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-category-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="active pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="active pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var cc=this.collection; var prid=this.model.id; var item=cc.get(this.cur_item);
+    <% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);
     if (cc.isEmpty()) { %>
     <div class="alert alert-info">
         No categories...
@@ -1001,31 +1001,31 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="person-template">
     <div class="page-header">
-        <h1><%- this.model.get('first-name') %> <%- this.model.get('last-name') %></h1>
-        <% var cc=this.options.collections.companies; if (this.model.get('title')) { %><small><%- this.model.get('title') %></small><br /><% } %>
-        <small><a href="#companies/<%- this.model.get('company-id') %>"><%- cc.get(this.model.get('company-id'))?cc.get(this.model.get('company-id')).get('name'):this.model.get('company-id') %></a></small>
+        <h1><%- view.model.get('first-name') %> <%- view.model.get('last-name') %></h1>
+        <% var cc=view.options.collections.companies; if (view.model.get('title')) { %><small><%- view.model.get('title') %></small><br /><% } %>
+        <small><a href="#companies/<%- view.model.get('company-id') %>"><%- cc.get(view.model.get('company-id'))?cc.get(view.model.get('company-id')).get('name'):view.model.get('company-id') %></a></small>
     </div>
     <img class="pull-right img-polaroid" width="55" height="55"
-         src="<%- this.model.get('avatar-url') %>"
-         alt="<%- this.model.get('first-name') %> <%- this.model.get('last-name') %>">
-    <a href="mailto:<%- this.model.get('email-address') %>"><b><%- this.model.get('email-address') %></b></a><br />
-    <% if (this.model.get('im-service')) { %><%- this.model.get('im-service') %>: <% } %>
-    <% if (this.model.get('im-handle')) { %><%- this.model.get('im-handle') %><br /><% } %>
-    <% if (this.model.get('phone-number-office')) { %>Office phone: <%- this.model.get('phone-number-office') %><br /><% } %>
-    <% if (this.model.get('phone-number-mobile')) { %>Mobile phone: <%- this.model.get('phone-number-mobile') %><br /><% } %>
-    <% if (this.model.get('phone-number-home')) { %>Home phone: <%- this.model.get('phone-number-home') %><br /><% } %>
-    <% if (this.model.get('phone-number-fax')) { %>Fax phone: <%- this.model.get('phone-number-fax') %><br /><% } %>
-    <% if (this.model.get('time-zone-name')) { %>Time zone: <%- this.model.get('time-zone-name') %><% } %>
+         src="<%- view.model.get('avatar-url') %>"
+         alt="<%- view.model.get('first-name') %> <%- view.model.get('last-name') %>">
+    <a href="mailto:<%- view.model.get('email-address') %>"><b><%- view.model.get('email-address') %></b></a><br />
+    <% if (view.model.get('im-service')) { %><%- view.model.get('im-service') %>: <% } %>
+    <% if (view.model.get('im-handle')) { %><%- view.model.get('im-handle') %><br /><% } %>
+    <% if (view.model.get('phone-number-office')) { %>Office phone: <%- view.model.get('phone-number-office') %><br /><% } %>
+    <% if (view.model.get('phone-number-mobile')) { %>Mobile phone: <%- view.model.get('phone-number-mobile') %><br /><% } %>
+    <% if (view.model.get('phone-number-home')) { %>Home phone: <%- view.model.get('phone-number-home') %><br /><% } %>
+    <% if (view.model.get('phone-number-fax')) { %>Fax phone: <%- view.model.get('phone-number-fax') %><br /><% } %>
+    <% if (view.model.get('time-zone-name')) { %>Time zone: <%- view.model.get('time-zone-name') %><% } %>
 </script>
 <script type="text/template" id="todo-lists-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
+        <h1><%- view.name() %></h1>
     </div>
-    <% var td=this.collection;
-    var pp=this.options.collections.people;
-    var prs=this.options.collections.projects;
-    var party=this.collection.responsible_party;
-    var mid=party==null?this.options.mydata.id:this.collection.responsible_party; %>
+    <% var td=view.collection;
+    var pp=view.options.collections.people;
+    var prs=view.options.collections.projects;
+    var party=view.collection.responsible_party;
+    var mid=party==null?view.options.mydata.id:view.collection.responsible_party; %>
     <div>
         <div class="pull-right">Show items assigned to:
             <select name="target">
@@ -1035,7 +1035,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <% }) %>
             </select>
         </div>
-        <h3><%- this.description() %> to-do items across all projects</h3>
+        <h3><%- view.description() %> to-do items across all projects</h3>
     </div>
     <% if (td.isEmpty()) { %>
     <div class="alert alert-info">
@@ -1070,20 +1070,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-todo-lists-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var td=this.collection; var todo_items=this.options.collections.todo_items; var prid=this.model.id;
+    <% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;
     if (td.isEmpty()) { %>
     <div class="alert alert-info">
         No todo lists...
@@ -1091,7 +1091,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } else { %>
     <div class="tabbable">
     <ul class="nav nav-list span4 pull-right">
-    <% var ci=this.cur_item; var ftdgrid=ci?td.get(ci).id:td.first().id;
+    <% var ci=view.cur_item; var ftdgrid=ci?td.get(ci).id:td.first().id;
     ci||_.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
         <% if (status==="true") { %>
         <li class="nav-header">Finished</li>
@@ -1140,20 +1140,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-todo-list-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var td=this.collection; var todo_items=this.options.collections.todo_items; var prid=this.model.id;
+    <% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;
     if (td.isEmpty()) { %>
     <div class="alert alert-info">
         No todo lists...
@@ -1161,7 +1161,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } else { %>
     <div class="tabbable">
     <ul class="nav nav-list span4 pull-right">
-    <% var ci=this.cur_item; var ftdgrid=ci?td.get(ci).id:td.first().id;
+    <% var ci=view.cur_item; var ftdgrid=ci?td.get(ci).id:td.first().id;
     ci||_.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
         <% if (status==="true") { %>
         <li class="nav-header">Finished</li>
@@ -1210,21 +1210,21 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-todo-item-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var td=this.collection; var todo_items=this.options.collections.todo_items;
-    var prid=this.model.id; var list_id=this.cur_item; var item_id=this.todo_item;
+    <% var td=view.collection; var todo_items=view.options.collections.todo_items;
+    var prid=view.model.id; var list_id=view.cur_item; var item_id=view.todo_item;
     var items=todo_items.get_or_create(list_id);
     var item=items.get(item_id);
     if (td.isEmpty()||items.isEmpty()) { %>
@@ -1246,24 +1246,24 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-todo-item-comments-template">
     <div class="page-header">
-        <h1><%- this.name() %></h1>
-        <% if (this.model.get('company')) { %><small><a href="#companies/<%- this.model.get('company').id %>"><%- this.model.get('company').name %></a></small><% } %>
+        <h1><%- view.name() %></h1>
+        <% if (view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
     <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- this.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- this.model.id %>/posts">Messages</a></li>
-        <li class="active"><a href="#projects/<%- this.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- this.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- this.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- this.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- this.model.id %>/categories">Categories</a></li>
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li class="active"><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
-    <% var td=this.todo_lists; var todo_items=this.options.collections.todo_items;
-    var prid=this.model.id; var list_id=this.cur_item; var item_id=this.todo_item;
+    <% var td=view.todo_lists; var todo_items=view.options.collections.todo_items;
+    var prid=view.model.id; var list_id=view.cur_item; var item_id=view.todo_item;
     var items=todo_items.get_or_create(list_id);
     var item=items.get(item_id);
-    var ccc=this.collection;
+    var ccc=view.collection;
     if (td.isEmpty()||items.isEmpty()) { %>
     <div class="alert alert-info">
         No todo items...
@@ -1307,7 +1307,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 <script type="text/template" id="nav-template">
 <div class="navbar-inner">
     <a class="brand" href="#">BB</a>
-    <% if (this.model.id) { %>
+    <% if (view.model.id) { %>
     <ul class="nav">
         <li><a href="#projects">Projects</a></li>
         <li><a href="#companies">Companies</a></li>
@@ -1317,8 +1317,8 @@ and `filter_company_id` restricts the entries to those for the given company.
     </ul>
     <ul class="nav pull-right">
         <li>
-            <a href="#me" title="<%- this.model.get('user-name') %>" class="dropdown-toggle" data-toggle="dropdown">
-                <%- this.model.get('first-name') %> <%- this.model.get('last-name') %> <span class="caret"></span>
+            <a href="#me" title="<%- view.model.get('user-name') %>" class="dropdown-toggle" data-toggle="dropdown">
+                <%- view.model.get('first-name') %> <%- view.model.get('last-name') %> <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                 <li><a href="#me"><i class="icon-user"></i> My profile</a></li>
