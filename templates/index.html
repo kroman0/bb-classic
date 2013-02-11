@@ -138,10 +138,10 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% if(tt.hasPrevious() || tt.hasNext()){ %>
     <ul class="pager">
         <li class="time-report previous<% if(!tt.hasPrevious()){ %> disabled<% } %>">
-            <a href="#time_report">&larr; Previous Page</a>
+            <a href="#">&larr; Previous Page</a>
         </li>
         <li class="time-report next<% if(!tt.hasNext()){ %> disabled<% } %>">
-            <a href="#time_report">Next Page &rarr;</a>
+            <a href="#">Next Page &rarr;</a>
         </li>
     </ul>
     <% } %>
@@ -181,10 +181,10 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% if(tt.hasPrevious() || tt.hasNext()){ %>
     <ul class="pager">
         <li class="time-report previous<% if(!tt.hasPrevious()){ %> disabled<% } %>">
-            <a href="#time_report">&larr; Previous Page</a>
+            <a href="#">&larr; Previous Page</a>
         </li>
         <li class="time-report next<% if(!tt.hasNext()){ %> disabled<% } %>">
-            <a href="#time_report">Next Page &rarr;</a>
+            <a href="#">Next Page &rarr;</a>
         </li>
     </ul>
     <% } %>
@@ -536,10 +536,10 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% if(tt.hasPrevious() || tt.hasNext()){ %>
     <ul class="pager">
         <li class="project-time previous<% if(!tt.hasPrevious()){ %> disabled<% } %>">
-            <a href="#time_report">&larr; Previous Page</a>
+            <a href="#">&larr; Previous Page</a>
         </li>
         <li class="project-time next<% if(!tt.hasNext()){ %> disabled<% } %>">
-            <a href="#time_report">Next Page &rarr;</a>
+            <a href="#">Next Page &rarr;</a>
         </li>
     </ul>
     <% } %>
@@ -573,10 +573,10 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% if(tt.hasPrevious() || tt.hasNext()){ %>
     <ul class="pager">
         <li class="project-time previous<% if(!tt.hasPrevious()){ %> disabled<% } %>">
-            <a href="#time_report">&larr; Previous Page</a>
+            <a href="#">&larr; Previous Page</a>
         </li>
         <li class="project-time next<% if(!tt.hasNext()){ %> disabled<% } %>">
-            <a href="#time_report">Next Page &rarr;</a>
+            <a href="#">Next Page &rarr;</a>
         </li>
     </ul>
     <% } %>
@@ -606,10 +606,10 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% if(tt.hasPrevious() || tt.hasNext()){ %>
     <ul class="pager">
         <li class="project-time previous<% if(!tt.hasPrevious()){ %> disabled<% } %>">
-            <a href="#time_report">&larr; Previous Page</a>
+            <a href="#">&larr; Previous Page</a>
         </li>
         <li class="project-time next<% if(!tt.hasNext()){ %> disabled<% } %>">
-            <a href="#time_report">Next Page &rarr;</a>
+            <a href="#">Next Page &rarr;</a>
         </li>
     </ul>
     <% } %>
@@ -643,10 +643,10 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% if(tt.hasPrevious() || tt.hasNext()){ %>
     <ul class="pager">
         <li class="todo-time previous<% if(!tt.hasPrevious()){ %> disabled<% } %>">
-            <a href="#time_report">&larr; Previous Page</a>
+            <a href="#">&larr; Previous Page</a>
         </li>
         <li class="todo-time next<% if(!tt.hasNext()){ %> disabled<% } %>">
-            <a href="#time_report">Next Page &rarr;</a>
+            <a href="#">Next Page &rarr;</a>
         </li>
     </ul>
     <% } %>
@@ -834,6 +834,16 @@ and `filter_company_id` restricts the entries to those for the given company.
         No files...
     </div>
     <% } else { %>
+    <% if(ff.hasPrevious() || ff.hasNext()){ %>
+    <ul class="pager">
+        <li class="project-files previous<% if(!ff.hasPrevious()){ %> disabled<% } %>">
+            <a href="#">&larr; Previous Page</a>
+        </li>
+        <li class="project-files next<% if(!ff.hasNext()){ %> disabled<% } %>">
+            <a href="#">Next Page &rarr;</a>
+        </li>
+    </ul>
+    <% } %>
     <ul class="media-list">
     <% ff.each(function (item) { %>
         <li class="media well well-small">
@@ -849,6 +859,16 @@ and `filter_company_id` restricts the entries to those for the given company.
         </li>
     <% }) %>
      </ul>
+    <% if(ff.hasPrevious() || ff.hasNext()){ %>
+    <ul class="pager">
+        <li class="project-files previous<% if(!ff.hasPrevious()){ %> disabled<% } %>">
+            <a href="#">&larr; Previous Page</a>
+        </li>
+        <li class="project-files next<% if(!ff.hasNext()){ %> disabled<% } %>">
+            <a href="#">Next Page &rarr;</a>
+        </li>
+    </ul>
+    <% } %>
     <% } %>
 </script>
 <script type="text/template" id="project-file-template">

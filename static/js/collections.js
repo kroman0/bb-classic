@@ -21,7 +21,8 @@ var Posts = Backbone.Collection.extend({
     },
     model: Post
 });
-var Attachments = Backbone.Collection.extend({
+var Attachments = Backbone.PageableCollection.extend({
+    mode: 'client',
     parent_id: null, // project id
     url: function () {
         return '/api/projects/' + this.parent_id + '/attachments.xml';

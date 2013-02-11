@@ -163,6 +163,18 @@ var FilesView = Backbone.View.extend({
     deps: function () {
         this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce()
     },
+    events: {
+        "click .project-files.previous": "previous",
+        "click .project-files.next": "next",
+    },
+    previous: function (e) {
+        e.preventDefault();
+        this.collection.hasPrevious() && this.collection.getPreviousPage();
+    },
+    next: function (e) {
+        e.preventDefault();
+        this.collection.hasNext() && this.collection.getNextPage();
+    },
     template: '#project-files-template',
     name: function () {
         return this.model.get('name') + " > Files"
