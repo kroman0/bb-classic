@@ -16,6 +16,8 @@ deploy: minify
 	appcfg.py update . --oauth2
 
 minify:
+	uglifyjs <static/js/jquery.deserialize.js >static/js/jquery.deserialize-min.js
+	uglifyjs <static/js/backbone.analytics.js >static/js/backbone.analytics-min.js
 	cat static/js/general.js static/js/models.js static/js/collections.js static/js/views.js static/js/main.js | uglifyjs >static/js/main-min.js
 
 clean:

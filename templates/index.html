@@ -42,6 +42,16 @@
             </div>
         </div>
     </div>
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38418276-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
 {% if dev %}
 <script src="/static/js/jquery-1.7.2.js"></script>
 <script src="/static/js/jquery.deserialize.js"></script>
@@ -50,6 +60,7 @@
 <script src="/static/js/backbone.js"></script>
 <script src="/static/js/backbone.fetch-cache.js"></script>
 <script src="/static/js/backbone-pageable.js"></script>
+<script src="/static/js/backbone.analytics.js"></script>
 <script src="/static/js/general.js"></script>
 <script src="/static/js/models.js"></script>
 <script src="/static/js/collections.js"></script>
@@ -63,6 +74,7 @@
 <script src="/static/js/backbone-min.js"></script>
 <script src="/static/js/backbone.fetch-cache.min.js"></script>
 <script src="/static/js/backbone-pageable.min.js"></script>
+<script src="/static/js/backbone.analytics-min.js"></script>
 <script src="/static/js/main-min.js"></script>
 {% endif %}
 <script type="text/template" id="time-report-template">
