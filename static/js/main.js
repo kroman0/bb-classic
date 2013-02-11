@@ -71,7 +71,7 @@ $(function () {
     views.project_files = new FilesView(oproject)
     views.project_file = new FileView(oproject)
     views.project_time_entries = new TimeEntriesView(oproject)
-    views.todo_time_entries = new TimeEntriesView(oproject)
+    views.todo_time_entries = new TodoTimeEntriesView(oproject)
     views.project_post_comments = new PostCommentsView(oproject)
     views.project_calendar_entry_comments = new CalendarEntryCommentsView(oproject)
     var Workspace = Backbone.Router.extend({

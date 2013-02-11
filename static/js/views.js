@@ -3,8 +3,8 @@ var TimeReportView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce()
     },
     events: {
-        "click .previous": "previous",
-        "click .next": "next",
+        "click .time-report.previous": "previous",
+        "click .time-report.next": "next",
         "click #getreport": "getreport"
     },
     previous: function (e) {
@@ -90,10 +90,29 @@ var TimeEntriesView = Backbone.View.extend({
     deps: function () {
         this.collection.fetchonce() && this.options.collections.projects.fetchonce()
     },
+    events: {
+        "click .project-time.previous": "previous",
+        "click .project-time.next": "next",
+    },
+    previous: function (e) {
+        e.preventDefault();
+        this.collection.hasPrevious() && this.collection.getPreviousPage();
+    },
+    next: function (e) {
+        e.preventDefault();
+        this.collection.hasNext() && this.collection.getNextPage();
+    },
     template: '#project-time-template',
     name: function () {
         return this.model.get('name') + " > Time"
     }
+});
+var TodoTimeEntriesView = TimeEntriesView.extend({
+    events: {
+        "click .todo-time.previous": "previous",
+        "click .todo-time.next": "next",
+    },
+    template: '#todo-time-template'
 });
 var PostCommentsView = Backbone.View.extend({
     cur_item: null,
