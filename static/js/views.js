@@ -21,6 +21,7 @@ var TimeReportView = Backbone.View.extend({
         this.collection.fetch({cache:true})
     },
     template: '#time-report-template',
+    itemtemplate: '#time-template',
     name: function () {
         return "Time report"
     },
