@@ -2,6 +2,7 @@ var TimeReportView = Backbone.View.extend({
     deps: function () {
         this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce()
     },
+    pagerid: "time-report",
     events: {
         "click .time-report.previous": "previous",
         "click .time-report.next": "next",
@@ -91,6 +92,7 @@ var TimeEntriesView = Backbone.View.extend({
     deps: function () {
         this.collection.fetchonce() && this.options.collections.projects.fetchonce()
     },
+    pagerid: "project-time",
     events: {
         "click .project-time.previous": "previous",
         "click .project-time.next": "next",
@@ -103,12 +105,14 @@ var TimeEntriesView = Backbone.View.extend({
         e.preventDefault();
         this.collection.hasNext() && this.collection.getNextPage();
     },
+    itemtemplate: '#time-template',
     template: '#project-time-template',
     name: function () {
         return this.model.get('name') + " > Time"
     }
 });
 var TodoTimeEntriesView = TimeEntriesView.extend({
+    pagerid: "todo-time",
     events: {
         "click .todo-time.previous": "previous",
         "click .todo-time.next": "next",
@@ -164,6 +168,7 @@ var FilesView = Backbone.View.extend({
     deps: function () {
         this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce()
     },
+    pagerid: "project-files",
     events: {
         "click .project-files.previous": "previous",
         "click .project-files.next": "next",

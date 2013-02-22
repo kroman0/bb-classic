@@ -93,12 +93,12 @@
     </tr>
 </script>
 <script type="text/template" id="pager-template">
-    <% if(collection.hasPrevious() || collection.hasNext()){ %>
+    <% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>
     <ul class="pager">
-        <li class="time-report previous<% if(!collection.hasPrevious()){ %> disabled<% } %>">
+        <li class="<%- view.pagerid %> previous<% if(!view.collection.hasPrevious()){ %> disabled<% } %>">
             <a href="#">&larr; Previous Page</a>
         </li>
-        <li class="time-report next<% if(!collection.hasNext()){ %> disabled<% } %>">
+        <li class="<%- view.pagerid %> next<% if(!view.collection.hasNext()){ %> disabled<% } %>">
             <a href="#">Next Page &rarr;</a>
         </li>
     </ul>
@@ -109,6 +109,18 @@
         <h1><%- view.name() %></h1>
         <% if (view.model && view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
     </div>
+</script>
+<script type="text/template" id="project-nav-template">
+    <ul class="nav nav-tabs projectnav">
+        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
+        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
+        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
+        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
+        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
+        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
+        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
+    </ul>
 </script>
 <script type="text/template" id="time-report-template">
     <%= view.renderheader() %>
@@ -166,7 +178,7 @@ The `subject_id` parameter lets you constrain the result to a single person’s 
 `filter_project_id` restricts the entries to those for the given project,
 and `filter_company_id` restricts the entries to those for the given company.
     </pre>
-    <%= view.renderpager(tt) %>
+    <%= view.renderpager() %>
     <table class="table table-hover table-condensed table-bordered">
         <thead>
             <tr>
@@ -188,7 +200,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             <% }) %>
         </tbody>
     </table>
-    <%= view.renderpager(tt) %>
+    <%= view.renderpager() %>
     <% } %>
 </script>
 <script type="text/template" id="projects-template">
@@ -237,16 +249,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% if (view.model.get('announcement')) { %><p><%= view.model.get('announcement') %></p><% } %>
 </script>
 <script type="text/template" id="companies-template">
@@ -413,16 +416,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-people-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="active pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var pp=view.collection;  var cc=view.options.collections.companies;
     if (pp.isEmpty()) { %>
     <div class="alert alert-info">
@@ -501,23 +495,14 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-time-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var tt=view.collection; var prid=view.model.id;
     if (tt.isEmpty()) { %>
     <div class="alert alert-info">
         No time entries...
     </div>
     <% } else { %>
-    <%= view.renderpager(tt) %>
+    <%= view.renderpager() %>
     <table class="table table-hover table-condensed table-bordered">
         <thead>
             <tr>
@@ -533,28 +518,19 @@ and `filter_company_id` restricts the entries to those for the given company.
             <% }) %>
         </tbody>
     </table>
-    <%= view.renderpager(tt) %>
+    <%= view.renderpager() %>
     <% } %>
 </script>
 <script type="text/template" id="todo-time-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var tt=view.collection; var prid=view.model.id;
     if (tt.isEmpty()) { %>
     <div class="alert alert-info">
         No time entries...
     </div>
     <% } else { %>
-    <%= view.renderpager(tt) %>
+    <%= view.renderpager() %>
     <table class="table table-hover table-condensed table-bordered">
         <thead>
             <tr>
@@ -570,21 +546,12 @@ and `filter_company_id` restricts the entries to those for the given company.
             <% }) %>
         </tbody>
     </table>
-    <%= view.renderpager(tt) %>
+    <%= view.renderpager() %>
     <% } %>
 </script>
 <script type="text/template" id="project-posts-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var pp=view.collection; var prid=view.model.id;
     if (pp.isEmpty()) { %>
     <div class="alert alert-info">
@@ -621,16 +588,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-post-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var pp=view.collection; var prid=view.model.id; var item=pp.get(view.cur_item);
     if (pp.isEmpty()) { %>
     <div class="alert alert-info">
@@ -665,16 +623,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-post-comments-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var prid=view.model.id; var pp=view.options.collections.project_posts.get_or_create(prid); var item=pp.get(view.cur_item); var ccc=view.collection;
     if (item) { %>
     <ul class="unstyled">
@@ -726,16 +675,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-files-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var ff=view.collection; var prid=view.model.id; var pp=view.options.collections.people;
     var cc=view.options.collections.project_categories.get_or_create(view.model.id);
     if (ff.isEmpty()) { %>
@@ -743,7 +683,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         No files...
     </div>
     <% } else { %>
-    <%= view.renderpager(ff) %>
+    <%= view.renderpager() %>
     <ul class="media-list">
     <% ff.each(function (item) { %>
         <li class="media well well-small">
@@ -759,21 +699,12 @@ and `filter_company_id` restricts the entries to those for the given company.
         </li>
     <% }) %>
      </ul>
-    <%= view.renderpager(ff) %>
+    <%= view.renderpager() %>
     <% } %>
 </script>
 <script type="text/template" id="project-file-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var ff=view.collection; var prid=view.model.id; var pp=view.options.collections.people;
     var cc=view.options.collections.project_categories.get_or_create(view.model.id); var item=ff.get(view.cur_item);
     if (ff.isEmpty()) { %>
@@ -798,16 +729,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-calendar-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var cc=view.collection; var prid=view.model.id;
     if (cc.isEmpty()) { %>
     <div class="alert alert-info">
@@ -844,16 +766,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-calendar-entry-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);
     if (cc.isEmpty()) { %>
     <div class="alert alert-info">
@@ -888,16 +801,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-calendar-entry-comments-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var prid=view.model.id; var cc=view.options.collections.project_calendar.get_or_create(prid); var item=cc.get(view.cur_item); var ccc=view.collection;
     if (item) { %>
     <ul class="unstyled">
@@ -950,16 +854,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-categories-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="active pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var cc=view.collection; var prid=view.model.id;
     if (cc.isEmpty()) { %>
     <div class="alert alert-info">
@@ -978,16 +873,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-category-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="active pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);
     if (cc.isEmpty()) { %>
     <div class="alert alert-info">
@@ -1067,16 +953,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-todo-lists-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;
     if (td.isEmpty()) { %>
     <div class="alert alert-info">
@@ -1134,16 +1011,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-todo-list-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;
     if (td.isEmpty()) { %>
     <div class="alert alert-info">
@@ -1201,16 +1069,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-todo-item-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var td=view.collection; var todo_items=view.options.collections.todo_items;
     var prid=view.model.id; var list_id=view.cur_item; var item_id=view.todo_item;
     var items=todo_items.get_or_create(list_id);
@@ -1234,16 +1093,7 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="project-todo-item-comments-template">
     <%= view.renderheader() %>
-    <ul class="nav nav-tabs">
-        <li><a href="#projects/<%- view.model.id %>">Overview</a></li>
-        <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>
-        <li class="active"><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>
-        <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>
-        <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>
-        <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>
-        <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
-    </ul>
+    <%= view.renderprojectnav() %>
     <% var td=view.todo_lists; var todo_items=view.options.collections.todo_items;
     var prid=view.model.id; var list_id=view.cur_item; var item_id=view.todo_item;
     var items=todo_items.get_or_create(list_id);

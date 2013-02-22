@@ -24,11 +24,14 @@ Backbone.View.prototype.render = function () {
 Backbone.View.prototype.renderitem = function (item) {
     return _.template($(this.itemtemplate).html(), item, {variable: 'item'})
 };
-Backbone.View.prototype.renderpager = function (collection) {
-    return _.template($('#pager-template').html(), collection, {variable: 'collection'})
+Backbone.View.prototype.renderpager = function () {
+    return _.template($('#pager-template').html(), this, {variable: 'view'})
 };
 Backbone.View.prototype.renderheader = function () {
     return _.template($('#header-template').html(), this, {variable: 'view'})
+};
+Backbone.View.prototype.renderprojectnav = function () {
+    return _.template($('#project-nav-template').html(), this, {variable: 'view'})
 };
 uniq_hash = [];
 var add_hash = function () {

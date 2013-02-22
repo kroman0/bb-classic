@@ -158,6 +158,10 @@ $(function () {
         $(_.filter($(".navbar ul.nav li").removeClass("active"), function (i) {
             return $(i).find("a:visible")[0] && document.location.hash.indexOf($(i).find("a:visible")[0].hash) !== -1
         })).addClass("active")
+        // html body div.container div.content ul.nav li
+        $(_.filter($("div.content ul.projectnav li").removeClass("active"), function (i) {
+            return $(i).find("a:visible")[0] && document.location.hash.indexOf($(i).find("a:visible")[0].hash) !== -1
+        })).filter(":last").addClass("active")
     }).on("route:project_todo_item", function (id, tlid, tiid) {
         if (collections.projects.get(id)) {
             views.project_todo_item.model = collections.projects.get(id);
