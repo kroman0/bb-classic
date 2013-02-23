@@ -39,6 +39,7 @@ var AllPeopleView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.companies.fetchonce()
     },
     template: '#people-template',
+    itemtemplate: '#personitem-template',
     name: function () {
         return "People"
     }
@@ -84,6 +85,7 @@ var PeopleView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce()
     },
     template: '#project-people-template',
+    itemtemplate: '#personitem-template',
     name: function () {
         return this.model.get('name') + " > People"
     }
@@ -125,6 +127,7 @@ var PostCommentsView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce()
     },
     template: '#project-post-comments-template',
+    itemtemplate: '#post-template',
     name: function () {
         var item=this.cur_item&&this.options.collections.project_posts.get_or_create(this.model.id).get(this.cur_item);
         var title=item&&item.get('title');
@@ -137,6 +140,7 @@ var CalendarEntryCommentsView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce()
     },
     template: '#project-calendar-entry-comments-template',
+    itemtemplate: '#calendar-template',
     name: function () {
         var item=this.cur_item&&this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item);
         var title=item&&item.get('title');
@@ -148,6 +152,7 @@ var PostsView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce()
     },
     template: '#project-posts-template',
+    itemtemplate: '#post-template',
     name: function () {
         return this.model.get('name') + " > Posts"
     }
@@ -158,6 +163,7 @@ var PostView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce()
     },
     template: '#project-post-template',
+    itemtemplate: '#post-template',
     name: function () {
         var item=this.cur_item&&this.collection.get(this.cur_item);
         var title=item&&item.get('title');
@@ -203,6 +209,7 @@ var CalendarView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce()
     },
     template: '#project-calendar-template',
+    itemtemplate: '#calendar-template',
     name: function () {
         return this.model.get('name') + " > Calendar"
     }
@@ -213,6 +220,7 @@ var CalendarEntryView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce()
     },
     template: '#project-calendar-entry-template',
+    itemtemplate: '#calendar-template',
     name: function () {
         var item=this.cur_item&&this.collection.get(this.cur_item);
         var title=item&&item.get('title');

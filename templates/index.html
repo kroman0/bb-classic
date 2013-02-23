@@ -330,6 +330,57 @@ and `filter_company_id` restricts the entries to those for the given company.
         </div>
     </div>
 </script>
+<script type="text/template" id="person-template">
+    <%= view.renderheader() %>
+    <img class="pull-right img-polaroid" width="55" height="55"
+         src="<%- view.model.get('avatar-url') %>"
+         alt="<%- view.model.name() %>">
+    <a href="mailto:<%- view.model.get('email-address') %>"><b><%- view.model.get('email-address') %></b></a><br />
+    <% if (view.model.get('im-service')&&view.model.get('im-handle')) { %>
+        <%- view.model.get('im-service') %>: <% if (view.model.get('im-service')=='Skype') { %>
+            <a href="skype:<%- view.model.get('im-handle') %>?call" title="Skype call to <%- view.model.name() %>"><%- view.model.get('im-handle') %></a>
+        <% } else { %>
+            <%- view.model.get('im-handle') %>
+        <% } %>
+        <br />
+    <% } %>
+    <% if (view.model.get('phone-number-office')) { %>Office phone: <%- view.model.get('phone-number-office') %><br /><% } %>
+    <% if (view.model.get('phone-number-mobile')) { %>Mobile phone: <%- view.model.get('phone-number-mobile') %><br /><% } %>
+    <% if (view.model.get('phone-number-home')) { %>Home phone: <%- view.model.get('phone-number-home') %><br /><% } %>
+    <% if (view.model.get('phone-number-fax')) { %>Fax phone: <%- view.model.get('phone-number-fax') %><br /><% } %>
+    <% if (view.model.get('time-zone-name')) { %>Time zone: <%- view.model.get('time-zone-name') %><% } %>
+</script>
+<script type="text/template" id="personitem-template">
+    <li class="media well well-small">
+        <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
+            <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
+        </a>
+        <div class="media-body">
+            <h4 class="media-heading">
+                <a href="#people/<%- item.id %>" title="<%- item.name() %>">
+                    <%- item.name() %>
+                </a>
+                <% if (item.get('title')) { %>
+                <small><%- item.get('title') %></small>
+                <% } %>
+            </h4>
+            <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
+            <% if (item.get('im-service')&&item.get('im-handle')) { %>
+                <%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %>
+                    <a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a>
+                <% } else { %>
+                    <%- item.get('im-handle') %>
+                <% } %>
+                <br />
+            <% } %>
+            <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
+            <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
+            <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
+            <% if (item.get('phone-number-fax')) { %>Fax phone: <%- item.get('phone-number-fax') %><br /><% } %>
+            <% if (item.get('time-zone-name')) { %>Time zone: <%- item.get('time-zone-name') %><% } %>
+        </div>
+    </li>
+</script>
 <script type="text/template" id="people-template">
     <%= view.renderheader() %>
     <% var pp=view.collection; var co=view.options.collections.companies;
@@ -341,28 +392,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     if (co.isEmpty()) { %>
     <ul class="media-list">
     <% pp.each(function (item) { %>
-        <li class="media well well-small">
-            <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
-                <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
-            </a>
-            <div class="media-body">
-                <h4 class="media-heading">
-                    <a href="#people/<%- item.id %>" title="<%- item.name() %>">
-                        <%- item.name() %>
-                    </a>
-                    <% if (item.get('title')) { %>
-                    <small><%- item.get('title') %></small>
-                    <% } %>
-                </h4>
-                <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
-                <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
-                <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
-                <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
-                <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
-                <% if (item.get('phone-number-fax')) { %>Fax phone: <%- item.get('phone-number-fax') %><br /><% } %>
-                <% if (item.get('time-zone-name')) { %>Time zone: <%- item.get('time-zone-name') %><% } %>
-            </div>
-        </li>
+        <%= view.renderitem(item) %>
     <% }) %>
     </ul>
     <% } else { %>
@@ -383,28 +413,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             <% } else { %>
             <ul class="media-list">
             <% _.each(cp, function (item) { %>
-                <li class="media well well-small">
-                    <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
-                        <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
-                    </a>
-                    <div class="media-body">
-                        <h4 class="media-heading">
-                            <a href="#people/<%- item.id %>" title="<%- item.name() %>">
-                                <%- item.name() %>
-                            </a>
-                            <% if (item.get('title')) { %>
-                            <small><%- item.get('title') %></small>
-                            <% } %>
-                        </h4>
-                        <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
-                        <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
-                        <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
-                        <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
-                        <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
-                        <% if (item.get('phone-number-fax')) { %>Fax phone: <%- item.get('phone-number-fax') %><br /><% } %>
-                        <% if (item.get('time-zone-name')) { %>Time zone: <%- item.get('time-zone-name') %><% } %>
-                    </div>
-                </li>
+                <%= view.renderitem(item) %>
             <% }) %>
             </ul>
             <% } %>
@@ -426,28 +435,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     if (cc.isEmpty()) { %>
     <ul class="media-list">
     <% pp.each(function (item) { %>
-        <li class="media well well-small">
-            <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
-                <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
-            </a>
-            <div class="media-body">
-                <h4 class="media-heading">
-                    <a href="#people/<%- item.id %>" title="<%- item.name() %>">
-                        <%- item.name() %>
-                    </a>
-                    <% if (item.get('title')) { %>
-                    <small><%- item.get('title') %></small>
-                    <% } %>
-                </h4>
-                <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
-                <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
-                <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
-                <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
-                <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
-                <% if (item.get('phone-number-fax')) { %>Fax phone: <%- item.get('phone-number-fax') %><br /><% } %>
-                <% if (item.get('time-zone-name')) { %>Time zone: <%- item.get('time-zone-name') %><% } %>
-            </div>
-        </li>
+        <%= view.renderitem(item) %>
     <% }) %>
     </ul>
     <% } else { %>
@@ -463,28 +451,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <div class="tab-pane fade<% if (fcoid==id) { %> in active<% } %>" id="people_c<%- id %>">
             <ul class="media-list">
             <% _.each(pp.where({'company-id':id}), function (item) { %>
-                <li class="media well well-small">
-                    <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
-                        <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
-                    </a>
-                    <div class="media-body">
-                        <h4 class="media-heading">
-                            <a href="#people/<%- item.id %>" title="<%- item.name() %>">
-                                <%- item.name() %>
-                            </a>
-                            <% if (item.get('title')) { %>
-                            <small><%- item.get('title') %></small>
-                            <% } %>
-                        </h4>
-                        <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
-                        <% if (item.get('im-service')&&item.get('im-handle')) { %><%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %><a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a><% } else { %><%- item.get('im-handle') %><% } %><br /><% } %>
-                        <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
-                        <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
-                        <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
-                        <% if (item.get('phone-number-fax')) { %>Fax phone: <%- item.get('phone-number-fax') %><br /><% } %>
-                        <% if (item.get('time-zone-name')) { %>Time zone: <%- item.get('time-zone-name') %><% } %>
-                    </div>
-                </li>
+                <%= view.renderitem(item) %>
             <% }) %>
             </ul>
         </div>
@@ -549,6 +516,30 @@ and `filter_company_id` restricts the entries to those for the given company.
     <%= view.renderpager() %>
     <% } %>
 </script>
+<script type="text/template" id="post-template">
+    <li class="thumbnail">
+        <h3>
+            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>"><%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a>
+            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
+        </h3>
+        <small>
+            by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
+            <% if (item.get('category-id')) { %>in <a href="#projects/<%- item.get('project-id') %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
+            on: <%- new Date(item.get('posted-on')) %>
+        </small>
+        <p><%= item.get('display-body') %></p>
+        <% if (item.get('attachments')) { %>
+        <ul>
+            <% _.each(item.get('attachments'),function (a) { %>
+            <li>
+                <a href="<%- a['download-url'] %>"><%- a.name %></a>
+                <small><%- a['byte-size'] %>B <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
+            </li>
+            <% }) %>
+        </ul>
+        <% } %>
+    </li>
+</script>
 <script type="text/template" id="project-posts-template">
     <%= view.renderheader() %>
     <%= view.renderprojectnav() %>
@@ -560,28 +551,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } else { %>
     <ul class="unstyled">
     <% pp.each(function (item) { %>
-        <li class="thumbnail">
-            <h3>
-                <a href="#projects/<%- prid %>/posts/<%- item.id %>"><%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a>
-                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
-            </h3>
-            <small>
-                by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
-                <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
-                on: <%- new Date(item.get('posted-on')) %>
-            </small>
-            <p><%= item.get('display-body') %></p>
-            <% if (item.get('attachments')) { %>
-            <ul>
-                <% _.each(item.get('attachments'),function (a) { %>
-                <li>
-                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
-                    <small><%- a['byte-size'] %>B <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
-                </li>
-                <% }) %>
-            </ul>
-            <% } %>
-        </li>
+        <%= view.renderitem(item) %>
     <% }) %>
      </ul>
     <% } %>
@@ -596,29 +566,8 @@ and `filter_company_id` restricts the entries to those for the given company.
     </div>
     <% } else { %>
     <ul class="unstyled">
-        <li class="thumbnail">
-            <h3>
-                <a href="#projects/<%- prid %>/posts/<%- item.id %>"><%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a>
-                <a href="#projects/<%- prid %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
-            </h3>
-            <small>
-                by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
-                <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
-                on: <%- new Date(item.get('posted-on')) %>
-            </small>
-            <p><%= item.get('display-body') %></p>
-            <% if (item.get('attachments')) { %>
-            <ul>
-                <% _.each(item.get('attachments'),function (a) { %>
-                <li>
-                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
-                    <small><%- a['byte-size'] %>B <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
-                </li>
-                <% }) %>
-            </ul>
-            <% } %>
-        </li>
-     </ul>
+        <%= view.renderitem(item) %>
+    </ul>
     <% } %>
 </script>
 <script type="text/template" id="project-post-comments-template">
@@ -627,26 +576,8 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% var prid=view.model.id; var pp=view.options.collections.project_posts.get_or_create(prid); var item=pp.get(view.cur_item); var ccc=view.collection;
     if (item) { %>
     <ul class="unstyled">
-        <li class="thumbnail">
-            <h3><a href="#projects/<%- prid %>/posts/<%- item.id %>"><%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
-            <small>
-                by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
-                <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
-                on: <%- new Date(item.get('posted-on')) %>
-            </small>
-            <p><%= item.get('display-body') %></p>
-            <% if (item.get('attachments')) { %>
-            <ul>
-                <% _.each(item.get('attachments'),function (a) { %>
-                <li>
-                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
-                    <small><%- a['byte-size'] %>B <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
-                </li>
-                <% }) %>
-            </ul>
-            <% } %>
-        </li>
-     </ul>
+        <%= view.renderitem(item) %>
+    </ul>
     <% } %>
     <% if (ccc.isEmpty()) { %>
     <div class="alert alert-info">
@@ -698,7 +629,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             <a class="btn btn-success" href="<%- item.get('download-url') %>">Download</a>
         </li>
     <% }) %>
-     </ul>
+    </ul>
     <%= view.renderpager() %>
     <% } %>
 </script>
@@ -724,8 +655,32 @@ and `filter_company_id` restricts the entries to those for the given company.
             <br/>
             <a class="btn btn-success" href="<%- item.get('download-url') %>">Download</a>
         </li>
-     </ul>
+    </ul>
     <% } %>
+</script>
+<script type="text/template" id="calendar-template">
+    <li class="thumbnail">
+        <h3>
+            <a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- item.get('project-id') %>/calendar/<%- item.id %>"><%- item.get('title') %></a>
+            <a href="#projects/<%- item.get('project-id') %>/calendar/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a><br />
+        </h3>
+        <small>
+            <% if (item.get('responsible-party-id')) { %>
+            <a href="#<%- item.get('responsible-party-type')=='Company'?'companies':'people' %>/<%- item.get('responsible-party-id') %>">
+                <% if (item.get('responsible-party-type')=='Person') { %><i class="icon-user"></i><% } %>
+                <%- item.get('responsible-party-name') %>
+            </a><br />
+            <% } %>
+            Type: <%- item.get('type') %>
+            <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
+            <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
+            <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
+            Created by <a href="#people/<%- item.get('creator-id') %>"><i class="icon-user"></i><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
+            <% if (item.get('completed')) { %><br />
+            Completed by <a href="#people/<%- item.get('completer-id') %>"><i class="icon-user"></i><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
+            <% } %>
+        </small>
+    </li>
 </script>
 <script type="text/template" id="project-calendar-template">
     <%= view.renderheader() %>
@@ -738,30 +693,9 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } else { %>
     <ul class="unstyled">
     <% cc.each(function (item) { %>
-        <li class="thumbnail">
-            <h3>
-                <a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/calendar/<%- item.id %>"><%- item.get('title') %></a>
-                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a><br />
-            </h3>
-            <small>
-                <% if (item.get('responsible-party-id')) { %>
-                <a href="#<%- item.get('responsible-party-type')=='Company'?'companies':'people' %>/<%- item.get('responsible-party-id') %>">
-                    <% if (item.get('responsible-party-type')=='Person') { %><i class="icon-user"></i><% } %>
-                    <%- item.get('responsible-party-name') %>
-                </a><br />
-                <% } %>
-                Type: <%- item.get('type') %>
-                <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
-                <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
-                <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
-                Created by <a href="#people/<%- item.get('creator-id') %>"><i class="icon-user"></i><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
-                <% if (item.get('completed')) { %><br />
-                Completed by <a href="#people/<%- item.get('completer-id') %>"><i class="icon-user"></i><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
-                <% } %>
-            </small>
-        </li>
+        <%= view.renderitem(item) %>
     <% }) %>
-     </ul>
+    </ul>
     <% } %>
 </script>
 <script type="text/template" id="project-calendar-entry-template">
@@ -774,28 +708,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     </div>
     <% } else { %>
     <ul class="unstyled">
-        <li class="thumbnail">
-            <h3>
-                <a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/calendar/<%- item.id %>"><%- item.get('title') %></a>
-                <a href="#projects/<%- prid %>/calendar/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a><br />
-            </h3>
-            <small>
-                <% if (item.get('responsible-party-id')) { %>
-                <a href="#<%- item.get('responsible-party-type')=='Company'?'companies':'people' %>/<%- item.get('responsible-party-id') %>">
-                    <% if (item.get('responsible-party-type')=='Person') { %><i class="icon-user"></i><% } %>
-                    <%- item.get('responsible-party-name') %>
-                </a><br />
-                <% } %>
-                Type: <%- item.get('type') %>
-                <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
-                <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
-                <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
-                Created by <a href="#people/<%- item.get('creator-id') %>"><i class="icon-user"></i><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
-                <% if (item.get('completed')) { %><br />
-                Completed by <a href="#people/<%- item.get('completer-id') %>"><i class="icon-user"></i><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
-                <% } %>
-            </small>
-        </li>
+        <%= view.renderitem(item) %>
      </ul>
     <% } %>
 </script>
@@ -805,25 +718,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% var prid=view.model.id; var cc=view.options.collections.project_calendar.get_or_create(prid); var item=cc.get(view.cur_item); var ccc=view.collection;
     if (item) { %>
     <ul class="unstyled">
-        <li class="thumbnail">
-            <h3><a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/calendar/<%- item.id %>"><%- item.get('title') %></a></h3>
-            <small>
-                <% if (item.get('responsible-party-id')) { %>
-                <a href="#<%- item.get('responsible-party-type')=='Company'?'companies':'people' %>/<%- item.get('responsible-party-id') %>">
-                    <% if (item.get('responsible-party-type')=='Person') { %><i class="icon-user"></i><% } %>
-                    <%- item.get('responsible-party-name') %>
-                </a><br />
-                <% } %>
-                Type: <%- item.get('type') %>
-                <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
-                <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
-                <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
-                Created by <a href="#people/<%- item.get('creator-id') %>"><i class="icon-user"></i><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
-                <% if (item.get('completed')) { %><br />
-                Completed by <a href="#people/<%- item.get('completer-id') %>"><i class="icon-user"></i><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
-                <% } %>
-            </small>
-        </li>
+        <%= view.renderitem(item) %>
     </ul>
     <% } %>
     <% if (ccc.isEmpty()) { %>
@@ -887,20 +782,6 @@ and `filter_company_id` restricts the entries to those for the given company.
         </dd>
     </dl>
     <% } %>
-</script>
-<script type="text/template" id="person-template">
-    <%= view.renderheader() %>
-    <img class="pull-right img-polaroid" width="55" height="55"
-         src="<%- view.model.get('avatar-url') %>"
-         alt="<%- view.model.get('first-name') %> <%- view.model.get('last-name') %>">
-    <a href="mailto:<%- view.model.get('email-address') %>"><b><%- view.model.get('email-address') %></b></a><br />
-    <% if (view.model.get('im-service')) { %><%- view.model.get('im-service') %>: <% } %>
-    <% if (view.model.get('im-handle')) { %><%- view.model.get('im-handle') %><br /><% } %>
-    <% if (view.model.get('phone-number-office')) { %>Office phone: <%- view.model.get('phone-number-office') %><br /><% } %>
-    <% if (view.model.get('phone-number-mobile')) { %>Mobile phone: <%- view.model.get('phone-number-mobile') %><br /><% } %>
-    <% if (view.model.get('phone-number-home')) { %>Home phone: <%- view.model.get('phone-number-home') %><br /><% } %>
-    <% if (view.model.get('phone-number-fax')) { %>Fax phone: <%- view.model.get('phone-number-fax') %><br /><% } %>
-    <% if (view.model.get('time-zone-name')) { %>Time zone: <%- view.model.get('time-zone-name') %><% } %>
 </script>
 <script type="text/template" id="todo-lists-template">
     <%= view.renderheader() %>
