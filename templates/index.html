@@ -579,30 +579,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <%= view.renderitem(item) %>
     </ul>
     <% } %>
-    <% if (ccc.isEmpty()) { %>
-    <div class="alert alert-info">
-        No comments...
-    </div>
-    <% } else { %>
-    <ul class="unstyled">
-        <% ccc.each(function (item) { %>
-        <li class="thumbnail">
-            <small><a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a> <%- new Date(item.get('created-at')) %></small>
-            <p><%= item.get('body') %></p>
-            <% if (item.get('attachments')) { %>
-            <ul>
-                <% _.each(item.get('attachments'),function (a) { %>
-                <li>
-                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
-                    <small><%- a['byte-size'] %>B <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
-                </li>
-                <% }) %>
-            </ul>
-            <% } %>
-        </li>
-        <% }) %>
-    </ul>
-    <% } %>
+    <%= view.rendercomments(ccc) %>
 </script>
 <script type="text/template" id="project-files-template">
     <%= view.renderheader() %>
@@ -721,31 +698,13 @@ and `filter_company_id` restricts the entries to those for the given company.
         <%= view.renderitem(item) %>
     </ul>
     <% } %>
-    <% if (ccc.isEmpty()) { %>
-    <div class="alert alert-info">
-        No comments...
-    </div>
-    <% } else { %>
-    <ul class="unstyled">
-        <% ccc.each(function (item) { %>
-        <li class="thumbnail">
-            <h3><a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/calendar/<%- item.id %>"><%- item.get('title') %></a></h3>
-            <small></small>
-            <p><%= item.get('body') %></p>
-            <% if (item.get('attachments')) { %>
-            <ul>
-                <% _.each(item.get('attachments'),function (a) { %>
-                <li>
-                    <a href="<%- a['download-url'] %>"><%- a.name %></a>
-                    <small><%- a['byte-size'] %>B <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
-                </li>
-                <% }) %>
-            </ul>
-            <% } %>
-        </li>
-        <% }) %>
-    </ul>
-    <% } %>
+    <%= view.rendercomments(ccc) %>
+</script>
+<script type="text/template" id="category-template">
+    <dt><h3><a href="#projects/<%- item.get('project-id') %>/categories/<%- item.id %>"><%- item.get('name') %></a></h3></dt>
+    <dd>
+        <%- item.get('type') %><br />Elements: <%- item.get('elements-count') %>
+    </dd>
 </script>
 <script type="text/template" id="project-categories-template">
     <%= view.renderheader() %>
@@ -758,10 +717,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } else { %>
     <dl>
     <% cc.each(function (item) { %>
-        <dt><h3><a href="#projects/<%- prid %>/categories/<%- item.id %>"><%- item.get('name') %></a></h3></dt>
-        <dd>
-            <%- item.get('type') %><br />Elements: <%- item.get('elements-count') %>
-        </dd>
+        <%= view.renderitem(item) %>
     <% }) %>
     </dl>
     <% } %>
@@ -776,10 +732,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     </div>
     <% } else { %>
     <dl>
-        <dt><h3><a href="#projects/<%- prid %>/categories/<%- item.id %>"><%- item.get('name') %></a></h3></dt>
-        <dd>
-            <%- item.get('type') %><br />Elements: <%- item.get('elements-count') %>
-        </dd>
+        <%= view.renderitem(item) %>
     </dl>
     <% } %>
 </script>
@@ -995,13 +948,16 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } %>
     <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>"><%= item.get('content') %></a>
     <% } %>
-    <% if (ccc.isEmpty()) { %>
+    <%= view.rendercomments(ccc) %>
+</script>
+<script type="text/template" id="comments-template">
+    <% if (comments.isEmpty()) { %>
     <div class="alert alert-info">
         No comments...
     </div>
     <% } else { %>
     <ul class="unstyled">
-        <% ccc.each(function (item) { %>
+        <% comments.each(function (item) { %>
         <li class="thumbnail">
             <small><a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a> <%- new Date(item.get('created-at')) %></small>
             <p><%= item.get('body') %></p>

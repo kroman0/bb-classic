@@ -24,6 +24,9 @@ Backbone.View.prototype.render = function () {
 Backbone.View.prototype.renderitem = function (item) {
     return _.template($(this.itemtemplate).html(), item, {variable: 'item'})
 };
+Backbone.View.prototype.rendercomments = function (comments) {
+    return _.template($('#comments-template').html(), comments, {variable: 'comments'})
+};
 Backbone.View.prototype.renderpager = function () {
     return _.template($('#pager-template').html(), this, {variable: 'view'})
 };

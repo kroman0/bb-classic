@@ -232,6 +232,7 @@ var CategoriesView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce()
     },
     template: '#project-categories-template',
+    itemtemplate: '#category-template',
     name: function () {
         return this.model.get('name') + " > Categories"
     }
@@ -242,6 +243,7 @@ var CategoryView = Backbone.View.extend({
         this.collection.fetchonce() && this.options.collections.projects.fetchonce()
     },
     template: '#project-category-template',
+    itemtemplate: '#category-template',
     name: function () {
         var item=this.cur_item&&this.collection.get(this.cur_item);
         var title=item&&item.get('name');
