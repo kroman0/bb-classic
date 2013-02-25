@@ -124,7 +124,6 @@
 </script>
 <script type="text/template" id="time-report-template">
     <%= view.renderheader() %>
-    <% var tt=view.collection; var pp=view.options.collections.people; var pr=view.options.collections.projects; var cc=view.options.collections.companies; %>
     <form class="form-inline" id="makereport">
         <div class="input-prepend">
             <span class="add-on">From</span>
@@ -138,7 +137,7 @@
             <span class="add-on">For</span>
             <select name="subject_id" class="input-medium">
                 <option value="">All</option>
-                <% pp.each(function (i) { %>
+                <% view.options.collections.people.each(function (i) { %>
                     <option value="<%- i.id %>"><%- i.name() %></option>
                 <% }) %>
             </select>
@@ -147,7 +146,7 @@
             <span class="add-on">Project</span>
             <select name="filter_project_id" class="input-medium">
                 <option value="">All</option>
-                <% pr.each(function (i) { %>
+                <% view.options.collections.projects.each(function (i) { %>
                     <option value="<%- i.id %>"><%- i.get('name') %></option>
                 <% }) %>
             </select>
@@ -156,14 +155,15 @@
             <span class="add-on">Company</span>
             <select name="filter_company_id" class="input-medium">
                 <option value="">All</option>
-                <% cc.each(function (i) { %>
+                <% view.options.collections.companies.each(function (i) { %>
                     <option value="<%- i.id %>"><%- i.get('name') %></option>
                 <% }) %>
             </select>
         </div>
         <button id="getreport" type="submit" class="btn btn-primary">Report</button>
     </form>
-    <% if (tt.isEmpty()) { %>
+    <% var tt=view.collection;
+    if (tt.isEmpty()) { %>
     <div class="alert alert-info">
         No time entries...
     </div>
@@ -192,7 +192,11 @@ and `filter_company_id` restricts the entries to those for the given company.
             <% var prs=view.options.collections.projects;
             _.each(_.uniq(tt.pluck('project-id')), function (prid) { %>
             <tr class="info">
-                <td colspan="4"><a href="#projects/<%- prid %>/time_entries"><%- prs.get(prid)?prs.get(prid).get('name'):prid %></a></td>
+                <td colspan="4">
+                    <a href="#projects/<%- prid %>/time_entries">
+                        <%- prs.get(prid)?prs.get(prid).get('name'):prid %>
+                    </a>
+                </td>
             </tr>
             <% _.each(tt.where({'project-id':prid}), function (item) { %>
                 <%= view.renderitem(item) %>
@@ -214,7 +218,9 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="nav nav-pills offset8">
     <% var fprst=_.first(pp.pluck('status'));
        _.each(_.uniq(pp.pluck('status')), function (status) { %>
-        <li class="prstatus<% if (fprst==status) { %> active<% } %>"><a href="#projects_<%- status %>" data-toggle="tab"><%- status %></a></li>
+        <li class="prstatus<% if (fprst==status) { %> active<% } %>">
+            <a href="#projects_<%- status %>" data-toggle="tab"><%- status %></a>
+        </li>
     <% }) %>
     </ul>
     <div class="tab-content">
@@ -224,7 +230,9 @@ and `filter_company_id` restricts the entries to those for the given company.
             <ul class="nav nav-list span4 pull-right">
             <% var fprcoid=_.first(plist).get('company').id;
             _.each(_.groupBy(plist, function(item){ return item.get('company').id}), function (list, coid) { %>
-                <li<% if (fprcoid==coid) { %> class="active"<% } %>><a href="#projects_<%- status %>_<%- coid %>" data-toggle="tab"><%- _.first(list).get('company').name %></a></li>
+                <li<% if (fprcoid==coid) { %> class="active"<% } %>>
+                    <a href="#projects_<%- status %>_<%- coid %>" data-toggle="tab"><%- _.first(list).get('company').name %></a>
+                </li>
             <% }) %>
             </ul>
             <div class="tab-content">
@@ -317,7 +325,9 @@ and `filter_company_id` restricts the entries to those for the given company.
         </div>
         <div class="span4">
             <h2>Contact</h2>
-            <% if (view.model.get('web-address')) { %><a href="<%- view.model.get('web-address') %>"><b><%- view.model.get('web-address') %></b></a><br /><% } %>
+            <% if (view.model.get('web-address')) { %>
+            <a href="<%- view.model.get('web-address') %>"><b><%- view.model.get('web-address') %></b></a><br />
+            <% } %>
             <% if (view.model.get('time-zone-id')) { %>Time zone: <%- view.model.get('time-zone-id') %><br /><% } %>
             <% if (view.model.get('locale')) { %>Locale: <%- view.model.get('locale') %><% } %>
             <% if (view.model.get('country')) { %><%- view.model.get('country') %><br /><% } %>
@@ -519,12 +529,24 @@ and `filter_company_id` restricts the entries to those for the given company.
 <script type="text/template" id="post-template">
     <li class="thumbnail">
         <h3>
-            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>"><%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a>
-            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
+            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>">
+                <%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %>
+            </a>
+            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>">
+                <i class="icon-comment"></i>
+            </a>
         </h3>
         <small>
-            by <a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a>
-            <% if (item.get('category-id')) { %>in <a href="#projects/<%- item.get('project-id') %>/categories/<%- item.get('category-id') %>"><%- item.get('category-name') %></a><% } %>
+            by
+            <a href="#people/<%- item.get('author-id') %>">
+                <i class="icon-user"></i><%- item.get('author-name') %>
+            </a>
+            <% if (item.get('category-id')) { %>
+            in
+            <a href="#projects/<%- item.get('project-id') %>/categories/<%- item.get('category-id') %>">
+                <%- item.get('category-name') %>
+            </a>
+            <% } %>
             on: <%- new Date(item.get('posted-on')) %>
         </small>
         <p><%= item.get('display-body') %></p>
@@ -533,7 +555,10 @@ and `filter_company_id` restricts the entries to those for the given company.
             <% _.each(item.get('attachments'),function (a) { %>
             <li>
                 <a href="<%- a['download-url'] %>"><%- a.name %></a>
-                <small><%- a['byte-size'] %>B <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
+                <small>
+                    <%- a['byte-size'] %>B
+                    <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a>
+                </small>
             </li>
             <% }) %>
         </ul>
@@ -573,13 +598,13 @@ and `filter_company_id` restricts the entries to those for the given company.
 <script type="text/template" id="project-post-comments-template">
     <%= view.renderheader() %>
     <%= view.renderprojectnav() %>
-    <% var prid=view.model.id; var pp=view.options.collections.project_posts.get_or_create(prid); var item=pp.get(view.cur_item); var ccc=view.collection;
+    <% var item=view.options.collections.project_posts.get_or_create(view.model.id).get(view.cur_item);
     if (item) { %>
     <ul class="unstyled">
         <%= view.renderitem(item) %>
     </ul>
     <% } %>
-    <%= view.rendercomments(ccc) %>
+    <%= view.rendercomments(view.collection) %>
 </script>
 <script type="text/template" id="project-files-template">
     <%= view.renderheader() %>
@@ -595,11 +620,24 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="media-list">
     <% ff.each(function (item) { %>
         <li class="media well well-small">
-            <h3><a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
+            <h3>
+                <a href="#projects/<%- prid %>/files/<%- item.id %>">
+                    <%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %>
+                </a>
+            </h3>
             <small>
-                by <a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %></a>
-                <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- cc.get(item.get('category-id'))?cc.get(item.get('category-id')).get('name'):item.get('category-id') %></a><% } %>
-                on <%- new Date(item.get('created-on')) %>,
+                by
+                <a href="#people/<%- item.get('person-id') %>">
+                    <i class="icon-user"></i><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %>
+                </a>
+                <% if (item.get('category-id')) { %>
+                in
+                <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>">
+                    <%- cc.get(item.get('category-id'))?cc.get(item.get('category-id')).get('name'):item.get('category-id') %>
+                </a>
+                <% } %>
+                on
+                <%- new Date(item.get('created-on')) %>,
                 <%- item.get('byte-size') %>B
             </small>
             <br/>
@@ -622,11 +660,24 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } else { %>
     <ul class="media-list">
         <li class="media well well-small">
-            <h3><a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %></a></h3>
+            <h3>
+                <a href="#projects/<%- prid %>/files/<%- item.id %>">
+                    <%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %>
+                </a>
+            </h3>
             <small>
-                by <a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %></a>
-                <% if (item.get('category-id')) { %>in <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>"><%- cc.get(item.get('category-id'))?cc.get(item.get('category-id')).get('name'):item.get('category-id') %></a><% } %>
-                on <%- new Date(item.get('created-on')) %>,
+                by
+                <a href="#people/<%- item.get('person-id') %>">
+                    <i class="icon-user"></i><%- pp.get(item.get('person-id'))?pp.get(item.get('person-id')).name():item.get('person-id') %>
+                </a>
+                <% if (item.get('category-id')) { %>
+                in
+                <a href="#projects/<%- prid %>/categories/<%- item.get('category-id') %>">
+                    <%- cc.get(item.get('category-id'))?cc.get(item.get('category-id')).get('name'):item.get('category-id') %>
+                </a>
+                <% } %>
+                on
+                <%- new Date(item.get('created-on')) %>,
                 <%- item.get('byte-size') %>B
             </small>
             <br/>
@@ -638,8 +689,12 @@ and `filter_company_id` restricts the entries to those for the given company.
 <script type="text/template" id="calendar-template">
     <li class="thumbnail">
         <h3>
-            <a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- item.get('project-id') %>/calendar/<%- item.id %>"><%- item.get('title') %></a>
-            <a href="#projects/<%- item.get('project-id') %>/calendar/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a><br />
+            <a <% if (item.get('completed')) { %>class="muted" <% } %>href="#projects/<%- item.get('project-id') %>/calendar/<%- item.id %>">
+                <%- item.get('title') %>
+            </a>
+            <a href="#projects/<%- item.get('project-id') %>/calendar/<%- item.id %>/comments" title="<%- item.get('comments-count') %>">
+                <i class="icon-comment"></i>
+            </a>
         </h3>
         <small>
             <% if (item.get('responsible-party-id')) { %>
@@ -649,12 +704,29 @@ and `filter_company_id` restricts the entries to those for the given company.
             </a><br />
             <% } %>
             Type: <%- item.get('type') %>
-            <% if (item.get('start-at')) { %>Start at <%- new Date(item.get('start-at')).toDateString() %><br /><% } %>
-            <% if (item.get('due-at')) { %>Due at <%- new Date(item.get('due-at')).toDateString() %><br /><% } %>
-            <% if (item.get('deadline')) { %>Deadline at <%- new Date(item.get('deadline')).toDateString() %><br /><% } %>
-            Created by <a href="#people/<%- item.get('creator-id') %>"><i class="icon-user"></i><%- item.get('creator-name') %></a> on <%- new Date(item.get('created-on')) %>
-            <% if (item.get('completed')) { %><br />
-            Completed by <a href="#people/<%- item.get('completer-id') %>"><i class="icon-user"></i><%- item.get('completer-name') %></a> at <%- new Date(item.get('completed-at')) %>
+            <% if (item.get('start-at')) { %>
+            Start at <%- new Date(item.get('start-at')).toDateString() %><br />
+            <% } %>
+            <% if (item.get('due-at')) { %>
+            Due at <%- new Date(item.get('due-at')).toDateString() %><br />
+            <% } %>
+            <% if (item.get('deadline')) { %>
+            Deadline at <%- new Date(item.get('deadline')).toDateString() %><br />
+            <% } %>
+            Created by
+            <a href="#people/<%- item.get('creator-id') %>">
+                <i class="icon-user"></i><%- item.get('creator-name') %>
+            </a>
+            on
+            <%- new Date(item.get('created-on')) %>
+            <% if (item.get('completed')) { %>
+            <br />
+            Completed by
+            <a href="#people/<%- item.get('completer-id') %>">
+                <i class="icon-user"></i><%- item.get('completer-name') %>
+            </a>
+            at
+            <%- new Date(item.get('completed-at')) %>
             <% } %>
         </small>
     </li>
@@ -692,16 +764,20 @@ and `filter_company_id` restricts the entries to those for the given company.
 <script type="text/template" id="project-calendar-entry-comments-template">
     <%= view.renderheader() %>
     <%= view.renderprojectnav() %>
-    <% var prid=view.model.id; var cc=view.options.collections.project_calendar.get_or_create(prid); var item=cc.get(view.cur_item); var ccc=view.collection;
+    <% var item=view.options.collections.project_calendar.get_or_create(view.model.id).get(view.cur_item);
     if (item) { %>
     <ul class="unstyled">
         <%= view.renderitem(item) %>
     </ul>
     <% } %>
-    <%= view.rendercomments(ccc) %>
+    <%= view.rendercomments(view.collection) %>
 </script>
 <script type="text/template" id="category-template">
-    <dt><h3><a href="#projects/<%- item.get('project-id') %>/categories/<%- item.id %>"><%- item.get('name') %></a></h3></dt>
+    <dt>
+        <h3>
+            <a href="#projects/<%- item.get('project-id') %>/categories/<%- item.id %>"><%- item.get('name') %></a>
+        </h3>
+    </dt>
     <dd>
         <%- item.get('type') %><br />Elements: <%- item.get('elements-count') %>
     </dd>
@@ -766,7 +842,9 @@ and `filter_company_id` restricts the entries to those for the given company.
         <dl>
             <% _.each(td.where({'project-id':prid}), function (list) { %>
             <dt>
-                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>"><%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %></a>
+                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
+                    <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+                </a>
                 <small><%= list.get('description') %></small>
             </dt>
             <dd>
@@ -830,10 +908,16 @@ and `filter_company_id` restricts the entries to those for the given company.
                     <i class="project-todo-lists icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
                     <% } %>
                     <% if (list.get('tracked')) { %>
-                    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
+                    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">
+                        <i class="icon-time"></i>
+                    </a>
                     <% } %>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.get('content') %></a>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>">
+                        <%= item.get('content') %>
+                    </a>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>">
+                        <i class="icon-comment"></i>
+                    </a>
                 </dd>
                 <% }) %>
             </dl>
@@ -888,10 +972,16 @@ and `filter_company_id` restricts the entries to those for the given company.
                     <i class="project-todo-list icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
                     <% } %>
                     <% if (list.get('tracked')) { %>
-                    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
+                    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">
+                        <i class="icon-time"></i>
+                    </a>
                     <% } %>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.get('content') %></a>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>">
+                        <%= item.get('content') %>
+                    </a>
+                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>">
+                        <i class="icon-comment"></i>
+                    </a>
                 </dd>
                 <% }) %>
             </dl>
@@ -919,10 +1009,16 @@ and `filter_company_id` restricts the entries to those for the given company.
     <i class="project-todo-item icon-uncompleted" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
     <% } %>
     <% if (td.get(list_id).get('tracked')) { %>
-    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
+    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">
+        <i class="icon-time"></i>
+    </a>
     <% } %>
-    <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>"><%= item.get('content') %></a>
-    <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>/comments" title="<%- item.get('comments-count') %>"><i class="icon-comment"></i></a>
+    <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>">
+        <%= item.get('content') %>
+    </a>
+    <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>/comments" title="<%- item.get('comments-count') %>">
+        <i class="icon-comment"></i>
+    </a>
     <% } %>
 </script>
 <script type="text/template" id="project-todo-item-comments-template">
@@ -959,14 +1055,24 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="unstyled">
         <% comments.each(function (item) { %>
         <li class="thumbnail">
-            <small><a href="#people/<%- item.get('author-id') %>"><i class="icon-user"></i><%- item.get('author-name') %></a> <%- new Date(item.get('created-at')) %></small>
+            <small>
+                <a href="#people/<%- item.get('author-id') %>">
+                    <i class="icon-user"></i><%- item.get('author-name') %>
+                </a>
+                <%- new Date(item.get('created-at')) %>
+            </small>
             <p><%= item.get('body') %></p>
             <% if (item.get('attachments')) { %>
             <ul>
                 <% _.each(item.get('attachments'),function (a) { %>
                 <li>
                     <a href="<%- a['download-url'] %>"><%- a.name %></a>
-                    <small><%- a['byte-size'] %>B <a href="#people/<%- a['person-id'] %>"><i class="icon-user"></i><%- a['author-name'] %></a></small>
+                    <small>
+                        <%- a['byte-size'] %>B
+                        <a href="#people/<%- a['person-id'] %>">
+                            <i class="icon-user"></i><%- a['author-name'] %>
+                        </a>
+                    </small>
                 </li>
                 <% }) %>
             </ul>
