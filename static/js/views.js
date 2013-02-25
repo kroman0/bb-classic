@@ -18,7 +18,7 @@ var TimeReportView = Backbone.View.extend({
     },
     getreport: function (e) {
         e.preventDefault();
-        this.collection.filter_report = this.$('form#makereport').serialize();
+        this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(),function(i){return i.value}));
         this.collection.fetch({cache:true});
     },
     template: '#time-report-template',
