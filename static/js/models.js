@@ -13,7 +13,7 @@ var Project = Backbone.Model.extend({
 var Company = Backbone.Model.extend();
 var Person = Backbone.Model.extend({
     name: function () {
-        return this.get('first-name') + ' ' + this.get('last-name')
+        return this.get('first-name') + ' ' + this.get('last-name');
     }
 });
 var Post = Backbone.Model.extend();
@@ -26,7 +26,7 @@ var TodoList = Backbone.Model.extend();
 var Comment = Backbone.Model.extend();
 var MyModel = Person.extend({
     defaults: {
-        id: null,
+        id: null
     },
     url: "/api/me.xml"
 });

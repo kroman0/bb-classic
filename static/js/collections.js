@@ -69,7 +69,7 @@ var TodoTimeEntries = TimeEntries.extend({
 var TodoItems = Backbone.Collection.extend({
     parent_id: null,
     url: function () {
-        return '/api/todo_lists/' + this.parent_id + '/todo_items.xml'
+        return '/api/todo_lists/' + this.parent_id + '/todo_items.xml';
     },
     model: TodoItem
 });
@@ -80,9 +80,9 @@ var TodoLists = Backbone.Collection.extend({
     url: function () {
         if (this.parent_id && this.filter_status) return '/api/projects/' + this.parent_id + '/todo_lists.xml?filter=' + this.filter_status;
         if (this.parent_id) return '/api/projects/' + this.parent_id + '/todo_lists.xml';
-        if (this.responsible_party == null) return '/api/todo_lists.xml';
-        if (this.responsible_party == "") return '/api/todo_lists.xml?responsible_party=';
-        return '/api/todo_lists.xml?responsible_party=' + this.responsible_party
+        if (this.responsible_party === null) return '/api/todo_lists.xml';
+        if (this.responsible_party === "") return '/api/todo_lists.xml?responsible_party=';
+        return '/api/todo_lists.xml?responsible_party=' + this.responsible_party;
     },
     model: TodoList
 });
