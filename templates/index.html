@@ -703,7 +703,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 <%- item.get('responsible-party-name') %>
             </a><br />
             <% } %>
-            Type: <%- item.get('type') %>
+            Type: <%- item.get('type') %><br />
             <% if (item.get('start-at')) { %>
             Start at <%- new Date(item.get('start-at')).toDateString() %><br />
             <% } %>
@@ -833,6 +833,15 @@ and `filter_company_id` restricts the entries to those for the given company.
         <i class="icon-comment"></i>
     </a>
 </script>
+<script type="text/template" id="todolist-template">
+    <dt>
+        <a <% if (item.get('completed')) { %>class="muted"<% } %>
+           href="#projects/<%- item.get('project-id') %>/todo_lists/<%- item.id %>">
+            <%- item.get('name') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %>
+        </a>
+        <small><%= item.get('description') %></small>
+    </dt>
+</script>
 <script type="text/template" id="todo-lists-template">
     <%= view.renderheader() %>
     <% var td=view.collection;
@@ -862,12 +871,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <dd>
         <dl>
             <% _.each(td.where({'project-id':prid}), function (list) { %>
-            <dt>
-                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
-                    <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
-                </a>
-                <small><%= list.get('description') %></small>
-            </dt>
+            <%= view.renderitem(list) %>
             <dd>
             <dl>
             <% _.each(list.get('todo-items'), function (item) { %>
@@ -926,13 +930,7 @@ and `filter_company_id` restricts the entries to those for the given company.
         <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">
             <dl>
                 <% _.each(tlgroup, function (list) { %>
-                <dt id="td<%- list.id %>">
-                    <a <% if (list.get('completed')) { %>class="muted" <% } %>
-                       href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
-                        <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
-                    </a>
-                    <small><%= list.get('description') %></small>
-                </dt>
+                <%= view.renderitem(list) %>
                 <dd>
                     <small>
                         Completed: <%- list.get('completed-count') %>
@@ -985,12 +983,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     </div>
     </div>
     <dl class="todoitemsholder">
-        <dt>
-            <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
-                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
-            </a>
-            <small><%= list.get('description') %></small>
-        </dt>
+        <%= view.renderitem(list) %>
     </dl>
     <% } %>
 </script>
@@ -1007,12 +1000,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     </div>
     <% } else { %>
     <dl class="todoitemsholder">
-        <dt>
-            <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
-                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
-            </a>
-            <small><%= list.get('description') %></small>
-        </dt>
+        <%= view.renderitem(list) %>
     </dl>
     <% } %>
 </script>

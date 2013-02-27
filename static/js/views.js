@@ -271,6 +271,7 @@ var TodosView = Backbone.View.extend({
         this.collection.fetch({cache:true});
     },
     template: '#todo-lists-template',
+    itemtemplate: '#todolist-template',
     name: function () {
         if (this.collection.responsible_party) {
             var person = this.options.collections.people && this.options.collections.people.get(this.collection.responsible_party);
@@ -295,6 +296,7 @@ var TodoListsView = Backbone.View.extend({
         return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
     },
     template: '#project-todo-lists-template',
+    itemtemplate: '#todolist-template',
     name: function () {
         if (this.collection.parent_id) {
             return this.model.get('name') + " > To-dos";
@@ -308,6 +310,7 @@ var TodoListView = Backbone.View.extend({
         return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
     },
     template: '#project-todo-list-template',
+    itemtemplate: '#todolist-template',
     name: function () {
         var item=this.cur_item&&this.collection.get(this.cur_item);
         var title=item&&item.get('name');
@@ -330,6 +333,7 @@ var TodoItemView = Backbone.View.extend({
         return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
     },
     template: '#project-todo-item-template',
+    itemtemplate: '#todolist-template',
     name: function () {
         var list=this.cur_item&&this.collection.get(this.cur_item);
         var title=list&&list.get('name');
