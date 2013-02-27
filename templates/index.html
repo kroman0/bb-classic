@@ -812,6 +812,27 @@ and `filter_company_id` restricts the entries to those for the given company.
     </dl>
     <% } %>
 </script>
+<script type="text/template" id="todo-template">
+    <% var item=view.model;
+    var prid=view.options.project_id;
+    var list=view.options.collections.project_todo_lists.get_or_create(prid).get(item.get("todo-list-id"));
+    if (item.get('completed')) { %>
+    <i class="todo icon-completed" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>
+    <% } else { %>
+    <i class="todo icon-uncompleted" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>
+    <% } %>
+    <% if (list&&list.get('tracked')) { %>
+    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">
+        <i class="icon-time"></i>
+    </a>
+    <% } %>
+    <a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>">
+        <%= item.get('content') %>
+    </a>
+    <a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>">
+        <i class="icon-comment"></i>
+    </a>
+</script>
 <script type="text/template" id="todo-lists-template">
     <%= view.renderheader() %>
     <% var td=view.collection;
@@ -824,7 +845,7 @@ and `filter_company_id` restricts the entries to those for the given company.
             <select name="target">
                 <option value="" <% if (party=="") { %>selected="selected"<% } %>>Nobody</option>
                 <% pp.each(function (i) { %>
-                    <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.get('first-name') %> <%- i.get('last-name') %></option>
+                    <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>
                 <% }) %>
             </select>
         </div>
@@ -851,7 +872,24 @@ and `filter_company_id` restricts the entries to those for the given company.
             <dl>
             <% _.each(list.get('todo-items'), function (item) { %>
             <dd>
-                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.content %></a>
+                <% if(false){if (item.completed) { %>
+                <i class="todo-lists icon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
+                <% } else { %>
+                <i class="todo-lists icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
+                <% } %>
+                <% if (list.get('tracked')) { %>
+                <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">
+                    <i class="icon-time"></i>
+                </a>
+                <% }} %>
+                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>">
+                    <%= item.content %>
+                </a>
+                <% if(false){ %>
+                <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item['comments-count'] %>">
+                    <i class="icon-comment"></i>
+                </a>
+                <% } %>
             </dd>
             <% }) %>
             </dl>
@@ -874,50 +912,33 @@ and `filter_company_id` restricts the entries to those for the given company.
     <% } else { %>
     <div class="tabbable">
     <ul class="nav nav-list span4 pull-right">
-    <% var ci=view.cur_item; var ftdgrid=ci?td.get(ci).id:td.first().id;
-    ci||_.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
-        <% if (status==="true") { %>
-        <li class="nav-header">Finished</li>
-        <% } else { %>
-        <li class="nav-header">Pending</li>
-        <% } %>
-        <% _.each(tlgroup, function (list) { %>
-        <li<% if (ftdgrid==list.id) { %> class="active"<% } %>>
-            <a href="#projects_<%- list.id %>" data-toggle="tab">
-                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+    <% var ftdst=_.first(td.pluck('completed'));
+       _.each(_.uniq(td.pluck('completed')), function (status) { %>
+        <li<% if (ftdst==status) { %> class="active"<% } %>>
+            <a href="#todolists_<%- status %>" data-toggle="tab">
+                <% if (status==true) { %>Finished<% } else { %>Pending<% } %>
             </a>
         </li>
-        <% }) %>
     <% }) %>
     </ul>
     <div class="tab-content">
-        <% td.each(function (list) { %>
-        <div class="tab-pane fade<% if (ftdgrid==list.id) { %> in active<% } %>" id="projects_<%- list.id %>">
+        <% _.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
+        <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">
             <dl>
+                <% _.each(tlgroup, function (list) { %>
                 <dt id="td<%- list.id %>">
-                    <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
+                    <a <% if (list.get('completed')) { %>class="muted" <% } %>
+                       href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
                         <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
                     </a>
                     <small><%= list.get('description') %></small>
                 </dt>
-                <% todo_items.get_or_create(list.id).each(function (item) { %>
                 <dd>
-                    <% if (item.get('completed')) { %>
-                    <i class="project-todo-lists icon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
-                    <% } else { %>
-                    <i class="project-todo-lists icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
-                    <% } %>
-                    <% if (list.get('tracked')) { %>
-                    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">
-                        <i class="icon-time"></i>
-                    </a>
-                    <% } %>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>">
-                        <%= item.get('content') %>
-                    </a>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>">
-                        <i class="icon-comment"></i>
-                    </a>
+                    <small>
+                        Completed: <%- list.get('completed-count') %>
+                        <br />
+                        Uncompleted: <%- list.get('uncompleted-count') %>
+                    </small>
                 </dd>
                 <% }) %>
             </dl>
@@ -931,64 +952,46 @@ and `filter_company_id` restricts the entries to those for the given company.
     <%= view.renderheader() %>
     <%= view.renderprojectnav() %>
     <% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;
+    var ci=view.cur_item; var list=td.get(ci); var ftdst=list&&list.get('completed');
     if (td.isEmpty()) { %>
     <div class="alert alert-info">
         No todo lists...
     </div>
     <% } else { %>
-    <div class="tabbable">
-    <ul class="nav nav-list span4 pull-right">
-    <% var ci=view.cur_item; var ftdgrid=ci?td.get(ci).id:td.first().id;
-    ci||_.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
-        <% if (status==="true") { %>
-        <li class="nav-header">Finished</li>
-        <% } else { %>
-        <li class="nav-header">Pending</li>
-        <% } %>
-        <% _.each(tlgroup, function (list) { %>
-        <li<% if (ftdgrid==list.id) { %> class="active"<% } %>>
-            <a href="#projects_<%- list.id %>" data-toggle="tab">
-                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+    <div class="tabbable span4 pull-right">
+    <ul class="nav nav-pills">
+    <% _.each(_.uniq(td.pluck('completed')), function (status) { %>
+        <li<% if (ftdst==status) { %> class="active"<% } %>>
+            <a href="#todolists_<%- status %>" data-toggle="tab">
+                <% if (status==true) { %>Finished<% } else { %>Pending<% } %>
             </a>
         </li>
-        <% }) %>
     <% }) %>
     </ul>
     <div class="tab-content">
-        <% td.each(function (list) { %>
-        <div class="tab-pane fade<% if (ftdgrid==list.id) { %> in active<% } %>" id="projects_<%- list.id %>">
-            <dl>
-                <dt id="td<%- list.id %>">
-                    <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
-                        <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
-                    </a>
-                    <small><%= list.get('description') %></small>
-                </dt>
-                <% todo_items.get_or_create(list.id).each(function (item) { %>
-                <dd>
-                    <% if (item.get('completed')) { %>
-                    <i class="project-todo-list icon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
-                    <% } else { %>
-                    <i class="project-todo-list icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>
-                    <% } %>
-                    <% if (list.get('tracked')) { %>
-                    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">
-                        <i class="icon-time"></i>
-                    </a>
-                    <% } %>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>">
-                        <%= item.get('content') %>
-                    </a>
-                    <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item.get('comments-count') %>">
-                        <i class="icon-comment"></i>
-                    </a>
-                </dd>
-                <% }) %>
-            </dl>
+    <% _.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
+        <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">
+        <ul class="nav nav-list">
+            <% _.each(tlgroup, function (l) { %>
+            <li<% if (ci==l.id) { %> class="active"<% } %>>
+                <a href="#projects/<%- prid %>/todo_lists/<%- l.id %>">
+                    <%- l.get('name') %><% if (l.get('private')) { %><i class="icon-lock"></i><% } %>
+                </a>
+            </li>
+            <% }) %>
+        </ul>
         </div>
-        <% }) %>
+    <% }) %>
     </div>
     </div>
+    <dl class="todoitemsholder">
+        <dt>
+            <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
+                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+            </a>
+            <small><%= list.get('description') %></small>
+        </dt>
+    </dl>
     <% } %>
 </script>
 <script type="text/template" id="project-todo-item-template">
@@ -996,29 +999,21 @@ and `filter_company_id` restricts the entries to those for the given company.
     <%= view.renderprojectnav() %>
     <% var td=view.collection; var todo_items=view.options.collections.todo_items;
     var prid=view.model.id; var list_id=view.cur_item; var item_id=view.todo_item;
-    var items=todo_items.get_or_create(list_id);
+    var items=todo_items.get_or_create(list_id); var list=td.get(list_id);
     var item=items.get(item_id);
     if (td.isEmpty()||items.isEmpty()) { %>
     <div class="alert alert-info">
         No todo items...
     </div>
     <% } else { %>
-    <% if (item.get('completed')) { %>
-    <i class="project-todo-item icon-completed" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
-    <% } else { %>
-    <i class="project-todo-item icon-uncompleted" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
-    <% } %>
-    <% if (td.get(list_id).get('tracked')) { %>
-    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">
-        <i class="icon-time"></i>
-    </a>
-    <% } %>
-    <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>">
-        <%= item.get('content') %>
-    </a>
-    <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>/comments" title="<%- item.get('comments-count') %>">
-        <i class="icon-comment"></i>
-    </a>
+    <dl class="todoitemsholder">
+        <dt>
+            <a <% if (list.get('completed')) { %>class="muted" <% } %>href="#projects/<%- prid %>/todo_lists/<%- list.id %>">
+                <%- list.get('name') %><% if (list.get('private')) { %><i class="icon-lock"></i><% } %>
+            </a>
+            <small><%= list.get('description') %></small>
+        </dt>
+    </dl>
     <% } %>
 </script>
 <script type="text/template" id="project-todo-item-comments-template">
@@ -1034,15 +1029,8 @@ and `filter_company_id` restricts the entries to those for the given company.
         No todo items...
     </div>
     <% } else { %>
-    <% if (item.get('completed')) { %>
-    <i class="project-todo-item-comments icon-completed" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
-    <% } else { %>
-    <i class="project-todo-item-comments icon-uncompleted" data-todolist-id="<%- list_id %>" data-todoitem-id="<%- item.id %>"></i>
-    <% } %>
-    <% if (td.get(list_id).get('tracked')) { %>
-    <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>
-    <% } %>
-    <a href="#projects/<%- prid %>/todo_lists/<%- list_id %>/<%- item_id %>"><%= item.get('content') %></a>
+    <dl class="todoitemsholder">
+    </dl>
     <% } %>
     <%= view.rendercomments(ccc) %>
 </script>
@@ -1096,7 +1084,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <ul class="nav pull-right">
         <li>
             <a href="#me" title="<%- view.model.get('user-name') %>" class="dropdown-toggle" data-toggle="dropdown">
-                <%- view.model.get('first-name') %> <%- view.model.get('last-name') %> <span class="caret"></span>
+                <%- view.model.name() %> <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
                 <li><a href="#me"><i class="icon-user"></i> My profile</a></li>

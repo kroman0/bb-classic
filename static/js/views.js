@@ -292,46 +292,9 @@ var TodosView = Backbone.View.extend({
 });
 var TodoListsView = Backbone.View.extend({
     deps: function () {
-        return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.sub();
-    },
-    events: {
-        "click .project-todo-lists.icon-completed": "uncomplete",
-        "click .project-todo-lists.icon-uncompleted": "complete"
-    },
-    complete: function (e) {
-        var target = $(e.target);
-        var todolist_id = parseInt(target.data('todolist-id'),10);
-        var todoitem_id = parseInt(target.data('todoitem-id'),10);
-        var todo_items = this.options.collections.todo_items;
-        var items = todo_items.get_or_create(todolist_id);
-        var item = items.get(todoitem_id);
-        item.set('completed', true);
-        this.render();
-    },
-    uncomplete: function (e) {
-        var target = $(e.target);
-        var todolist_id = parseInt(target.data('todolist-id'),10);
-        var todoitem_id = parseInt(target.data('todoitem-id'),10);
-        var todo_items = this.options.collections.todo_items;
-        var items = todo_items.get_or_create(todolist_id);
-        var item = items.get(todoitem_id);
-        item.set('completed', false);
-        this.render();
+        return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
     },
     template: '#project-todo-lists-template',
-    sub: function () {
-        var todo_items = this.options.collections.todo_items;
-        var td = _.map(this.collection.pluck('id'), function (id) {
-            return todo_items.get_or_create(id);
-        });
-        var ftd = _.first(td.filter(function (i) {
-            return !i.fetched;
-        }));
-        if (ftd) {
-            ftd.fetched = true;
-            ftd.fetch({cache:true});
-        }
-    },
     name: function () {
         if (this.collection.parent_id) {
             return this.model.get('name') + " > To-dos";
@@ -344,35 +307,20 @@ var TodoListView = Backbone.View.extend({
     deps: function () {
         return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
     },
-    events: {
-        "click .project-todo-list.icon-completed": "uncomplete",
-        "click .project-todo-list.icon-uncompleted": "complete"
-    },
-    complete: function (e) {
-        var target = $(e.target);
-        var todolist_id = parseInt(target.data('todolist-id'),10);
-        var todoitem_id = parseInt(target.data('todoitem-id'),10);
-        var todo_items = this.options.collections.todo_items;
-        var items = todo_items.get_or_create(todolist_id);
-        var item = items.get(todoitem_id);
-        item.set('completed', true);
-        this.render();
-    },
-    uncomplete: function (e) {
-        var target = $(e.target);
-        var todolist_id = parseInt(target.data('todolist-id'),10);
-        var todoitem_id = parseInt(target.data('todoitem-id'),10);
-        var todo_items = this.options.collections.todo_items;
-        var items = todo_items.get_or_create(todolist_id);
-        var item = items.get(todoitem_id);
-        item.set('completed', false);
-        this.render();
-    },
     template: '#project-todo-list-template',
     name: function () {
         var item=this.cur_item&&this.collection.get(this.cur_item);
         var title=item&&item.get('name');
         return this.model.get('name') + " > To-dos > " + title;
+    },
+    render: function () {
+        this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+        if(this.cur_item){
+            this.options.collections.todo_items.get_or_create(this.cur_item).each(function (item) {
+                this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el)
+            }, this);
+        }
+        return this;
     }
 });
 var TodoItemView = Backbone.View.extend({
@@ -381,30 +329,6 @@ var TodoItemView = Backbone.View.extend({
     deps: function () {
         return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
     },
-    events: {
-        "click .project-todo-item.icon-completed": "uncomplete",
-        "click .project-todo-item.icon-uncompleted": "complete"
-    },
-    complete: function (e) {
-        var target = $(e.target);
-        var todolist_id = parseInt(target.data('todolist-id'),10);
-        var todoitem_id = parseInt(target.data('todoitem-id'),10);
-        var todo_items = this.options.collections.todo_items;
-        var items = todo_items.get_or_create(todolist_id);
-        var item = items.get(todoitem_id);
-        item.set('completed', true);
-        this.render();
-    },
-    uncomplete: function (e) {
-        var target = $(e.target);
-        var todolist_id = parseInt(target.data('todolist-id'),10);
-        var todoitem_id = parseInt(target.data('todoitem-id'),10);
-        var todo_items = this.options.collections.todo_items;
-        var items = todo_items.get_or_create(todolist_id);
-        var item = items.get(todoitem_id);
-        item.set('completed', false);
-        this.render();
-    },
     template: '#project-todo-item-template',
     name: function () {
         var list=this.cur_item&&this.collection.get(this.cur_item);
@@ -412,6 +336,12 @@ var TodoItemView = Backbone.View.extend({
         var item=this.todo_item&&this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
         var itemtitle=item&&item.get('content');
         return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle;
+    },
+    render: function () {
+        this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+        var item=this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
+        if (item) this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el)
+        return this;
     }
 });
 var TodoItemCommentsView = Backbone.View.extend({
@@ -420,30 +350,6 @@ var TodoItemCommentsView = Backbone.View.extend({
     deps: function () {
         return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
     },
-    events: {
-        "click .project-todo-item-comments.icon-completed": "uncomplete",
-        "click .project-todo-item-comments.icon-uncompleted": "complete"
-    },
-    complete: function (e) {
-        var target = $(e.target);
-        var todolist_id = parseInt(target.data('todolist-id'),10);
-        var todoitem_id = parseInt(target.data('todoitem-id'),10);
-        var todo_items = this.options.collections.todo_items;
-        var items = todo_items.get_or_create(todolist_id);
-        var item = items.get(todoitem_id);
-        item.set('completed', true);
-        this.render();
-    },
-    uncomplete: function (e) {
-        var target = $(e.target);
-        var todolist_id = parseInt(target.data('todolist-id'),10);
-        var todoitem_id = parseInt(target.data('todoitem-id'),10);
-        var todo_items = this.options.collections.todo_items;
-        var items = todo_items.get_or_create(todolist_id);
-        var item = items.get(todoitem_id);
-        item.set('completed', false);
-        this.render();
-    },
     template: '#project-todo-item-comments-template',
     name: function () {
         var list=this.cur_item&&this.todo_lists.get(this.cur_item);
@@ -451,6 +357,32 @@ var TodoItemCommentsView = Backbone.View.extend({
         var item=this.todo_item&&this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
         var itemtitle=item&&item.get('content');
         return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle + " > Comments";
+    },
+    render: function () {
+        this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+        var item=this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
+        if (item) this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el)
+        return this;
+    }
+});
+var TodoView = Backbone.View.extend({
+    events: {
+        "click .todo.icon-completed": "uncomplete",
+        "click .todo.icon-uncompleted": "complete"
+    },
+    complete: function () {
+        this.model.set('completed', true);
+        this.render();
+    },
+    uncomplete: function () {
+        this.model.set('completed', false);
+        this.render();
+    },
+    tagName: 'dd',
+    template: '#todo-template',
+    render: function () {
+        this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+        return this;
     }
 });
 var NavView = Backbone.View.extend({

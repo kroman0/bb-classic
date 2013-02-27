@@ -62,10 +62,6 @@ $(function () {
     views.project_category = new CategoryView(oproject);
     views.project_posts = new PostsView(oproject);
     views.project_post = new PostView(oproject);
-    views.project_todo_lists = new TodoListsView(oproject);
-    views.project_todo_list = new TodoListView(oproject);
-    views.project_todo_item = new TodoItemView(oproject);
-    views.project_todo_item_comments = new TodoItemCommentsView(oproject);
     views.project_calendar = new CalendarView(oproject);
     views.project_calendar_entry = new CalendarEntryView(oproject);
     views.project_files = new FilesView(oproject);
@@ -74,6 +70,17 @@ $(function () {
     views.todo_time_entries = new TodoTimeEntriesView(oproject);
     views.project_post_comments = new PostCommentsView(oproject);
     views.project_calendar_entry_comments = new CalendarEntryCommentsView(oproject);
+    views.todo = function(prid, item){
+        if(!views.todo[item.id]) views.todo[item.id] = new TodoView({model: item, collections: collections, project_id: prid});
+        return views.todo[item.id];
+    }
+    var otodo = _.extend({
+        todo: views.todo
+    }, oproject);
+    views.project_todo_lists = new TodoListsView(otodo);
+    views.project_todo_list = new TodoListView(otodo);
+    views.project_todo_item = new TodoItemView(otodo);
+    views.project_todo_item_comments = new TodoItemCommentsView(otodo);
     var Workspace = Backbone.Router.extend({
         routes: {
             "projects": "projects",
