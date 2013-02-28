@@ -226,7 +226,7 @@ and `filter_company_id` restricts the entries to those for the given company.
     <div class="tab-content">
     <% _.each(pp.groupBy(function(i){ return i.get('status')}), function (plist, status) { %>
         <div class="tab-pane fade<% if (fprst==status) { %> in active<% } %>" id="projects_<%- status %>">
-            <div class="tabbable">
+            <div class="tabbable row-fluid">
             <ul class="nav nav-list span4 pull-right">
             <% var fprcoid=_.first(plist).get('company').id;
             _.each(_.groupBy(plist, function(item){ return item.get('company').id}), function (list, coid) { %>
@@ -235,7 +235,7 @@ and `filter_company_id` restricts the entries to those for the given company.
                 </li>
             <% }) %>
             </ul>
-            <div class="tab-content">
+            <div class="tab-content span8">
             <% _.each(_.groupBy(plist, function(item){ return item.get('company').id}), function (list, coid) { %>
                 <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">
                     <ul class="unstyled">
