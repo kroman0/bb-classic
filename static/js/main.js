@@ -73,7 +73,7 @@ $(function () {
     views.todo = function(prid, item){
         if(!views.todo[item.id]) views.todo[item.id] = new TodoView({model: item, collections: collections, project_id: prid});
         return views.todo[item.id];
-    }
+    };
     var otodo = _.extend({
         todo: views.todo
     }, oproject);

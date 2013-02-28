@@ -18,7 +18,7 @@ var TimeReportView = Backbone.View.extend({
     },
     getreport: function (e) {
         e.preventDefault();
-        this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(),function(i){return i.value}));
+        this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(),function(i){return i.value;}));
         this.collection.fetch({cache:true});
     },
     template: '#time-report-template',
@@ -320,7 +320,7 @@ var TodoListView = Backbone.View.extend({
         this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
         if(this.cur_item){
             this.options.collections.todo_items.get_or_create(this.cur_item).each(function (item) {
-                this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el)
+                this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
             }, this);
         }
         return this;
@@ -344,7 +344,7 @@ var TodoItemView = Backbone.View.extend({
     render: function () {
         this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
         var item=this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
-        if (item) this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el)
+        if (item) this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
         return this;
     }
 });
@@ -365,7 +365,7 @@ var TodoItemCommentsView = Backbone.View.extend({
     render: function () {
         this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
         var item=this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
-        if (item) this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el)
+        if (item) this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
         return this;
     }
 });
