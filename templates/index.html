@@ -1060,9 +1060,14 @@ and `filter_company_id` restricts the entries to those for the given company.
 </script>
 <script type="text/template" id="nav-template">
 <div class="navbar-inner">
+    <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar" type="button">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
     <a class="brand" href="#">BB</a>
     <% if (view.model.id) { %>
-    <ul class="nav">
+    <ul class="nav nav-collapse">
         <li><a href="#projects">Projects</a></li>
         <li><a href="#companies">Companies</a></li>
         <li><a href="#todos">To-Dos</a></li>
