@@ -929,7 +929,7 @@ div#time_report {
         No todo lists...
     </div>
     <% } else { %>
-    <div class="tabbable">
+    <div class="tabbable row-fluid">
     <ul class="nav nav-list span4 pull-right">
     <% var ftdst=_.first(td.pluck('completed'));
        _.each(_.uniq(td.pluck('completed')), function (status) { %>
@@ -940,7 +940,7 @@ div#time_report {
         </li>
     <% }) %>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content span8">
         <% _.each(td.groupBy(function(i){ return i.get('completed')}), function (tlgroup, status) { %>
         <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">
             <dl>
@@ -971,6 +971,10 @@ div#time_report {
         No todo lists...
     </div>
     <% } else { %>
+    <div class="row-fluid">
+    <dl class="todoitemsholder span8">
+        <%= view.renderitem(list) %>
+    </dl>
     <div class="tabbable span4 pull-right">
     <ul class="nav nav-pills">
     <% _.each(_.uniq(td.pluck('completed')), function (status) { %>
@@ -997,9 +1001,7 @@ div#time_report {
     <% }) %>
     </div>
     </div>
-    <dl class="todoitemsholder">
-        <%= view.renderitem(list) %>
-    </dl>
+    </div>
     <% } %>
 </script>
 <script type="text/template" id="project-todo-item-template">
