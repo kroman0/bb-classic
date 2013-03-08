@@ -72,6 +72,17 @@ class LoginPage(webapp2.RequestHandler):
         pwd = self.request.get('password')
         subdomain = self.request.get('subdomain')
 
+        # test login
+        if subdomain=='test' and login=='test' and pwd=='test':
+            subject_id = 'test'
+            data = [login, pwd, subject_id, subdomain]
+            expires = (datetime.datetime.now() + datetime.timedelta(weeks=4))\
+                .strftime('%a, %d-%b-%Y %H:%M:%S UTC')
+            ssid_cookie = 'ssid=%s; expires=%s' % \
+                (encodeData(tuple(data)), expires)
+            self.response.headers.add_header('Set-Cookie', str(ssid_cookie))
+            return
+
         # check whether all needed data is given
         if not (subdomain and login and pwd): 
            self.error(401)
@@ -139,6 +150,40 @@ class CrossDomain(webapp2.RequestHandler):
 
     def get(self):
         self.auth_check()
+        data = decodeData(self.request.cookies['ssid'])
+        if data:
+            username, password, subjectId, subdomain = data
+            import logging
+            logging.info("%s %s %s %s %s"%(username, password, subjectId, subdomain, self.request.path_qs))
+            if subdomain=='test' and username=='test' and password=='test' and subjectId=='test':
+                self.response.headers['Content-Type'] = 'application/json'
+                medata = {
+                    "phone-number-office": "",
+                    "id": 1,
+                    "title": "Title",
+                    "phone-number-fax": "+000 (00) 000-000",
+                    "updated-at": "2000-01-01T00:00:00Z",
+                    "time-zone-name": "Europe/Kiev",
+                    "avatar-url": "http://asset0.37img.com/global/missing/avatar.gif?r=3",
+                    "email-address": "name@domain.com",
+                    "deleted": False,
+                    "company-id": 1,
+                    "im-handle": "example",
+                    "phone-number-home": "+000 (00) 000-0000",
+                    "first-name": "First",
+                    "user-name": "test",
+                    "last-name": "Last",
+                    "created-at": "2000-00-00T00:00:00Z",
+                    "im-service": "Skype",
+                    "token": "5421e047f5a5d5b2b765450faf4b274a916da482",
+                    "phone-number-mobile": "+000 (00) 000-0000",
+                    "phone-number-office-ext": ""
+                }
+                if self.request.path_qs=="/api/me.xml":
+                    self.response.out.write(json.dumps(medata))
+                else:
+                    self.response.out.write(json.dumps([]))
+                return
         DEV = os.environ['SERVER_SOFTWARE'].startswith('Development')
         q = None
         if DEV:

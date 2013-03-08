@@ -1,4 +1,6 @@
 *~
+*.egg
+*.egg-info
 api
 tmp
 app.ds*
