@@ -3,10 +3,12 @@ from google.appengine.api import memcache
 import pickle
 import crypto
 
-KEYRING_SIZE = 14 
+KEYRING_SIZE = 14
+
 
 class Keyring(db.Model):
     data = db.TextProperty()
+
 
 def refresh():
     keys = [crypto.generate_key() for i in xrange(KEYRING_SIZE)]
@@ -14,10 +16,12 @@ def refresh():
     set(keys)
     return keys
 
+
 def set(keys):
     encoded = pickle.dumps(keys)
     db.put(Keyring(data=encoded))
     memcache.set('keyring', encoded)
+
 
 def rotate():
     keys = [i for i in data()]
@@ -27,21 +31,24 @@ def rotate():
     delete()
     set(keys)
 
+
 def delete():
     db.delete(_db_get())
+
 
 def _db_get():
     query = db.GqlQuery('SELECT * FROM Keyring')
     keyring = query.fetch(1)
     return keyring
 
+
 def data():
     # read from the memcache
-    keyring = memcache.get('keyring')    
+    keyring = memcache.get('keyring')
 
     if keyring is None:
         # read from the database
-        keyring = _db_get() 
+        keyring = _db_get()
         if len(keyring) > 0:
             memcache.set('keyring', keyring[0].data)
             keyring = pickle.loads(str(keyring[0].data))
@@ -53,7 +60,6 @@ def data():
     for key in keyring:
         yield key
 
+
 def current():
     return data().next()
-
-
