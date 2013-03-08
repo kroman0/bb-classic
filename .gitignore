@@ -4,3 +4,5 @@
 api
 tmp
 app.ds*
+test
+robot_*

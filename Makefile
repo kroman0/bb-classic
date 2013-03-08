@@ -6,6 +6,9 @@
 run:
 	dev_appserver.py . --skip_sdk_update_check --high_replication --datastore_path=app.ds
 
+test:
+	python setup.py test
+
 backup:
 	cp app.ds app.ds.backup
 

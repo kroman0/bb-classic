@@ -1,0 +1,53 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=15  implicit_wait=0.1
+
+Library  OperatingSystem
+
+Suite Setup  Start app and Open Browser
+
+Suite Teardown  Close All Browsers and Processes
+
+
+*** Variables ***
+
+${PORT} =  8080
+${APP_URL} =  http://localhost:${PORT}/
+${BROWSER} =  Firefox
+
+
+*** Test Cases ***
+
+Test App
+    Location should contain  login
+    Page should contain  BB
+    Title should be  BB
+
+Test Login Page
+    Location should contain  login
+    Page should contain  Please enter you credentials
+    Page should contain element  name=subdomain
+    Page should contain element  name=username
+    Page should contain element  name=password
+    Input Text  name=subdomain  test
+    Click button  Log in
+    Page should contain  Please enter all fields!
+    Input Text  name=username  test
+    Click button  Log in
+    Page should contain  Please enter all fields!
+    Input Password  name=password  test
+    Click button  Log in
+    Wait Until Page Contains  Projects
+    Location should be  ${APP_URL}
+
+
+*** Keywords ***
+
+Start app and Open Browser
+    Start Process  make
+    Open browser  ${APP_URL}
+    Maximize browser window
+
+Close All Browsers and Processes
+    Close All Browsers
+    Stop All Processes
