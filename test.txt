@@ -12,7 +12,7 @@ Suite Teardown  Close All Browsers and Processes
 *** Variables ***
 
 ${PORT} =  8080
-${APP_URL} =  http://localhost:${PORT}/
+${APP_URL} =  http://localhost:${PORT}
 ${BROWSER} =  Firefox
 
 
@@ -38,7 +38,22 @@ Test Login Page
     Input Password  name=password  test
     Click button  Log in
     Wait Until Page Contains  Projects
-    Location should be  ${APP_URL}
+
+
+Test Nav Pages
+    Test user login
+    Sleep  5
+    Location should be  ${APP_URL}/#projects
+    Click link  Companies
+    Location should be  ${APP_URL}/#companies
+    Click link  To-Dos
+    Location should be  ${APP_URL}/#todos
+    Click link  Time
+    Location should be  ${APP_URL}/#time_report
+    Click link  People
+    Location should be  ${APP_URL}/#people
+    Click link  Projects
+    Location should be  ${APP_URL}/#projects
 
 
 *** Keywords ***
@@ -51,3 +66,12 @@ Start app and Open Browser
 Close All Browsers and Processes
     Close All Browsers
     Stop All Processes
+
+Test user login
+    Location should contain  login
+    Input Text  name=subdomain  test
+    Input Text  name=username  test
+    Input Password  name=password  test
+    Click button  Log in
+    Wait Until Page Contains  Projects
+

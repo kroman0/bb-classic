@@ -151,54 +151,53 @@ def convert(node):
 
 
 class CrossDomain(webapp2.RequestHandler):
+    username = None
+    password = None
+    subjectId = None
+    subdomain = None
+
     def auth_check(self):
         isSessioned = False
-        subdomain = None
         if 'ssid' in self.request.cookies:
             data = decodeData(self.request.cookies['ssid'])
             if data:
                 isSessioned = True
+                self.username, self.password, self.subjectId, self.subdomain = data
         if not isSessioned:
             self.redirect('/login')
 
     def get(self):
         self.auth_check()
-        data = decodeData(self.request.cookies['ssid'])
-        if data:
-            username, password, subjectId, subdomain = data
-            import logging
-            logging.info("%s %s %s %s %s" % (username, password,
-                         subjectId, subdomain, self.request.path_qs))
-            if subdomain == 'test' and username == 'test' and \
-                    password == 'test' and subjectId == 'test':
-                self.response.headers['Content-Type'] = 'application/json'
-                medata = {
-                    "phone-number-office": "",
-                    "id": 1,
-                    "title": "Title",
-                    "phone-number-fax": "+000 (00) 000-000",
-                    "updated-at": "2000-01-01T00:00:00Z",
-                    "time-zone-name": "Europe/Kiev",
-                    "avatar-url": "http://asset0.37img.com/global/missing/"
-                                  "avatar.gif?r=3",
-                    "email-address": "name@domain.com",
-                    "deleted": False,
-                    "company-id": 1,
-                    "im-handle": "example",
-                    "phone-number-home": "+000 (00) 000-0000",
-                    "first-name": "First",
-                    "user-name": "test",
-                    "last-name": "Last",
-                    "created-at": "2000-00-00T00:00:00Z",
-                    "im-service": "Skype",
-                    "phone-number-mobile": "+000 (00) 000-0000",
-                    "phone-number-office-ext": ""
-                }
-                if self.request.path_qs == "/api/me.xml":
-                    self.response.out.write(json.dumps(medata))
-                else:
-                    self.response.out.write(json.dumps([]))
-                return
+        if self.subdomain == 'test' and self.username == 'test' and \
+                self.password == 'test' and self.subjectId == 'test':
+            self.response.headers['Content-Type'] = 'application/json'
+            medata = {
+                "phone-number-office": "",
+                "id": 1,
+                "title": "Title",
+                "phone-number-fax": "+000 (00) 000-000",
+                "updated-at": "2000-01-01T00:00:00Z",
+                "time-zone-name": "Europe/Kiev",
+                "avatar-url": "http://asset0.37img.com/global/missing/"
+                            "avatar.gif?r=3",
+                "email-address": "name@domain.com",
+                "deleted": False,
+                "company-id": 1,
+                "im-handle": "example",
+                "phone-number-home": "+000 (00) 000-0000",
+                "first-name": "First",
+                "user-name": "test",
+                "last-name": "Last",
+                "created-at": "2000-00-00T00:00:00Z",
+                "im-service": "Skype",
+                "phone-number-mobile": "+000 (00) 000-0000",
+                "phone-number-office-ext": ""
+            }
+            if self.request.path_qs == "/api/me.xml":
+                self.response.out.write(json.dumps(medata))
+            else:
+                self.response.out.write(json.dumps([]))
+            return
         DEV = os.environ['SERVER_SOFTWARE'].startswith('Development')
         q = None
         if DEV:
@@ -214,17 +213,11 @@ class CrossDomain(webapp2.RequestHandler):
                 # if "authorization" in cookie:
                     # headers["Authorization"] = "Basic %s" % cookie["authorization"]
             # headers.pop("Host", "")
-            data = decodeData(self.request.cookies['ssid'])
-            if data:
-                username, password, subjectId, subdomain = data
-            else:
-                self.response.set_status(403)
-                return
             headers = {
                 'Content-Type': 'application/xml',
                 'Accept': 'application/xml'
             }
-            creds = username + u':' + password
+            creds = self.username + u':' + self.password
             creds = "Basic " + base64.encodestring(
                 creds.encode('utf-8')).strip()
             headers["Authorization"] = creds
