@@ -39,10 +39,9 @@ Test Login Page
     Click button  Log in
     Wait Until Page Contains  Projects
 
-
 Test Nav Pages
     Test user login
-    Sleep  5
+    Wait Until Page Contains  First Last
     Location should be  ${APP_URL}/#projects
     Click link  Companies
     Location should be  ${APP_URL}/#companies
@@ -54,6 +53,19 @@ Test Nav Pages
     Location should be  ${APP_URL}/#people
     Click link  Projects
     Location should be  ${APP_URL}/#projects
+
+Test My Profile
+    Test user login
+    Wait Until Page Contains  First Last
+    Click link  First Last
+    Click link  My profile
+    Location should be  ${APP_URL}/#me
+    Page should contain element  link=name@domain.com
+    Page should contain element  link=example
+    Page should contain  Mobile phone: +000 (00) 000-0000
+    Page should contain  Home phone: +000 (00) 000-0001
+    Page should contain  Fax phone: +000 (00) 000-0002
+    Page should contain  Time zone: Europe/Kiev 
 
 
 *** Keywords ***

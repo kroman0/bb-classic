@@ -175,7 +175,7 @@ class CrossDomain(webapp2.RequestHandler):
                 "phone-number-office": "",
                 "id": 1,
                 "title": "Title",
-                "phone-number-fax": "+000 (00) 000-000",
+                "phone-number-fax": "+000 (00) 000-0002",
                 "updated-at": "2000-01-01T00:00:00Z",
                 "time-zone-name": "Europe/Kiev",
                 "avatar-url": "http://asset0.37img.com/global/missing/"
@@ -184,7 +184,7 @@ class CrossDomain(webapp2.RequestHandler):
                 "deleted": False,
                 "company-id": 1,
                 "im-handle": "example",
-                "phone-number-home": "+000 (00) 000-0000",
+                "phone-number-home": "+000 (00) 000-0001",
                 "first-name": "First",
                 "user-name": "test",
                 "last-name": "Last",
