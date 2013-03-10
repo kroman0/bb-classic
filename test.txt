@@ -37,7 +37,7 @@ Test Login Page
     Page should contain  Please enter all fields!
     Input Password  name=password  test
     Click button  Log in
-    Wait Until Page Contains  Projects
+    Wait Until Page Contains  First Last
 
 Test Nav Pages
     Test user login

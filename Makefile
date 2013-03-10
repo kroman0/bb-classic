@@ -7,6 +7,7 @@ run:
 	dev_appserver.py . --skip_sdk_update_check --high_replication --datastore_path=app.ds
 
 test:
+	rm -rf *.pyc robot_*
 	python setup.py test
 
 backup:
@@ -28,4 +29,4 @@ jshint:
 
 clean:
 	find . -name \*~ -exec rm {} \;
-	rm -rf *.pyc
+	rm -rf *.pyc robot_*
