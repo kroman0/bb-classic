@@ -6,8 +6,7 @@
 run:
 	dev_appserver.py . --skip_sdk_update_check --high_replication --datastore_path=app.ds
 
-test:
-	rm -rf *.pyc robot_*
+test:	clean
 	python setup.py test
 
 backup:
@@ -16,7 +15,7 @@ backup:
 restore:
 	cp app.ds.backup app.ds
 
-deploy: minify
+deploy: clean minify
 	appcfg.py update . --oauth2
 
 minify:
