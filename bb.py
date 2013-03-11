@@ -172,31 +172,69 @@ class CrossDomain(webapp2.RequestHandler):
                 self.password == 'test' and self.subjectId == 'test':
             self.response.headers['Content-Type'] = 'application/json'
             medata = {
-                "phone-number-office": "",
-                "id": 1,
-                "title": "Title",
-                "phone-number-fax": "+000 (00) 000-0002",
-                "updated-at": "2000-01-01T00:00:00Z",
-                "time-zone-name": "Europe/Kiev",
-                "avatar-url": "http://asset0.37img.com/global/missing/"
-                            "avatar.gif?r=3",
-                "email-address": "name@domain.com",
-                "deleted": False,
+                "avatar-url": "http://asset0.37img.com/global/missing/avatar.gif",
                 "company-id": 1,
-                "im-handle": "example",
-                "phone-number-home": "+000 (00) 000-0001",
-                "first-name": "First",
-                "user-name": "test",
-                "last-name": "Last",
                 "created-at": "2000-00-00T00:00:00Z",
+                "deleted": False,
+                "email-address": "name@domain.com",
+                "first-name": "First",
+                "id": 1,
+                "im-handle": "example",
                 "im-service": "Skype",
+                "last-name": "Last",
+                "phone-number-fax": "+000 (00) 000-0002",
+                "phone-number-home": "+000 (00) 000-0001",
                 "phone-number-mobile": "+000 (00) 000-0000",
-                "phone-number-office-ext": ""
+                "phone-number-office": "+000 (00) 000-0003",
+                "phone-number-office-ext": "",
+                "time-zone-name": "Europe/Kiev",
+                "title": "Title",
+                "updated-at": "2000-01-01T00:00:00Z",
+                "user-name": "test",
             }
+            import random, string
+            collection = [{
+                "address-one": "Address one of #%s"%i,
+                "address-two": "Address two of #%s"%i,
+                "announcement": "announcement of #%s"%i, # "".join(random.sample(string.letters,50)),
+                "avatar-url": "http://asset0.37img.com/global/missing/avatar.gif",
+                "city": "City #%s"%i,
+                "company": [{"id": x, "name": "Company name #%s"%x} for x in [random.randint(1,5)]][0],
+                "company-id": random.randint(1,5),
+                "country": "Country #%s"%i,
+                "date": "%s-%s-%s"%(random.randint(2001,2013),random.randint(1,13),random.randint(1,31)),
+                "description": "description of #%s"%i,
+                "email-address": "name@domain.com",
+                "first-name": "First#%s"%i,
+                "hours": random.random()*3,
+                "id": i,
+                "im-handle": "example#%s"%i,
+                "im-service": "Skype",
+                "last-name": "Last",
+                "locale": random.choice(["en", "ru", "ua"]),
+                "name": "Name of #%s"%i,
+                "person-id": random.randint(1,5),
+                "person-name": "Pesson #%s"%i,
+                "phone-number-fax": "Fax of #%s"%i,
+                "phone-number-home": "Home phone of #%s"%i,
+                "phone-number-mobile": "Mobile phone of #%s"%i,
+                "phone-number-office": "Office phone of #%s"%i,
+                "project-id": random.randint(1,5),
+                "state": "State phone of #%s"%i,
+                "status": random.choice(["active","on_hold", "archived"]),
+                "time-zone-id": "EET",
+                "time-zone-name": "Europe/Kiev",
+                "title": "Title #%s"%i,
+                "todo-item-id": random.randint(1,5),
+                "user-name": "test",
+                "web-address": "http://example%s.com"%i,
+                "zip": "".join(random.sample(string.digits,5)),
+            }
+            for i in range(1,30)]
             if self.request.path_qs == "/api/me.xml":
                 self.response.out.write(json.dumps(medata))
             else:
-                self.response.out.write(json.dumps([]))
+                self.response.out.write(json.dumps(collection))
             return
         DEV = os.environ['SERVER_SOFTWARE'].startswith('Development')
         q = None
