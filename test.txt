@@ -4,6 +4,8 @@ Library  Selenium2Library  timeout=15  implicit_wait=0.1
 
 Library  OperatingSystem
 
+Library  testing.Compare
+
 Suite Setup  Start app and Open Browser
 
 Suite Teardown  Close All Browsers and Processes
@@ -13,7 +15,14 @@ Suite Teardown  Close All Browsers and Processes
 
 ${PORT} =  8080
 ${APP_URL} =  http://localhost:${PORT}
-${BROWSER} =  Firefox
+${base_path} =  static/img/
+${base_login} =  ${base_path}login.png
+${base_mypage} =  ${base_path}mypage.png
+${base_projects} =  ${base_path}projects.png
+${base_companies} =  ${base_path}companies.png
+${base_time_report} =  ${base_path}time_report.png
+${base_todos} =  ${base_path}todos.png
+${base_people} =  ${base_path}people.png
 
 
 *** Test Cases ***
@@ -29,6 +38,8 @@ Test Login Page
     Page should contain element  name=subdomain
     Page should contain element  name=username
     Page should contain element  name=password
+#    Capture Page Screenshot  login.png
+    Compare screenshot to base  ${base_login}
     Input Text  name=subdomain  test
     Click button  Log in
     Page should contain  Please enter all fields!
@@ -41,22 +52,29 @@ Test Login Page
 
 Test Nav Pages
     Test user login
-    Wait Until Page Contains  First Last
-    Location should be  ${APP_URL}/#projects
-    Click link  Companies
-    Location should be  ${APP_URL}/#companies
-    Click link  To-Dos
-    Location should be  ${APP_URL}/#todos
-    Click link  Time
-    Location should be  ${APP_URL}/#time_report
-    Click link  People
-    Location should be  ${APP_URL}/#people
     Click link  Projects
     Location should be  ${APP_URL}/#projects
+#    Capture Page Screenshot  projects.png
+    Compare screenshot to base  ${base_projects}
+    Click link  Companies
+    Location should be  ${APP_URL}/#companies
+#    Capture Page Screenshot  companies.png
+    Compare screenshot to base  ${base_companies}
+    Click link  To-Dos
+    Location should be  ${APP_URL}/#todos
+#    Capture Page Screenshot  todos.png
+    Compare screenshot to base  ${base_todos}
+    Click link  Time
+    Location should be  ${APP_URL}/#time_report
+#    Capture Page Screenshot  time_report.png
+    Compare screenshot to base  ${base_time_report}
+    Click link  People
+    Location should be  ${APP_URL}/#people
+#    Capture Page Screenshot  people.png
+    Compare screenshot to base  ${base_people}
 
 Test My Profile
     Test user login
-    Wait Until Page Contains  First Last
     Click link  First Last
     Click link  My profile
     Location should be  ${APP_URL}/#me
@@ -66,7 +84,9 @@ Test My Profile
     Page should contain  Home phone: +000 (00) 000-0001
     Page should contain  Fax phone: +000 (00) 000-0002
     Page should contain  Office phone: +000 (00) 000-0003
-    Page should contain  Time zone: Europe/Kiev 
+    Page should contain  Time zone: Europe/Kiev
+#    Capture Page Screenshot  mypage.png
+    Compare screenshot to base  ${base_mypage}
 
 
 *** Keywords ***
@@ -87,5 +107,4 @@ Test user login
     Input Text  name=username  test
     Input Password  name=password  test
     Click button  Log in
-    Wait Until Page Contains  Projects
-
+    Wait Until Page Contains  First Last
