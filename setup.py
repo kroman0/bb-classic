@@ -8,6 +8,7 @@ test_require = [
     'robotframework-selenium2library',
     'decorator',
     'selenium',
+    'Pillow',
 ]
 
 setup(name='bb-classic',
