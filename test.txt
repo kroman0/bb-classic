@@ -73,6 +73,31 @@ Test Nav Pages
 #    Capture Page Screenshot  people.png
     Compare screenshot to base  ${base_people}
 
+Test Projects Page
+    Test user login
+    Click link  Projects
+    Click link  active
+    Sleep  0.5
+    Click element  xpath=//*[@id="projects_active"]//a[contains(text(),"Company name #1")]
+    Sleep  0.5
+    Element Should Be Visible  link=Name of #15
+    Element Should Not Be Visible  link=Name of #10
+    Element Should Not Be Visible  link=Name of #5
+    Click link  on_hold
+    Sleep  0.5
+    Click element  xpath=//*[@id="projects_on_hold"]//a[contains(text(),"Company name #1")]
+    Sleep  0.5
+    Element Should Not Be Visible  link=Name of #15
+    Element Should Be Visible  link=Name of #10
+    Element Should Not Be Visible  link=Name of #5
+    Click link  archived
+    Sleep  0.5
+    Click element  xpath=//*[@id="projects_archived"]//a[contains(text(),"Company name #1")]
+    Sleep  0.5
+    Element Should Not Be Visible  link=Name of #15
+    Element Should Not Be Visible  link=Name of #10
+    Element Should Be Visible  link=Name of #5
+
 Test My Profile
     Test user login
     Click link  First Last
