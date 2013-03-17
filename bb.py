@@ -211,7 +211,7 @@ class CrossDomain(webapp2.RequestHandler):
                 "elements-count": i,
                 "email-address": "name@domain.com",
                 "first-name": "First#%s"%i,
-                "hours": i%5*0.5,
+                "hours": i%5*0.5+0.1,
                 "id": i,
                 "im-handle": "example#%s"%i,
                 "im-service": "Skype",
