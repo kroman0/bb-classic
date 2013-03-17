@@ -70,6 +70,7 @@ div#time_report {
 <script src="/static/js/backbone.fetch-cache.js"></script>
 <script src="/static/js/backbone-pageable.js"></script>
 <script src="/static/js/backbone.analytics.js"></script>
+<script src="/static/js/backbone.marionette.js"></script>
 <script src="/static/js/general.js"></script>
 <script src="/static/js/models.js"></script>
 <script src="/static/js/collections.js"></script>
@@ -84,8 +85,28 @@ div#time_report {
 <script src="/static/js/backbone.fetch-cache.min.js"></script>
 <script src="/static/js/backbone-pageable.min.js"></script>
 <script src="/static/js/backbone.analytics-min.js"></script>
+<script src="/static/js/backbone.marionette.min.js"></script>
 <script src="/static/js/main-min.js"></script>
 {% endif %}
+
+
+<script type="text/template" id="angry_cats-template">
+  <thead>
+    <tr class='header'>
+      <th>Name</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</script>
+
+<script type="text/template" id="angry_cat-template">
+  <td><%= name %></td>
+</script>
+
+<div id="content">
+</div>
+
 <script type="text/template" id="time-template">
     <tr <% if(item.get('hours')>2){ %>class="warning"<% } %>>
         <td><%- item.get('date') %></td>
@@ -1076,7 +1097,6 @@ div#time_report {
     <% } %>
 </script>
 <script type="text/template" id="nav-template">
-<div class="navbar-inner">
     <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar" type="button">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -1112,7 +1132,6 @@ div#time_report {
         </li>
     </ul>
     <% } %>
-</div>
 </script>
 </body>
 </html>
