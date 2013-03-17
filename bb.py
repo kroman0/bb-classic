@@ -229,6 +229,8 @@ class CrossDomain(webapp2.RequestHandler):
                 "user-name": "test",
                 "web-address": "http://example%s.com"%i,
                 "zip": "".join(random.sample(string.digits,5)),
+                "elements-count": i,
+                "type": "Type of #%s"%i,
             }
             for i in range(1,30)]
             if self.request.path_qs == "/api/me.xml":

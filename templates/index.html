@@ -806,11 +806,13 @@ div#time_report {
         No categories...
     </div>
     <% } else { %>
+    <%= view.renderpager() %>
     <dl>
     <% cc.each(function (item) { %>
         <%= view.renderitem(item) %>
     <% }) %>
     </dl>
+    <%= view.renderpager() %>
     <% } %>
 </script>
 <script type="text/template" id="project-category-template">

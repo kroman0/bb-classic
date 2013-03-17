@@ -231,6 +231,19 @@ var CategoriesView = Backbone.View.extend({
     deps: function () {
         return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
     },
+    pagerid: "project-categories",
+    events: {
+        "click .project-categories.previous": "previous",
+        "click .project-categories.next": "next"
+    },
+    previous: function (e) {
+        e.preventDefault();
+        return this.collection.hasPrevious() && this.collection.getPreviousPage();
+    },
+    next: function (e) {
+        e.preventDefault();
+        return this.collection.hasNext() && this.collection.getNextPage();
+    },
     template: '#project-categories-template',
     itemtemplate: '#category-template',
     name: function () {

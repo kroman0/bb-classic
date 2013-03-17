@@ -36,7 +36,8 @@ var Calendar = Backbone.Collection.extend({
     },
     model: CalendarEntry
 });
-var Categories = Backbone.Collection.extend({
+var Categories = Backbone.PageableCollection.extend({
+    mode: 'client',
     parent_id: null, // project id
     url: function () {
         return '/api/projects/' + this.parent_id + '/categories.xml';
