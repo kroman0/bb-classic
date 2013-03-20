@@ -51,6 +51,7 @@ body {
             </div>
         </div>
     </div>
+{% if not dev %}
     <script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-38418276-1']);
@@ -61,6 +62,7 @@ body {
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
     </script>
+{% endif %}
     <script type="text/javascript">
         var timerId;
         function countDown(elem) {
