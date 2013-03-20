@@ -74,7 +74,9 @@ class LoginPage(webapp2.RequestHandler):
             raise Exception('Can\'t get subject_id')
 
     def get(self):
-        self.response.out.write(template.render(_('login.html'), {}))
+        self.response.out.write(template.render(
+            _('login.html'),
+            {'dev': os.environ['SERVER_SOFTWARE'].startswith('Development')}))
 
     def post(self):
         login = self.request.get('username')
@@ -118,7 +120,9 @@ class LogoutPage(webapp2.RequestHandler):
         ssid = self.request.cookies.get('ssid', '')
         self.response.headers['Set-Cookie'] = str(
             'ssid=%s; expires=Fri, 31-Dec-2008 23:59:59 GMT;' % ssid)
-        self.response.out.write(template.render(_('logout.html'), {}))
+        self.response.out.write(template.render(
+            _('logout.html'),
+            {'dev': os.environ['SERVER_SOFTWARE'].startswith('Development')}))
 
 
 def convert(node):
@@ -172,7 +176,7 @@ class CrossDomain(webapp2.RequestHandler):
                 self.password == 'test' and self.subjectId == 'test':
             self.response.headers['Content-Type'] = 'application/json'
             medata = {
-                "avatar-url": "http://asset0.37img.com/global/missing/avatar.gif",
+                "avatar-url": "/static/img/avatar.gif",
                 "company-id": 1,
                 "created-at": "2000-00-00T00:00:00Z",
                 "deleted": False,
@@ -199,7 +203,7 @@ class CrossDomain(webapp2.RequestHandler):
                 "announcement": "announcement of #%s"%i,
                 "author-id": i%5+1,
                 "author-name": "Author name #%s"%i,
-                "avatar-url": "http://asset0.37img.com/global/missing/avatar.gif",
+                "avatar-url": "/static/img/avatar.gif",
                 "body": "Body of #%s"%i,
                 "city": "City #%s"%i,
                 "company": {"id": i%5+1, "name": "Company name #%s"%(i%5+1)},
