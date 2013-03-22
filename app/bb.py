@@ -271,7 +271,7 @@ class CrossDomain(webapp2.RequestHandler):
             headers["Authorization"] = creds
             # url = "https://quintagroup.basecamphq.com%s" %
             # self.request.path_qs[4:]
-            url = absoluteUrl(subdomain, self.request.path_qs[4:])
+            url = absoluteUrl(self.subdomain, self.request.path_qs[4:])
             # BOBO
             # if DEV and os.path.exists(os.path.abspath(self.request.path_qs[1:])):
                 # ff = os.path.abspath(self.request.path_qs[1:])
