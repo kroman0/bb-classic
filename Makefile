@@ -4,10 +4,10 @@
 .PHONY: run
 
 run:
-	dev_appserver.py . --skip_sdk_update_check --high_replication --datastore_path=app.ds
+	bin/dev_appserver app --skip_sdk_update_check --high_replication --datastore_path=app.ds
 
 test:	clean
-	python setup.py test
+	bin/pybot test.txt
 
 backup:
 	cp app.ds app.ds.backup
@@ -16,15 +16,15 @@ restore:
 	cp app.ds.backup app.ds
 
 deploy: clean minify
-	appcfg.py update . --oauth2
+	bin/appcfg update app --oauth2
 
 minify:
-	uglifyjs static/js/jquery.deserialize.js -o static/js/jquery.deserialize-min.js
-	uglifyjs static/js/backbone.analytics.js -o static/js/backbone.analytics-min.js
-	uglifyjs static/js/general.js static/js/models.js static/js/collections.js static/js/views.js static/js/main.js -o static/js/main-min.js
+	uglifyjs app/static/js/jquery.deserialize.js -o app/static/js/jquery.deserialize-min.js
+	uglifyjs app/static/js/backbone.analytics.js -o app/static/js/backbone.analytics-min.js
+	uglifyjs app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js -o app/static/js/main-min.js
 
 jshint:
-	jshint static/js/general.js static/js/models.js static/js/collections.js static/js/views.js static/js/main.js
+	jshint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js
 
 clean:
 	find . -name \*~ -exec rm {} \;

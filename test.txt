@@ -4,7 +4,7 @@ Library  Selenium2Library  timeout=15  implicit_wait=0.1
 
 Library  OperatingSystem
 
-Library  test.Compare
+Library  compare.py
 
 Suite Setup  Start app and Open Browser
 
@@ -15,7 +15,7 @@ Suite Teardown  Close All Browsers and Processes
 
 ${PORT} =  8080
 ${APP_URL} =  http://localhost:${PORT}
-${base_path} =  static/img/
+${base_path} =  app/static/img/
 ${base_login} =  ${base_path}login.png
 ${base_mypage} =  ${base_path}mypage.png
 ${base_projects} =  ${base_path}projects.png
@@ -49,6 +49,7 @@ Test Login Page
     Input Password  name=password  test
     Click button  Log in
     Wait Until Page Contains  First Last
+    Test user logout
 
 Test Nav Pages
     Test user login
@@ -71,7 +72,8 @@ Test Nav Pages
     Click link  People
     Location should be  ${APP_URL}/#people
 #    Capture Page Screenshot  people.png
-    Compare screenshot to base  ${base_people}
+    Compare screenshot to base  ${base_people}  1000
+    Test user logout
 
 Test Projects Page
     Test user login
@@ -97,6 +99,7 @@ Test Projects Page
     Element Should Not Be Visible  link=Name of #15
     Element Should Not Be Visible  link=Name of #10
     Element Should Be Visible  link=Name of #5
+    Test user logout
 
 Test My Profile
     Test user login
@@ -112,12 +115,13 @@ Test My Profile
     Page should contain  Time zone: Europe/Kiev
 #    Capture Page Screenshot  mypage.png
     Compare screenshot to base  ${base_mypage}
+    Test user logout
 
 
 *** Keywords ***
 
 Start app and Open Browser
-    Start Process  dev_appserver.py . --skip_sdk_update_check
+    Start Process  bin/dev_appserver app --skip_sdk_update_check
     Open browser  ${APP_URL}
     Maximize browser window
 
@@ -133,3 +137,8 @@ Test user login
     Input Password  name=password  test
     Click button  Log in
     Wait Until Page Contains  First Last
+
+Test user logout
+    Click link  First Last
+    Click link  Logout
+    Click link  log in

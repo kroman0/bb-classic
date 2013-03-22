@@ -6,3 +6,11 @@ tmp
 app.ds*
 test
 robot_*
+*.png
+*.jpg
+*.html
+*.xml
+.installed.cfg
+bin/
+develop-eggs/
+parts/
