@@ -28,4 +28,4 @@ jshint:
 
 clean:
 	find . -name \*~ -exec rm {} \;
-	rm -rf *.pyc robot_*
+	rm -rf *.pyc robot_* selenium-screenshot-* output.xml log.html report.html
