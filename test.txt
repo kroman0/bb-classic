@@ -14,7 +14,8 @@ Suite Teardown  Close All Browsers and Processes
 *** Variables ***
 
 ${PORT} =  8080
-${APP_URL} =  http://localhost:${PORT}
+${DOMAIN} =  0.0.0.0
+${APP_URL} =  http://${DOMAIN}:${PORT}
 ${base_path} =  app/static/img/
 ${base_login} =  ${base_path}login.png
 ${base_mypage} =  ${base_path}mypage.png
@@ -23,6 +24,12 @@ ${base_companies} =  ${base_path}companies.png
 ${base_time_report} =  ${base_path}time_report.png
 ${base_todos} =  ${base_path}todos.png
 ${base_people} =  ${base_path}people.png
+
+${BROWSER} = Firefox
+${REMOTE_URL} =
+${DESIRED_CAPABILITIES} = platform:Linux
+${BUILD_NUMBER} = manual
+${SESSION_ID} =
 
 
 *** Test Cases ***
@@ -39,7 +46,7 @@ Test Login Page
     Page should contain element  name=username
     Page should contain element  name=password
 #    Capture Page Screenshot  login.png
-    Compare screenshot to base  ${base_login}
+#    Compare screenshot to base  ${base_login}
     Input Text  name=subdomain  test
     Click button  Log in
     Page should contain  Please enter all fields!
@@ -56,23 +63,23 @@ Test Nav Pages
     Click link  Projects
     Location should be  ${APP_URL}/#projects
 #    Capture Page Screenshot  projects.png
-    Compare screenshot to base  ${base_projects}
+#    Compare screenshot to base  ${base_projects}
     Click link  Companies
     Location should be  ${APP_URL}/#companies
 #    Capture Page Screenshot  companies.png
-    Compare screenshot to base  ${base_companies}
+#    Compare screenshot to base  ${base_companies}
     Click link  To-Dos
     Location should be  ${APP_URL}/#todos
 #    Capture Page Screenshot  todos.png
-    Compare screenshot to base  ${base_todos}
+#    Compare screenshot to base  ${base_todos}
     Click link  Time
     Location should be  ${APP_URL}/#time_report
 #    Capture Page Screenshot  time_report.png
-    Compare screenshot to base  ${base_time_report}
+#    Compare screenshot to base  ${base_time_report}
     Click link  People
     Location should be  ${APP_URL}/#people
 #    Capture Page Screenshot  people.png
-    Compare screenshot to base  ${base_people}  1000
+#    Compare screenshot to base  ${base_people}  1000
     Test user logout
 
 Test Projects Page
@@ -114,19 +121,21 @@ Test My Profile
     Page should contain  Office phone: +000 (00) 000-0003
     Page should contain  Time zone: Europe/Kiev
 #    Capture Page Screenshot  mypage.png
-    Compare screenshot to base  ${base_mypage}
+#    Compare screenshot to base  ${base_mypage}
     Test user logout
 
 
 *** Keywords ***
 
 Start app and Open Browser
-    Start Process  bin/dev_appserver app --skip_sdk_update_check
+    Start Process  bin/dev_appserver app --skip_sdk_update_check -a 0.0.0.0
     Sleep  1
-    Open browser  ${APP_URL}
+#    Open browser  ${APP_URL}
+    Start browser
     Maximize browser window
 
 Close All Browsers and Processes
+    Report test status
     Close All Browsers
     Run  pkill -f dev_appserver
     Stop All Processes
@@ -143,3 +152,20 @@ Test user logout
     Click link  First Last
     Click link  Logout
     Click link  log in
+
+Start browser
+    ${BUILD_INFO} =  Set variable
+    ...           build:${BUILD_NUMBER},name:${SUITE_NAME} | ${TEST_NAME}
+    Open browser  ${APP_URL}  ${BROWSER}
+    ...           remote_url=${REMOTE_URL}
+    ...           desired_capabilities=${DESIRED_CAPABILITIES},${BUILD_INFO}
+    Run keyword and ignore error  Set session id
+
+Set session id
+    Keyword should exist  Get session id
+    ${SESSION_ID} =  Get session id
+    Set test variable  ${SESSION_ID}  ${SESSION_ID}
+
+Report test status
+    Run keyword unless  '${SESSION_ID}' == ''
+    ...     Report sauce status  ${SESSION_ID}  ${TEST_STATUS}  ${TEST_TAGS}

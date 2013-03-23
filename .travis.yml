@@ -1,13 +1,31 @@
+--- 
+before_script: 
+- bash -c "while [ ! -f CONNECTED ]; do sleep 2; done"
+before_install: 
+- pip install http://effbot.org/downloads/Imaging-1.1.6.tar.gz
+script: 
+- make test
 language: python
-python: 2.7
-before_install:
-  - pip install http://effbot.org/downloads/Imaging-1.1.6.tar.gz
-install:
-  - python bootstrap.py
-  - bin/buildout -t 5 -Nq
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-script:
-  - make test
-  - cat log.html
+after_script: 
+- kill $JAVA_PID
+install: 
+- python bootstrap.py
+- bin/buildout -t 5 -Nq
+- curl -O http://saucelabs.com/downloads/Sauce-Connect-latest.zip
+- unzip Sauce-Connect-latest.zip
+- java -jar Sauce-Connect.jar $SAUCE_USERNAME $SAUCE_ACCESS_KEY -i $TRAVIS_JOB_ID -f CONNECTED &
+- JAVA_PID=$!
+env: 
+  global: 
+  - ROBOT_BUILD_NUMBER=travis-$TRAVIS_BUILD_NUMBER
+  - ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub
+  - ROBOT_BROWSER=firefox ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_ID
+  - secure: |-
+      gnXfR/3vjGjWDU+rW+nD2orhlKXR2IxvVL+p0FePbM8Uy/pl2fDYjYn5vvwL
+      HEJBmHPsr4DHgoh9+euT5duWU4jSctLT4UmKzYLgCAyWVqPZfsaLHf2MK+5s
+      cxkzzqt+PWfzfbSzUQSkdzsGz6ST0QI+mNI/JkRSzVYMG2cedcc=
+  - secure: |-
+      MKvFH1MzDXHE0M3TStiUzGYhEQ315HwoT4M5a9UplDQDx6+tGZunTzwLBpjX
+      DWsgOk7Js8Zq+1Xz7+wYUr7XJzuSsVrsRHNNUyCWqlYLZcWvJmUVkrMEKfuL
+      TMmGrfOZD4Hpp9XjIjI5CUOfsjCncJrEP584djSPq+HVozaPLpI=
+python: "2.7"
