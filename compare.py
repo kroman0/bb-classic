@@ -80,4 +80,4 @@ def set_window_size(width, height):
     | Should Be Equal | ${height} | ${600} |
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
-    return driver._current_browser().set_window_size(width, height)
+    return driver._current_browser().set_window_size(int(width), int(height))
