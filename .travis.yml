@@ -10,7 +10,7 @@ script:
 after_script: 
 - kill $JAVA_PID
 before_install: 
-- pip install Pillow
+- pip install Pillow pycrypto
 language: python
 env: 
   global: 
