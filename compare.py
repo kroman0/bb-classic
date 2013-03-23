@@ -69,6 +69,3 @@ def report_sauce_status(job_id, test_status, test_tags=[]):
     )
 
     return connection.getresponse().status
-
-def get_env_variable(variable, default=None):
-    return os.environ.get(variable, default)
