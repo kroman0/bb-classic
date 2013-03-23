@@ -10,6 +10,14 @@ import httplib
 import os
 import json
 
+try:
+    # Inject keyword for getting the selenium session id
+    import Selenium2Library
+    Selenium2Library.keywords._browsermanagement.\
+        _BrowserManagementKeywords.get_session_id = lambda self:\
+        self._cache.current.session_id
+except ImportError:
+    pass
 
 def compare_screenshot_to_base(baseline, diff=100):
     """
