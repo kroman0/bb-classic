@@ -49,7 +49,7 @@ def compare_screenshot_to_base(baseline, diff=100):
         raise AssertionError(
             "Image: %s is different from baseline: %s" % (path, baseline))
 
-def report_sauce_status(self, job_id, test_status, test_tags=[]):
+def report_sauce_status(job_id, test_status, test_tags=[]):
     username = os.environ.get('SAUCE_USERNAME')
     access_key = os.environ.get('SAUCE_ACCESS_KEY')
 
@@ -69,3 +69,6 @@ def report_sauce_status(self, job_id, test_status, test_tags=[]):
     )
 
     return connection.getresponse().status
+
+def get_env_variable(variable, default=None):
+    return os.environ.get(variable, default)
