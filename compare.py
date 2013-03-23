@@ -69,3 +69,15 @@ def report_sauce_status(job_id, test_status, test_tags=[]):
     )
 
     return connection.getresponse().status
+
+def set_window_size(width, height):
+    """Sets the `width` and `height` of the current window to the specified values.
+
+    Example:
+    | Set Window Size | ${800} | ${600} |
+    | ${width} | ${height}= | Get Window Size |
+    | Should Be Equal | ${width} | ${800} |
+    | Should Be Equal | ${height} | ${600} |
+    """
+    driver = BuiltIn().get_library_instance('Selenium2Library')
+    return driver._current_browser().set_window_size(width, height)
