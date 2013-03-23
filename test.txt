@@ -122,6 +122,7 @@ Test My Profile
 
 Start app and Open Browser
     Start Process  bin/dev_appserver app --skip_sdk_update_check
+    Sleep  1
     Open browser  ${APP_URL}
     Maximize browser window
 
