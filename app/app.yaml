@@ -23,10 +23,10 @@ handlers:
 
 libraries:
 - name: webapp2
-  version: "2.5.2"
+  version: latest
 
 - name: pycrypto
-  version: "2.3"
+  version: latest
 
 - name: jinja2
   version: latest
