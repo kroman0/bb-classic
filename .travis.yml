@@ -3,6 +3,7 @@ before_script:
 - bash -c "while [ ! -f CONNECTED ]; do sleep 2; done"
 script: 
 - make test
+- cat log.html
 after_script: 
 - kill $JAVA_PID
 before_install: 
