@@ -5,6 +5,7 @@ script:
 #- make test
 #- cat log.html
 - make &
+- sleep 10
 - curl -s 0.0.0.0:8080
 after_script: 
 - kill $JAVA_PID
