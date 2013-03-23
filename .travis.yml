@@ -17,9 +17,6 @@ install:
 - JAVA_PID=$!
 env: 
   global: 
-  - ROBOT_BUILD_NUMBER=travis-$TRAVIS_BUILD_NUMBER
-  - ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub
-  - ROBOT_BROWSER=firefox ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_ID
   - secure: |-
       gnXfR/3vjGjWDU+rW+nD2orhlKXR2IxvVL+p0FePbM8Uy/pl2fDYjYn5vvwL
       HEJBmHPsr4DHgoh9+euT5duWU4jSctLT4UmKzYLgCAyWVqPZfsaLHf2MK+5s
@@ -28,4 +25,7 @@ env:
       MKvFH1MzDXHE0M3TStiUzGYhEQ315HwoT4M5a9UplDQDx6+tGZunTzwLBpjX
       DWsgOk7Js8Zq+1Xz7+wYUr7XJzuSsVrsRHNNUyCWqlYLZcWvJmUVkrMEKfuL
       TMmGrfOZD4Hpp9XjIjI5CUOfsjCncJrEP584djSPq+HVozaPLpI=
+  - ROBOT_BUILD_NUMBER=travis-$TRAVIS_BUILD_NUMBER
+  - ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub
+  - ROBOT_BROWSER=firefox ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_ID
 python: "2.7"
