@@ -1,31 +1,31 @@
 --- 
-language: python
-python: "2.7"
+before_script: 
+- bash -c "while [ ! -f CONNECTED ]; do sleep 2; done"
+script: 
+- make test
+after_script: 
+- kill $JAVA_PID
 before_install: 
 - pip install Pillow
-install:
+language: python
+env: 
+  global: 
+  - secure: |-
+      Po6BXB8Bu+FJ2Reg4BI20gDcolIwwVo2L3wT48A9BI2utPgQ9ct7ku9Mte3p
+      uyFUBucLbhvs5SjHWCUunFYkZ8F3VOPL/WSh2QGJAUlUsjQLfHYSyKRM3xiu
+      IKNO2nQiW01oPJ56DLhJaEzq+T3UIDDzsVYnSWPr3U8olAyGNn0=
+  - secure: |-
+      E+PygQjGik/pJ5rhDi9WH4r/LjY9VU+K/kkFoXFkmKItZaI9k6P0wS1EEZ5G
+      39wS6LFxj8z8qVEpdtPhSK4WLvkpkGbQxsVsizn8eYI9Gk0f7giw7QyBjAjc
+      dLo+JsWsQJBwnU3aRaZ31lXSg/CqBqs4J+iALXhO1P5lhcvdlNw=
+  - ROBOT_BUILD_NUMBER=travis-$TRAVIS_BUILD_NUMBER
+  - ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub
+  - ROBOT_BROWSER=firefox ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_ID
+python: "2.7"
+install: 
 - python bootstrap.py
 - bin/buildout -Nq
 - curl -O http://saucelabs.com/downloads/Sauce-Connect-latest.zip
 - unzip Sauce-Connect-latest.zip
 - java -jar Sauce-Connect.jar $SAUCE_USERNAME $SAUCE_ACCESS_KEY -i $TRAVIS_JOB_ID -f CONNECTED &
 - JAVA_PID=$!
-before_script:
-- bash -c "while [ ! -f CONNECTED ]; do sleep 2; done"
-script: 
-- make test
-after_script: 
-- kill $JAVA_PID
-env: 
-  global: 
-  - secure: |-
-      gnXfR/3vjGjWDU+rW+nD2orhlKXR2IxvVL+p0FePbM8Uy/pl2fDYjYn5vvwL
-      HEJBmHPsr4DHgoh9+euT5duWU4jSctLT4UmKzYLgCAyWVqPZfsaLHf2MK+5s
-      cxkzzqt+PWfzfbSzUQSkdzsGz6ST0QI+mNI/JkRSzVYMG2cedcc=
-  - secure: |-
-      MKvFH1MzDXHE0M3TStiUzGYhEQ315HwoT4M5a9UplDQDx6+tGZunTzwLBpjX
-      DWsgOk7Js8Zq+1Xz7+wYUr7XJzuSsVrsRHNNUyCWqlYLZcWvJmUVkrMEKfuL
-      TMmGrfOZD4Hpp9XjIjI5CUOfsjCncJrEP584djSPq+HVozaPLpI=
-  - ROBOT_BUILD_NUMBER=travis-$TRAVIS_BUILD_NUMBER
-  - ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub
-  - ROBOT_BROWSER=firefox ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_ID
