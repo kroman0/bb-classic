@@ -30,7 +30,7 @@ ${REMOTE_URL} =
 ${DESIRED_CAPABILITIES} =  platform:Linux
 ${BUILD_NUMBER} =  manual
 ${SESSION_ID} =
-${TEST_NAME} =
+${TEST_NAME} =  General
 
 
 *** Test Cases ***
@@ -47,7 +47,7 @@ Test Login Page
     Page should contain element  name=username
     Page should contain element  name=password
 #    Capture Page Screenshot  login.png
-#    Compare screenshot to base  ${base_login}
+    Compare screenshot to base  ${base_login}
     Input Text  name=subdomain  test
     Click button  Log in
     Page should contain  Please enter all fields!
@@ -64,23 +64,23 @@ Test Nav Pages
     Click link  Projects
     Location should be  ${APP_URL}/#projects
 #    Capture Page Screenshot  projects.png
-#    Compare screenshot to base  ${base_projects}
+    Compare screenshot to base  ${base_projects}
     Click link  Companies
     Location should be  ${APP_URL}/#companies
 #    Capture Page Screenshot  companies.png
-#    Compare screenshot to base  ${base_companies}
+    Compare screenshot to base  ${base_companies}
     Click link  To-Dos
     Location should be  ${APP_URL}/#todos
 #    Capture Page Screenshot  todos.png
-#    Compare screenshot to base  ${base_todos}
+    Compare screenshot to base  ${base_todos}
     Click link  Time
     Location should be  ${APP_URL}/#time_report
 #    Capture Page Screenshot  time_report.png
-#    Compare screenshot to base  ${base_time_report}
+    Compare screenshot to base  ${base_time_report}
     Click link  People
     Location should be  ${APP_URL}/#people
 #    Capture Page Screenshot  people.png
-#    Compare screenshot to base  ${base_people}  1000
+    Compare screenshot to base  ${base_people}
     Test user logout
 
 Test Projects Page
@@ -122,7 +122,7 @@ Test My Profile
     Page should contain  Office phone: +000 (00) 000-0003
     Page should contain  Time zone: Europe/Kiev
 #    Capture Page Screenshot  mypage.png
-#    Compare screenshot to base  ${base_mypage}
+    Compare screenshot to base  ${base_mypage}
     Test user logout
 
 
@@ -133,7 +133,7 @@ Start app and Open Browser
     Sleep  1
 #    Open browser  ${APP_URL}
     Start browser
-    Maximize browser window
+#    Maximize browser window
 
 Close All Browsers and Processes
     Report test status
@@ -155,8 +155,7 @@ Test user logout
     Click link  log in
 
 Start browser
-    ${BUILD_INFO} =  Set variable
-    ...           build:${BUILD_NUMBER},name:${SUITE_NAME} | ${TEST_NAME}
+    ${BUILD_INFO} =  Set variable  build:${BUILD_NUMBER},name:${SUITE_NAME} | ${TEST_NAME}
     Open browser  ${APP_URL}  ${BROWSER}  remote_url=${REMOTE_URL}  desired_capabilities=${DESIRED_CAPABILITIES},${BUILD_INFO}
     Run keyword and ignore error  Set session id
 

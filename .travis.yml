@@ -1,20 +1,21 @@
 --- 
-before_script: 
-- bash -c "while [ ! -f CONNECTED ]; do sleep 2; done"
-before_install: 
-- pip install http://effbot.org/downloads/Imaging-1.1.6.tar.gz
-script: 
-- make test
 language: python
-after_script: 
-- kill $JAVA_PID
-install: 
+python: "2.7"
+before_install: 
+- pip install Pillow
+install:
 - python bootstrap.py
-- bin/buildout -t 5 -Nq
+- bin/buildout -Nq
 - curl -O http://saucelabs.com/downloads/Sauce-Connect-latest.zip
 - unzip Sauce-Connect-latest.zip
 - java -jar Sauce-Connect.jar $SAUCE_USERNAME $SAUCE_ACCESS_KEY -i $TRAVIS_JOB_ID -f CONNECTED &
 - JAVA_PID=$!
+before_script:
+- bash -c "while [ ! -f CONNECTED ]; do sleep 2; done"
+script: 
+- make test
+after_script: 
+- kill $JAVA_PID
 env: 
   global: 
   - secure: |-
@@ -28,4 +29,3 @@ env:
   - ROBOT_BUILD_NUMBER=travis-$TRAVIS_BUILD_NUMBER
   - ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub
   - ROBOT_BROWSER=firefox ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_ID
-python: "2.7"
