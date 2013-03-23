@@ -25,10 +25,10 @@ ${base_time_report} =  ${base_path}time_report.png
 ${base_todos} =  ${base_path}todos.png
 ${base_people} =  ${base_path}people.png
 
-${BROWSER} = Firefox
+${BROWSER} =  Firefox
 ${REMOTE_URL} =
-${DESIRED_CAPABILITIES} = platform:Linux
-${BUILD_NUMBER} = manual
+${DESIRED_CAPABILITIES} =  platform:Linux
+${BUILD_NUMBER} =  manual
 ${SESSION_ID} =
 
 
