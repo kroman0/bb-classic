@@ -42,28 +42,34 @@ Test Nav Pages
     Test user login
     Click link  Projects
     Location should be  ${APP_URL}/#projects
+    Sleep  0.5
 #    Capture Page Screenshot  projects.png
 #    Compare screenshot to base  ${base_projects}
     Click link  Companies
     Location should be  ${APP_URL}/#companies
+    Sleep  0.5
 #    Capture Page Screenshot  companies.png
 #    Compare screenshot to base  ${base_companies}
     Click link  To-Dos
     Location should be  ${APP_URL}/#todos
+    Sleep  0.5
 #    Capture Page Screenshot  todos.png
 #    Compare screenshot to base  ${base_todos}
     Click link  Time
     Location should be  ${APP_URL}/#time_report
+    Sleep  0.5
 #    Capture Page Screenshot  time_report.png
 #    Compare screenshot to base  ${base_time_report}
     Click link  People
     Location should be  ${APP_URL}/#people
+    Sleep  0.5
 #    Capture Page Screenshot  people.png
 #    Compare screenshot to base  ${base_people}
 
 Test Projects Page
     Test user login
     Click link  Projects
+    Wait Until Page Contains Element  link=Active
     Click link  active
     Sleep  0.5
     Click element  xpath=//*[@id="projects_active"]//a[contains(text(),"Company name #1")]

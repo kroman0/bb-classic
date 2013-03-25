@@ -13,7 +13,7 @@ Backbone.Collection.prototype.get_or_create = function (id) {
     if (!this[id]) {
         this[id] = this.clone();
         this[id].parent_id = id;
-        this[id].on("reset", onReset);
+        this[id].on("sync", onReset);
     }
     return this[id];
 };
