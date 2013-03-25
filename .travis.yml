@@ -21,7 +21,7 @@ env:
   - ROBOT_BUILD_NUMBER=travis-$TRAVIS_BUILD_NUMBER
   - ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub
   - ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_ID
-matrix:
+  matrix:
   - ROBOT_BROWSER=firefox
   - ROBOT_BROWSER=chrome
   - ROBOT_BROWSER=internetexplorer
