@@ -4,9 +4,13 @@ Library  Selenium2Library  timeout=15  implicit_wait=0.1
 
 Resource  keywords.txt
 
-Suite Setup  Start app and Open Browser
+Suite Setup  Start app
 
-Suite Teardown  Close All Browsers and Processes
+Suite Teardown  Stop app
+
+Test Setup  Start Browser For Test
+
+Test Teardown  Close All Browsers and Report Status
 
 
 *** Test Cases ***
@@ -33,7 +37,6 @@ Test Login Page
     Input Password  name=password  test
     Click button  Log in
     Wait Until Page Contains  First Last
-    Test user logout
 
 Test Nav Pages
     Test user login
@@ -57,7 +60,6 @@ Test Nav Pages
     Location should be  ${APP_URL}/#people
 #    Capture Page Screenshot  people.png
 #    Compare screenshot to base  ${base_people}
-    Test user logout
 
 Test Projects Page
     Test user login
@@ -83,7 +85,6 @@ Test Projects Page
     Element Should Not Be Visible  link=Name of #15
     Element Should Not Be Visible  link=Name of #10
     Element Should Be Visible  link=Name of #5
-    Test user logout
 
 Test My Profile
     Test user login
@@ -99,5 +100,4 @@ Test My Profile
     Page should contain  Time zone: Europe/Kiev
 #    Capture Page Screenshot  mypage.png
 #    Compare screenshot to base  ${base_mypage}
-    Test user logout
 
