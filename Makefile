@@ -19,6 +19,7 @@ deploy: clean minify
 	bin/appcfg update app --oauth2
 
 minify:
+	uglifyjs app/static/js/json2.js -o app/static/js/json2.min.js
 	uglifyjs app/static/js/jquery.deserialize.js -o app/static/js/jquery.deserialize-min.js
 	uglifyjs app/static/js/backbone.analytics.js -o app/static/js/backbone.analytics-min.js
 	uglifyjs app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js -o app/static/js/main-min.js
