@@ -7,7 +7,7 @@ run:
 	bin/dev_appserver app --skip_sdk_update_check --high_replication --datastore_path=app.ds
 
 test:	clean
-	bin/pybot test.txt
+	bin/pybot tests
 
 backup:
 	cp app.ds app.ds.backup
@@ -29,3 +29,8 @@ jshint:
 clean:
 	find . -name \*~ -exec rm {} \;
 	rm -rf *.pyc robot_* selenium-screenshot-* output.xml log.html report.html
+
+sauce:
+	wget http://saucelabs.com/downloads/Sauce-Connect-latest.zip
+	unzip Sauce-Connect-latest.zip
+	java -jar Sauce-Connect.jar
