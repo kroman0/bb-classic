@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kroman0/bb-classic.png?branch=master)](https://travis-ci.org/kroman0/bb-classic)
+[![Sauce Status](https://saucelabs.com/buildstatus/kroman0)](https://saucelabs.com/u/kroman0)
 BB Classic
 ==========
 
