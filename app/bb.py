@@ -35,25 +35,32 @@ class CacheInfo(db.Model):
                                auto_now=True)
 
 
-class MainPage(webapp2.RequestHandler):
+class BaseRequestHandler(webapp2.RequestHandler):
+    def dev(self):
+        dev = self.request.get('dev', False)
+        return dev or os.environ['SERVER_SOFTWARE'].startswith('Development')
+
     def auth_check(self):
         isSessioned = False
-        subdomain = None
         if 'ssid' in self.request.cookies:
             data = decodeData(self.request.cookies['ssid'])
             if data:
                 isSessioned = True
-        if not isSessioned:
-            self.redirect('/login')
+                self.username, self.password, self.subjectId, self.subdomain = data
+        return isSessioned
 
+
+class MainPage(BaseRequestHandler):
     def get(self):
-        self.auth_check()
-        self.response.out.write(template.render(
-            _('index.html'),
-            {'dev': os.environ['SERVER_SOFTWARE'].startswith('Development')}))
+        if self.auth_check():
+            self.response.out.write(template.render(
+                _('index.html'),
+                {'dev': self.dev()}))
+        else:
+            return self.redirect('/login')
 
 
-class LoginPage(webapp2.RequestHandler):
+class LoginPage(BaseRequestHandler):
     def getSubjectId(self, username, password, subdomain):
         """
         Get 'subject_id' for report query - it is id of logged in user.
@@ -76,7 +83,7 @@ class LoginPage(webapp2.RequestHandler):
     def get(self):
         self.response.out.write(template.render(
             _('login.html'),
-            {'dev': os.environ['SERVER_SOFTWARE'].startswith('Development')}))
+            {'dev': self.dev()}))
 
     def post(self):
         login = self.request.get('username')
@@ -115,14 +122,14 @@ class LoginPage(webapp2.RequestHandler):
         self.response.headers.add_header('Set-Cookie', str(ssid_cookie))
 
 
-class LogoutPage(webapp2.RequestHandler):
+class LogoutPage(BaseRequestHandler):
     def get(self):
         ssid = self.request.cookies.get('ssid', '')
         self.response.headers['Set-Cookie'] = str(
             'ssid=%s; expires=Fri, 31-Dec-2008 23:59:59 GMT;' % ssid)
         self.response.out.write(template.render(
             _('logout.html'),
-            {'dev': os.environ['SERVER_SOFTWARE'].startswith('Development')}))
+            {'dev': self.dev()}))
 
 
 def convert(node):
@@ -154,24 +161,15 @@ def convert(node):
     return (name, value)
 
 
-class CrossDomain(webapp2.RequestHandler):
+class CrossDomain(BaseRequestHandler):
     username = None
     password = None
     subjectId = None
     subdomain = None
 
-    def auth_check(self):
-        isSessioned = False
-        if 'ssid' in self.request.cookies:
-            data = decodeData(self.request.cookies['ssid'])
-            if data:
-                isSessioned = True
-                self.username, self.password, self.subjectId, self.subdomain = data
-        if not isSessioned:
-            self.redirect('/login')
-
     def get(self):
-        self.auth_check()
+        if not self.auth_check():
+            return self.redirect('/login')
         if self.subdomain == 'test' and self.username == 'test' and \
                 self.password == 'test' and self.subjectId == 'test':
             self.response.headers['Content-Type'] = 'application/json'
@@ -246,7 +244,7 @@ class CrossDomain(webapp2.RequestHandler):
             else:
                 self.response.out.write(json.dumps(collection))
             return
-        DEV = os.environ['SERVER_SOFTWARE'].startswith('Development')
+        DEV = self.dev()
         q = None
         if DEV:
             q = db.GqlQuery(
