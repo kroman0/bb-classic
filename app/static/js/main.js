@@ -117,9 +117,9 @@ $(function () {
     workspace = new Workspace();
     workspace.on("route", function (route, params) {
         var id;
-        if (["projects","companies","people","time_report","todos"].indexOf(route)!==-1) {
+        if (_.contains(["projects","companies","people","time_report","todos"], route)) {
             views.current = views[route].render();
-        } else if (["project_people", "project_categories", "project_time_entries", "project_posts", "project_files", "project_calendar", "project_todo_lists"].indexOf(route)!==-1) {
+        } else if (_.contains(["project_people", "project_categories", "project_time_entries", "project_posts", "project_files", "project_calendar", "project_todo_lists"], route)) {
             id = parseInt(params[0],10);
             if (collections.projects.get(id)) {
                 views[route].model = collections.projects.get(id);
@@ -128,7 +128,7 @@ $(function () {
             }
             views[route].collection = collections[route].get_or_create(id);
             views.current = views[route].render();
-        } else if (["project_post", "project_file", "project_calendar_entry", "project_category", "project_todo_list"].indexOf(route)!==-1) {
+        } else if (_.contains(["project_post", "project_file", "project_calendar_entry", "project_category", "project_todo_list"], route)) {
             id = parseInt(params[0],10);
             var cur_item = parseInt(params[1],10);
             if (collections.projects.get(id)) {
@@ -148,7 +148,7 @@ $(function () {
                     views[route].collection = collections[route+"s"].get_or_create(id);
             } 
             views.current = views[route].render();
-        } else if (["project_calendar_entry_comments", "project_post_comments", "todo_time_entries"].indexOf(route)!==-1) {
+        } else if (_.contains(["project_calendar_entry_comments", "project_post_comments", "todo_time_entries"], route)) {
             id = parseInt(params[0],10);
             var parent_id = parseInt(params[1],10);
             if (collections.projects.get(id)) {
