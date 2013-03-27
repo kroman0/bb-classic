@@ -160,7 +160,7 @@ $(function () {
             views[route].collection = collections[route].get_or_create(parent_id);
             views.current = views[route].render();
         }
-        if (views.current) $('title').html(views.current.name() + " - BB");
+        if (views.current) document.title = views.current.name() + " - BB";
 //         add_hash();
         if (views.current && views.current.deps) views.current.deps();
         $(_.filter($(".navbar ul.nav li").removeClass("active"), function (i) {
