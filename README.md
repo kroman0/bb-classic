@@ -16,6 +16,17 @@ Installation
 
 - - -
 
+Development
+-----------
+
+- Backup `make backup`
+- Restore `make restory`
+- Minify javascript `make minify`
+- JShint `make jshint`
+- Testing `make test`
+
+- - -
+
 Updating GAE application
 ------------------------
 
