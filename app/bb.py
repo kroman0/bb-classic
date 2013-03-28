@@ -160,18 +160,20 @@ def convert(node):
             value = "".join([i.nodeValue for i in childs])
     return (name, value)
 
+
 def dict2xml(data):
     from xml.dom.minidom import Document
-    d=Document()
-    p=d.createElement("photo")
+    d = Document()
+    p = d.createElement("photo")
     d.appendChild(p)
-    a=d.createAttribute("asd")
+    a = d.createAttribute("asd")
     p.attributes.setNamedItem(a)
-    a.value="dsa"
-    t=d.createTextNode("test")
+    a.value = "dsa"
+    t = d.createTextNode("test")
     p.appendChild(t)
     d.toprettyxml()
     '<?xml version="1.0" ?>\n<photo asd="dsa">test</photo>\n'
+
 
 class CrossDomain(BaseRequestHandler):
     username = None
@@ -206,11 +208,12 @@ class CrossDomain(BaseRequestHandler):
                 "updated-at": "2000-01-01T00:00:00Z",
                 "user-name": "test",
             }
-            import random, string
+            import random
+            import string
             attachment = lambda x: {
                 "download-url": "url%s"%x,
-                "byte-size": 100*x,
-                "person-id": x%5+1,
+                "byte-size": 100 * x,
+                "person-id": x%5 + 1,
                 "name": "Name #%s"%x,
                 "author-name": "Author name #%s"%i,
             }
@@ -218,56 +221,56 @@ class CrossDomain(BaseRequestHandler):
                 "address-one": "Address one of #%s"%i,
                 "address-two": "Address two of #%s"%i,
                 "announcement": "announcement of #%s"%i,
-                "attachments": [attachment(x) for x in range(1, i%5+1)],
+                "attachments": [attachment(x) for x in range(1, i%5 + 1)],
                 "attachments-count": i%5,
-                "author-id": i%5+1,
+                "author-id": i%5 + 1,
                 "author-name": "Author name #%s"%i,
                 "avatar-url": "/static/img/avatar.gif",
                 "body": "Body of #%s"%i,
-                "category-id": i%5+1,
+                "category-id": i%5 + 1,
                 "city": "City #%s"%i,
-                "commented-at": "%s-%s-%s"%(i%12+2001,i%12+1,i%30+1),
+                "commented-at": "%s-%s-%s"%(i%12 + 2001, i%12 + 1, i%30 + 1),
                 "comments-count": i,
-                "company": {"id": i%5+1, "name": "Company name #%s"%(i%5+1)},
-                "company-id": i%5+1,
+                "company": {"id": i%5 + 1, "name": "Company name #%s"%(i%5 + 1)},
+                "company-id": i%5 + 1,
                 "country": "Country #%s"%i,
-                "created-at": "%s-%s-%s"%(i%12+2001,i%12+1,i%30+1),
-                "created-at": "%s-%s-%s"%(i%12+2001,i%12+1,i%30+1),
-                "date": "%s-%s-%s"%(i%12+2001,i%12+1,i%30+1),
+                "created-at": "%s-%s-%s"%(i%12 + 2001, i%12 + 1, i%30 + 1),
+                "created-at": "%s-%s-%s"%(i%12 + 2001, i%12 + 1, i%30 + 1),
+                "date": "%s-%s-%s"%(i%12 + 2001, i%12 + 1, i%30 + 1),
                 "description": "description of #%s"%i,
                 "display-body": "Display body of #%s"%i,
                 "elements-count": i,
                 "email-address": "name@domain.com",
                 "first-name": "First#%s"%i,
-                "hours": i%5*0.5+0.1,
+                "hours": i%5 * 0.5 + 0.1,
                 "id": i,
                 "im-handle": "example#%s"%i,
                 "im-service": "Skype",
                 "last-name": "Last",
                 "locale": ["en", "ru", "ua"][i%3],
                 "name": "Name of #%s"%i,
-                "person-id": i%5+1,
+                "person-id": i%5 + 1,
                 "person-name": "Pesson #%s"%i,
                 "phone-number-fax": "Fax of #%s"%i,
                 "phone-number-home": "Home phone of #%s"%i,
                 "phone-number-mobile": "Mobile phone of #%s"%i,
                 "phone-number-office": "Office phone of #%s"%i,
-                "posted-on": "%s-%s-%s"%(i%12+2001,i%12+1,i%30+1),
+                "posted-on": "%s-%s-%s"%(i%12 + 2001, i%12 + 1, i%30 + 1),
                 "private": [True, False][i%2],
-                "project-id": i%5+1,
+                "project-id": i%5 + 1,
                 "state": "State phone of #%s"%i,
-                "status": ["active","on_hold", "archived"][i%3],
+                "status": ["active", "on_hold", "archived"][i%3],
                 "time-zone-id": "EET",
                 "time-zone-name": "Europe/Kiev",
                 "title": "Title #%s"%i,
-                "todo-item-id": i%5+1,
+                "todo-item-id": i%5 + 1,
                 "type": "Type of #%s"%i,
                 "use-textile": [True, False][i%2],
                 "user-name": "test",
                 "web-address": "http://example%s.com"%i,
-                "zip": "".join(random.sample(string.digits,5)),
+                "zip": "".join(random.sample(string.digits, 5)),
             }
-            for i in range(1,30)]
+                for i in range(1, 30)]
             if self.request.path_qs == "/api/me.xml":
                 self.response.out.write(json.dumps(medata))
             else:
