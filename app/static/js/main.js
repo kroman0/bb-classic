@@ -33,6 +33,7 @@ $(function () {
         mydata: models.mydata
     }, viewdata));
     for (var i in collections) {
+        collections[i].on("reset", onReset);
         collections[i].on("sync", onReset);
     }
     collections.project_people = new People();
