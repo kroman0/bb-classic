@@ -1,6 +1,11 @@
 var onReset = function () {
     Backbone.history.loadUrl();
 };
+Backbone.Model.prototype.url = function() {
+    var base = _.result(this, 'urlRoot') || _.result(this.collection, 'url') || urlError();
+    if (this.isNew()) return base;
+    return base + (base.charAt(base.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.id) + '.xml';
+};
 Backbone.Collection.prototype.fetchonce = function () {
     var fetched = this.fetched;
     if (!fetched) {
