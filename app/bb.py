@@ -217,11 +217,16 @@ class CrossDomain(BaseRequestHandler):
                 "name": "Name #%s"%x,
                 "author-name": "Author name #%s"%i,
             }
+            todo = lambda x: {
+                "id": x,
+                "content": "Todo content #%s"%x,
+            }
             collection = [{
                 "address-one": "Address one of #%s"%i,
                 "address-two": "Address two of #%s"%i,
                 "announcement": "announcement of #%s"%i,
                 "attachments": [attachment(x) for x in range(1, i%5 + 1)],
+                "todo-items": [todo(x) for x in range(1, i%5 + 1)],
                 "attachments-count": i%5,
                 "author-id": i%5 + 1,
                 "author-name": "Author name #%s"%i,
@@ -283,6 +288,11 @@ class CrossDomain(BaseRequestHandler):
                 "user-name": "test",
                 "web-address": "http://example%s.com"%i,
                 "zip": "".join(random.sample(string.digits, 5)),
+                "tracked": [True, False][i%2],
+                "completed-count": i%5 + 1,
+                "uncompleted-count": 5 - i%5,
+                "todo-list-id": i%5 + 1,
+                "content": "Todo content #%s"%x,
             }
                 for i in range(1, 30)]
             if self.request.path_qs == "/api/me.xml":
