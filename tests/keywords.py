@@ -10,15 +10,6 @@ import httplib
 import os
 import json
 
-try:
-    # Inject keyword for getting the selenium session id
-    import Selenium2Library
-    Selenium2Library.keywords._browsermanagement.\
-        _BrowserManagementKeywords.get_session_id = lambda self:\
-        self._cache.current.session_id
-except ImportError:
-    pass
-
 def compare_screenshot_to_base(baseline, diff=100):
     """
     Calculate the exact difference between two images.
@@ -81,3 +72,13 @@ def set_window_size(width, height):
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
     return driver._current_browser().set_window_size(int(width), int(height))
+
+def get_session_id():
+    """Get session id
+    """
+    driver = BuiltIn().get_library_instance('Selenium2Library')
+    try:
+        session_id = driver._cache.current.session_id
+    except:
+        session_id = ""
+    return session_id

@@ -70,5 +70,4 @@ Set session id
     Set test variable  ${SESSION_ID}  ${SESSION_ID}
 
 Report test status
-    Run keyword unless  '${SESSION_ID}' == ''
-    ...     Report sauce status  ${SESSION_ID}  ${TEST_STATUS}  ${TEST_TAGS}
+    Run keyword unless  '${SESSION_ID}' == ''  Report sauce status  ${SESSION_ID}  ${TEST_STATUS}  ${TEST_TAGS}
