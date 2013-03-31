@@ -38,14 +38,9 @@ sauce:
 
 bootstrap-update:
 	wget -q http://twitter.github.com/bootstrap/assets/bootstrap.zip -O /tmp/bootstrap.zip
-	unzip -p /tmp/bootstrap.zip bootstrap/css/bootstrap-responsive.css >app/static/css/bootstrap-responsive.css
-	unzip -p /tmp/bootstrap.zip bootstrap/css/bootstrap-responsive.min.css >app/static/css/bootstrap-responsive.min.css
-	unzip -p /tmp/bootstrap.zip bootstrap/css/bootstrap.css >app/static/css/bootstrap.css
-	unzip -p /tmp/bootstrap.zip bootstrap/css/bootstrap.min.css >app/static/css/bootstrap.min.css
-	unzip -p /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings-white.png >app/static/img/glyphicons-halflings-white.png
-	unzip -p /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings.png >app/static/img/glyphicons-halflings.png
-	unzip -p /tmp/bootstrap.zip bootstrap/js/bootstrap.js >app/static/js/bootstrap.js
-	unzip -p /tmp/bootstrap.zip bootstrap/js/bootstrap.min.js >app/static/js/bootstrap.min.js
+	unzip -oj /tmp/bootstrap.zip bootstrap/css/* -d app/static/css/
+	unzip -oj /tmp/bootstrap.zip bootstrap/img/* -d app/static/img/
+	unzip -oj /tmp/bootstrap.zip bootstrap/js/* -d app/static/js/
 
 backbone-update:
 	wget -q http://backbonejs.org/backbone.js -O app/static/js/backbone.js
