@@ -388,17 +388,16 @@ var TodoView = Backbone.View.extend({
         "click .todo.icon-uncompleted": "complete"
     },
     complete: function () {
-        this.model.set('completed', true);
-        this.render();
+        this.model.complete();
     },
     uncomplete: function () {
-        this.model.set('completed', false);
-        this.render();
+        this.model.uncomplete();
     },
     tagName: 'dd',
     template: '#todo-template',
     render: function () {
         this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+        this.delegateEvents();
         return this;
     }
 });

@@ -181,6 +181,12 @@ class CrossDomain(BaseRequestHandler):
     subjectId = None
     subdomain = None
 
+    def put(self):
+        if not self.auth_check():
+            return self.redirect('/login')
+        #self.response.headers['Content-Type'] = 'application/json'
+        #self.response.out.write(self.request.body)
+
     def get(self):
         if not self.auth_check():
             return self.redirect('/login')

@@ -34,7 +34,13 @@ var TimeEntry = Backbone.Model.extend({
     urlRoot: "/api/time_entries/"
 });
 var TodoItem = Backbone.Model.extend({
-    urlRoot: "/api/todo_items/"
+    urlRoot: "/api/todo_items/",
+    complete: function() {
+        this.save('completed', true, {url: _.result(this, 'url').replace('.xml', '/complete.xml')});
+    },
+    uncomplete: function() {
+        this.save('completed', false, {url: _.result(this, 'url').replace('.xml', '/uncomplete.xml')});
+    }
 });
 var TodoList = Backbone.Model.extend({
     urlRoot: "/api/todo_lists/"
