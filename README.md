@@ -24,6 +24,9 @@ Development
 - Minify javascript `make minify`
 - JShint `make jshint`
 - Testing `make test`
+- Update bootstrap `make bootstrap-update`
+- Update backbone.js `make backbone-update`
+- Update underscore.js `make underscore-update`
 
 - - -
 
