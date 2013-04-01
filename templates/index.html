@@ -44,14 +44,14 @@ div#time_report {
 </head>
 <body>
     <div class="navbar navbar-static-top"></div>
-    <div class="container">
+    <div id="content" class="container">
         <div class="content">
             <div class="progress progress-striped active">
                 <div class="bar" style="width: 100%;"></div>
             </div>
         </div>
     </div>
-<script type="text/javascript">
+<!--<script type="text/javascript">
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-38418276-1']);
     _gaq.push(['_trackPageview']);
@@ -60,7 +60,7 @@ div#time_report {
         ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
-</script>
+</script>-->
 {% if dev %}
 <script src="/static/js/jquery-1.7.2.js"></script>
 <script src="/static/js/jquery.deserialize.js"></script>
@@ -103,9 +103,9 @@ div#time_report {
 <script type="text/template" id="angry_cat-template">
   <td><%= name %></td>
 </script>
-
-<div id="content">
-</div>
+<script type="text/template" id="oneproject-template">
+    <h3><a href="#projects/<%- id %>"><%- name %></a></h3>
+</script>
 
 <script type="text/template" id="time-template">
     <tr <% if(item.get('hours')>2){ %>class="warning"<% } %>>
@@ -243,13 +243,14 @@ div#time_report {
     <%= view.renderpager() %>
     <% } %>
 </script>
-<script type="text/template" id="projects-template">
-    <%= view.renderheader() %>
-    <% var pp=view.collection; if (pp.isEmpty()) { %>
+<script type="text/template" id="emptyprojects-template">
     <div class="alert alert-info">
         No projects...
     </div>
-    <% } else { %>
+</script>
+<script type="text/template" id="projects-template">
+    <%= view.renderheader() %>
+    <% var pp=view.collection; if (!pp.isEmpty()) { %>
     <div class="tabbable">
     <ul class="nav nav-pills offset8">
     <% var fprst=_.first(pp.pluck('status'));
@@ -275,11 +276,6 @@ div#time_report {
             <% _.each(_.groupBy(plist, function(item){ return item.get('company').id}), function (list, coid) { %>
                 <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">
                     <ul class="unstyled">
-                    <% _.each(list, function (item) { %>
-                        <li>
-                            <h3><a href="#projects/<%- item.id %>"><%- item.get('name') %></a></h3>
-                        </li>
-                    <% }) %>
                     </ul>
                 </div>
             <% }) %>

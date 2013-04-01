@@ -241,30 +241,6 @@ BB.addRegions({
     mainRegion: "#content"
 });
 
-AngryCat = Backbone.Model.extend({});
-
-AngryCats = Backbone.Collection.extend({
-    model: AngryCat
-});
-
-AngryCatView = Backbone.Marionette.ItemView.extend({
-    template: "#angry_cat-template",
-    tagName: 'tr',
-    className: 'angry_cat'
-});
-
-AngryCatsView = Backbone.Marionette.CompositeView.extend({
-  tagName: "table",
-  id: "angry_cats",
-  className: "table-striped table-bordered",
-  template: "#angry_cats-template",
-  itemView: AngryCatView,
-
-  appendHtml: function(collectionView, itemView){
-    collectionView.$("tbody").append(itemView.el);
-  }
-});
-
 NavBarView = Backbone.Marionette.View.extend({
     template: "#nav-template",
     className: "navbar-inner",
@@ -273,35 +249,53 @@ NavBarView = Backbone.Marionette.View.extend({
     }
 });
 
+ProjectView = Backbone.Marionette.ItemView.extend({
+    tagName: "li",
+    template: "#oneproject-template"
+});
+EmptyProjectsView = Backbone.Marionette.ItemView.extend({
+    template: "#emptyprojects-template"
+});
+
+ProjectsView = Backbone.Marionette.CompositeView.extend({
+//   tagName: "table",
+  id: "projects",
+//   className: "table-striped table-bordered",
+  template: "#projects-template",
+  itemView: ProjectView,
+  emptyView: EmptyProjectsView,
+  templateHelpers: function(){return {view:this}},
+      name: function () {
+        return "Projects";
+    },
+    appendHtml: function(collectionView, itemView){
+        if(itemView.model.get('company')) {
+            var coid = itemView.model.get('company').id;
+            var status = itemView.model.get('status');
+            var holder = "#projects_" + status + "_" + coid + " ul";
+            collectionView.$(holder).append(itemView.el);
+        } else {
+            collectionView.$el.append(itemView.el);
+        }
+  },
+    initialize: function () {
+        this.collection.bind("sync", this.render, this);
+    }
+});
 
 BB.addInitializer(function(options) {
-    var angryCatsView = new AngryCatsView({
-        collection: options.cats
-    });
     var navbarView = new NavBarView({
         model: new MyModel()
     });
+    var projectsView = new ProjectsView({
+        collection: new Projects()
+    });
     BB.navRegion.show(navbarView);
-    BB.mainRegion.show(angryCatsView);
+    BB.mainRegion.show(projectsView);
     navbarView.model.fetch();
+//     projectsView.collection.fetch();
 });
 
 $(document).ready(function() {
-    // Here we create a bunch of models at the same time as the collection.
-    var cats = new AngryCats([
-        new AngryCat({
-        name: 'Wet Cat'
-    }),
-        new AngryCat({
-        name: 'Bitey Cat'
-    }),
-        new AngryCat({
-        name: 'Surprised Cat'
-    })
-        ]);
-
-
-    BB.start({
-        cats: cats
-    });
+    BB.start();
 });
