@@ -1,0 +1,109 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=15  implicit_wait=0.1
+
+Resource  keywords.txt
+
+Suite Setup  Start app
+
+Suite Teardown  Stop app
+
+Test Setup  Start Browser For Test
+
+Test Teardown  Close All Browsers and Report Status
+
+
+*** Test Cases ***
+
+Test App
+    Location should contain  login
+    Page should contain  BB
+    Title should be  BB
+
+Test Login Page
+    Location should contain  login
+    Page should contain  Please enter you credentials
+    Page should contain element  name=subdomain
+    Page should contain element  name=username
+    Page should contain element  name=password
+#    Capture Page Screenshot  login.png
+#    Compare screenshot to base  ${base_login}
+    Input Text  name=subdomain  test
+    Click button  Log in
+    Page should contain  Please enter all fields!
+    Input Text  name=username  test
+    Click button  Log in
+    Page should contain  Please enter all fields!
+    Input Password  name=password  test
+    Click button  Log in
+    Wait Until Page Contains  First Last
+
+Test Nav Pages
+    Test user login
+    Click link  Projects
+    Location should be  ${APP_URL}/#projects
+    Sleep  0.5
+#    Capture Page Screenshot  projects.png
+#    Compare screenshot to base  ${base_projects}
+    Click link  Companies
+    Location should be  ${APP_URL}/#companies
+    Sleep  0.5
+#    Capture Page Screenshot  companies.png
+#    Compare screenshot to base  ${base_companies}
+    Click link  To-Dos
+    Location should be  ${APP_URL}/#todos
+    Sleep  0.5
+#    Capture Page Screenshot  todos.png
+#    Compare screenshot to base  ${base_todos}
+    Click link  Time
+    Location should be  ${APP_URL}/#time_report
+    Sleep  0.5
+#    Capture Page Screenshot  time_report.png
+#    Compare screenshot to base  ${base_time_report}
+    Click link  People
+    Location should be  ${APP_URL}/#people
+    Sleep  0.5
+#    Capture Page Screenshot  people.png
+#    Compare screenshot to base  ${base_people}
+
+Test Projects Page
+    Test user login
+    Click link  Projects
+    Wait Until Page Contains Element  link=Active
+    Click link  active
+    Sleep  0.5
+    Click element  xpath=//*[@id="projects_active"]//a[contains(text(),"Company name #1")]
+    Sleep  0.5
+    Element Should Be Visible  link=Name of #15
+    Element Should Not Be Visible  link=Name of #10
+    Element Should Not Be Visible  link=Name of #5
+    Click link  on_hold
+    Sleep  0.5
+    Click element  xpath=//*[@id="projects_on_hold"]//a[contains(text(),"Company name #1")]
+    Sleep  0.5
+    Element Should Not Be Visible  link=Name of #15
+    Element Should Be Visible  link=Name of #10
+    Element Should Not Be Visible  link=Name of #5
+    Click link  archived
+    Sleep  0.5
+    Click element  xpath=//*[@id="projects_archived"]//a[contains(text(),"Company name #1")]
+    Sleep  0.5
+    Element Should Not Be Visible  link=Name of #15
+    Element Should Not Be Visible  link=Name of #10
+    Element Should Be Visible  link=Name of #5
+
+Test My Profile
+    Test user login
+    Click link  First Last
+    Click link  My profile
+    Location should be  ${APP_URL}/#me
+    Page should contain element  link=name@domain.com
+    Page should contain element  link=example
+    Page should contain  Mobile phone: +000 (00) 000-0000
+    Page should contain  Home phone: +000 (00) 000-0001
+    Page should contain  Fax phone: +000 (00) 000-0002
+    Page should contain  Office phone: +000 (00) 000-0003
+    Page should contain  Time zone: Europe/Kiev
+#    Capture Page Screenshot  mypage.png
+#    Compare screenshot to base  ${base_mypage}
+

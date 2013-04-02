@@ -1,0 +1,73 @@
+*** Settings ***
+
+Library  OperatingSystem
+
+Library  keywords.py
+
+
+*** Variables ***
+
+${PORT} =  8080
+${DOMAIN} =  0.0.0.0
+${APP_URL} =  http://${DOMAIN}:${PORT}
+${base_path} =  app/static/img/
+${base_login} =  ${base_path}login.png
+${base_mypage} =  ${base_path}mypage.png
+${base_projects} =  ${base_path}projects.png
+${base_companies} =  ${base_path}companies.png
+${base_time_report} =  ${base_path}time_report.png
+${base_todos} =  ${base_path}todos.png
+${base_people} =  ${base_path}people.png
+
+${REMOTE_URL} =
+${SESSION_ID} =
+
+
+*** Keywords ***
+
+Start app
+    Start Process  bin/dev_appserver app --skip_sdk_update_check -a 0.0.0.0
+    Sleep  1
+
+Start Browser For Test
+    Start browser
+    Set Window Size  1024  768
+#    Maximize browser window
+
+Close All Browsers and Report Status
+    Report test status
+    Close All Browsers
+
+Stop app
+    Run  pkill -f dev_appserver
+    Stop All Processes
+
+Test user login
+    Location should contain  login
+    Input Text  name=subdomain  test
+    Input Text  name=username  test
+    Input Password  name=password  test
+    Click button  Log in
+    Wait Until Page Contains  First Last
+
+Test user logout
+    Click link  First Last
+    Click link  Logout
+    Click link  log in
+
+Start browser
+    ${BROWSER} =  Get Environment Variable  ROBOT_BROWSER  Firefox
+    ${REMOTE_URL} =  Get Environment Variable  ROBOT_REMOTE_URL  ${REMOTE_URL}
+    ${BUILD_NUMBER} =  Get Environment Variable  ROBOT_BUILD_NUMBER  manual
+    ${DESIRED_CAPABILITIES} =  Get Environment Variable  ROBOT_DESIRED_CAPABILITIES  platform:Linux
+    ${BUILD_INFO} =  Set variable  build:${BUILD_NUMBER},name:${SUITE_NAME} | ${TEST_NAME}
+    Open browser  ${APP_URL}  ${BROWSER}  remote_url=${REMOTE_URL}  desired_capabilities=${DESIRED_CAPABILITIES},${BUILD_INFO}
+    Run keyword and ignore error  Set session id
+
+Set session id
+    Keyword should exist  Get session id
+    ${SESSION_ID} =  Get session id
+    Set test variable  ${SESSION_ID}  ${SESSION_ID}
+
+Report test status
+    Run keyword unless  '${SESSION_ID}' == ''  Report sauce status  ${SESSION_ID}  ${TEST_STATUS}  ${TEST_TAGS}
