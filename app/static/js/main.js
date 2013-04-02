@@ -230,7 +230,26 @@ $(function () {
 //     models.mydata.fetch();
 });
 
-
+// container = new Backbone.Marionette.Region({
+//   el: "#container"
+// });
+// 
+// MyLayout = Backbone.Marionette.Layout.extend({
+//   template: "#my-layout",
+// 
+//   regions: {
+//     menu: "#menu",
+//     content: "#content"
+//   }
+// });
+// 
+// // Show the "layout" in the "container" region
+// layout = new MyLayout();
+// container.show(layout);
+// 
+// // and show the views in the layout
+// layout.menu.show(new MyMenuView());
+// layout.content.show(new MyContentView());
 
 
 
@@ -242,59 +261,19 @@ BB.addRegions({
     mainRegion: "#content"
 });
 
-NavBarView = Backbone.Marionette.View.extend({
-    template: "#nav-template",
-    className: "navbar-inner",
-    initialize: function () {
-        this.model.bind("change", this.render, this);
-    }
-});
-
-ProjectView = Backbone.Marionette.ItemView.extend({
-    tagName: "li",
-    template: "#oneproject-template"
-});
-EmptyProjectsView = Backbone.Marionette.ItemView.extend({
-    template: "#emptyprojects-template"
-});
-
-ProjectsView = Backbone.Marionette.CompositeView.extend({
-//   tagName: "table",
-  id: "projects",
-//   className: "table-striped table-bordered",
-  template: "#projects-template",
-  itemView: ProjectView,
-  emptyView: EmptyProjectsView,
-  templateHelpers: function(){return {view:this}},
-      name: function () {
-        return "Projects";
-    },
-    appendHtml: function(collectionView, itemView){
-        if(itemView.model.get('company')) {
-            var coid = itemView.model.get('company').id;
-            var status = itemView.model.get('status');
-            var holder = "#projects_" + status + "_" + coid + " ul";
-            collectionView.$(holder).append(itemView.el);
-        } else {
-            collectionView.$el.append(itemView.el);
-        }
-  },
-    initialize: function () {
-        this.collection.bind("sync", this.render, this);
-    }
-});
-
 BB.addInitializer(function(options) {
-    var navbarView = new NavBarView({
-        model: new BB.People.Me()
+    var me = new BB.People.Me();
+    var projects = new BB.Projects.Projects();
+    var navbarView = new BB.People.NavBarView({
+        model: me
     });
-    var projectsView = new ProjectsView({
-        collection: new BB.Projects.Projects()
+    var projectsView = new BB.Projects.ProjectsView({
+        collection: projects
     });
     BB.navRegion.show(navbarView);
     BB.mainRegion.show(projectsView);
-    navbarView.model.fetch();
-//     projectsView.collection.fetch();
+    me.fetch();
+    projects.fetch();
 });
 
 BB.module('Projects', function (Projects, App, Backbone) {
@@ -319,6 +298,39 @@ BB.module('Projects', function (Projects, App, Backbone) {
     Projects.Projects = Backbone.Collection.extend({
         url: '/api/projects.xml',
         model: Projects.Project
+    });
+    Projects.ProjectView = Backbone.Marionette.ItemView.extend({
+        tagName: "li",
+        template: "#oneproject-template"
+    });
+    Projects.EmptyProjectsView = Backbone.Marionette.ItemView.extend({
+        template: "#emptyprojects-template"
+    });
+
+    Projects.ProjectsView = Backbone.Marionette.CompositeView.extend({
+        //   tagName: "table",
+        id: "projects",
+        //   className: "table-striped table-bordered",
+        template: "#projects-template",
+        itemView: Projects.ProjectView,
+        emptyView: Projects.EmptyProjectsView,
+        templateHelpers: function(){return {view:this}},
+        name: function () {
+            return "Projects";
+        },
+        appendHtml: function(collectionView, itemView){
+            if(itemView.model.get('company')) {
+                var coid = itemView.model.get('company').id;
+                var status = itemView.model.get('status');
+                var holder = "#projects_" + status + "_" + coid + " ul";
+                collectionView.$(holder).append(itemView.el);
+            } else {
+                collectionView.$el.append(itemView.el);
+            }
+        },
+        initialize: function () {
+            this.collection.bind("sync", this.render, this);
+        }
     });
 });
 
@@ -355,16 +367,13 @@ BB.module('People', function (People, App, Backbone) {
     People.Me = People.Person.extend({
         url: "/api/me.xml"
     });
-    People.addInitializer(function () {
-        People.me = new People.Me();
-//         var controller = new TodoList.Controller();
-//         controller.router = new TodoList.Router({
-//             controller: controller
-//         });
-// 
-//         controller.start();
+    People.NavBarView = Backbone.Marionette.View.extend({
+        template: "#nav-template",
+        className: "navbar-inner",
+        initialize: function () {
+            this.model.bind("change", this.render, this);
+        }
     });
-
 });
 
 $(document).ready(function() {
