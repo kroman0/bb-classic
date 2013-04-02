@@ -70,24 +70,15 @@ Test Projects Page
     Test user login
     Click link  Projects
     Wait Until Page Contains Element  link=Active
-    Click link  active
-    Sleep  0.5
-    Click element  xpath=//*[@id="projects_active"]//a[contains(text(),"Company name #1")]
-    Sleep  0.5
+    Click on "Company name #1" in active state and wait effect
     Element Should Be Visible  link=Name of #15
     Element Should Not Be Visible  link=Name of #10
     Element Should Not Be Visible  link=Name of #5
-    Click link  on_hold
-    Sleep  0.5
-    Click element  xpath=//*[@id="projects_on_hold"]//a[contains(text(),"Company name #1")]
-    Sleep  0.5
+    Click on "Company name #1" in on_hold state and wait effect
     Element Should Not Be Visible  link=Name of #15
     Element Should Be Visible  link=Name of #10
     Element Should Not Be Visible  link=Name of #5
-    Click link  archived
-    Sleep  0.5
-    Click element  xpath=//*[@id="projects_archived"]//a[contains(text(),"Company name #1")]
-    Sleep  0.5
+    Click on "Company name #1" in archived state and wait effect
     Element Should Not Be Visible  link=Name of #15
     Element Should Not Be Visible  link=Name of #10
     Element Should Be Visible  link=Name of #5
