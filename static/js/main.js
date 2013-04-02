@@ -285,15 +285,85 @@ ProjectsView = Backbone.Marionette.CompositeView.extend({
 
 BB.addInitializer(function(options) {
     var navbarView = new NavBarView({
-        model: new MyModel()
+        model: new BB.People.Me()
     });
     var projectsView = new ProjectsView({
-        collection: new Projects()
+        collection: new BB.Projects.Projects()
     });
     BB.navRegion.show(navbarView);
     BB.mainRegion.show(projectsView);
     navbarView.model.fetch();
 //     projectsView.collection.fetch();
+});
+
+BB.module('Projects', function (Projects, App, Backbone) {
+    // Project Model
+    // -------------
+    Projects.Project = Backbone.Model.extend({
+        urlRoot: "/api/projects/",
+        icon: function () {
+            switch (this.get('status')) {
+                case "active":
+                    return "icon-play";
+                case "archived":
+                    return "icon-stop";
+                case "on_hold":
+                    return "icon-pause";
+            }
+        }
+    });
+
+    // Project Collection
+    // ------------------
+    Projects.Projects = Backbone.Collection.extend({
+        url: '/api/projects.xml',
+        model: Projects.Project
+    });
+});
+
+BB.module('Companies', function (Companies, App, Backbone) {
+    // Company Model
+    // -------------
+    Companies.Company = Backbone.Model.extend({
+        urlRoot: "/api/companies/"
+    });
+
+    // Company Collection
+    // ------------------
+    Companies.Companies = Backbone.Collection.extend({
+        url: '/api/companies.xml',
+        model: Companies.Company
+    });
+});
+
+BB.module('People', function (People, App, Backbone) {
+    People.Person = Backbone.Model.extend({
+        urlRoot: "/api/people/",
+        name: function () {
+            return this.get('first-name') + ' ' + this.get('last-name');
+        }
+    });
+    People.People = Backbone.Collection.extend({
+        parent_id: null, // project id
+        url: function () {
+            if (this.parent_id) return '/api/projects/' + this.parent_id + '/people.xml';
+            return '/api/people.xml';
+        },
+        model: People.Person
+    });
+    People.Me = People.Person.extend({
+        url: "/api/me.xml"
+    });
+    People.addInitializer(function () {
+        People.me = new People.Me();
+//         var controller = new TodoList.Controller();
+//         controller.router = new TodoList.Router({
+//             controller: controller
+//         });
+// 
+//         controller.start();
+    });
+
 });
 
 $(document).ready(function() {
