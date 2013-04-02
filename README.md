@@ -24,8 +24,22 @@ Development
 - Minify javascript `make minify`
 - JShint `make jshint`
 - Testing `make test`
+- Update bootstrap `make bootstrap-update`
+- Update backbone.js `make backbone-update`
+- Update underscore.js `make underscore-update`
 
 - - -
+
+Screenhosts
+-----------
+
+![login](/app/static/img/login.png "login")
+![projects](/app/static/img/projects.png "projects")
+![companies](/app/static/img/companies.png "companies")
+![todos](/app/static/img/todos.png "todos")
+![time_report](/app/static/img/time_report.png "time_report")
+![people](/app/static/img/people.png "people")
+![mypage](/app/static/img/mypage.png "mypage")
 
 Updating GAE application
 ------------------------

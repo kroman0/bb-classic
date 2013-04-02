@@ -32,6 +32,20 @@ clean:
 	rm -rf *.pyc robot_* selenium-screenshot-* output.xml log.html report.html
 
 sauce:
-	wget http://saucelabs.com/downloads/Sauce-Connect-latest.zip
-	unzip Sauce-Connect-latest.zip
-	java -jar Sauce-Connect.jar
+	wget -q http://saucelabs.com/downloads/Sauce-Connect-latest.zip -O /tmp/Sauce-Connect-latest.zip
+	unzip -p Sauce-Connect-latest.zip Sauce-Connect.jar >/tmp/Sauce-Connect.jar
+	java -jar /tmp/Sauce-Connect.jar
+
+bootstrap-update:
+	wget -q http://twitter.github.com/bootstrap/assets/bootstrap.zip -O /tmp/bootstrap.zip
+	unzip -oj /tmp/bootstrap.zip bootstrap/css/* -d app/static/css/
+	unzip -oj /tmp/bootstrap.zip bootstrap/img/* -d app/static/img/
+	unzip -oj /tmp/bootstrap.zip bootstrap/js/* -d app/static/js/
+
+backbone-update:
+	wget -q http://backbonejs.org/backbone.js -O app/static/js/backbone.js
+	wget -q http://backbonejs.org/backbone-min.js -O app/static/js/backbone-min.js
+
+underscore-update:
+	wget -q http://underscorejs.org/underscore.js -O app/static/js/underscore.js
+	wget -q http://underscorejs.org/underscore-min.js -O app/static/js/underscore-min.js
