@@ -43,8 +43,8 @@ div#time_report {
     <![endif]-->
 </head>
 <body>
-    <div class="navbar navbar-static-top"></div>
-    <div id="content" class="container">
+    <div id="navbar" class="navbar navbar-static-top"></div>
+    <div id="content2" class="container">
         <div class="content">
             <div class="progress progress-striped active">
                 <div class="bar" style="width: 100%;"></div>
@@ -140,10 +140,15 @@ div#time_report {
     <% } %>
 </script>
 <script type="text/template" id="header-template">
-    <div class="page-header">
-        <h1><%- view.name() %></h1>
-        <% if (view.model && view.model.get('company')) { %><small><a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a></small><% } %>
-    </div>
+    <h1><%- view.name() %></h1>
+    <% if (view.model && view.model.get('company')) { %>
+    <small>
+        <a href="#companies/<%- view.model.get('company').id %>"><%- view.model.get('company').name %></a>
+    </small>
+    <% } %>
+</script>
+<script type="text/template" id="header1-template">
+    <h1><%- view.name() %></h1>
 </script>
 <script type="text/template" id="project-nav-template">
     <ul class="nav nav-tabs projectnav">
@@ -253,8 +258,11 @@ div#time_report {
         No projects...
     </div>
 </script>
+<script type="text/template" id="projectslayout-template">
+    <div id="header"></div>
+    <div id="maincontent"></div>
+</script>
 <script type="text/template" id="projects-template">
-    <%= view.renderheader() %>
     <% var pp=view.collection; if (!pp.isEmpty()) { %>
     <div class="tabbable">
     <ul class="nav nav-pills offset8">

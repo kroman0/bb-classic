@@ -270,8 +270,15 @@ BB.addInitializer(function(options) {
     var projectsView = new BB.Projects.ProjectsView({
         collection: projects
     });
+    var projectsHeader = new BB.Projects.Header({
+        collection: projects
+    });
+    var projectsLayout = new BB.Projects.Layout();
     BB.navRegion.show(navbarView);
-    BB.mainRegion.show(projectsView);
+//     BB.mainRegion.show(projectsView);
+    BB.mainRegion.show(projectsLayout);
+    projectsLayout.content.show(projectsView);
+    projectsLayout.header.show(projectsHeader);
     me.fetch();
     projects.fetch();
 });
@@ -330,6 +337,27 @@ BB.module('Projects', function (Projects, App, Backbone) {
         },
         initialize: function () {
             this.collection.bind("sync", this.render, this);
+        }
+    });
+    Projects.Header = Backbone.Marionette.View.extend({
+        className: "page-header",
+        template: "#header1-template",
+//         templateHelpers: function(){
+//             return {
+//                 view: this,
+//                 hh: this.name()
+//             };
+//         },
+        name: function () {
+            return "Projects";
+        }
+    });
+    Projects.Layout = Backbone.Marionette.Layout.extend({
+        className: "projectslayout",
+        template: "#projectslayout-template",
+        regions: {
+            header: "#header",
+            content: "#maincontent"
         }
     });
 });
