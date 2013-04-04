@@ -264,7 +264,7 @@ div#time_report {
     <div id="maincontent"></div>
 </script>
 <script type="text/template" id="projects-template">
-    <% var pp=view.collection; if (!pp.isEmpty()) { %>
+    <% var pp=BB.collections.projects; if (!pp.isEmpty()) { %>
     <div class="tabbable">
     <ul class="nav nav-pills offset8">
     <% var fprst=_.first(pp.pluck('status'));
@@ -307,8 +307,8 @@ div#time_report {
     <% if (view.model.get('announcement')) { %><p><%= view.model.get('announcement') %></p><% } %>
 </script>
 <script type="text/template" id="onecompany-template">
-    <dt><h3><a href="#companies/<%- id %>"><%- name %></a></h3></dt>
-    <dd class="row-fluid thumbnail">
+    <h3><a href="#companies/<%- id %>"><%- name %></a></h3>
+    <div class="row-fluid thumbnail">
         <div class="span4">
             <% if (obj['web-address']) { %><a href="<%- obj['web-address'] %>"><b><%- obj['web-address'] %></b></a><br /><% } %>
             <% if (obj['time_zone_id']) { %>Time zone: <%- obj['time_zone_id'] %><br /><% } %>
@@ -325,7 +325,7 @@ div#time_report {
             <% if (obj['phone-number-office']) { %>Office phone: <%- obj['phone-number-office'] %><br /><% } %>
             <% if (obj['phone-number-fax']) { %>Fax phone: <%- obj['phone-number-fax'] %><br /><% } %>
         </div>
-    </dd>
+    </div>
 </script>
 <script type="text/template" id="emptycompanies-template">
     <div class="alert alert-info">
@@ -333,7 +333,6 @@ div#time_report {
     </div>
 </script>
 <script type="text/template" id="companies-template">
-    <dl></dl>
 </script>
 <script type="text/template" id="company-template">
     <%= view.renderheader() %>

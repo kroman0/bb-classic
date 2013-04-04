@@ -256,44 +256,13 @@ $(function () {
 
 BB = new Backbone.Marionette.Application();
 
+BB.collections = {};
+BB.views = {};
+
 BB.addRegions({
     navRegion: "#navbar",
     headerRegion: "#header",
     mainRegion: "#content"
-});
-
-BB.addInitializer(function(options) {
-    var me = new BB.People.Me();
-    var projects = new BB.Projects.Collection();
-    var companies = new BB.Companies.Collection();
-    var navbarView = new BB.People.NavBarView({
-        model: me
-    });
-    var projectsView = new BB.Projects.View({
-        collection: projects
-    });
-    var companiesView = new BB.Companies.View({
-        collection: companies
-    });
-    var projectsHeader = new BB.Projects.Header({
-        collection: projects
-    });
-    var companiesHeader = new BB.Companies.Header({
-        collection: companies
-    });
-//     var projectsLayout = new BB.Projects.Layout();
-    BB.navRegion.show(navbarView);
-//     BB.mainRegion.show(projectsView);
-//     BB.mainRegion.show(projectsLayout);
-//     BB.headerRegion.show(projectsHeader);
-//     BB.mainRegion.show(projectsView);
-    BB.headerRegion.show(companiesHeader);
-    BB.mainRegion.show(companiesView);
-//     projectsLayout.content.show(projectsView);
-//     projectsLayout.header.show(projectsHeader);
-    me.fetch();
-    projects.fetch();
-    companies.fetch();
 });
 
 BB.module('Projects', function (Projects, App, Backbone) {
@@ -390,17 +359,19 @@ BB.module('Companies', function (Companies, App, Backbone) {
     });
 
     Companies.ItemView = Backbone.Marionette.ItemView.extend({
-//         tagName: "li",
+        tagName: "li",
         template: "#onecompany-template"
     });
+
     Companies.EmptyView = Backbone.Marionette.ItemView.extend({
+        tagName: "li",
         template: "#emptycompanies-template"
     });
 
     Companies.View = Backbone.Marionette.CompositeView.extend({
-        //   tagName: "table",
+        tagName: "ul",
         id: "companies",
-        //   className: "table-striped table-bordered",
+        className: "unstyled",
         template: "#companies-template",
         itemView: Companies.ItemView,
         emptyView: Companies.EmptyView,
@@ -408,7 +379,7 @@ BB.module('Companies', function (Companies, App, Backbone) {
             return "Companies";
         },
         appendHtml: function(collectionView, itemView){
-            collectionView.$("dl").append(itemView.el);
+            collectionView.$el.append(itemView.el);
         },
         initialize: function () {
             this.collection.bind("sync", this.render, this);
@@ -425,13 +396,13 @@ BB.module('Companies', function (Companies, App, Backbone) {
 });
 
 BB.module('People', function (People, App, Backbone) {
-    People.Person = Backbone.Model.extend({
+    People.Model = Backbone.Model.extend({
         urlRoot: "/api/people/",
         name: function () {
             return this.get('first-name') + ' ' + this.get('last-name');
         }
     });
-    People.People = Backbone.Collection.extend({
+    People.Collection = Backbone.Collection.extend({
         parent_id: null, // project id
         url: function () {
             if (this.parent_id) return '/api/projects/' + this.parent_id + '/people.xml';
@@ -439,16 +410,61 @@ BB.module('People', function (People, App, Backbone) {
         },
         model: People.Person
     });
-    People.Me = People.Person.extend({
+});
+
+BB.module('Base', function (Base, App, Backbone) {
+    Base.Me = App.People.Model.extend({
         url: "/api/me.xml"
     });
-    People.NavBarView = Backbone.Marionette.View.extend({
+    var NavBarView = Backbone.Marionette.View.extend({
         template: "#nav-template",
         className: "navbar-inner",
         initialize: function () {
             this.model.bind("change", this.render, this);
         }
     });
+    App.addInitializer(function(options) {
+        App.me = new Base.Me();
+        var navbarView = new NavBarView({
+            model: App.me
+        });
+        App.navRegion.show(navbarView);
+    });
+});
+
+BB.addInitializer(function(options) {
+//     BB.me = new BB.Base.Me();
+//     BB.collections = {};
+    BB.collections.projects = new BB.Projects.Collection();
+    BB.collections.companies = new BB.Companies.Collection();
+//     BB.views = {};
+    BB.views.projectsView = new BB.Projects.View({
+        collection: BB.collections.projects
+    });
+    BB.views.companiesView = new BB.Companies.View({
+        collection: BB.collections.companies
+    });
+    BB.views.projectsHeader = new BB.Projects.Header({
+        collection: BB.collections.projects
+    });
+    BB.views.companiesHeader = new BB.Companies.Header({
+        collection: BB.collections.companies
+    });
+//     var projectsLayout = new BB.Projects.Layout();
+//     BB.navRegion.show(BB.views.navbarView);
+//     BB.mainRegion.show(projectsView);
+//     BB.mainRegion.show(projectsLayout);
+//     BB.headerRegion.show(projectsHeader);
+//     BB.mainRegion.show(projectsView);
+    BB.headerRegion.show(BB.views.companiesHeader);
+    BB.mainRegion.show(BB.views.companiesView);
+    BB.headerRegion.show(BB.views.projectsHeader);
+    BB.mainRegion.show(BB.views.projectsView);
+//     projectsLayout.content.show(projectsView);
+//     projectsLayout.header.show(projectsHeader);
+    BB.me.fetch();
+    BB.collections.projects.fetch();
+//     companies.fetch();
 });
 
 $(document).ready(function() {
