@@ -45,7 +45,8 @@ div#time_report {
 <body>
     <div id="navbar" class="navbar navbar-static-top"></div>
     <div id="content2" class="container">
-        <div class="content">
+        <div id="header"></div>
+        <div id="content" class="content">
             <div class="progress progress-striped active">
                 <div class="bar" style="width: 100%;"></div>
             </div>
@@ -305,37 +306,34 @@ div#time_report {
     <%= view.renderprojectnav() %>
     <% if (view.model.get('announcement')) { %><p><%= view.model.get('announcement') %></p><% } %>
 </script>
-<script type="text/template" id="companies-template">
-    <%= view.renderheader() %>
-    <% cc=view.collection; if (cc.isEmpty()) { %>
+<script type="text/template" id="onecompany-template">
+    <dt><h3><a href="#companies/<%- id %>"><%- name %></a></h3></dt>
+    <dd class="row-fluid thumbnail">
+        <div class="span4">
+            <% if (obj['web-address']) { %><a href="<%- obj['web-address'] %>"><b><%- obj['web-address'] %></b></a><br /><% } %>
+            <% if (obj['time_zone_id']) { %>Time zone: <%- obj['time_zone_id'] %><br /><% } %>
+            <% if (locale) { %>Locale: <%- locale %><% } %>
+        </div>
+        <div class="span4">
+            <% if (country) { %><%- country %><br /><% } %>
+            <% if (city) { %><%- city %> <%- zip %><br /><% } %>
+            <% if (obj['address-one']) { %><%- obj['address-one'] %><br /><% } %>
+            <% if (obj['address-two']) { %><%- obj['address-two'] %><% } %>
+        </div>
+        <div class="span4">
+            <% if (state) { %>State: <%- state %><br /><% } %>
+            <% if (obj['phone-number-office']) { %>Office phone: <%- obj['phone-number-office'] %><br /><% } %>
+            <% if (obj['phone-number-fax']) { %>Fax phone: <%- obj['phone-number-fax'] %><br /><% } %>
+        </div>
+    </dd>
+</script>
+<script type="text/template" id="emptycompanies-template">
     <div class="alert alert-info">
         No companies...
     </div>
-    <% } else { %>
-    <dl>
-    <% cc.each(function (item) { %>
-        <dt><h3><a href="#companies/<%- item.id %>"><%- item.get('name') %></a></h3></dt>
-        <dd class="row-fluid thumbnail">
-            <div class="span4">
-                <% if (item.get('web-address')) { %><a href="<%- item.get('web-address') %>"><b><%- item.get('web-address') %></b></a><br /><% } %>
-                <% if (item.get('time-zone-id')) { %>Time zone: <%- item.get('time-zone-id') %><br /><% } %>
-                <% if (item.get('locale')) { %>Locale: <%- item.get('locale') %><% } %>
-            </div>
-            <div class="span4">
-                <% if (item.get('country')) { %><%- item.get('country') %><br /><% } %>
-                <% if (item.get('city')) { %><%- item.get('city') %> <%- item.get('zip') %><br /><% } %>
-                <% if (item.get('address-one')) { %><%- item.get('address-one') %><br /><% } %>
-                <% if (item.get('address-two')) { %><%- item.get('address-two') %><% } %>
-            </div>
-            <div class="span4">
-                <% if (item.get('state')) { %>State: <%- item.get('state') %><br /><% } %>
-                <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
-                <% if (item.get('phone-number-fax')) { %>Fax phone: <%- item.get('phone-number-fax') %><br /><% } %>
-            </div>
-        </dd>
-    <% }) %>
-    </dl>
-    <% } %>
+</script>
+<script type="text/template" id="companies-template">
+    <dl></dl>
 </script>
 <script type="text/template" id="company-template">
     <%= view.renderheader() %>

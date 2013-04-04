@@ -257,36 +257,49 @@ $(function () {
 BB = new Backbone.Marionette.Application();
 
 BB.addRegions({
-    navRegion: ".navbar",
+    navRegion: "#navbar",
+    headerRegion: "#header",
     mainRegion: "#content"
 });
 
 BB.addInitializer(function(options) {
     var me = new BB.People.Me();
-    var projects = new BB.Projects.Projects();
+    var projects = new BB.Projects.Collection();
+    var companies = new BB.Companies.Collection();
     var navbarView = new BB.People.NavBarView({
         model: me
     });
-    var projectsView = new BB.Projects.ProjectsView({
+    var projectsView = new BB.Projects.View({
         collection: projects
+    });
+    var companiesView = new BB.Companies.View({
+        collection: companies
     });
     var projectsHeader = new BB.Projects.Header({
         collection: projects
     });
-    var projectsLayout = new BB.Projects.Layout();
+    var companiesHeader = new BB.Companies.Header({
+        collection: companies
+    });
+//     var projectsLayout = new BB.Projects.Layout();
     BB.navRegion.show(navbarView);
 //     BB.mainRegion.show(projectsView);
-    BB.mainRegion.show(projectsLayout);
-    projectsLayout.content.show(projectsView);
-    projectsLayout.header.show(projectsHeader);
+//     BB.mainRegion.show(projectsLayout);
+//     BB.headerRegion.show(projectsHeader);
+//     BB.mainRegion.show(projectsView);
+    BB.headerRegion.show(companiesHeader);
+    BB.mainRegion.show(companiesView);
+//     projectsLayout.content.show(projectsView);
+//     projectsLayout.header.show(projectsHeader);
     me.fetch();
     projects.fetch();
+    companies.fetch();
 });
 
 BB.module('Projects', function (Projects, App, Backbone) {
     // Project Model
     // -------------
-    Projects.Project = Backbone.Model.extend({
+    Projects.Model = Backbone.Model.extend({
         urlRoot: "/api/projects/",
         icon: function () {
             switch (this.get('status')) {
@@ -302,25 +315,25 @@ BB.module('Projects', function (Projects, App, Backbone) {
 
     // Project Collection
     // ------------------
-    Projects.Projects = Backbone.Collection.extend({
+    Projects.Collection = Backbone.Collection.extend({
         url: '/api/projects.xml',
-        model: Projects.Project
+        model: Projects.Model
     });
-    Projects.ProjectView = Backbone.Marionette.ItemView.extend({
+    Projects.ItemView = Backbone.Marionette.ItemView.extend({
         tagName: "li",
         template: "#oneproject-template"
     });
-    Projects.EmptyProjectsView = Backbone.Marionette.ItemView.extend({
+    Projects.EmptyView = Backbone.Marionette.ItemView.extend({
         template: "#emptyprojects-template"
     });
 
-    Projects.ProjectsView = Backbone.Marionette.CompositeView.extend({
+    Projects.View = Backbone.Marionette.CompositeView.extend({
         //   tagName: "table",
         id: "projects",
         //   className: "table-striped table-bordered",
         template: "#projects-template",
-        itemView: Projects.ProjectView,
-        emptyView: Projects.EmptyProjectsView,
+        itemView: Projects.ItemView,
+        emptyView: Projects.EmptyView,
         templateHelpers: function(){return {view:this}},
         name: function () {
             return "Projects";
@@ -365,16 +378,50 @@ BB.module('Projects', function (Projects, App, Backbone) {
 BB.module('Companies', function (Companies, App, Backbone) {
     // Company Model
     // -------------
-    Companies.Company = Backbone.Model.extend({
+    Companies.Model = Backbone.Model.extend({
         urlRoot: "/api/companies/"
     });
 
     // Company Collection
     // ------------------
-    Companies.Companies = Backbone.Collection.extend({
+    Companies.Collection = Backbone.Collection.extend({
         url: '/api/companies.xml',
-        model: Companies.Company
+        model: Companies.Model
     });
+
+    Companies.ItemView = Backbone.Marionette.ItemView.extend({
+//         tagName: "li",
+        template: "#onecompany-template"
+    });
+    Companies.EmptyView = Backbone.Marionette.ItemView.extend({
+        template: "#emptycompanies-template"
+    });
+
+    Companies.View = Backbone.Marionette.CompositeView.extend({
+        //   tagName: "table",
+        id: "companies",
+        //   className: "table-striped table-bordered",
+        template: "#companies-template",
+        itemView: Companies.ItemView,
+        emptyView: Companies.EmptyView,
+        name: function () {
+            return "Companies";
+        },
+        appendHtml: function(collectionView, itemView){
+            collectionView.$("dl").append(itemView.el);
+        },
+        initialize: function () {
+            this.collection.bind("sync", this.render, this);
+        }
+    });
+    Companies.Header = Backbone.Marionette.View.extend({
+        className: "page-header",
+        template: "#header1-template",
+        name: function () {
+            return "Companies";
+        }
+    });
+
 });
 
 BB.module('People', function (People, App, Backbone) {
