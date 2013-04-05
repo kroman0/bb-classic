@@ -1,0 +1,33 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=15  implicit_wait=0.1
+
+Resource  keywords.txt
+
+Suite Setup  Start app
+
+Suite Teardown  Stop app
+
+Test Setup  Start Browser For Test
+
+Test Teardown  Close All Browsers and Report Status
+
+
+*** Test Cases ***
+
+Test Projects Page
+    Test user login
+    Click link  Projects
+    Wait Until Page Contains Element  link=Active
+    Click on "Company name #1" in active state and wait effect
+    Element Should Be Visible  link=Name of #15
+    Element Should Not Be Visible  link=Name of #10
+    Element Should Not Be Visible  link=Name of #5
+    Click on "Company name #1" in on_hold state and wait effect
+    Element Should Not Be Visible  link=Name of #15
+    Element Should Be Visible  link=Name of #10
+    Element Should Not Be Visible  link=Name of #5
+    Click on "Company name #1" in archived state and wait effect
+    Element Should Not Be Visible  link=Name of #15
+    Element Should Not Be Visible  link=Name of #10
+    Element Should Be Visible  link=Name of #5

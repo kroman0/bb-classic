@@ -65,36 +65,3 @@ Test Nav Pages
     Sleep  0.5
 #    Capture Page Screenshot  people.png
 #    Compare screenshot to base  ${base_people}
-
-Test Projects Page
-    Test user login
-    Click link  Projects
-    Wait Until Page Contains Element  link=Active
-    Click on "Company name #1" in active state and wait effect
-    Element Should Be Visible  link=Name of #15
-    Element Should Not Be Visible  link=Name of #10
-    Element Should Not Be Visible  link=Name of #5
-    Click on "Company name #1" in on_hold state and wait effect
-    Element Should Not Be Visible  link=Name of #15
-    Element Should Be Visible  link=Name of #10
-    Element Should Not Be Visible  link=Name of #5
-    Click on "Company name #1" in archived state and wait effect
-    Element Should Not Be Visible  link=Name of #15
-    Element Should Not Be Visible  link=Name of #10
-    Element Should Be Visible  link=Name of #5
-
-Test My Profile
-    Test user login
-    Click link  First Last
-    Click link  My profile
-    Location should be  ${APP_URL}/#me
-    Page should contain element  link=name@domain.com
-    Page should contain element  link=example
-    Page should contain  Mobile phone: +000 (00) 000-0000
-    Page should contain  Home phone: +000 (00) 000-0001
-    Page should contain  Fax phone: +000 (00) 000-0002
-    Page should contain  Office phone: +000 (00) 000-0003
-    Page should contain  Time zone: Europe/Kiev
-#    Capture Page Screenshot  mypage.png
-#    Compare screenshot to base  ${base_mypage}
-
