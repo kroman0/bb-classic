@@ -184,8 +184,8 @@ class CrossDomain(BaseRequestHandler):
     def put(self):
         if not self.auth_check():
             return self.redirect('/login')
-        #self.response.headers['Content-Type'] = 'application/json'
-        #self.response.out.write(self.request.body)
+        # self.response.headers['Content-Type'] = 'application/json'
+        # self.response.out.write(self.request.body)
 
     def get(self):
         if not self.auth_check():
@@ -217,11 +217,11 @@ class CrossDomain(BaseRequestHandler):
             import random
             import string
             attachment = lambda x: {
-                "download-url": "url%s"%x,
-                "byte-size": 100 * x,
-                "person-id": x%5 + 1,
-                "name": "Name #%s"%x,
                 "author-name": "Author name #%s"%i,
+                "byte-size": 100 * x,
+                "download-url": "url%s"%x,
+                "name": "Name #%s"%x,
+                "person-id": x%5 + 1,
             }
             todo = lambda x: {
                 "id": x,
@@ -232,7 +232,6 @@ class CrossDomain(BaseRequestHandler):
                 "address-two": "Address two of #%s"%i,
                 "announcement": "announcement of #%s"%i,
                 "attachments": [attachment(x) for x in range(1, i%5 + 1)],
-                "todo-items": [todo(x) for x in range(1, i%5 + 1)],
                 "attachments-count": i%5,
                 "author-id": i%5 + 1,
                 "author-name": "Author name #%s"%i,
@@ -247,8 +246,10 @@ class CrossDomain(BaseRequestHandler):
                 "company-id": i%5 + 1,
                 "completed": [True, False][i%2],
                 "completed-at": "%s-%s-%s"%(i%12 + 2001, i%12 + 1, i%30 + 1),
+                "completed-count": i%5 + 1,
                 "completer-id": i%5 + 1,
                 "completer-name": "Completer name #%s"%i,
+                "content": "Todo content #%s"%x,
                 "country": "Country #%s"%i,
                 "created-at": "%s-%s-%s"%(i%12 + 2001, i%12 + 1, i%30 + 1),
                 "created-on": "%s-%s-%s"%(i%12 + 2001, i%12 + 1, i%30 + 1),
@@ -289,16 +290,15 @@ class CrossDomain(BaseRequestHandler):
                 "time-zone-name": "Europe/Kiev",
                 "title": "Title #%s"%i,
                 "todo-item-id": i%5 + 1,
+                "todo-items": [todo(x) for x in range(1, i%5 + 1)],
+                "todo-list-id": i%5 + 1,
+                "tracked": [True, False][i%2],
                 "type": "Type of #%s"%i,
+                "uncompleted-count": 5 - i%5,
                 "use-textile": [True, False][i%2],
                 "user-name": "test",
                 "web-address": "http://example%s.com"%i,
                 "zip": "".join(random.sample(string.digits, 5)),
-                "tracked": [True, False][i%2],
-                "completed-count": i%5 + 1,
-                "uncompleted-count": 5 - i%5,
-                "todo-list-id": i%5 + 1,
-                "content": "Todo content #%s"%x,
             }
                 for i in range(1, 30)]
             if self.request.path_qs == "/api/me.xml":
