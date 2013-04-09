@@ -10,29 +10,40 @@ import keyring
 
 
 def generate_raw_key():
+    """ generate raw key
+    """
     return base64.b64encode(repr(random.uniform(1, 1000)))
 
 
 def generate_marker():
-    # regenerate_raw_key implementation satisfies needs
+    """ regenerate_raw_key implementation satisfies needs
+    """
     return generate_raw_key()
 
 
 def generate_key():
+    """ generate key
+    """
     return (generate_raw_key(), generate_marker())
 
 # ARC4/XOR require two instances to encode/decode
 
 
 def encrypt(source, key):
+    """ encrypt
+    """
     return Crypter.new(key).encrypt(source)
 
 
 def decrypt(source, key):
+    """ decrypt
+    """
     return Crypter.new(key).decrypt(source)
 
 
 def decodeData(source, delimiter='\n'):
+    """ decode data
+    """
     for keymarkerPair in keyring.data():
         try:
             source_decoded = base64.b64decode(source)
@@ -46,6 +57,8 @@ def decodeData(source, delimiter='\n'):
 
 
 def encodeData(values, delimiter='\n'):
+    """ encode data
+    """
     data = ''
     values = list(values)
     current = keyring.current()
