@@ -52,21 +52,7 @@ div#time_report {
         </div>
     </div>
 {% if dev %}
-<script src="/static/js/json2.js"></script>
-<script src="/static/js/jquery-1.7.2.js"></script>
-<script src="/static/js/jquery.deserialize.js"></script>
-<script src="/static/js/bootstrap.js"></script>
-<script src="/static/js/underscore.js"></script>
-<script src="/static/js/backbone.js"></script>
-<!--[if !IE]><!-->
-<script src="/static/js/backbone.fetch-cache.js"></script>
-<!--<![endif]-->
-<script src="/static/js/backbone-pageable.js"></script>
-<script src="/static/js/general.js"></script>
-<script src="/static/js/models.js"></script>
-<script src="/static/js/collections.js"></script>
-<script src="/static/js/views.js"></script>
-<script src="/static/js/main.js"></script>
+<script data-main="/static/js/deps" src="/static/js/require.js"></script>
 {% else %}
 <script type="text/javascript">
     var _gaq = _gaq || [];

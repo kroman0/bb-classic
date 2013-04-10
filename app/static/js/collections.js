@@ -1,12 +1,13 @@
-var Projects = Backbone.Collection.extend({
+define(['backbone', 'backbone-pageable'], function (Backbone, PageableCollection) {
+window.Projects = Backbone.Collection.extend({
     url: '/api/projects.xml',
     model: Project
 });
-var Companies = Backbone.Collection.extend({
+window.Companies = Backbone.Collection.extend({
     url: '/api/companies.xml',
     model: Company
 });
-var People = Backbone.Collection.extend({
+window.People = Backbone.Collection.extend({
     parent_id: null, // project id
     url: function () {
         if (this.parent_id) return '/api/projects/' + this.parent_id + '/people.xml';
@@ -14,14 +15,14 @@ var People = Backbone.Collection.extend({
     },
     model: Person
 });
-var Posts = Backbone.Collection.extend({
+window.Posts = Backbone.Collection.extend({
     parent_id: null, // project id
     url: function () {
         return '/api/projects/' + this.parent_id + '/posts.xml';
     },
     model: Post
 });
-var Attachments = Backbone.PageableCollection.extend({
+window.Attachments = PageableCollection.extend({
     mode: 'client',
     parent_id: null, // project id
     url: function () {
@@ -29,14 +30,14 @@ var Attachments = Backbone.PageableCollection.extend({
     },
     model: Attachment
 });
-var Calendar = Backbone.Collection.extend({
+window.Calendar = Backbone.Collection.extend({
     parent_id: null, // project id
     url: function () {
         return '/api/projects/' + this.parent_id + '/calendar_entries.xml';
     },
     model: CalendarEntry
 });
-var Categories = Backbone.PageableCollection.extend({
+window.Categories = PageableCollection.extend({
     mode: 'client',
     parent_id: null, // project id
     url: function () {
@@ -44,7 +45,7 @@ var Categories = Backbone.PageableCollection.extend({
     },
     model: Category
 });
-var TimeEntries = Backbone.PageableCollection.extend({
+window.TimeEntries = PageableCollection.extend({
     mode: 'client',
     parent_id: null, // project id
     parent: 'projects',
@@ -64,17 +65,17 @@ var TimeEntries = Backbone.PageableCollection.extend({
     },
     model: TimeEntry
 });
-var TodoTimeEntries = TimeEntries.extend({
+window.TodoTimeEntries = TimeEntries.extend({
     parent: 'todo_items'
 });
-var TodoItems = Backbone.Collection.extend({
+window.TodoItems = Backbone.Collection.extend({
     parent_id: null,
     url: function () {
         return '/api/todo_lists/' + this.parent_id + '/todo_items.xml';
     },
     model: TodoItem
 });
-var TodoLists = Backbone.Collection.extend({
+window.TodoLists = Backbone.Collection.extend({
     responsible_party: null, // person id
     parent_id: null, // project id
     filter_status: null, // filter for project [all\pending\finished]
@@ -87,7 +88,7 @@ var TodoLists = Backbone.Collection.extend({
     },
     model: TodoList
 });
-var Comments = Backbone.Collection.extend({
+window.Comments = Backbone.Collection.extend({
     parent_id: null, // parent id
     parent_type: null, // posts|milestones|todo_items
     url: function () {
@@ -95,12 +96,13 @@ var Comments = Backbone.Collection.extend({
     },
     model: Comment
 });
-var PostComments = Comments.extend({
+window.PostComments = Comments.extend({
     parent_type: 'posts'
 });
-var TodoComments = Comments.extend({
+window.TodoComments = Comments.extend({
     parent_type: 'todo_items'
 });
-var CalendarEntryComments = Comments.extend({
+window.CalendarEntryComments = Comments.extend({
     parent_type: 'milestones'
+});
 });
