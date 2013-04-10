@@ -51,6 +51,10 @@ underscore-update:
 	wget -q http://underscorejs.org/underscore.js -O app/static/js/underscore.js
 	wget -q http://underscorejs.org/underscore-min.js -O app/static/js/underscore-min.js
 
+backbone-pageable-update:
+	wget -q https://raw.github.com/wyuenho/backbone-pageable/master/lib/backbone-pageable.js -O app/static/js/backbone-pageable.js
+	wget -q https://raw.github.com/wyuenho/backbone-pageable/master/lib/backbone-pageable.min.js -O app/static/js/backbone-pageable.min.js
+
 pylint:
 	pylint app/*.py
 

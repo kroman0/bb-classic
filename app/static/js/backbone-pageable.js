@@ -1,8 +1,8 @@
 /*
-  backbone-pageable
+  backbone-pageable 1.2.1
   http://github.com/wyuenho/backbone-pageable
 
-  Copyright (c) 2012 Jimmy Yuen Ho Wong
+  Copyright (c) 2013 Jimmy Yuen Ho Wong
   Licensed under the MIT @license.
 */
 
@@ -60,8 +60,12 @@
   var _invert = _.invert;
   var _isArray = _.isArray;
   var _isFunction = _.isFunction;
+  var _isObject = _.isObject;
   var _keys = _.keys;
+  var _isUndefined = _.isUndefined;
+  var _result = _.result;
   var ceil = Math.ceil;
+  var max = Math.max;
 
   var BBColProto = Backbone.Collection.prototype;
 
@@ -203,7 +207,7 @@
        @property {string} [queryParams.currentPage="page"]
        @property {string} [queryParams.pageSize="per_page"]
        @property {string} [queryParams.totalPages="total_pages"]
-       @property {string} [queryParams.totalRecords="total"]
+       @property {string} [queryParams.totalRecords="total_entries"]
        @property {string} [queryParams.sortKey="sort_by"]
        @property {string} [queryParams.order="order"]
        @property {string} [queryParams.directions={"-1": "asc", "1": "desc"}] A
@@ -281,20 +285,19 @@
 
       options = options || {};
 
-      var self = this;
-      var mode = self.mode = options.mode || self.mode || PageableProto.mode;
+      var mode = this.mode = options.mode || this.mode || PageableProto.mode;
 
-      var queryParams = _extend({}, PageableProto.queryParams, self.queryParams,
+      var queryParams = _extend({}, PageableProto.queryParams, this.queryParams,
                                 options.queryParams || {});
 
       queryParams.directions = _extend({},
                                        PageableProto.queryParams.directions,
-                                       self.queryParams.directions,
+                                       this.queryParams.directions,
                                        queryParams.directions || {});
 
-      self.queryParams = queryParams;
+      this.queryParams = queryParams;
 
-      var state = self.state = _extend({}, PageableProto.state, self.state,
+      var state = this.state = _extend({}, PageableProto.state, this.state,
                                        options.state || {});
 
       state.currentPage = state.currentPage == null ?
@@ -305,21 +308,21 @@
         state.totalRecords = models.length;
       }
 
-      self.switchMode(mode, _extend({fetch: false,
+      this.switchMode(mode, _extend({fetch: false,
                                      resetState: false,
                                      models: models}, options));
 
       var comparator = options.comparator;
 
       if (state.sortKey && !comparator) {
-        self.setSorting(state.sortKey, state.order, options);
+        this.setSorting(state.sortKey, state.order, options);
       }
 
       if (mode != "server") {
 
         if (comparator && options.full) {
-          delete self.comparator;
-          var fullCollection = self.fullCollection;
+          delete this.comparator;
+          var fullCollection = this.fullCollection;
           fullCollection.comparator = comparator;
           fullCollection.sort();
         }
@@ -327,12 +330,12 @@
         // make sure the models in the current page and full collection have the
         // same references
         if (models && !_isEmpty(models)) {
-          self.getPage(state.currentPage);
-          models.splice.apply(models, [0, models.length].concat(self.models));
+          this.getPage(state.currentPage);
+          models.splice.apply(models, [0, models.length].concat(this.models));
         }
       }
 
-      self._initState = _clone(self.state);
+      this._initState = _clone(this.state);
     },
 
     /**
@@ -345,15 +348,14 @@
     */
     _makeFullCollection: function (models, options) {
 
-      var self = this;
       var properties = ["url", "model", "sync", "comparator"];
-      var thisProto = self.constructor.prototype;
+      var thisProto = this.constructor.prototype;
       var i, length, prop;
 
       var proto = {};
       for (i = 0, length = properties.length; i < length; i++) {
         prop = properties[i];
-        if (!_.isUndefined(thisProto[prop])) {
+        if (!_isUndefined(thisProto[prop])) {
           proto[prop] = thisProto[prop];
         }
       }
@@ -362,8 +364,8 @@
 
       for (i = 0, length = properties.length; i < length; i++) {
         prop = properties[i];
-        if (self[prop] !== thisProto[prop]) {
-          fullCollection[prop] = prop;
+        if (this[prop] !== thisProto[prop]) {
+          fullCollection[prop] = this[prop];
         }
       }
 
@@ -372,8 +374,9 @@
 
     /**
        Factory method that returns a Backbone event handler that responses to
-       the `all` event. The returned event handler will synchronize the current
-       page collection and the full collection's models.
+       the `add`, `remove`, `reset`, and the `sort` events. The returned event
+       handler will synchronize the current page collection and the full
+       collection's models.
 
        @private
 
@@ -386,7 +389,6 @@
     _makeCollectionEventHandler: function (pageCol, fullCol) {
 
       return function collectionEventHandler (event, model, collection, options) {
-
         var handlers = pageCol._handlers;
         _each(_keys(handlers), function (event) {
           var handler = handlers[event];
@@ -403,19 +405,21 @@
         var pageStart = currentPage * pageSize, pageEnd = pageStart + pageSize;
 
         if (event == "add") {
-          var fullIndex, addAt, colToAdd;
+          var pageIndex, fullIndex, addAt, colToAdd, options = options || {};
           if (collection == fullCol) {
             fullIndex = fullCol.indexOf(model);
             if (fullIndex >= pageStart && fullIndex < pageEnd) {
               colToAdd = pageCol;
-              addAt = fullIndex - pageStart;
+              pageIndex = addAt = fullIndex - pageStart;
             }
           }
           else {
-            fullIndex = pageStart + pageCol.indexOf(model);
+            pageIndex = pageCol.indexOf(model);
+            fullIndex = pageStart + pageIndex;
             colToAdd = fullCol;
-            var at = options && options.at || fullIndex;
-            addAt = (at < pageStart || at >= pageEnd) ? at : fullIndex;
+            var addAt = !_isUndefined(options.at) ?
+              options.at + pageStart :
+              fullIndex;
           }
 
           ++state.totalRecords;
@@ -423,35 +427,59 @@
 
           if (colToAdd) {
             colToAdd.add(model, _extend({}, options || {}, {at: addAt}));
-            pageCol.pop();
+            var modelToRemove = pageIndex >= pageSize ?
+              model :
+              !_isUndefined(options.at) && addAt < pageEnd && pageCol.length > pageSize ?
+              pageCol.at(pageSize) :
+              null;
+            if (modelToRemove) {
+              var addHandlers = collection._events.add || [],
+              popOptions = {onAdd: true};
+              if (addHandlers.length) {
+                var lastAddHandler = addHandlers[addHandlers.length - 1];
+                var oldCallback = lastAddHandler.callback;
+                lastAddHandler.callback = function () {
+                  try {
+                    oldCallback.apply(this, arguments);
+                    pageCol.remove(modelToRemove, popOptions);
+                  }
+                  finally {
+                    lastAddHandler.callback = oldCallback;
+                  }
+                };
+              }
+              else pageCol.remove(modelToRemove, popOptions);
+            }
           }
         }
 
         // remove the model from the other collection as well
         if (event == "remove") {
+          if (!options.onAdd) {
+            // decrement totalRecords and update totalPages and lastPage
+            if (!--state.totalRecords) {
+              state.totalRecords = null;
+              state.totalPages = null;
+            }
+            else {
+              var totalPages = state.totalPages = ceil(state.totalRecords / pageSize);
+              state.lastPage = firstPage === 0 ? totalPages - 1 : totalPages;
+              if (state.currentPage > totalPages) state.currentPage = state.lastPage;
+            }
+            pageCol.state = pageCol._checkState(state);
 
-          // decrement totalRecords and update totalPages and lastPage
-          if (!--state.totalRecords) {
-            state.totalRecords = null;
-            state.totalPages = null;
+            var nextModel, removedIndex = options.index;
+            if (collection == pageCol) {
+              if (nextModel = fullCol.at(pageEnd)) pageCol.push(nextModel);
+              fullCol.remove(model);
+            }
+            else if (removedIndex >= pageStart && removedIndex < pageEnd) {
+              pageCol.remove(model);
+              nextModel = fullCol.at(currentPage * (pageSize + removedIndex));
+              if (nextModel) pageCol.push(nextModel);
+            }
           }
-          else {
-            var totalPages = state.totalPages = ceil(state.totalRecords / pageSize);
-            state.lastPage = firstPage === 0 ? totalPages - 1 : totalPages;
-            if (state.currentPage > totalPages) state.currentPage = state.lastPage;
-          }
-          pageCol.state = pageCol._checkState(state);
-
-          var nextModel;
-          if (collection == pageCol) {
-            if (nextModel = fullCol.at(pageEnd)) pageCol.push(nextModel);
-            fullCol.remove(model);
-          }
-          else if (options.index >= pageStart && options.index < pageEnd) {
-            pageCol.remove(model);
-            nextModel = fullCol.at(currentPage * (pageSize + options.index));
-            if (nextModel) pageCol.push(nextModel);
-          }
+          else delete options.onAdd;
         }
 
         if (event == "reset" || event == "sort") {
@@ -467,7 +495,11 @@
           }
 
           if (event == "reset" || collection == fullCol) {
-            state.totalRecords = fullCol.models.length;
+            if (!(state.totalRecords = fullCol.models.length)) {
+              state.totalRecords = null;
+              state.totalPages = null;
+              state.lastPage = state.currentPage = state.firstPage;
+            }
             pageCol.state = pageCol._checkState(state);
             if (collection == pageCol) fullCol.trigger(event, fullCol, options);
             resetQuickly(pageCol, fullCol.models.slice(pageStart, pageEnd),
@@ -478,19 +510,9 @@
         _each(_keys(handlers), function (event) {
           var handler = handlers[event];
           _each([pageCol, fullCol], function (col) {
-            if (col._events) {
-              col.on(event, handler);
-              var callbacks = col._events[event];
-              callbacks.unshift(callbacks.pop());
-            }
-            else {
-              var list = col._callbacks[event] || {};
-              var tail = _isEmpty(list) ?
-                tail = list.next = list.tail = {} :
-                tail = list.tail;
-              var node = {next: list.next, context: void 0, callback: handler};
-              col._callbacks[event] = {tail: tail, next: node};
-            }
+            col.on(event, handler);
+            var callbacks = col._events[event] || [];
+            callbacks.unshift(callbacks.pop());
           });
         });
       };
@@ -515,9 +537,8 @@
     */
     _checkState: function (state) {
 
-      var self = this;
-      var mode = self.mode;
-      var links = self.links;
+      var mode = this.mode;
+      var links = this.links;
       var totalRecords = state.totalRecords;
       var pageSize = state.pageSize;
       var currentPage = state.currentPage;
@@ -542,7 +563,7 @@
           throw new RangeError("`firstPage must be 0 or 1`");
         }
 
-        state.lastPage = firstPage === 0 ? totalPages - 1 : totalPages;
+        state.lastPage = firstPage === 0 ? max(0, totalPages - 1) : totalPages;
 
         if (mode == "infinite") {
           if (!links[currentPage + '']) {
@@ -550,7 +571,7 @@
           }
         }
         else {
-          if (firstPage === 0 && (currentPage < firstPage || currentPage >= totalPages)) {
+          if (firstPage === 0 && (currentPage < firstPage || (currentPage >= totalPages && totalPages > 0))) {
             throw new RangeError("`currentPage` must be firstPage <= currentPage < totalPages if 0-based. Got " + currentPage + '.');
           }
           else if (firstPage === 1 && (currentPage < firstPage || currentPage > totalPages)) {
@@ -587,18 +608,16 @@
        from fetch or this.
     */
     setPageSize: function (pageSize, options) {
-      var self = this;
-
       pageSize = finiteInt(pageSize, "pageSize");
 
       options = options || {};
 
-      self.state = self._checkState(_extend({}, self.state, {
+      this.state = this._checkState(_extend({}, this.state, {
         pageSize: pageSize,
-        totalPages: ceil(self.state.totalRecords / pageSize)
+        totalPages: ceil(this.state.totalRecords / pageSize)
       }));
 
-      return self.getPage(self.state.currentPage, options);
+      return this.getPage(this.state.currentPage, options);
     },
 
     /**
@@ -633,33 +652,32 @@
     */
     switchMode: function (mode, options) {
 
-      var self = this;
-
       if (!_contains(["server", "client", "infinite"], mode)) {
         throw new TypeError('`mode` must be one of "server", "client" or "infinite"');
       }
 
       options = options || {fetch: true, resetState: true};
 
-      var state = self.state = options.resetState ?
-        _clone(self._initState) :
-        self._checkState(_extend({}, self.state));
+      var state = this.state = options.resetState ?
+        _clone(this._initState) :
+        this._checkState(_extend({}, this.state));
 
-      self.mode = mode;
+      this.mode = mode;
 
-      var fullCollection = self.fullCollection;
-      var handlers = self._handlers = self._handlers || {}, handler;
+      var self = this;
+      var fullCollection = this.fullCollection;
+      var handlers = this._handlers = this._handlers || {}, handler;
       if (mode != "server" && !fullCollection) {
-        fullCollection = self._makeFullCollection(options.models || []);
-        fullCollection.pageableCollection = self;
-        self.fullCollection = fullCollection;
-        var allHandler = self._makeCollectionEventHandler(self, fullCollection);
+        fullCollection = this._makeFullCollection(options.models || []);
+        fullCollection.pageableCollection = this;
+        this.fullCollection = fullCollection;
+        var allHandler = this._makeCollectionEventHandler(this, fullCollection);
         _each(["add", "remove", "reset", "sort"], function (event) {
           handlers[event] = handler = _.bind(allHandler, {}, event);
           self.on(event, handler);
           fullCollection.on(event, handler);
         });
-        fullCollection.comparator = self._fullComparator;
+        fullCollection.comparator = this._fullComparator;
       }
       else if (mode == "server" && fullCollection) {
         _each(_keys(handlers), function (event) {
@@ -667,25 +685,25 @@
           self.off(event, handler);
           fullCollection.off(event, handler);
         });
-        delete self._handlers;
-        self._fullComparator = fullCollection.comparator;
-        delete self.fullCollection;
+        delete this._handlers;
+        this._fullComparator = fullCollection.comparator;
+        delete this.fullCollection;
       }
 
       if (mode == "infinite") {
-        var links = self.links = {};
+        var links = this.links = {};
         var firstPage = state.firstPage;
         var totalPages = ceil(state.totalRecords / state.pageSize);
-        var lastPage = firstPage === 0 ? totalPages - 1 : totalPages || firstPage;
+        var lastPage = firstPage === 0 ? max(0, totalPages - 1) : totalPages || firstPage;
         for (var i = state.firstPage; i <= lastPage; i++) {
-          links[i] = self.url;
+          links[i] = this.url;
         }
       }
-      else if (self.links) delete self.links;
+      else if (this.links) delete this.links;
 
       return options.fetch ?
-        self.fetch(_omit(options, ["fetch", "resetState"])) :
-        self;
+        this.fetch(_omit(options, "fetch", "resetState")) :
+        this;
     },
 
     /**
@@ -693,10 +711,10 @@
        otherwise.
     */
     hasPrevious: function () {
-      var self = this, state = self.state;
+      var state = this.state;
       var currentPage = state.currentPage;
-      if (self.mode != "infinite") return currentPage > state.firstPage;
-      return !!self.links[currentPage - 1];
+      if (this.mode != "infinite") return currentPage > state.firstPage;
+      return !!this.links[currentPage - 1];
     },
 
     /**
@@ -704,10 +722,10 @@
        otherwise.
     */
     hasNext: function () {
-      var self = this, state = self.state;
-      var currentPage = self.state.currentPage;
-      if (self.mode != "infinite") return currentPage < state.lastPage;
-      return !!self.links[currentPage + 1];
+      var state = this.state;
+      var currentPage = this.state.currentPage;
+      if (this.mode != "infinite") return currentPage < state.lastPage;
+      return !!this.links[currentPage + 1];
     },
 
     /**
@@ -796,11 +814,11 @@
     */
     getPage: function (index, options) {
 
-      var self = this, mode = self.mode, fullCollection = self.fullCollection;
+      var mode = this.mode, fullCollection = this.fullCollection;
 
       options = options || {fetch: false};
 
-      var state = self.state,
+      var state = this.state,
       firstPage = state.firstPage,
       currentPage = state.currentPage,
       lastPage = state.lastPage,
@@ -815,7 +833,7 @@
         default: pageNum = finiteInt(index, "index");
       }
 
-      self.state = self._checkState(_extend({}, state, {currentPage: pageNum}));
+      this.state = this._checkState(_extend({}, state, {currentPage: pageNum}));
 
       var pageStart = (firstPage === 0 ? pageNum : pageNum - 1) * pageSize;
       var pageModels = fullCollection && fullCollection.length ?
@@ -823,12 +841,12 @@
         [];
       if ((mode == "client" || (mode == "infinite" && !_isEmpty(pageModels))) &&
           !options.fetch) {
-        return resetQuickly(self, pageModels, _omit(options, "fetch"));
+        return resetQuickly(this, pageModels, _omit(options, "fetch"));
       }
 
-      if (mode == "infinite") options.url = self.links[pageNum];
+      if (mode == "infinite") options.url = this.links[pageNum];
 
-      return self.fetch(_omit(options, "fetch"));
+      return this.fetch(_omit(options, "fetch"));
     },
 
     /**
@@ -884,47 +902,48 @@
        @return {Object}
     */
     parseLinks: function (resp, options) {
-      var self = this;
-      var linkHeader = options.xhr.getResponseHeader("Link");
-      var relations = ["first", "prev", "previous", "next", "last"];
       var links = {};
-      _each(linkHeader.split(","), function (linkValue) {
-        var linkParts = linkValue.split(";");
-        var url = linkParts[0].replace(URL_TRIM_RE, '');
-        var params = linkParts.slice(1);
-        _each(params, function (param) {
-          var paramParts = param.split("=");
-          var key = paramParts[0].replace(PARAM_TRIM_RE, '');
-          var value = paramParts[1].replace(PARAM_TRIM_RE, '');
-          if (key == "rel" && _contains(relations, value)) {
-            if (value == "previous") links.prev = url;
-            else links[value] = url;
-          }
+      var linkHeader = options.xhr.getResponseHeader("Link");
+      if (linkHeader) {
+        var relations = ["first", "prev", "previous", "next", "last"];
+        _each(linkHeader.split(","), function (linkValue) {
+          var linkParts = linkValue.split(";");
+          var url = linkParts[0].replace(URL_TRIM_RE, '');
+          var params = linkParts.slice(1);
+          _each(params, function (param) {
+            var paramParts = param.split("=");
+            var key = paramParts[0].replace(PARAM_TRIM_RE, '');
+            var value = paramParts[1].replace(PARAM_TRIM_RE, '');
+            if (key == "rel" && _contains(relations, value)) {
+              if (value == "previous") links.prev = url;
+              else links[value] = url;
+            }
+          });
         });
-      });
 
-      var last = links.last || '', qsi, qs;
-      if (qs = (qsi = last.indexOf('?')) ? last.slice(qsi + 1) : '') {
-        var params = queryStringToParams(qs);
+        var last = links.last || '', qsi, qs;
+        if (qs = (qsi = last.indexOf('?')) ? last.slice(qsi + 1) : '') {
+          var params = queryStringToParams(qs);
 
-        var state = _.clone(self.state);
-        var queryParams = self.queryParams;
-        var pageSize = state.pageSize;
+          var state = _clone(this.state);
+          var queryParams = this.queryParams;
+          var pageSize = state.pageSize;
 
-        var totalRecords = params[queryParams.totalRecords] * 1;
-        var pageNum = params[queryParams.currentPage] * 1;
-        var totalPages = params[queryParams.totalPages];
+          var totalRecords = params[queryParams.totalRecords] * 1;
+          var pageNum = params[queryParams.currentPage] * 1;
+          var totalPages = params[queryParams.totalPages];
 
-        if (!totalRecords) {
-          if (pageNum) totalRecords = (state.firstPage === 0 ?
-                                       pageNum + 1 :
-                                       pageNum) * pageSize;
-          else if (totalPages) totalRecords = totalPages * pageSize;
+          if (!totalRecords) {
+            if (pageNum) totalRecords = (state.firstPage === 0 ?
+                                         pageNum + 1 :
+                                         pageNum) * pageSize;
+            else if (totalPages) totalRecords = totalPages * pageSize;
+          }
+
+          if (totalRecords) state.totalRecords = totalRecords;
+
+          this.state = this._checkState(state);
         }
-
-        if (totalRecords) state.totalRecords = totalRecords;
-
-        self.state = self._checkState(state);
       }
 
       delete links.last;
@@ -956,37 +975,88 @@
        [Backbone.Collection#parse](http://backbonejs.org/#Collection-parse)
        default.
 
-       @param {Array} resp The deserialized response data from the server.
+       **Note:** this method has been further simplified since 1.1.7. While
+       existing #parse implementations will continue to work, new code is
+       encouraged to override #parseState and #parseRecords instead.
 
-       @throws {TypeError} If the `resp` is not an array.
+       @param {Object} resp The deserialized response data from the server.
 
        @return {Array.<Object>} An array of model objects
     */
     parse: function (resp) {
+      var newState = this.parseState(resp, _clone(this.queryParams), _clone(this.state));
+      if (newState) this.state = this._checkState(_extend({}, this.state, newState));
+      return this.parseRecords(resp);
+    },
 
-      var self = this;
+    /**
+       Parse server response for server pagination state updates.
 
-      if (!_isArray(resp)) {
-        return new TypeError("The server response must be an array");
-      }
+       This default implementation first checks whether the response has any
+       state object as documented in #parse. If it exists, a state object is
+       returned by mapping the server state keys to this pageable collection
+       instance's query parameter keys using `queryParams`.
 
-      if (resp.length === 2 && _.isObject(resp[0]) && _isArray(resp[1])) {
+       It is __NOT__ neccessary to return a full state object complete with all
+       the mappings defined in #queryParams. Any state object resulted is merged
+       with a copy of the current pageable collection state and checked for
+       sanity before actually updating. Most of the time, simply providing a new
+       `totalRecords` value is enough to trigger a full pagination state
+       recalculation.
 
-        var queryParams = self.queryParams;
-        var newState = _clone(self.state);
+           parseState: function (resp, queryParams, state) {
+             return {totalRecords: resp.total_entries};
+           }
+
+       __Note__: `totalRecords` cannot be set to 0 for compatibility reasons,
+       use `null` instead of 0 for all cases where you would like to set it to
+       0. You can do this either on the server-side or in your overridden #parseState
+       method.
+
+       This method __MUST__ return a new state object instead of directly
+       modifying the #state object. The behavior of directly modifying #state is
+       undefined.
+
+       @param {Object} resp The deserialized response data from the server.
+       @param {Object} queryParams A copy of #queryParams.
+       @param {Object} state A copy of #state.
+
+       @return {Object} A new (partial) state object.
+     */
+    parseState: function (resp, queryParams, state) {
+      if (resp && resp.length === 2 && _isObject(resp[0]) && _isArray(resp[1])) {
+
+        var newState = _clone(state);
         var serverState = resp[0];
 
         _each(_pairs(_omit(queryParams, "directions")), function (kvp) {
           var k = kvp[0], v = kvp[1];
-          newState[k] = serverState[v];
+          var serverVal = serverState[v];
+          if (!_isUndefined(serverVal) && !_.isNull(serverVal)) newState[k] = serverState[v];
         });
 
         if (serverState.order) {
           newState.order = _invert(queryParams.directions)[serverState.order] * 1;
         }
 
-        self.state = self._checkState(newState);
+        return newState;
+      }
+    },
 
+    /**
+       Parse server response for an array of model objects.
+
+       This default implementation first checks whether the response has any
+       state object as documented in #parse. If it exists, the array of model
+       objects is assumed to be the second element, otherwise the entire
+       response is returned directly.
+
+       @param {Object} resp The deserialized response data from the server.
+
+       @return {Array.<Object>} An array of model objects
+     */
+    parseRecords: function (resp) {
+      if (resp && resp.length === 2 && _isObject(resp[0]) && _isArray(resp[1])) {
         return resp[1];
       }
 
@@ -1010,22 +1080,20 @@
     */
     fetch: function (options) {
 
-      var self = this;
-
       options = options || {};
 
-      var state = self._checkState(self.state);
+      var state = this._checkState(this.state);
 
-      var mode = self.mode;
+      var mode = this.mode;
 
       if (mode == "infinite" && !options.url) {
-        options.url = self.links[state.currentPage];
+        options.url = this.links[state.currentPage];
       }
 
       var data = options.data || {};
 
       // dedup query params
-      var url = options.url || _.result(self, "url") || '';
+      var url = _result(options, "url") || _result(this, "url") || '';
       var qsi = url.indexOf('?');
       if (qsi != -1) {
         _extend(data, queryStringToParams(url.slice(qsi + 1)));
@@ -1036,12 +1104,12 @@
       options.data = data;
 
       // map params except directions
-      var queryParams = self.mode == "client" ?
-        _pick(self.queryParams, "sortKey", "order") :
-        _omit(_pick(self.queryParams, _keys(PageableProto.queryParams)),
+      var queryParams = this.mode == "client" ?
+        _pick(this.queryParams, "sortKey", "order") :
+        _omit(_pick(this.queryParams, _keys(PageableProto.queryParams)),
               "directions");
 
-      var i, kvp, k, v, kvps = _pairs(queryParams), thisCopy = _clone(self);
+      var i, kvp, k, v, kvps = _pairs(queryParams), thisCopy = _clone(this);
       for (i = 0; i < kvps.length; i++) {
         kvp = kvps[i], k = kvp[0], v = kvp[1];
         v = _isFunction(v) ? v.call(thisCopy) : v;
@@ -1052,12 +1120,12 @@
 
       // fix up sorting parameters
       if (state.sortKey && state.order) {
-        data[queryParams.order] = self.queryParams.directions[state.order + ""];
+        data[queryParams.order] = this.queryParams.directions[state.order + ""];
       }
       else if (!state.sortKey) delete data[queryParams.order];
 
       // map extra query parameters
-      var extraKvps = _pairs(_omit(self.queryParams,
+      var extraKvps = _pairs(_omit(this.queryParams,
                                    _keys(PageableProto.queryParams)));
       for (i = 0; i < extraKvps.length; i++) {
         kvp = extraKvps[i];
@@ -1066,16 +1134,18 @@
         data[kvp[0]] = v;
       }
 
-      var fullCollection = self.fullCollection, links = self.links;
+      var fullCollection = this.fullCollection, links = this.links;
 
       if (mode != "server") {
 
+        var self = this;
         var success = options.success;
         options.success = function (col, resp, opts) {
 
           // make sure the caller's intent is obeyed
           opts = opts || {};
-          opts.silent = options.silent;
+          if (_isUndefined(options.silent)) delete opts.silent;
+          else opts.silent = options.silent;
 
           var models = col.models;
           var currentPage = state.currentPage;
@@ -1090,13 +1160,11 @@
             var head = fullModels.slice(0, pageStart);
             var tail = fullModels.slice(pageStart + pageSize);
             fullModels = head.concat(models).concat(tail);
-            if (_isFunction(fullCollection.update)) {
-              fullCollection.update(fullModels,
-                                    _extend({silent: true, sort: false}, opts));
-              if (fullCollection.comparator) fullCollection.sort();
-              fullCollection.trigger("reset", fullCollection, opts);
-            }
-            else resetQuickly(fullCollection, fullModels, opts);
+            var updateFunc = fullCollection.set || fullCollection.update;
+            updateFunc.call(fullCollection, fullModels,
+                            _extend({silent: true, sort: false}, opts));
+            if (fullCollection.comparator) fullCollection.sort();
+            fullCollection.trigger("reset", fullCollection, opts);
           }
           else { // fetching new page
             fullCollection.add(models, _extend({at: fullCollection.length,
@@ -1111,7 +1179,7 @@
         return BBColProto.fetch.call(self, _extend({}, options, {silent: true}));
       }
 
-      return BBColProto.fetch.call(self, options);
+      return BBColProto.fetch.call(this, options);
     },
 
     /**
@@ -1180,22 +1248,22 @@
     */
     setSorting: function (sortKey, order, options) {
 
-      var self = this, state = self.state;
+      var state = this.state;
 
       state.sortKey = sortKey;
       state.order = order = order || state.order;
 
-      var fullCollection = self.fullCollection;
+      var fullCollection = this.fullCollection;
 
       var delComp = false, delFullComp = false;
 
       if (!sortKey) delComp = delFullComp = true;
 
-      var mode = self.mode;
+      var mode = this.mode;
       options = _extend({side: mode == "client" ? mode : "server", full: true},
                         options);
 
-      var comparator = self._makeComparator(sortKey, order);
+      var comparator = this._makeComparator(sortKey, order);
 
       var full = options.full, side = options.side;
 
@@ -1205,18 +1273,18 @@
           delComp = true;
         }
         else {
-          self.comparator = comparator;
+          this.comparator = comparator;
           delFullComp = true;
         }
       }
       else if (side == "server" && !full) {
-        self.comparator = comparator;
+        this.comparator = comparator;
       }
 
-      if (delComp) delete self.comparator;
+      if (delComp) delete this.comparator;
       if (delFullComp && fullCollection) delete fullCollection.comparator;
 
-      return self;
+      return this;
     }
 
   });
