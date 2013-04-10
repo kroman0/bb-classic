@@ -1,0 +1,32 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=15  implicit_wait=0.1
+
+Resource  keywords.txt
+
+Suite Setup  Start app
+
+Suite Teardown  Stop app
+
+Test Setup  Start Browser For Test
+
+Test Teardown  Close All Browsers and Report Status
+
+
+*** Test Cases ***
+
+Test My Profile
+    Test user login
+    Click link  First Last
+    Click link  My profile
+    Location should be  ${APP_URL}/#me
+    Page should contain element  link=name@domain.com
+    Page should contain element  link=example
+    Page should contain  Mobile phone: +000 (00) 000-0000
+    Page should contain  Home phone: +000 (00) 000-0001
+    Page should contain  Fax phone: +000 (00) 000-0002
+    Page should contain  Office phone: +000 (00) 000-0003
+    Page should contain  Time zone: Europe/Kiev
+#    Capture Page Screenshot  mypage.png
+#    Compare screenshot to base  ${base_mypage}
+

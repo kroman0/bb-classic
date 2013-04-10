@@ -32,7 +32,7 @@ Click on ${text} in ${state} state and wait effect
     Sleep  0.5
 
 Start app
-    Start Process  bin/dev_appserver app --skip_sdk_update_check -a 0.0.0.0
+    Start Process  bin/dev_appserver app --skip_sdk_update_check --host 0.0.0.0
     Sleep  1
 
 Start Browser For Test
@@ -47,9 +47,20 @@ Close All Browsers and Report Status
 Stop app
     Run  pkill -f dev_appserver
     Stop All Processes
+    Sleep  1
+
+Reload Page Until
+    [Arguments]  @{condition}
+    :FOR  ${try}  IN RANGE  10
+    \   ${status}=  Run Keyword And Ignore Error  @{condition}
+    \   ${raise error}=  Set Variable If  ${status}[0]=='PASS'  'False'  'True'
+    \   Run Keyword If  ${status}[0]=='PASS'  Exit For Loop
+    \   Sleep  1
+    \   Reload Page
+    Run Keyword If  ${raise error}=="True"  Fail  "${condition}"
 
 Test user login
-    Location should contain  login
+    Reload Page Until  Location should contain  login
     Input Text  name=subdomain  test
     Input Text  name=username  test
     Input Password  name=password  test

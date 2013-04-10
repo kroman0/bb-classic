@@ -266,10 +266,10 @@ div#time_report {
 <script type="text/template" id="projects-template">
     <% var pp=BB.collections.projects; if (!pp.isEmpty()) { %>
     <div class="tabbable">
-    <ul class="nav nav-pills offset8">
+    <ul class="nav nav-pills">
     <% var fprst=_.first(pp.pluck('status'));
        _.each(_.uniq(pp.pluck('status')), function (status) { %>
-        <li class="prstatus<% if (fprst==status) { %> active<% } %>">
+        <li class="prstatus<% if (fprst==status) { %> active<% } %> pull-right">
             <a href="#projects_<%- status %>" data-toggle="tab"><%- status %></a>
         </li>
     <% }) %>

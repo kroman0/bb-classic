@@ -30,6 +30,13 @@ Development
 
 - - -
 
+Updating GAE application
+------------------------
+
+- Deploy `make deploy`
+
+- - -
+
 Screenhosts
 -----------
 
@@ -41,9 +48,3 @@ Screenhosts
 ![people](/app/static/img/people.png "people")
 ![mypage](/app/static/img/mypage.png "mypage")
 
-Updating GAE application
-------------------------
-
-- Deploy `make deploy`
-
-- - -

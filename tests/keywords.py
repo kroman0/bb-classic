@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+""" keywords for tests
+"""
 from PIL import Image
 from PIL import ImageChops
 import math
@@ -15,32 +16,36 @@ def compare_screenshot_to_base(baseline, diff=100):
     Calculate the exact difference between two images.
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
-    path, link = driver._get_screenshot_paths(None)
+    path = driver._get_screenshot_paths(None)[0]
 
-    if hasattr(driver._current_browser(), 'get_screenshot_as_file'):
-        driver._current_browser().get_screenshot_as_file(path)
+    current_browser = driver._current_browser()
+
+    if hasattr(current_browser, 'get_screenshot_as_file'):
+        current_browser.get_screenshot_as_file(path)
     else:
-        driver._current_browser().save_screenshot(path)
+        current_browser.save_screenshot(path)
 
-    i1 = Image.open(path)
-    i2 = Image.open(baseline)
-    h1 = i1.histogram()
-    h2 = i2.histogram()
+    img1 = Image.open(path)
+    img2 = Image.open(baseline)
+    his1 = img1.histogram()
+    his2 = img2.histogram()
     rms = math.sqrt(
         reduce(operator.add,
-                map(lambda a, b: (a - b) ** 2, h1, h2)
-                ) / len(h1))
+                map(lambda a, b: (a - b) ** 2, his1, his2)
+                ) / len(his1))
     logger.info("RMS diff: %s" % rms)
     if rms > 0:
-        d = ImageChops.difference(i1, i2)
+        idiff = ImageChops.difference(img1, img2)
         path = path.replace(".png", ".jpg")
-        d.save(path)
+        idiff.save(path)
         logger.info("diff image: %s" % path)
     if rms > diff:
         raise AssertionError(
             "Image: %s is different from baseline: %s" % (path, baseline))
 
-def report_sauce_status(job_id, test_status, test_tags=[]):
+def report_sauce_status(job_id, test_status, test_tags=list()):
+    """ Report test status to Sauce service
+    """
     username = os.environ.get('SAUCE_USERNAME')
     access_key = os.environ.get('SAUCE_ACCESS_KEY')
 
@@ -62,7 +67,8 @@ def report_sauce_status(job_id, test_status, test_tags=[]):
     return connection.getresponse().status
 
 def set_window_size(width, height):
-    """Sets the `width` and `height` of the current window to the specified values.
+    """ Sets the `width` and `height` of the current window
+        to the specified values.
 
     Example:
     | Set Window Size | ${800} | ${600} |
@@ -74,7 +80,7 @@ def set_window_size(width, height):
     return driver._current_browser().set_window_size(int(width), int(height))
 
 def get_session_id():
-    """Get session id
+    """ Get session id
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
     try:

@@ -4,7 +4,7 @@
 .PHONY: run
 
 run:
-	bin/dev_appserver app --skip_sdk_update_check --high_replication --datastore_path=app.ds
+	bin/dev_appserver app --skip_sdk_update_check --datastore_path=app.ds
 
 test:	clean
 	bin/pybot tests
@@ -29,7 +29,8 @@ jshint:
 
 clean:
 	find . -name \*~ -exec rm {} \;
-	rm -rf *.pyc robot_* selenium-screenshot-* output.xml log.html report.html
+	find . -name \*.pyc -exec rm {} \;
+	rm -rf robot_* selenium-screenshot-* output.xml log.html report.html
 
 sauce:
 	wget -q http://saucelabs.com/downloads/Sauce-Connect-latest.zip -O /tmp/Sauce-Connect-latest.zip
@@ -49,3 +50,13 @@ backbone-update:
 underscore-update:
 	wget -q http://underscorejs.org/underscore.js -O app/static/js/underscore.js
 	wget -q http://underscorejs.org/underscore-min.js -O app/static/js/underscore-min.js
+
+backbone-pageable-update:
+	wget -q https://raw.github.com/wyuenho/backbone-pageable/master/lib/backbone-pageable.js -O app/static/js/backbone-pageable.js
+	wget -q https://raw.github.com/wyuenho/backbone-pageable/master/lib/backbone-pageable.min.js -O app/static/js/backbone-pageable.min.js
+
+pylint:
+	pylint app/*.py
+
+pep8:
+	pep8 app
