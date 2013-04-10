@@ -47,6 +47,7 @@ Close All Browsers and Report Status
 Stop app
     Run  pkill -f dev_appserver
     Stop All Processes
+    Sleep  1
 
 Reload Page Until
     [Arguments]  @{condition}
