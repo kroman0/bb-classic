@@ -16,12 +16,12 @@ Test Teardown  Close All Browsers and Report Status
 *** Test Cases ***
 
 Test App
-    Location should contain  login
+    Reload Page Until  Location should contain  login
     Page should contain  BB
     Title should be  BB
 
 Test Login Page
-    Location should contain  login
+    Reload Page Until  Location should contain  login
     Page should contain  Please enter you credentials
     Page should contain element  name=subdomain
     Page should contain element  name=username

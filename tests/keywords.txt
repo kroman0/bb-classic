@@ -48,8 +48,18 @@ Stop app
     Run  pkill -f dev_appserver
     Stop All Processes
 
+Reload Page Until
+    [Arguments]  @{condition}
+    :FOR  ${try}  IN RANGE  10
+    \   ${status}=  Run Keyword And Ignore Error  @{condition}
+    \   ${raise error}=  Set Variable If  ${status}[0]=='PASS'  'False'  'True'
+    \   Run Keyword If  ${status}[0]=='PASS'  Exit For Loop
+    \   Sleep  1
+    \   Reload Page
+    Run Keyword If  ${raise error}=="True"  Fail  "${condition}"
+
 Test user login
-    Location should contain  login
+    Reload Page Until  Location should contain  login
     Input Text  name=subdomain  test
     Input Text  name=username  test
     Input Password  name=password  test
