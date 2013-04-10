@@ -29,7 +29,8 @@ jshint:
 
 clean:
 	find . -name \*~ -exec rm {} \;
-	rm -rf *.pyc robot_* selenium-screenshot-* output.xml log.html report.html
+	find . -name \*.pyc -exec rm {} \;
+	rm -rf robot_* selenium-screenshot-* output.xml log.html report.html
 
 sauce:
 	wget -q http://saucelabs.com/downloads/Sauce-Connect-latest.zip -O /tmp/Sauce-Connect-latest.zip
