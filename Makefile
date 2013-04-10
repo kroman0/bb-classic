@@ -32,10 +32,16 @@ clean:
 	find . -name \*.pyc -exec rm {} \;
 	rm -rf robot_* selenium-screenshot-* output.xml log.html report.html
 
-sauce:
+sauceget:
 	wget -q http://saucelabs.com/downloads/Sauce-Connect-latest.zip -O /tmp/Sauce-Connect-latest.zip
 	unzip -p Sauce-Connect-latest.zip Sauce-Connect.jar >/tmp/Sauce-Connect.jar
 	java -jar /tmp/Sauce-Connect.jar
+
+sauceconnect:
+	java -jar /tmp/Sauce-Connect.jar $SAUCE_USERNAME $SAUCE_ACCESS_KEY
+
+sauce:	clean
+	ROBOT_DESIRED_CAPABILITIES=platform:Windows ROBOT_BROWSER=internetexplorer ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub bin/pybot tests
 
 bootstrap-update:
 	wget -q http://twitter.github.com/bootstrap/assets/bootstrap.zip -O /tmp/bootstrap.zip
