@@ -4,7 +4,7 @@
 .PHONY: run
 
 run:
-	bin/dev_appserver app --skip_sdk_update_check --high_replication --datastore_path=app.ds
+	bin/dev_appserver app --skip_sdk_update_check --datastore_path=app.ds
 
 test:	clean
 	bin/pybot tests

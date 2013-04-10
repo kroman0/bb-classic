@@ -32,7 +32,7 @@ Click on ${text} in ${state} state and wait effect
     Sleep  0.5
 
 Start app
-    Start Process  bin/dev_appserver app --skip_sdk_update_check -a 0.0.0.0
+    Start Process  bin/dev_appserver app --skip_sdk_update_check --host 0.0.0.0
     Sleep  1
 
 Start Browser For Test
