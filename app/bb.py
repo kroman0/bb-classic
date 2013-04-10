@@ -12,7 +12,7 @@ import base64
 from urlparse import urlunparse
 from urllib import urlencode
 
-from crypto import encodeData, decodeData
+import crypto
 
 _ = lambda x: os.path.join(os.path.dirname(__file__), 'templates', x)
 
@@ -39,22 +39,17 @@ MEDATA = {
     "updated-at": "2000-01-01T00:00:00Z",
     "user-name": "test",
 }
-ATTACHMENT = lambda x: {
-    "author-name": "Author name #%s" % x,
-    "byte-size": 100 * x,
-    "download-url": "url%s" % x,
-    "name": "Name #%s" % x,
-    "person-id": x % 5 + 1,
-}
-TODO = lambda x: {
-    "id": x,
-    "content": "Todo content #%s" % x,
-}
 COLLECTION = [{
     "address-one": "Address one of #%s" % i,
     "address-two": "Address two of #%s" % i,
     "announcement": "announcement of #%s" % i,
-    "attachments": [ATTACHMENT(x) for x in range(1, i % 5 + 1)],
+    "attachments": [{
+        "author-name": "Author name #%s" % x,
+        "byte-size": 100 * x,
+        "download-url": "url%s" % x,
+        "name": "Name #%s" % x,
+        "person-id": x % 5 + 1,
+    } for x in range(1, i % 5 + 1)],
     "attachments-count": i % 5,
     "author-id": i % 5 + 1,
     "author-name": "Author name #%s" % i,
@@ -130,7 +125,10 @@ COLLECTION = [{
     "time-zone-name": "Europe/Kiev",
     "title": "Title #%s" % i,
     "todo-item-id": i % 5 + 1,
-    "todo-items": [TODO(x) for x in range(1, i % 5 + 1)],
+    "todo-items": [{
+        "id": x,
+        "content": "Todo content #%s" % x,
+    } for x in range(1, i % 5 + 1)],
     "todo-list-id": i % 5 + 1,
     "tracked": [True, False][i % 2],
     "type": "Type of #%s" % i,
@@ -139,8 +137,15 @@ COLLECTION = [{
     "user-name": "test",
     "web-address": "http://example%s.com" % i,
     "zip": "%5.5d" % i,
-}
-    for i in range(1, 30)]
+} for i in range(1, 30)]
+
+
+NODE_ONE = lambda x: x.nodeType == 1
+
+
+class GetSubjectException(Exception):
+    """ Exception on get subject_id
+    """
 
 
 def absolute_url(subdomain, relative_url='', params='', query='', fragment=''):
@@ -168,7 +173,7 @@ def get_subject_id(username, password, subdomain):
         dom = minidom.parseString(result.content)
         return str(dom.getElementsByTagName('id')[0].firstChild.nodeValue)
     else:
-        raise Exception('Can\'t get subject_id')
+        raise GetSubjectException('Can\'t get subject_id')
 
 
 class CacheInfo(db.Model):
@@ -202,7 +207,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
         """
         is_sessioned = False
         if 'ssid' in self.request.cookies:
-            data = decodeData(self.request.cookies['ssid'])
+            data = crypto.decode_data(self.request.cookies['ssid'])
             if data:
                 is_sessioned = True
                 self.username, self.password, self.sub_id, \
@@ -248,7 +253,7 @@ class LoginPage(BaseRequestHandler):
             expires = (datetime.datetime.now() + datetime.timedelta(weeks=4))\
                 .strftime('%a, %d-%b-%Y %H:%M:%S UTC')
             ssid_cookie = 'ssid=%s; expires=%s' % \
-                (encodeData(tuple(data)), expires)
+                (crypto.encode_data(tuple(data)), expires)
             self.response.headers.add_header('Set-Cookie', str(ssid_cookie))
             return
 
@@ -260,7 +265,7 @@ class LoginPage(BaseRequestHandler):
         # make a request to the Basecamp API
         try:
             subject_id = get_subject_id(login, pwd, subdomain)
-        except:
+        except GetSubjectException:
             self.error(401)
             return
 
@@ -269,7 +274,7 @@ class LoginPage(BaseRequestHandler):
         expires = (datetime.datetime.now() + datetime.timedelta(weeks=4))\
             .strftime('%a, %d-%b-%Y %H:%M:%S UTC')
         ssid_cookie = 'ssid=%s; expires=%s' % \
-            (encodeData(tuple(data)), expires)
+            (crypto.encode_data(tuple(data)), expires)
         self.response.headers.add_header('Set-Cookie', str(ssid_cookie))
 
 
@@ -305,16 +310,16 @@ def convert(node):
         value = float(node.firstChild.nodeValue)
     elif type_ == "array":
         result = []
-        for i in filter(lambda x: x.nodeType == 1, childs):
-            items = filter(lambda x: x.nodeType == 1, i.childNodes)
-            result.append(dict([convert(i) for i in items]))
+        for item in [y for y in childs if NODE_ONE(y)]:
+            items = [y for y in item.childNodes if NODE_ONE(y)]
+            result.append(dict([convert(y) for y in items]))
         value = result
     else:
-        subnodes = filter(lambda x: x.nodeType == 1, childs)
+        subnodes = [y for y in childs if NODE_ONE(y)]
         if subnodes:
-            value = dict([convert(i) for i in subnodes])
+            value = dict([convert(y) for y in subnodes])
         else:
-            value = "".join([i.nodeValue for i in childs])
+            value = "".join([y.nodeValue for y in childs])
     return (name, value)
 
 
@@ -358,14 +363,14 @@ class CrossDomain(BaseRequestHandler):
             else:
                 self.response.out.write(json.dumps(COLLECTION))
             return
-        DEV = self.dev()
-        q = None
-        if DEV:
-            q = db.GqlQuery(
+        dev = self.dev()
+        query = None
+        if dev:
+            query = db.GqlQuery(
                 "SELECT * FROM CacheInfo"
                 " WHERE url='%s'" % self.request.path_qs)
-        if DEV and q and q.count():
-            content = q[0].content
+        if dev and query and query.count():
+            content = query[0].content
         else:
             headers = {
                 'Content-Type': 'application/xml',
@@ -385,22 +390,23 @@ class CrossDomain(BaseRequestHandler):
                 self.response.out.write(result.content)
                 return
             content = result.content
-            if DEV:
-                e = CacheInfo(url=self.request.path_qs,
-                              status_code=result.status_code,
-                              headers=[db.Blob('%s:%s' % (k, v))
-                                       for k, v in result.headers.items()],
-                              content=result.content)
-                e.put()
+            if dev:
+                einfo = CacheInfo(url=self.request.path_qs,
+                                  status_code=result.status_code,
+                                  headers=[db.Blob('%s:%s' % (k, v))
+                                           for k, v in result.headers.items()],
+                                  content=result.content)
+                einfo.put()
             self.response.set_status(result.status_code)
             self.response.headers.update(result.headers)
         dom = minidom.parseString(content)
-        parent = dom.firstChild
-        result = convert(parent)[1]
-        self.response.headers['Content-Type'] = 'application/json'
-        self.response.out.write(json.dumps(result))
+        if dom.childNodes:
+            parent = dom.childNodes[0]
+            result = convert(parent)[1]
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.out.write(json.dumps(result))
 
-app = webapp2.WSGIApplication([
+APPLICATION = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/login', LoginPage),
     ('/logout', LogoutPage),

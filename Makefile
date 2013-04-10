@@ -49,3 +49,9 @@ backbone-update:
 underscore-update:
 	wget -q http://underscorejs.org/underscore.js -O app/static/js/underscore.js
 	wget -q http://underscorejs.org/underscore-min.js -O app/static/js/underscore-min.js
+
+pylint:
+	pylint app/*.py
+
+pep8:
+	pep8 app

@@ -1,30 +1,11 @@
+""" crypto module
+"""
 from google.appengine.ext import webapp
-from google.appengine.ext import db
 from google.appengine.ext.webapp.util import run_wsgi_app
-from google.appengine.api import memcache
 from Crypto.Cipher import ARC4 as Crypter
 import base64
-import random
-import sys
-import keyring
 
-
-def generate_raw_key():
-    """ generate raw key
-    """
-    return base64.b64encode(repr(random.uniform(1, 1000)))
-
-
-def generate_marker():
-    """ regenerate_raw_key implementation satisfies needs
-    """
-    return generate_raw_key()
-
-
-def generate_key():
-    """ generate key
-    """
-    return (generate_raw_key(), generate_marker())
+import keys
 
 # ARC4/XOR require two instances to encode/decode
 
@@ -41,27 +22,26 @@ def decrypt(source, key):
     return Crypter.new(key).decrypt(source)
 
 
-def decodeData(source, delimiter='\n'):
+def decode_data(source, delimiter='\n'):
     """ decode data
     """
-    for keymarkerPair in keyring.data():
+    for keymarkerpair in keys.data():
         try:
             source_decoded = base64.b64decode(source)
-            values = decrypt(source_decoded, keymarkerPair[0]).split(delimiter)
-            if values[0] == keymarkerPair[1]:
+            values = decrypt(source_decoded, keymarkerpair[0]).split(delimiter)
+            if values[0] == keymarkerpair[1]:
                 return tuple(values[1:])
-        except:
+        except (TypeError, IndexError):
             break
-
     return None
 
 
-def encodeData(values, delimiter='\n'):
+def encode_data(values, delimiter='\n'):
     """ encode data
     """
     data = ''
     values = list(values)
-    current = keyring.current()
+    current = keys.current()
     values.insert(0, current[1])
     for i in xrange(len(values)):
         if i > 0:
@@ -71,39 +51,47 @@ def encodeData(values, delimiter='\n'):
 
 
 class AddkeyPage(webapp.RequestHandler):
-
-    def __init__(self, *args, **kwargs):
-        super(AddkeyPage, self).__init__(*args, **kwargs)
+    """ Add key handler
+    """
 
     def get(self):
+        """ GET request
+        """
         self.post()
 
     def post(self):
-        keyring.rotate()
+        """ POST request
+        """
+        keys.rotate()
 
 
 class GenkeysPage(webapp.RequestHandler):
-
-    def __init__(self, *args, **kwargs):
-        super(GenkeysPage, self).__init__(*args, **kwargs)
+    """ Generate keys handler
+    """
 
     def get(self):
+        """ GET request
+        """
         self.post()
 
     def post(self):
-        keyring.refresh()
+        """ POST request
+        """
+        keys.refresh()
         # import pdb; pdb.Pdb(stdin=sys.__stdin__,
         # stdout=sys.__stdout__).set_trace()
 
 
-application = webapp.WSGIApplication([
+APPLICATION = webapp.WSGIApplication([
     ('/genkeys', GenkeysPage),
     ('/addkey', AddkeyPage),
 ], debug=True)
 
 
 def main():
-    run_wsgi_app(application)
+    """ main
+    """
+    run_wsgi_app(APPLICATION)
 
 if __name__ == "__main__":
     main()
