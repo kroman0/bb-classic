@@ -61,6 +61,12 @@ backbone-pageable-update:
 	wget -q https://raw.github.com/wyuenho/backbone-pageable/master/lib/backbone-pageable.js -O app/static/js/backbone-pageable.js
 	wget -q https://raw.github.com/wyuenho/backbone-pageable/master/lib/backbone-pageable.min.js -O app/static/js/backbone-pageable.min.js
 
+backbone-fetch-cache-update:
+	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.js -O app/static/js/backbone.fetch-cache.js
+	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.min.js -O app/static/js/backbone.fetch-cache.min.js
+
+update-all: bootstrap-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update
+
 pylint:
 	pylint app/*.py
 
