@@ -9,6 +9,9 @@ run:
 test:	clean
 	bin/pybot tests
 
+xtest:	clean
+	xvfb-run bin/pybot tests
+
 backup:
 	cp app.ds app.ds.backup
 
