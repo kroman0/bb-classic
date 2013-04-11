@@ -1,29 +1,50 @@
 /*global window, Backbone*/
 (function () {
     "use strict";
-    window.Projects = Backbone.Collection.extend({
+    var BBCollectionExtra = {
+            fetchonce: function () {
+                var fetched = this.fetched;
+                if (!fetched) {
+                    this.fetched = true;
+                    this.fetch({cache: true});
+                }
+                return fetched;
+            },
+            get_or_create: function (id) {
+                if (!this[id]) {
+                    this[id] = this.clone();
+                    this[id].parent_id = id;
+                    this[id].on("reset", window.onReset);
+                    this[id].on("sync", window.onReset);
+                }
+                return this[id];
+            }
+        },
+        BBCollection = Backbone.Collection.extend(BBCollectionExtra),
+        BBPCollection = Backbone.PageableCollection.extend(BBCollectionExtra);
+    window.Projects = BBCollection.extend({
         url: '/api/projects.xml',
         model: window.Project
     });
-    window.Companies = Backbone.Collection.extend({
+    window.Companies = BBCollection.extend({
         url: '/api/companies.xml',
         model: window.Company
     });
-    window.People = Backbone.Collection.extend({
+    window.People = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
             return this.parent_id ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
         },
         model: window.Person
     });
-    window.Posts = Backbone.Collection.extend({
+    window.Posts = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
             return '/api/projects/' + this.parent_id + '/posts.xml';
         },
         model: window.Post
     });
-    window.Attachments = Backbone.PageableCollection.extend({
+    window.Attachments = BBPCollection.extend({
         mode: 'client',
         parent_id: null, // project id
         url: function () {
@@ -31,14 +52,14 @@
         },
         model: window.Attachment
     });
-    window.Calendar = Backbone.Collection.extend({
+    window.Calendar = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
             return '/api/projects/' + this.parent_id + '/calendar_entries.xml';
         },
         model: window.CalendarEntry
     });
-    window.Categories = Backbone.PageableCollection.extend({
+    window.Categories = BBPCollection.extend({
         mode: 'client',
         parent_id: null, // project id
         url: function () {
@@ -46,7 +67,7 @@
         },
         model: window.Category
     });
-    window.TimeEntries = Backbone.PageableCollection.extend({
+    window.TimeEntries = BBPCollection.extend({
         mode: 'client',
         parent_id: null, // project id
         parent: 'projects',
@@ -73,14 +94,14 @@
     window.TodoTimeEntries = window.TimeEntries.extend({
         parent: 'todo_items'
     });
-    window.TodoItems = Backbone.Collection.extend({
+    window.TodoItems = BBCollection.extend({
         parent_id: null,
         url: function () {
             return '/api/todo_lists/' + this.parent_id + '/todo_items.xml';
         },
         model: window.TodoItem
     });
-    window.TodoLists = Backbone.Collection.extend({
+    window.TodoLists = BBCollection.extend({
         responsible_party: null, // person id
         parent_id: null, // project id
         filter_status: null, // filter for project [all\pending\finished]
@@ -101,7 +122,7 @@
         },
         model: window.TodoList
     });
-    window.PostComments = Backbone.Collection.extend({
+    window.PostComments = BBCollection.extend({
         parent_id: null, // parent id
         parent_type: 'posts', // posts|milestones|todo_items
         url: function () {

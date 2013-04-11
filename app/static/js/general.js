@@ -15,23 +15,6 @@
         }
         return base;
     };
-    Backbone.Collection.prototype.fetchonce = function () {
-        var fetched = this.fetched;
-        if (!fetched) {
-            this.fetched = true;
-            this.fetch({cache: true});
-        }
-        return fetched;
-    };
-    Backbone.Collection.prototype.get_or_create = function (id) {
-        if (!this[id]) {
-            this[id] = this.clone();
-            this[id].parent_id = id;
-            this[id].on("reset", window.onReset);
-            this[id].on("sync", window.onReset);
-        }
-        return this[id];
-    };
     Backbone.View.prototype.render = function () {
         this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
         return this;
