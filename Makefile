@@ -82,6 +82,9 @@ pep8:
 flake8:
 	flake8 app/ tests/
 
-pytest: pep8 flake8 pylint
+pyflakes:
+	pyflakes app/*.py tests/*.py
+
+pytest: pep8 pyflakes flake8 pylint
 
 jstest: jshint jslint
