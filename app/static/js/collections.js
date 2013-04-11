@@ -1,4 +1,3 @@
-/*jslint nomen: true*/
 /*global window, Backbone*/
 (function () {
     "use strict";
