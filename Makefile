@@ -27,6 +27,9 @@ minify:
 jshint:
 	jshint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js
 
+jslint:
+	jslint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js
+
 clean:
 	find . -name \*~ -exec rm {} \;
 	find . -name \*.pyc -exec rm {} \;
@@ -68,7 +71,14 @@ backbone-fetch-cache-update:
 update-all: bootstrap-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update
 
 pylint:
-	pylint app/*.py
+	pylint app/*.py tests/*.py
 
 pep8:
-	pep8 app
+	pep8 app/ tests/
+
+flake8:
+	flake8 app/ tests/
+
+pytest: pep8 flake8 pylint
+
+jstest: jshint jslint
