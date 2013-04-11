@@ -1,5 +1,5 @@
 /*jslint nomen: true*/
-/*global window, $, _, Backbone*/
+/*global window, _, Backbone*/
 (function () {
     "use strict";
     window.Project = Backbone.Model.extend({
