@@ -9,6 +9,9 @@ run:
 test:	clean
 	bin/pybot tests
 
+xtest:	clean
+	xvfb-run bin/pybot tests
+
 backup:
 	cp app.ds app.ds.backup
 
@@ -27,15 +30,24 @@ minify:
 jshint:
 	jshint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js
 
+jslint:
+	jslint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js
+
 clean:
 	find . -name \*~ -exec rm {} \;
 	find . -name \*.pyc -exec rm {} \;
 	rm -rf robot_* selenium-screenshot-* output.xml log.html report.html
 
-sauce:
+sauceget:
 	wget -q http://saucelabs.com/downloads/Sauce-Connect-latest.zip -O /tmp/Sauce-Connect-latest.zip
 	unzip -p Sauce-Connect-latest.zip Sauce-Connect.jar >/tmp/Sauce-Connect.jar
 	java -jar /tmp/Sauce-Connect.jar
+
+sauceconnect:
+	java -jar /tmp/Sauce-Connect.jar $SAUCE_USERNAME $SAUCE_ACCESS_KEY
+
+sauce:	clean
+	ROBOT_DESIRED_CAPABILITIES=platform:Windows ROBOT_BROWSER=internetexplorer ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub bin/pybot tests
 
 bootstrap-update:
 	wget -q http://twitter.github.com/bootstrap/assets/bootstrap.zip -O /tmp/bootstrap.zip
@@ -55,8 +67,21 @@ backbone-pageable-update:
 	wget -q https://raw.github.com/wyuenho/backbone-pageable/master/lib/backbone-pageable.js -O app/static/js/backbone-pageable.js
 	wget -q https://raw.github.com/wyuenho/backbone-pageable/master/lib/backbone-pageable.min.js -O app/static/js/backbone-pageable.min.js
 
+backbone-fetch-cache-update:
+	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.js -O app/static/js/backbone.fetch-cache.js
+	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.min.js -O app/static/js/backbone.fetch-cache.min.js
+
+update-all: bootstrap-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update
+
 pylint:
-	pylint app/*.py
+	pylint app/*.py tests/*.py
 
 pep8:
-	pep8 app
+	pep8 app/ tests/
+
+flake8:
+	flake8 app/ tests/
+
+pytest: pep8 flake8 pylint
+
+jstest: jshint jslint
