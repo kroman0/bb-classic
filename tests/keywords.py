@@ -11,6 +11,7 @@ import httplib
 import os
 import json
 
+
 def compare_screenshot_to_base(baseline, diff=100):
     """
     Calculate the exact difference between two images.
@@ -31,8 +32,8 @@ def compare_screenshot_to_base(baseline, diff=100):
     his2 = img2.histogram()
     rms = math.sqrt(
         reduce(operator.add,
-                map(lambda a, b: (a - b) ** 2, his1, his2)
-                ) / len(his1))
+               map(lambda a, b: (a - b) ** 2, his1, his2)
+               ) / len(his1))
     logger.info("RMS diff: %s" % rms)
     if rms > 0:
         idiff = ImageChops.difference(img1, img2)
@@ -42,6 +43,7 @@ def compare_screenshot_to_base(baseline, diff=100):
     if rms > diff:
         raise AssertionError(
             "Image: %s is different from baseline: %s" % (path, baseline))
+
 
 def report_sauce_status(job_id, test_status, test_tags=list()):
     """ Report test status to Sauce service
@@ -56,7 +58,7 @@ def report_sauce_status(job_id, test_status, test_tags=list()):
 
     token = base64.encodestring('%s:%s' % (username, access_key))[:-1]
     body = json.dumps({'passed': test_status == 'PASS',
-                        'tags': test_tags})
+                       'tags': test_tags})
 
     connection = httplib.HTTPConnection('saucelabs.com')
     connection.request('PUT', '/rest/v1/%s/jobs/%s' % (
@@ -65,6 +67,7 @@ def report_sauce_status(job_id, test_status, test_tags=list()):
     )
 
     return connection.getresponse().status
+
 
 def set_window_size(width, height):
     """ Sets the `width` and `height` of the current window
@@ -78,6 +81,7 @@ def set_window_size(width, height):
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
     return driver._current_browser().set_window_size(int(width), int(height))
+
 
 def get_session_id():
     """ Get session id
