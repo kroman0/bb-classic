@@ -199,8 +199,9 @@ class BaseRequestHandler(webapp2.RequestHandler):
     def dev(self):
         """ Check develompent environment
         """
-        dev = self.request.get('dev', False)
-        return dev or os.environ['SERVER_SOFTWARE'].startswith('Development')
+        req_dev = self.request.get('dev', False)
+        soft_dev = os.environ['SERVER_SOFTWARE'].startswith('Development')
+        return req_dev or soft_dev
 
     def auth_check(self):
         """ Check session
