@@ -2,7 +2,28 @@
 /*global window, $, _, Backbone*/
 (function () {
     "use strict";
-    window.TimeReportView = Backbone.View.extend({
+    var BBView = Backbone.View.extend({
+        render: function () {
+            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            return this;
+        },
+        renderitem: function (item) {
+            return _.template($(this.itemtemplate).html(), item, {variable: 'item'});
+        },
+        rendercomments: function (comments) {
+            return _.template($('#comments-template').html(), comments, {variable: 'comments'});
+        },
+        renderpager: function () {
+            return _.template($('#pager-template').html(), this, {variable: 'view'});
+        },
+        renderheader: function () {
+            return _.template($('#header-template').html(), this, {variable: 'view'});
+        },
+        renderprojectnav: function () {
+            return _.template($('#project-nav-template').html(), this, {variable: 'view'});
+        }
+    });
+    window.TimeReportView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -38,7 +59,7 @@
             return this;
         }
     });
-    window.AllPeopleView = Backbone.View.extend({
+    window.AllPeopleView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -48,7 +69,7 @@
             return "People";
         }
     });
-    window.ProjectsView = Backbone.View.extend({
+    window.ProjectsView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce();
         },
@@ -57,7 +78,7 @@
             return "Projects";
         }
     });
-    window.ProjectView = Backbone.View.extend({
+    window.ProjectView = BBView.extend({
         deps: function () {
             return this.options.collections.projects.fetchonce();
         },
@@ -66,7 +87,7 @@
             return this.model.get('name');
         }
     });
-    window.CompaniesView = Backbone.View.extend({
+    window.CompaniesView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce();
         },
@@ -75,7 +96,7 @@
             return "Companies";
         }
     });
-    window.CompanyView = Backbone.View.extend({
+    window.CompanyView = BBView.extend({
         deps: function () {
             return this.options.collections.companies.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
@@ -84,7 +105,7 @@
             return this.model.get('name');
         }
     });
-    window.PeopleView = Backbone.View.extend({
+    window.PeopleView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -94,7 +115,7 @@
             return this.model.get('name') + " > People";
         }
     });
-    window.TimeEntriesView = Backbone.View.extend({
+    window.TimeEntriesView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -125,7 +146,7 @@
         },
         template: '#todo-time-template'
     });
-    window.PostCommentsView = Backbone.View.extend({
+    window.PostCommentsView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
@@ -138,7 +159,7 @@
             return this.model.get('name') + " > Posts > " + title + " > Comments";
         }
     });
-    window.CalendarEntryCommentsView = Backbone.View.extend({
+    window.CalendarEntryCommentsView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
@@ -151,7 +172,7 @@
             return this.model.get('name') + " > Calendar > " + title + " > Comments";
         }
     });
-    window.PostsView = Backbone.View.extend({
+    window.PostsView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -161,7 +182,7 @@
             return this.model.get('name') + " > Posts";
         }
     });
-    window.PostView = Backbone.View.extend({
+    window.PostView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
@@ -174,7 +195,7 @@
             return this.model.get('name') + " > Posts > " + title;
         }
     });
-    window.FilesView = Backbone.View.extend({
+    window.FilesView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
@@ -196,7 +217,7 @@
             return this.model.get('name') + " > Files";
         }
     });
-    window.FileView = Backbone.View.extend({
+    window.FileView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
@@ -208,7 +229,7 @@
             return this.model.get('name') + " > Files > " + title;
         }
     });
-    window.CalendarView = Backbone.View.extend({
+    window.CalendarView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -218,7 +239,7 @@
             return this.model.get('name') + " > Calendar";
         }
     });
-    window.CalendarEntryView = Backbone.View.extend({
+    window.CalendarEntryView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
@@ -231,7 +252,7 @@
             return this.model.get('name') + " > Calendar > " + title;
         }
     });
-    window.CategoriesView = Backbone.View.extend({
+    window.CategoriesView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -254,7 +275,7 @@
             return this.model.get('name') + " > Categories";
         }
     });
-    window.CategoryView = Backbone.View.extend({
+    window.CategoryView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
@@ -267,7 +288,7 @@
             return this.model.get('name') + " > Categories > " + title;
         }
     });
-    window.PersonView = Backbone.View.extend({
+    window.PersonView = BBView.extend({
         deps: function () {
             return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -276,7 +297,7 @@
             return this.model.name();
         }
     });
-    window.TodosView = Backbone.View.extend({
+    window.TodosView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
@@ -316,7 +337,7 @@
             return "All";
         }
     });
-    window.TodoListsView = Backbone.View.extend({
+    window.TodoListsView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -329,7 +350,7 @@
             return "To-dos";
         }
     });
-    window.TodoListView = Backbone.View.extend({
+    window.TodoListView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
@@ -351,7 +372,7 @@
             return this;
         }
     });
-    window.TodoItemView = Backbone.View.extend({
+    window.TodoItemView = BBView.extend({
         todo_item: null,
         cur_item: null,
         deps: function () {
@@ -375,7 +396,7 @@
             return this;
         }
     });
-    window.TodoItemCommentsView = Backbone.View.extend({
+    window.TodoItemCommentsView = BBView.extend({
         todo_item: null,
         cur_item: null,
         deps: function () {
@@ -398,7 +419,7 @@
             return this;
         }
     });
-    window.TodoView = Backbone.View.extend({
+    window.TodoView = BBView.extend({
         events: {
             "click .todo.icon-completed": "uncomplete",
             "click .todo.icon-uncompleted": "complete"
@@ -417,7 +438,7 @@
             return this;
         }
     });
-    window.NavView = Backbone.View.extend({
+    window.NavView = BBView.extend({
         template: '#nav-template',
         initialize: function () {
             this.model.bind("change", this.render, this);

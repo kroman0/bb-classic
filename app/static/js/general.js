@@ -15,25 +15,6 @@
         }
         return base;
     };
-    Backbone.View.prototype.render = function () {
-        this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
-        return this;
-    };
-    Backbone.View.prototype.renderitem = function (item) {
-        return _.template($(this.itemtemplate).html(), item, {variable: 'item'});
-    };
-    Backbone.View.prototype.rendercomments = function (comments) {
-        return _.template($('#comments-template').html(), comments, {variable: 'comments'});
-    };
-    Backbone.View.prototype.renderpager = function () {
-        return _.template($('#pager-template').html(), this, {variable: 'view'});
-    };
-    Backbone.View.prototype.renderheader = function () {
-        return _.template($('#header-template').html(), this, {variable: 'view'});
-    };
-    Backbone.View.prototype.renderprojectnav = function () {
-        return _.template($('#project-nav-template').html(), this, {variable: 'view'});
-    };
     // uniq_hash = [];
     // var add_hash = function () {
     //     if(window.workspace){
