@@ -1,0 +1,39 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=15  implicit_wait=0.1
+
+Resource  keywords.txt
+
+Suite Setup  Start app
+
+Suite Teardown  Stop app
+
+Test Setup  Start Browser For Test
+
+Test Teardown  Close All Browsers
+
+
+*** Test Cases ***
+
+Generate images
+    [Tags]  screenshots
+    Capture Page Screenshot  ${base_login}
+    Test user login
+    Sleep  2
+    Capture Page Screenshot  ${base_projects}
+    Click link  Companies
+    Sleep  2
+    Capture Page Screenshot  ${base_companies}
+    Click link  To-Dos
+    Sleep  2
+    Capture Page Screenshot  ${base_todos}
+    Click link  Time
+    Sleep  2
+    Capture Page Screenshot  ${base_time_report}
+    Click link  People
+    Sleep  2
+    Capture Page Screenshot  ${base_people}
+    Click link  First Last
+    Click link  My profile
+    Capture Page Screenshot  ${base_mypage}
+
