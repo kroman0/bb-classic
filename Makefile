@@ -7,7 +7,7 @@ run:
 	bin/dev_appserver app --skip_sdk_update_check --datastore_path=app.ds
 
 test:	clean
-	bin/pybot tests -e screenshots
+	bin/pybot -e screenshots tests
 
 xtest:	clean
 	xvfb-run bin/pybot -e screenshots tests
