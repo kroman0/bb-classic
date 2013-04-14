@@ -17,6 +17,7 @@ Test Teardown  Close All Browsers
 
 Generate images
     [Tags]  screenshots
+    Sleep  1
     Capture Page Screenshot  ${base_login}
     Test user login
     Sleep  2
