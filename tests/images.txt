@@ -44,6 +44,9 @@ Generate images
     Click link  Title #1
     Sleep  2
     Capture Page Screenshot  ${base_project_message}
+    Click element  css=.icon-comment
+    Sleep  2
+    Capture Page Screenshot  ${base_project_message_comments}
     Click on "To-Dos" in projectnav
     Capture Page Screenshot  ${base_project_todos}
     Click link  Name of #1
@@ -52,11 +55,17 @@ Generate images
     Click link  Todo content #1
     Sleep  2
     Capture Page Screenshot  ${base_project_todo}
+    Click element  css=.icon-comment
+    Sleep  2
+    Capture Page Screenshot  ${base_project_todo_comments}
     Click on "Calendar" in projectnav
     Capture Page Screenshot  ${base_project_calendar}
     Click link  Title #1
     Sleep  2
     Capture Page Screenshot  ${base_project_calendar_entry}
+    Click element  css=.icon-comment
+    Sleep  2
+    Capture Page Screenshot  ${base_project_calendar_entry_comments}
     Click on "Time" in projectnav
     Capture Page Screenshot  ${base_project_time}
     Click on "Files" in projectnav

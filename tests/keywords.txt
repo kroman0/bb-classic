@@ -33,6 +33,9 @@ ${base_project_calendar_entry} =  ${base_path}project_calendar_entry.png
 ${base_project_file} =  ${base_path}project_file.png
 ${base_project_category} =  ${base_path}project_category.png
 ${base_project_person} =  ${base_path}project_person.png
+${base_project_message_comments} =  ${base_path}project_message_comments.png
+${base_project_calendar_entry_comments} =  ${base_path}project_calendar_entry_comments.png
+${base_project_todo_comments} =  ${base_path}project_todo_comments.png
 
 ${REMOTE_URL} =
 ${SESSION_ID} =
