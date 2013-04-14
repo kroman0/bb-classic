@@ -36,4 +36,41 @@ Generate images
     Click link  First Last
     Click link  My profile
     Capture Page Screenshot  ${base_mypage}
-
+    Click link  Projects
+    Click link  Name of #1
+    Capture Page Screenshot  ${base_project_overview}
+    Click on "Messages" in projectnav
+    Capture Page Screenshot  ${base_project_messages}
+    Click link  Title #1
+    Sleep  2
+    Capture Page Screenshot  ${base_project_message}
+    Click on "To-Dos" in projectnav
+    Capture Page Screenshot  ${base_project_todos}
+    Click link  Name of #1
+    Sleep  2
+    Capture Page Screenshot  ${base_project_todolist}
+    Click link  Todo content #1
+    Sleep  2
+    Capture Page Screenshot  ${base_project_todo}
+    Click on "Calendar" in projectnav
+    Capture Page Screenshot  ${base_project_calendar}
+    Click link  Title #1
+    Sleep  2
+    Capture Page Screenshot  ${base_project_calendar_entry}
+    Click on "Time" in projectnav
+    Capture Page Screenshot  ${base_project_time}
+    Click on "Files" in projectnav
+    Capture Page Screenshot  ${base_project_files}
+    Click link  Name of #1
+    Sleep  2
+    Capture Page Screenshot  ${base_project_file}
+    Click on "Categories" in projectnav
+    Capture Page Screenshot  ${base_project_categories}
+    Click link  Name of #1
+    Sleep  2
+    Capture Page Screenshot  ${base_project_category}
+    Click on "People" in projectnav
+    Capture Page Screenshot  ${base_project_people}
+    Click link  First#1 Last
+    Sleep  2
+    Capture Page Screenshot  ${base_project_person}
