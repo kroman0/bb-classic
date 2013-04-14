@@ -19,14 +19,33 @@ Installation
 Development
 -----------
 
-- Backup `make backup`
-- Restore `make restory`
+- Datastore:
+  - Backup `make backup`
+  - Restore `make restore`
+- Python test `make pytest`:
+  - pep8 `make pep8`
+  - pyflakes `make pyflakes`
+  - flake8 `make flake8`
+  - pylint `make pylint`
+- Javascript test `make jstest` 
+  - JShint `make jshint`
+  - JSlint `make jslint`
 - Minify javascript `make minify`
-- JShint `make jshint`
-- Testing `make test`
-- Update bootstrap `make bootstrap-update`
-- Update backbone.js `make backbone-update`
-- Update underscore.js `make underscore-update`
+- Selelium testing:
+  - Run tests in foreground `make test`
+  - Run tests in xvfb `make xtest`
+- Selelium testing with SauceLab:
+  - Get sauce connect `make sauceget`
+  - Connect to SauceLab `make sauceconnect`
+  - Run selenium tests on SauceLab `make sauce`
+- Update screenshots `make screenshots`
+- Update libraries `make update-all`
+  - Update bootstrap `make bootstrap-update`
+  - Update underscore.js `make underscore-update`
+  - Update backbone.js `make backbone-update`
+  - Update backbone-pageable `make backbone-pageable-update`
+  - Update backbone-fetch-cache `make backbone-fetch-cache-update`
+- Cleanup `make clean`
 
 - - -
 

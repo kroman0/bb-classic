@@ -18,6 +18,24 @@ ${base_companies} =  ${base_path}companies.png
 ${base_time_report} =  ${base_path}time_report.png
 ${base_todos} =  ${base_path}todos.png
 ${base_people} =  ${base_path}people.png
+${base_project_overview} =  ${base_path}project_overview.png
+${base_project_messages} =  ${base_path}project_messages.png
+${base_project_todos} =  ${base_path}project_todos.png
+${base_project_calendar} =  ${base_path}project_calendar.png
+${base_project_time} =  ${base_path}project_time.png
+${base_project_files} =  ${base_path}project_files.png
+${base_project_categories} =  ${base_path}project_categories.png
+${base_project_people} =  ${base_path}project_people.png
+${base_project_message} =  ${base_path}project_message.png
+${base_project_todolist} =  ${base_path}project_todolist.png
+${base_project_todo} =  ${base_path}project_todo.png
+${base_project_calendar_entry} =  ${base_path}project_calendar_entry.png
+${base_project_file} =  ${base_path}project_file.png
+${base_project_category} =  ${base_path}project_category.png
+${base_project_person} =  ${base_path}project_person.png
+${base_project_message_comments} =  ${base_path}project_message_comments.png
+${base_project_calendar_entry_comments} =  ${base_path}project_calendar_entry_comments.png
+${base_project_todo_comments} =  ${base_path}project_todo_comments.png
 
 ${REMOTE_URL} =
 ${SESSION_ID} =
@@ -30,6 +48,10 @@ Click on ${text} in ${state} state and wait effect
     Sleep  0.5
     Click element  xpath=//*[@id="projects_${state}"]//a[contains(text(),${text})]
     Sleep  0.5
+
+Click on ${text} in projectnav
+    Click element  xpath=//*[contains(@class,"projectnav")]//a[contains(text(),${text})]
+    Sleep  2
 
 Start app
     Start Process  bin/dev_appserver app --skip_sdk_update_check --host 0.0.0.0

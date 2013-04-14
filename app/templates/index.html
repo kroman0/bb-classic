@@ -412,14 +412,14 @@ div#time_report {
     <% }) %>
     </ul>
     <% } else { %>
-    <div class="tabbable tabs-left">
+    <div class="tabbable tabs-left row-fluid">
     <ul class="nav nav-tabs span3">
     <% var fcoid=_.first(pp.pluck('company-id'));
        view.options.collections.companies.each(function (item) { %>
         <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#people_c<%- item.id %>" data-toggle="tab"><%- item.get('name') %></a></li>
     <% }) %>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content span8">
     <% view.options.collections.companies.each(function (cc) { %>
         <div class="tab-pane fade<% if (fcoid==cc.id) { %> in active<% } %>" id="people_c<%- cc.id %>">
             <% var cp=pp.where({'company-id':cc.id}); if (_.isEmpty(cp)) { %>
@@ -455,14 +455,14 @@ div#time_report {
     <% }) %>
     </ul>
     <% } else { %>
-    <div class="tabbable tabs-left">
+    <div class="tabbable tabs-left row-fluid">
     <ul class="nav nav-tabs span3">
     <% var pc=_.uniq(pp.pluck('company-id')); var fcoid=_.first(pc); 
     _.each(pc, function (id) { %>
         <li<% if (fcoid==id) { %> class="active"<% } %>><a href="#people_c<%- id %>" data-toggle="tab"><%- cc.get(id)?cc.get(id).get('name'):id %></a></li>
     <% }) %>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content span8">
     <% _.each(pc, function (id) { %>
         <div class="tab-pane fade<% if (fcoid==id) { %> in active<% } %>" id="people_c<%- id %>">
             <ul class="media-list">
@@ -535,9 +535,8 @@ div#time_report {
 <script type="text/template" id="post-template">
     <li class="thumbnail">
         <h3>
-            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>">
-                <%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %>
-            </a>
+            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>"><%- item.get('title') %></a>
+            <% if (item.get('private')) { %><i class="icon-lock"></i><% } %>
             <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>">
                 <i class="icon-comment"></i>
             </a>
