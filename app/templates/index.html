@@ -549,9 +549,8 @@ div#time_report {
 <script type="text/template" id="post-template">
     <li class="thumbnail">
         <h3>
-            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>">
-                <%- item.get('title') %><% if (item.get('private')) { %><i class="icon-lock"></i><% } %>
-            </a>
+            <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>"><%- item.get('title') %></a>
+            <% if (item.get('private')) { %><i class="icon-lock"></i><% } %>
             <a href="#projects/<%- item.get('project-id') %>/posts/<%- item.id %>/comments" title="<%- item.get('comments-count') %>">
                 <i class="icon-comment"></i>
             </a>
