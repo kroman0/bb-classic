@@ -2,6 +2,7 @@
 /*global window, document, $, _, Backbone*/
 $(function () {
     "use strict";
+    return;
     var i,
         models = window.models = {},
         collections = window.collections = {},
@@ -234,14 +235,14 @@ $(function () {
             trigger: true
         });
     });
-//     views.navbar = new window.NavView({
-//         model: models.mydata,
-//         el: '.navbar'
-//     }).render();
-//     models.mydata.once("sync", function () {
-//         Backbone.history.start();
-//     });
-//     models.mydata.fetch();
+    views.navbar = new window.NavView({
+        model: models.mydata,
+        el: '.navbar'
+    }).render();
+    models.mydata.once("sync", function () {
+        Backbone.history.start();
+    });
+    models.mydata.fetch();
 });
 
 // container = new Backbone.Marionette.Region({
@@ -317,7 +318,7 @@ BB.module('Projects', function (Projects, App, Backbone) {
         template: "#projects-template",
         itemView: Projects.ItemView,
         emptyView: Projects.EmptyView,
-        templateHelpers: function(){return {view:this}},
+        templateHelpers: function () {return {view: this}; },
         name: function () {
             return "Projects";
         },
@@ -338,12 +339,10 @@ BB.module('Projects', function (Projects, App, Backbone) {
     Projects.Header = Backbone.Marionette.View.extend({
         className: "page-header",
         template: "#header1-template",
-//         templateHelpers: function(){
-//             return {
-//                 view: this,
-//                 hh: this.name()
-//             };
-//         },
+        render: function () {
+            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            return this;
+        },
         name: function () {
             return "Projects";
         }
@@ -355,6 +354,15 @@ BB.module('Projects', function (Projects, App, Backbone) {
             header: "#header",
             content: "#maincontent"
         }
+    });
+    App.on("initialize:before", function(options){
+        App.collections.projects = new App.Projects.Collection();
+        App.views.projectsView = new App.Projects.View({
+            collection: App.collections.projects
+        });
+        App.views.projectsHeader = new App.Projects.Header({
+            collection: App.collections.projects
+        });
     });
 });
 
@@ -406,6 +414,15 @@ BB.module('Companies', function (Companies, App, Backbone) {
             return "Companies";
         }
     });
+    App.on("initialize:before", function(options){
+        App.collections.companies = new App.Companies.Collection();
+        App.views.companiesView = new App.Companies.View({
+            collection: App.collections.companies
+        });
+        App.views.companiesHeader = new App.Companies.Header({
+            collection: App.collections.companies
+        });
+    });
 
 });
 
@@ -424,63 +441,45 @@ BB.module('People', function (People, App, Backbone) {
         },
         model: People.Person
     });
+    App.on("initialize:before", function(options){
+    });
 });
 
 BB.module('Base', function (Base, App, Backbone) {
     Base.Me = App.People.Model.extend({
         url: "/api/me.xml"
     });
-    var NavBarView = Backbone.Marionette.View.extend({
+    var NavBarView = Base.NavBarView = Backbone.Marionette.View.extend({
         template: "#nav-template",
         className: "navbar-inner",
+        render: function () {
+            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            return this;
+        },
         initialize: function () {
             this.model.bind("change", this.render, this);
         }
     });
-    App.addInitializer(function(options) {
+
+    App.on("initialize:before", function(options){
         App.me = new Base.Me();
-        var navbarView = new NavBarView({
-            model: App.me
-        });
+        var navbarView = new BB.Base.NavBarView({model: App.me});
         App.navRegion.show(navbarView);
     });
 });
 
 BB.addInitializer(function(options) {
-//     BB.me = new BB.Base.Me();
-//     BB.collections = {};
-    BB.collections.projects = new BB.Projects.Collection();
-    BB.collections.companies = new BB.Companies.Collection();
-//     BB.views = {};
-    BB.views.projectsView = new BB.Projects.View({
-        collection: BB.collections.projects
-    });
-    BB.views.companiesView = new BB.Companies.View({
-        collection: BB.collections.companies
-    });
-    BB.views.projectsHeader = new BB.Projects.Header({
-        collection: BB.collections.projects
-    });
-    BB.views.companiesHeader = new BB.Companies.Header({
-        collection: BB.collections.companies
-    });
-//     var projectsLayout = new BB.Projects.Layout();
-//     BB.navRegion.show(BB.views.navbarView);
-//     BB.mainRegion.show(projectsView);
-//     BB.mainRegion.show(projectsLayout);
-//     BB.headerRegion.show(projectsHeader);
-//     BB.mainRegion.show(projectsView);
-    BB.headerRegion.show(BB.views.companiesHeader);
-    BB.mainRegion.show(BB.views.companiesView);
     BB.headerRegion.show(BB.views.projectsHeader);
     BB.mainRegion.show(BB.views.projectsView);
-//     projectsLayout.content.show(projectsView);
-//     projectsLayout.header.show(projectsHeader);
     BB.me.fetch();
     BB.collections.projects.fetch();
-//     companies.fetch();
 });
 
+BB.on("initialize:after", function(options){
+    if (Backbone.history){
+        Backbone.history.start();
+    }
+});
 $(document).ready(function() {
     BB.start();
 });
