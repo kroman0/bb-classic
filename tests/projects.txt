@@ -19,15 +19,24 @@ Test Projects Page
     Test user login
     Click link  Projects
     Wait Until Page Contains Element  link=Active
-    Click on "Company name #1" in active state and wait effect
+    Click on "Company name #0" in active state and wait effect
+    Element Should Be Visible  link=Name of #0
+    Element Should Not Be Visible  link=Name of #5
+    Element Should Not Be Visible  link=Name of #10
     Element Should Be Visible  link=Name of #15
-    Element Should Not Be Visible  link=Name of #10
+    Element Should Not Be Visible  link=Name of #20
+    Element Should Not Be Visible  link=Name of #25
+    Click on "Company name #0" in on_hold state and wait effect
+    Element Should Not Be Visible  link=Name of #0
     Element Should Not Be Visible  link=Name of #5
-    Click on "Company name #1" in on_hold state and wait effect
-    Element Should Not Be Visible  link=Name of #15
     Element Should Be Visible  link=Name of #10
-    Element Should Not Be Visible  link=Name of #5
-    Click on "Company name #1" in archived state and wait effect
     Element Should Not Be Visible  link=Name of #15
-    Element Should Not Be Visible  link=Name of #10
+    Element Should Not Be Visible  link=Name of #20
+    Element Should Be Visible  link=Name of #25
+    Click on "Company name #0" in archived state and wait effect
+    Element Should Not Be Visible  link=Name of #0
     Element Should Be Visible  link=Name of #5
+    Element Should Not Be Visible  link=Name of #10
+    Element Should Not Be Visible  link=Name of #15
+    Element Should Be Visible  link=Name of #20
+    Element Should Not Be Visible  link=Name of #25
