@@ -1,5 +1,6 @@
+/*jslint nomen: true*/
 /*global window, define*/
-define(['backbone', 'backbone-pageable'], function (Backbone, PageableCollection) {
+define(['underscore', 'backbone', 'backbone-pageable'], function (_, Backbone, PageableCollection) {
     "use strict";
     var BBCollectionExtra = {
             fetchonce: function () {
@@ -33,7 +34,7 @@ define(['backbone', 'backbone-pageable'], function (Backbone, PageableCollection
     window.People = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
-            return this.parent_id ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
+            return _.isFinite(this.parent_id) ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
         },
         model: window.Person
     });
@@ -81,7 +82,7 @@ define(['backbone', 'backbone-pageable'], function (Backbone, PageableCollection
         //         `filter_project_id` restricts the entries to those for the given project,
         //         and `filter_company_id` restricts the entries to those for the given company.
         url: function () {
-            if (this.parent_id) {
+            if (_.isFinite(this.parent_id)) {
                 return '/api/' + this.parent + '/' + this.parent_id + '/time_entries.xml';
             }
             if (this.filter_report) {
@@ -106,10 +107,10 @@ define(['backbone', 'backbone-pageable'], function (Backbone, PageableCollection
         parent_id: null, // project id
         filter_status: null, // filter for project [all\pending\finished]
         url: function () {
-            if (this.parent_id && this.filter_status) {
+            if (_.isFinite(this.parent_id) && this.filter_status) {
                 return '/api/projects/' + this.parent_id + '/todo_lists.xml?filter=' + this.filter_status;
             }
-            if (this.parent_id) {
+            if (_.isFinite(this.parent_id)) {
                 return '/api/projects/' + this.parent_id + '/todo_lists.xml';
             }
             if (this.responsible_party === null) {
