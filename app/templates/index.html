@@ -1089,7 +1089,7 @@ div#time_report {
         <span class="icon-bar"></span>
     </button>
     <a class="brand" href="#">BB</a>
-    <% if (view.model.id) { %>
+    <% if (_.isFinite(view.model.id)) { %>
     <ul class="nav nav-collapse">
         <li><a href="#projects">Projects</a></li>
         <li><a href="#companies">Companies</a></li>
