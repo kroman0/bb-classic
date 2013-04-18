@@ -144,8 +144,8 @@ def absolute_url(subdomain, relative_url='', params='', query='', fragment=''):
                       relative_url, params, query, fragment))
 
 
-def get_subject_id(username, password, subdomain):
-    """ Get 'subject_id' for report query - it is id of logged in user.
+def get_headers(username, password):
+    """ Prepare request headers
     """
     headers = {
         'Content-Type': 'application/xml',
@@ -154,6 +154,13 @@ def get_subject_id(username, password, subdomain):
     creds = username + u':' + password
     creds = "Basic " + base64.encodestring(creds.encode('utf-8')).strip()
     headers["Authorization"] = creds
+    return headers
+
+
+def get_subject_id(username, password, subdomain):
+    """ Get 'subject_id' for report query - it is id of logged in user.
+    """
+    headers = get_headers(username, password)
     result = urlfetch.fetch(url=absolute_url(
         subdomain, '/me.xml'), method=urlfetch.GET, headers=headers)
     if result.status_code == 200:
@@ -280,6 +287,27 @@ class LogoutPage(BaseRequestHandler):
             {'dev': self.dev()}))
 
 
+def convertchilds(childs):
+    """ convert childs
+    """
+    result = []
+    for item in [y for y in childs if NODE_ONE(y)]:
+        items = [y for y in item.childNodes if NODE_ONE(y)]
+        result.append(dict([convert(y) for y in items]))
+    return result
+
+
+def convertsubnodes(childs):
+    """ convert subnodes
+    """
+    subnodes = [y for y in childs if NODE_ONE(y)]
+    if subnodes:
+        value = dict([convert(y) for y in subnodes])
+    else:
+        value = "".join([y.nodeValue for y in childs])
+    return value
+
+
 def convert(node):
     """ convert xml to dict
     """
@@ -297,17 +325,9 @@ def convert(node):
     elif type_ == "float":
         value = float(node.firstChild.nodeValue)
     elif type_ == "array":
-        result = []
-        for item in [y for y in childs if NODE_ONE(y)]:
-            items = [y for y in item.childNodes if NODE_ONE(y)]
-            result.append(dict([convert(y) for y in items]))
-        value = result
+        value = convertchilds(childs)
     else:
-        subnodes = [y for y in childs if NODE_ONE(y)]
-        if subnodes:
-            value = dict([convert(y) for y in subnodes])
-        else:
-            value = "".join([y.nodeValue for y in childs])
+        value = convertsubnodes(childs)
     return (name, value)
 
 
@@ -360,16 +380,7 @@ class CrossDomain(BaseRequestHandler):
         if dev and query and query.count():
             content = query[0].content
         else:
-            headers = {
-                'Content-Type': 'application/xml',
-                'Accept': 'application/xml'
-            }
-            creds = self.username + u':' + self.password
-            creds = "Basic " + base64.encodestring(
-                creds.encode('utf-8')).strip()
-            headers["Authorization"] = creds
-            # url = "https://quintagroup.basecamphq.com%s" %
-            # self.request.path_qs[4:]
+            headers = get_headers(self.username, self.password)
             url = absolute_url(self.subdomain, self.request.path_qs[4:])
             result = urlfetch.fetch(
                 url=url, method=urlfetch.GET, headers=headers)
