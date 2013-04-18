@@ -312,9 +312,7 @@ BB.module('Projects', function (Projects, App, Backbone) {
     });
 
     Projects.View = Backbone.Marionette.CompositeView.extend({
-        //   tagName: "table",
         id: "projects",
-        //   className: "table-striped table-bordered",
         template: "#projects-template",
         itemView: Projects.ItemView,
         emptyView: Projects.EmptyView,
@@ -340,27 +338,19 @@ BB.module('Projects', function (Projects, App, Backbone) {
         className: "page-header",
         template: "#header1-template",
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template($(this.template).html(), this.name(), {variable: 'name'}));
             return this;
         },
         name: function () {
             return "Projects";
         }
     });
-    Projects.Layout = Backbone.Marionette.Layout.extend({
-        className: "projectslayout",
-        template: "#projectslayout-template",
-        regions: {
-            header: "#header",
-            content: "#maincontent"
-        }
-    });
     App.on("initialize:before", function(options){
-        App.collections.projects = new App.Projects.Collection();
-        App.views.projectsView = new App.Projects.View({
+        App.collections.projects = new Projects.Collection();
+        App.views.projectsView = new Projects.View({
             collection: App.collections.projects
         });
-        App.views.projectsHeader = new App.Projects.Header({
+        App.views.projectsHeader = new Projects.Header({
             collection: App.collections.projects
         });
     });
@@ -410,16 +400,20 @@ BB.module('Companies', function (Companies, App, Backbone) {
     Companies.Header = Backbone.Marionette.View.extend({
         className: "page-header",
         template: "#header1-template",
+        render: function () {
+            this.$el.html(_.template($(this.template).html(), this.name(), {variable: 'name'}));
+            return this;
+        },
         name: function () {
             return "Companies";
         }
     });
     App.on("initialize:before", function(options){
-        App.collections.companies = new App.Companies.Collection();
-        App.views.companiesView = new App.Companies.View({
+        App.collections.companies = new Companies.Collection();
+        App.views.companiesView = new Companies.View({
             collection: App.collections.companies
         });
-        App.views.companiesHeader = new App.Companies.Header({
+        App.views.companiesHeader = new Companies.Header({
             collection: App.collections.companies
         });
     });
@@ -439,9 +433,77 @@ BB.module('People', function (People, App, Backbone) {
             if (this.parent_id) return '/api/projects/' + this.parent_id + '/people.xml';
             return '/api/people.xml';
         },
-        model: People.Person
+        model: People.Model
+    });
+    People.ItemView = Backbone.Marionette.ItemView.extend({
+        render: function(){
+            this.isClosed = false;
+
+            this.triggerMethod("before:render", this);
+            this.triggerMethod("item:before:render", this);
+
+            var data = this.serializeData();
+            data = this.mixinTemplateHelpers(data);
+
+            var template = this.getTemplate();
+            var html = Marionette.Renderer.render(template, {item: this.model});
+            this.$el.html(html);
+            this.bindUIElements();
+
+            this.triggerMethod("render", this);
+            this.triggerMethod("item:rendered", this);
+
+            return this;
+        },
+        tagName: "li",
+        className: "media well well-small",
+        template: "#personitem-template"
+    });
+
+    People.EmptyView = Backbone.Marionette.ItemView.extend({
+//         tagName: "li",
+        template: "#emptypeople-template"
+    });
+
+    People.View = Backbone.Marionette.CompositeView.extend({
+        id: "people",
+        template: "#people-template",
+        itemView: People.ItemView,
+        emptyView: People.EmptyView,
+        templateHelpers: function () {return {view: this}; },
+        appendHtml: function(collectionView, itemView){
+            if(itemView.model.get('company')) {
+                var coid = itemView.model.get('company').id;
+                var holder = "#people_c" + coid + " ul.media-list";
+                collectionView.$(holder).length ? collectionView.$(holder).append(itemView.el) : collectionView.$("ul.media-list").append(itemView.el);
+                console.log(holder, collectionView.$(holder).length, collectionView.$el, itemView.$el);
+            } else {
+                collectionView.$el.append(itemView.el);
+            }
+        },
+        initialize: function () {
+            this.collection.bind("sync", this.render, this);
+        }
+    });
+    People.Header = Backbone.Marionette.View.extend({
+        className: "page-header",
+        template: "#header1-template",
+        render: function () {
+            this.$el.html(_.template($(this.template).html(), this.name(), {variable: 'name'}));
+            return this;
+        },
+        name: function () {
+            return "People";
+        }
     });
     App.on("initialize:before", function(options){
+        App.collections.people = new People.Collection();
+        App.views.peopleView = new People.View({
+            collection: App.collections.people
+        });
+        App.views.peopleHeader = new People.Header({
+            collection: App.collections.people
+        });
     });
 });
 
@@ -469,10 +531,61 @@ BB.module('Base', function (Base, App, Backbone) {
 });
 
 BB.addInitializer(function(options) {
-    BB.headerRegion.show(BB.views.projectsHeader);
-    BB.mainRegion.show(BB.views.projectsView);
     BB.me.fetch();
     BB.collections.projects.fetch();
+    BB.collections.companies.fetch();
+    BB.collections.people.fetch();
+});
+
+var Workspace = Backbone.Router.extend({
+    routes: {
+        "projects": "projects",
+        "projects:tab": "projects",
+        "projects/:id": "project",
+        "projects/:id/todo_lists": "project_todo_lists",
+        "projects/:id/todo_lists/:tlid": "project_todo_list",
+        "projects/:id/todo_lists/:tlid/:tiid": "project_todo_item",
+        "projects/:id/todo_lists/:tlid/:tiid/comments": "project_todo_item_comments",
+        "projects/:id/time_entries/todo_items/:tiid": "todo_time_entries",
+        "projects/:id/time_entries": "project_time_entries",
+        "projects/:id/people": "project_people",
+        "projects/:id/posts": "project_posts",
+        "projects/:id/posts/:pid": "project_post",
+        "projects/:id/posts/:pid/comments": "project_post_comments",
+        "projects/:id/files": "project_files",
+        "projects/:id/files/:fid": "project_file",
+        "projects/:id/calendar": "project_calendar",
+        "projects/:id/calendar/:cid": "project_calendar_entry",
+        "projects/:id/calendar/:cid/comments": "project_calendar_entry_comments",
+        "projects/:id/categories": "project_categories",
+        "projects/:id/categories/:cid": "project_category",
+        "companies": "companies",
+        "companies/:id": "company",
+        "people": "people",
+        "people:tab": "people",
+        "people/:id": "person",
+        "me": "me",
+        "todos": "todos",
+        "time_report": "time_report",
+        "*actions": "defaultRoute"
+    }
+});
+workspace = new Workspace();
+workspace.on("route", function (route, params) {
+    console.log(route, params);
+}).on("route:projects", function () {
+    BB.headerRegion.show(BB.views.projectsHeader);
+    BB.mainRegion.show(BB.views.projectsView);
+}).on("route:companies", function () {
+    BB.headerRegion.show(BB.views.companiesHeader);
+    BB.mainRegion.show(BB.views.companiesView);
+}).on("route:people", function () {
+    BB.headerRegion.show(BB.views.peopleHeader);
+    BB.mainRegion.show(BB.views.peopleView);
+}).on("route:defaultRoute", function (action) {
+    this.navigate("projects", {
+        trigger: true
+    });
 });
 
 BB.on("initialize:after", function(options){

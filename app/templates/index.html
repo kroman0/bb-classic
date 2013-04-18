@@ -149,7 +149,7 @@ div#time_report {
     <% } %>
 </script>
 <script type="text/template" id="header1-template">
-    <h1><%- view.name() %></h1>
+    <h1><%- name %></h1>
 </script>
 <script type="text/template" id="project-nav-template">
     <ul class="nav nav-tabs projectnav">
@@ -382,6 +382,11 @@ div#time_report {
         </div>
     </div>
 </script>
+<script type="text/template" id="emptypeople-template">
+    <div class="alert alert-info">
+        No people...
+    </div>
+</script>
 <script type="text/template" id="person-template">
     <%= view.renderheader() %>
     <img class="pull-right img-polaroid" width="55" height="55"
@@ -403,71 +408,56 @@ div#time_report {
     <% if (view.model.get('time-zone-name')) { %>Time zone: <%- view.model.get('time-zone-name') %><% } %>
 </script>
 <script type="text/template" id="personitem-template">
-    <li class="media well well-small">
-        <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
-            <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
-        </a>
-        <div class="media-body">
-            <h4 class="media-heading">
-                <a href="#people/<%- item.id %>" title="<%- item.name() %>">
-                    <%- item.name() %>
-                </a>
-                <% if (item.get('title')) { %>
-                <small><%- item.get('title') %></small>
-                <% } %>
-            </h4>
-            <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
-            <% if (item.get('im-service')&&item.get('im-handle')) { %>
-                <%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %>
-                    <a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a>
-                <% } else { %>
-                    <%- item.get('im-handle') %>
-                <% } %>
-                <br />
+    <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
+        <img class="media-object img-polaroid" src="<%- item.get('avatar-url') %>" alt="<%- item.name() %>">
+    </a>
+    <div class="media-body">
+        <h4 class="media-heading">
+            <a href="#people/<%- item.id %>" title="<%- item.name() %>">
+                <%- item.name() %>
+            </a>
+            <% if (item.get('title')) { %>
+            <small><%- item.get('title') %></small>
             <% } %>
-            <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
-            <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
-            <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
-            <% if (item.get('phone-number-fax')) { %>Fax phone: <%- item.get('phone-number-fax') %><br /><% } %>
-            <% if (item.get('time-zone-name')) { %>Time zone: <%- item.get('time-zone-name') %><% } %>
-        </div>
-    </li>
+        </h4>
+        <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
+        <% if (item.get('im-service')&&item.get('im-handle')) { %>
+            <%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %>
+                <a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a>
+            <% } else { %>
+                <%- item.get('im-handle') %>
+            <% } %>
+            <br />
+        <% } %>
+        <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
+        <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
+        <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
+        <% if (item.get('phone-number-fax')) { %>Fax phone: <%- item.get('phone-number-fax') %><br /><% } %>
+        <% if (item.get('time-zone-name')) { %>Time zone: <%- item.get('time-zone-name') %><% } %>
+    </div>
 </script>
 <script type="text/template" id="people-template">
-    <%= view.renderheader() %>
-    <% var pp=view.collection; var co=view.options.collections.companies;
-    if (pp.isEmpty()) { %>
-    <div class="alert alert-info">
-        No people...
-    </div>
-    <% } else { 
+    <% var pp=view.collection; var co=BB.collections.companies;
+    if (!pp.isEmpty()) {
     if (co.isEmpty()) { %>
-    <ul class="media-list">
-    <% pp.each(function (item) { %>
-        <%= view.renderitem(item) %>
-    <% }) %>
-    </ul>
+    <ul class="media-list"></ul>
     <% } else { %>
     <div class="tabbable tabs-left">
     <ul class="nav nav-tabs span3">
     <% var fcoid=_.first(pp.pluck('company-id'));
-       view.options.collections.companies.each(function (item) { %>
+       co.each(function (item) { %>
         <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#people_c<%- item.id %>" data-toggle="tab"><%- item.get('name') %></a></li>
     <% }) %>
     </ul>
     <div class="tab-content">
-    <% view.options.collections.companies.each(function (cc) { %>
+    <% co.each(function (cc) { %>
         <div class="tab-pane fade<% if (fcoid==cc.id) { %> in active<% } %>" id="people_c<%- cc.id %>">
             <% var cp=pp.where({'company-id':cc.id}); if (_.isEmpty(cp)) { %>
             <div class="alert alert-info">
                 No people in company...
             </div>
             <% } else { %>
-            <ul class="media-list">
-            <% _.each(cp, function (item) { %>
-                <%= view.renderitem(item) %>
-            <% }) %>
-            </ul>
+            <ul class="media-list"></ul>
             <% } %>
         </div>
     <% }) %>
