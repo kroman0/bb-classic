@@ -331,6 +331,22 @@ def convert(node):
     return (name, value)
 
 
+def fetch_request(url, headers):
+    """ Fetch request
+    """
+    return urlfetch.fetch(url=url, method=urlfetch.GET, headers=headers)
+
+
+def save_request(url, result):
+    """ Save request
+    """
+    einfo = CacheInfo(url=url, status_code=result.status_code,
+                      headers=[db.Blob('%s:%s' % (k, v))
+                               for k, v in result.headers.items()],
+                      content=result.content)
+    einfo.put()
+
+
 # def dict2xml(data):
     #""" convert dict to xml
     #"""
@@ -358,6 +374,15 @@ class CrossDomain(BaseRequestHandler):
         # self.response.headers['Content-Type'] = 'application/json'
         # self.response.out.write(self.request.body)
 
+    def _testget(self):
+        """ test data
+        """
+        self.response.headers['Content-Type'] = 'application/json'
+        if self.request.path_qs == "/api/me.xml":
+            self.response.out.write(json.dumps(MEDATA))
+        else:
+            self.response.out.write(json.dumps(COLLECTION))
+
     def get(self):
         """ GET request
         """
@@ -365,39 +390,26 @@ class CrossDomain(BaseRequestHandler):
             return self.redirect('/login')
         if self.subdomain == 'test' and self.username == 'test' and \
                 self.password == 'test' and self.sub_id == 'test':
-            self.response.headers['Content-Type'] = 'application/json'
-            if self.request.path_qs == "/api/me.xml":
-                self.response.out.write(json.dumps(MEDATA))
-            else:
-                self.response.out.write(json.dumps(COLLECTION))
+            self._testget()
             return
         dev = self.dev()
         query = None
+        url = absolute_url(self.subdomain, self.request.path_qs[4:])
         if dev:
-            query = db.GqlQuery(
-                "SELECT * FROM CacheInfo"
-                " WHERE url='%s'" % self.request.path_qs)
+            query = db.GqlQuery("SELECT * FROM CacheInfo WHERE url='%s'" % url)
         if dev and query and query.count():
             content = query[0].content
         else:
             headers = get_headers(self.username, self.password)
-            url = absolute_url(self.subdomain, self.request.path_qs[4:])
-            result = urlfetch.fetch(
-                url=url, method=urlfetch.GET, headers=headers)
-            if result.status_code != 200:
-                self.response.set_status(result.status_code)
-                self.response.out.write(result.content)
-                return
-            content = result.content
-            if dev:
-                einfo = CacheInfo(url=self.request.path_qs,
-                                  status_code=result.status_code,
-                                  headers=[db.Blob('%s:%s' % (k, v))
-                                           for k, v in result.headers.items()],
-                                  content=result.content)
-                einfo.put()
+            result = fetch_request(url, headers)
             self.response.set_status(result.status_code)
             self.response.headers.update(result.headers)
+            if result.status_code != 200:
+                self.response.out.write(result.content)
+                return
+            if dev:
+                save_request(url, result)
+            content = result.content
         dom = minidom.parseString(content)
         if dom.childNodes:
             parent = dom.childNodes[0]
