@@ -344,7 +344,7 @@
         template: '#project-todo-lists-template',
         itemtemplate: '#todolist-template',
         name: function () {
-            if (this.collection.parent_id) {
+            if (_.isFinite(this.collection.parent_id)) {
                 return this.model.get('name') + " > To-dos";
             }
             return "To-dos";
@@ -364,7 +364,7 @@
         },
         render: function () {
             this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
-            if (this.cur_item) {
+            if (_.isFinite(this.cur_item)) {
                 this.options.collections.todo_items.get_or_create(this.cur_item).each(function (item) {
                     this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
                 }, this);

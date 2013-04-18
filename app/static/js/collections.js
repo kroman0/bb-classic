@@ -1,4 +1,5 @@
-/*global window, Backbone*/
+/*jslint nomen: true*/
+/*global window, _, Backbone*/
 (function () {
     "use strict";
     var BBCollectionExtra = {
@@ -33,7 +34,7 @@
     window.People = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
-            return this.parent_id ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
+            return _.isFinite(this.parent_id) ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
         },
         model: window.Person
     });
@@ -81,7 +82,7 @@
         //         `filter_project_id` restricts the entries to those for the given project,
         //         and `filter_company_id` restricts the entries to those for the given company.
         url: function () {
-            if (this.parent_id) {
+            if (_.isFinite(this.parent_id)) {
                 return '/api/' + this.parent + '/' + this.parent_id + '/time_entries.xml';
             }
             if (this.filter_report) {
@@ -106,10 +107,10 @@
         parent_id: null, // project id
         filter_status: null, // filter for project [all\pending\finished]
         url: function () {
-            if (this.parent_id && this.filter_status) {
+            if (_.isFinite(this.parent_id) && this.filter_status) {
                 return '/api/projects/' + this.parent_id + '/todo_lists.xml?filter=' + this.filter_status;
             }
-            if (this.parent_id) {
+            if (_.isFinite(this.parent_id)) {
                 return '/api/projects/' + this.parent_id + '/todo_lists.xml';
             }
             if (this.responsible_party === null) {
