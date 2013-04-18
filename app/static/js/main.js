@@ -1,5 +1,5 @@
 /*jslint nomen: true*/
-/*global window, document, $, _, Backbone*/
+/*global window, document, $, _, Backbone, Marionette*/
 $(function () {
     "use strict";
     return;
@@ -268,8 +268,9 @@ $(function () {
 
 
 
+"use strict";
 
-BB = new Backbone.Marionette.Application();
+var BB = window.BB = new Backbone.Marionette.Application();
 
 BB.collections = {};
 BB.views = {};
@@ -287,12 +288,12 @@ BB.module('Projects', function (Projects, App, Backbone) {
         urlRoot: "/api/projects/",
         icon: function () {
             switch (this.get('status')) {
-                case "active":
-                    return "icon-play";
-                case "archived":
-                    return "icon-stop";
-                case "on_hold":
-                    return "icon-pause";
+            case "active":
+                return "icon-play";
+            case "archived":
+                return "icon-stop";
+            case "on_hold":
+                return "icon-pause";
             }
         }
     });
@@ -320,11 +321,11 @@ BB.module('Projects', function (Projects, App, Backbone) {
         name: function () {
             return "Projects";
         },
-        appendHtml: function(collectionView, itemView){
-            if(itemView.model.get('company')) {
-                var coid = itemView.model.get('company').id;
-                var status = itemView.model.get('status');
-                var holder = "#projects_" + status + "_" + coid + " ul";
+        appendHtml: function (collectionView, itemView) {
+            if (itemView.model.get('company')) {
+                var coid = itemView.model.get('company').id,
+                    status = itemView.model.get('status'),
+                    holder = "#projects_" + status + "_" + coid + " ul";
                 collectionView.$(holder).append(itemView.el);
             } else {
                 collectionView.$el.append(itemView.el);
@@ -345,7 +346,7 @@ BB.module('Projects', function (Projects, App, Backbone) {
             return "Projects";
         }
     });
-    App.on("initialize:before", function(options){
+    App.on("initialize:before", function (options) {
         App.collections.projects = new Projects.Collection();
         App.views.projectsView = new Projects.View({
             collection: App.collections.projects
@@ -390,7 +391,7 @@ BB.module('Companies', function (Companies, App, Backbone) {
         name: function () {
             return "Companies";
         },
-        appendHtml: function(collectionView, itemView){
+        appendHtml: function (collectionView, itemView) {
             collectionView.$el.append(itemView.el);
         },
         initialize: function () {
@@ -408,7 +409,7 @@ BB.module('Companies', function (Companies, App, Backbone) {
             return "Companies";
         }
     });
-    App.on("initialize:before", function(options){
+    App.on("initialize:before", function (options) {
         App.collections.companies = new Companies.Collection();
         App.views.companiesView = new Companies.View({
             collection: App.collections.companies
@@ -430,31 +431,15 @@ BB.module('People', function (People, App, Backbone) {
     People.Collection = Backbone.Collection.extend({
         parent_id: null, // project id
         url: function () {
-            if (this.parent_id) return '/api/projects/' + this.parent_id + '/people.xml';
+            if (this.parent_id) {
+                return '/api/projects/' + this.parent_id + '/people.xml';
+            }
             return '/api/people.xml';
         },
         model: People.Model
     });
     People.ItemView = Backbone.Marionette.ItemView.extend({
-        render: function(){
-            this.isClosed = false;
-
-            this.triggerMethod("before:render", this);
-            this.triggerMethod("item:before:render", this);
-
-            var data = this.serializeData();
-            data = this.mixinTemplateHelpers(data);
-
-            var template = this.getTemplate();
-            var html = Marionette.Renderer.render(template, {item: this.model});
-            this.$el.html(html);
-            this.bindUIElements();
-
-            this.triggerMethod("render", this);
-            this.triggerMethod("item:rendered", this);
-
-            return this;
-        },
+        templateHelpers: function () {return {item: this.model}; },
         tagName: "li",
         className: "media well well-small",
         template: "#personitem-template"
@@ -471,11 +456,15 @@ BB.module('People', function (People, App, Backbone) {
         itemView: People.ItemView,
         emptyView: People.EmptyView,
         templateHelpers: function () {return {view: this}; },
-        appendHtml: function(collectionView, itemView){
-            if(itemView.model.get('company')) {
-                var coid = itemView.model.get('company').id;
-                var holder = "#people_c" + coid + " ul.media-list";
-                collectionView.$(holder).length ? collectionView.$(holder).append(itemView.el) : collectionView.$("ul.media-list").append(itemView.el);
+        appendHtml: function (collectionView, itemView) {
+            if (itemView.model.get('company')) {
+                var coid = itemView.model.get('company').id,
+                    holder = "#people_c" + coid + " ul.media-list";
+                if (collectionView.$(holder).length) {
+                    collectionView.$(holder).append(itemView.el);
+                } else {
+                    collectionView.$("ul.media-list").append(itemView.el);
+                }
             } else {
                 collectionView.$el.append(itemView.el);
             }
@@ -495,7 +484,7 @@ BB.module('People', function (People, App, Backbone) {
             return "People";
         }
     });
-    App.on("initialize:before", function(options){
+    App.on("initialize:before", function (options) {
         App.collections.people = new People.Collection();
         App.views.peopleView = new People.View({
             collection: App.collections.people
@@ -522,14 +511,14 @@ BB.module('Base', function (Base, App, Backbone) {
         }
     });
 
-    App.on("initialize:before", function(options){
+    App.on("initialize:before", function (options) {
         App.me = new Base.Me();
         var navbarView = new BB.Base.NavBarView({model: App.me});
         App.navRegion.show(navbarView);
     });
 });
 
-BB.addInitializer(function(options) {
+BB.addInitializer(function (options) {
     BB.me.fetch();
     BB.collections.projects.fetch();
     BB.collections.companies.fetch();
@@ -569,7 +558,7 @@ var Workspace = Backbone.Router.extend({
         "*actions": "defaultRoute"
     }
 });
-workspace = new Workspace();
+var workspace = new Workspace();
 workspace.on("route", function (route, params) {
     console.log(route, params);
 }).on("route:projects", function () {
@@ -587,11 +576,11 @@ workspace.on("route", function (route, params) {
     });
 });
 
-BB.on("initialize:after", function(options){
-    if (Backbone.history){
+BB.on("initialize:after", function (options) {
+    if (Backbone.history) {
         Backbone.history.start();
     }
 });
-$(document).ready(function() {
+$(document).ready(function () {
     BB.start();
 });
