@@ -476,7 +476,6 @@ BB.module('People', function (People, App, Backbone) {
                 var coid = itemView.model.get('company').id;
                 var holder = "#people_c" + coid + " ul.media-list";
                 collectionView.$(holder).length ? collectionView.$(holder).append(itemView.el) : collectionView.$("ul.media-list").append(itemView.el);
-                console.log(holder, collectionView.$(holder).length, collectionView.$el, itemView.$el);
             } else {
                 collectionView.$el.append(itemView.el);
             }
