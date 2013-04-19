@@ -68,6 +68,8 @@ Close All Browsers and Report Status
 
 Stop app
     Run  pkill -f dev_appserver
+    ${out} =  Read Process Output
+    Append to file  app.log  ${out}
     Stop All Processes
     Sleep  1
 
