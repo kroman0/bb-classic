@@ -598,6 +598,124 @@ BB.module('Time', function (Time, App, Backbone) {
     });
 });
 
+
+BB.module('Todo', function (Todo, App, Backbone) {
+    Todo.Model = Backbone.Model.extend({
+        urlRoot: "/api/todo_items/",
+        complete: function () {
+            this.save('completed', true, {url: _.result(this, 'url').replace('.xml', '/complete.xml')});
+        },
+        uncomplete: function () {
+            this.save('completed', false, {url: _.result(this, 'url').replace('.xml', '/uncomplete.xml')});
+        }
+    });
+    Todo.Collection = Backbone.Collection.extend({
+        responsible_party: null, // person id
+        parent_id: null, // project id
+        filter_status: null, // filter for project [all\pending\finished]
+        url: function () {
+            if (_.isFinite(this.parent_id) && this.filter_status) {
+                return '/api/projects/' + this.parent_id + '/todo_lists.xml?filter=' + this.filter_status;
+            }
+            if (_.isFinite(this.parent_id)) {
+                return '/api/projects/' + this.parent_id + '/todo_lists.xml';
+            }
+            if (this.responsible_party === null) {
+                return '/api/todo_lists.xml';
+            }
+            if (this.responsible_party === "") {
+                return '/api/todo_lists.xml?responsible_party=';
+            }
+            return '/api/todo_lists.xml?responsible_party=' + this.responsible_party;
+        },
+        model: Todo.Model
+    });
+    Todo.ItemView = Backbone.Marionette.ItemView.extend({
+        templateHelpers: function () {return {list: this.model}; },
+        tagName: "dl",
+        template: "#todolist-template"
+    });
+
+    Todo.EmptyView = Backbone.Marionette.ItemView.extend({
+        tagName: "li",
+        template: "#emptytodos-template"
+    });
+
+    Todo.View = Backbone.Marionette.CompositeView.extend({
+        tagName: "ul",
+        id: "todos",
+        className: "unstyled",
+        template: "#todo-lists-template",
+        itemView: Todo.ItemView,
+        emptyView: Todo.EmptyView,
+        events: {
+            "change select[name='target']": "selectTarget"
+        },
+        selectTarget: function (e) {
+            console.log("selectTarget");
+            this.collection.responsible_party = $(e.target).val();
+            this.collection.fetch({cache: true});
+        },
+        templateHelpers: function () {return {view: this}; },
+        appendHtml: function (collectionView, itemView) {
+            if (_.isFinite(itemView.model.get('project-id'))) {
+                var prid = itemView.model.get('project-id'),
+                    holder = "#todos_p" + prid;
+                collectionView.$(holder).append(itemView.el);
+            } else {
+                collectionView.$el.append(itemView.el);
+            }
+        },
+        initialize: function () {
+            this.collection.bind("sync", this.render, this);
+        },
+        description: function () {
+            if (this.collection.responsible_party) {
+                var person = App.collections.people && App.collections.people.get(this.collection.responsible_party);
+                return person ? person.name() + "'s" : this.collection.responsible_party + "'s";
+            }
+            if (this.collection.responsible_party === null) {
+                return "My";
+            }
+            if (this.collection.responsible_party === "") {
+                return "Unassigned";
+            }
+            return "All";
+        }
+    });
+    Todo.Header = Backbone.Marionette.View.extend({
+        className: "page-header",
+        template: "#header1-template",
+        render: function () {
+            this.$el.html(_.template($(this.template).html(), this.name(), {variable: 'name'}));
+            return this;
+        },
+        name: function () {
+            if (this.collection.responsible_party) {
+                var person = App.collections.people && App.collections.people.get(this.collection.responsible_party);
+                return person ? person.name() + "'s to-dos" : this.collection.responsible_party + "'s to-dos";
+            }
+            if (this.collection.responsible_party === null) {
+                return "My to-dos";
+            }
+            if (this.collection.responsible_party === "") {
+                return "Unassigned to-dos";
+            }
+            return "To-dos";
+        }
+    });
+    App.on("initialize:before", function (options) {
+        App.collections.todos = new Todo.Collection();
+        App.views.todosView = new Todo.View({
+            collection: App.collections.todos
+        });
+        App.views.todosHeader = new Todo.Header({
+            collection: App.collections.todos
+        });
+    });
+
+});
+
 BB.module('Base', function (Base, App, Backbone) {
     Base.Me = App.People.Model.extend({
         url: "/api/me.xml"
@@ -626,7 +744,8 @@ BB.addInitializer(function (options) {
     BB.collections.projects.fetch();
     BB.collections.companies.fetch();
     BB.collections.people.fetch();
-    BB.collections.times.fetch()
+    BB.collections.times.fetch();
+    BB.collections.todos.fetch();
 });
 
 var Workspace = Backbone.Router.extend({
@@ -677,6 +796,9 @@ workspace.on("route", function (route, params) {
 }).on("route:time_report", function () {
     BB.headerRegion.show(BB.views.timesHeader);
     BB.mainRegion.show(BB.views.timesView);
+}).on("route:todos", function () {
+    BB.headerRegion.show(BB.views.todosHeader);
+    BB.mainRegion.show(BB.views.todosView);
 }).on("route:defaultRoute", function (action) {
     this.navigate("projects", {
         trigger: true
