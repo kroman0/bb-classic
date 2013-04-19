@@ -114,19 +114,17 @@ div#time_report {
 </script>
 
 <script type="text/template" id="time-template">
-    <tr <% if(item.get('hours')>2){ %>class="warning"<% } %>>
-        <td><%- item.get('date') %></td>
-        <td><%- item.get('hours') %></td>
-        <td><a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- item.get('person-name') %></a></td>
-        <td>
-            <% if (item.get('todo-item-id')) { %>
-                <a href="#projects/<%- item.get('project-id') %>/time_entries/todo_items/<%- item.get('todo-item-id') %>"><i class="icon-file"></i></a>
-            <% } else { %>
-                <a href="#projects/<%- item.get('project-id') %>/time_entries"><i class="icon-folder-close"></i></a>
-            <% } %>
-            <%- item.get('description') %>
-        </td>
-    </tr>
+    <td><%- item.get('date') %></td>
+    <td><%- item.get('hours') %></td>
+    <td><a href="#people/<%- item.get('person-id') %>"><i class="icon-user"></i><%- item.get('person-name') %></a></td>
+    <td>
+        <% if (item.get('todo-item-id')) { %>
+            <a href="#projects/<%- item.get('project-id') %>/time_entries/todo_items/<%- item.get('todo-item-id') %>"><i class="icon-file"></i></a>
+        <% } else { %>
+            <a href="#projects/<%- item.get('project-id') %>/time_entries"><i class="icon-folder-close"></i></a>
+        <% } %>
+        <%- item.get('description') %>
+    </td>
 </script>
 <script type="text/template" id="pager-template">
     <% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>
@@ -163,8 +161,12 @@ div#time_report {
         <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>
     </ul>
 </script>
+<script type="text/template" id="emptytime-template">
+    <div class="alert alert-info">
+        No time entries...
+    </div>
+</script>
 <script type="text/template" id="time-report-template">
-    <%= view.renderheader() %>
     <div id="time_report" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="makereportlabel" aria-hidden="true">
     <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
@@ -186,7 +188,7 @@ div#time_report {
             <span class="add-on">For</span>
             <select name="subject_id" class="input-medium">
                 <option value="">All</option>
-                <% view.options.collections.people.each(function (i) { %>
+                <% BB.collections.people.each(function (i) { %>
                     <option value="<%- i.id %>"><%- i.name() %></option>
                 <% }) %>
             </select>
@@ -196,7 +198,7 @@ div#time_report {
             <span class="add-on">Project</span>
             <select name="filter_project_id" class="input-medium">
                 <option value="">All</option>
-                <% view.options.collections.projects.each(function (i) { %>
+                <% BB.collections.projects.each(function (i) { %>
                     <option value="<%- i.id %>"><%- i.get('name') %></option>
                 <% }) %>
             </select>
@@ -206,7 +208,7 @@ div#time_report {
             <span class="add-on">Company</span>
             <select name="filter_company_id" class="input-medium">
                 <option value="">All</option>
-                <% view.options.collections.companies.each(function (i) { %>
+                <% BB.collections.companies.each(function (i) { %>
                     <option value="<%- i.id %>"><%- i.get('name') %></option>
                 <% }) %>
             </select>
@@ -220,12 +222,8 @@ div#time_report {
     </div>
     <a href="#time_report" role="button" class="btn btn-primary" data-toggle="modal">Report</a>
     <% var tt=view.collection;
-    if (tt.isEmpty()) { %>
-    <div class="alert alert-info">
-        No time entries...
-    </div>
-    <% } else { %>
-    <%= view.renderpager() %>
+    if (!tt.isEmpty()) { %>
+    <%= view.renderpager && view.renderpager() %>
     <table class="table table-hover table-condensed table-bordered">
         <thead>
             <tr>
@@ -236,9 +234,9 @@ div#time_report {
             </tr>
         </thead>
         <tbody>
-            <% var prs=view.options.collections.projects;
+            <% var prs=BB.collections.projects;
             _.each(_.uniq(tt.pluck('project-id')), function (prid) { %>
-            <tr class="info">
+            <tr id="times_p<%- prid %>" class="info">
                 <td colspan="4">
                     <a href="#projects/<%- prid %>/time_entries">
                         <%- prs.get(prid)?prs.get(prid).get('name'):prid %>
@@ -246,12 +244,12 @@ div#time_report {
                 </td>
             </tr>
             <% _.each(tt.where({'project-id':prid}), function (item) { %>
-                <%= view.renderitem(item) %>
+                <%= view.renderitem && view.renderitem(item) %>
             <% }) %>
             <% }) %>
         </tbody>
     </table>
-    <%= view.renderpager() %>
+    <%= view.renderpager && view.renderpager() %>
     <% } %>
 </script>
 <script type="text/template" id="emptyprojects-template">

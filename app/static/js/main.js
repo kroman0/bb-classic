@@ -495,6 +495,109 @@ BB.module('People', function (People, App, Backbone) {
     });
 });
 
+BB.module('Time', function (Time, App, Backbone) {
+    Time.Model = Backbone.Model.extend({
+        urlRoot: "/api/time_entries/"
+    });
+    Time.Collection = Backbone.PageableCollection.extend({
+        mode: 'client',
+        parent_id: null, // project id
+        parent: 'projects',
+        filter_report: null, // report filter
+        //         This action accepts the following query parameters:
+        //         `from`, `to`, `subject_id`, `todo_item_id`,
+        //         `filter_project_id`, and `filter_company_id`.
+        //         Both `from` and `to` should be dates in `YYYYMMDD` format, and can be used to restrict the result to a particular date range.
+        //         The `subject_id` parameter lets you constrain the result to a single person’s time entries.
+        //         `todo_item_id` restricts the result to only those entries relating to the given todo item.
+        //         `filter_project_id` restricts the entries to those for the given project,
+        //         and `filter_company_id` restricts the entries to those for the given company.
+        url: function () {
+            if (_.isFinite(this.parent_id)) {
+                return '/api/' + this.parent + '/' + this.parent_id + '/time_entries.xml';
+            }
+            if (this.filter_report) {
+                return '/api/time_entries/report.xml?' + this.filter_report;
+            }
+            return '/api/time_entries/report.xml';
+        },
+        model: Time.Model
+    });
+    Time.ItemView = Backbone.Marionette.ItemView.extend({
+        templateHelpers: function () {return {item: this.model}; },
+        tagName: "tr",
+        className: function () {return this.model.get('hours')>2 ? "warning" : ""; },
+        template: "#time-template"
+    });
+
+    Time.EmptyView = Backbone.Marionette.ItemView.extend({
+//         tagName: "li",
+        template: "#emptytime-template"
+    });
+
+    Time.View = Backbone.Marionette.CompositeView.extend({
+        id: "time-report",
+        template: "#time-report-template",
+        itemView: Time.ItemView,
+        emptyView: Time.EmptyView,
+        pagerid: "time-report",
+        events: {
+            "click .time-report.previous": "previous",
+            "click .time-report.next": "next",
+            "click #getreport": "getreport"
+        },
+        previous: function (e) {
+            e.preventDefault();
+            return this.collection.hasPrevious() && this.collection.getPreviousPage() && this.render();
+        },
+        next: function (e) {
+            e.preventDefault();
+            return this.collection.hasNext() && this.collection.getNextPage() && this.render();
+        },
+        getreport: function (e) {
+            e.preventDefault();
+            this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function (i) {return i.value; }));
+            this.collection.fetch({cache: true});
+        },
+        renderpager: function () {
+            return _.template($('#pager-template').html(), this, {variable: 'view'});
+        },
+        templateHelpers: function () {return {view: this}; },
+        appendHtml: function (collectionView, itemView) {
+            if (_.isFinite(itemView.model.get('project-id'))) {
+                var prid = itemView.model.get('project-id'),
+                    holder = "#times_p" + prid;
+                collectionView.$(holder).after(itemView.el);
+            } else {
+                collectionView.$el.append(itemView.el);
+            }
+        },
+        initialize: function () {
+            this.collection.bind("sync", this.render, this);
+        }
+    });
+    Time.Header = Backbone.Marionette.View.extend({
+        className: "page-header",
+        template: "#header1-template",
+        render: function () {
+            this.$el.html(_.template($(this.template).html(), this.name(), {variable: 'name'}));
+            return this;
+        },
+        name: function () {
+            return "Time report";
+        }
+    });
+    App.on("initialize:before", function (options) {
+        App.collections.times = new Time.Collection();
+        App.views.timesView = new Time.View({
+            collection: App.collections.times
+        });
+        App.views.timesHeader = new Time.Header({
+            collection: App.collections.times
+        });
+    });
+});
+
 BB.module('Base', function (Base, App, Backbone) {
     Base.Me = App.People.Model.extend({
         url: "/api/me.xml"
@@ -523,6 +626,7 @@ BB.addInitializer(function (options) {
     BB.collections.projects.fetch();
     BB.collections.companies.fetch();
     BB.collections.people.fetch();
+    BB.collections.times.fetch()
 });
 
 var Workspace = Backbone.Router.extend({
@@ -570,6 +674,9 @@ workspace.on("route", function (route, params) {
 }).on("route:people", function () {
     BB.headerRegion.show(BB.views.peopleHeader);
     BB.mainRegion.show(BB.views.peopleView);
+}).on("route:time_report", function () {
+    BB.headerRegion.show(BB.views.timesHeader);
+    BB.mainRegion.show(BB.views.timesView);
 }).on("route:defaultRoute", function (action) {
     this.navigate("projects", {
         trigger: true
