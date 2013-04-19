@@ -526,7 +526,7 @@ BB.module('Time', function (Time, App, Backbone, Marionette, $, _) {
     Time.ItemView = Marionette.ItemView.extend({
         templateHelpers: function () {return {item: this.model}; },
         tagName: "tr",
-        className: function () {return this.model.get('hours')>2 ? "warning" : ""; },
+        className: function () {return this.model.get('hours') > 2 ? "warning" : ""; },
         template: "#time-template"
     });
 
