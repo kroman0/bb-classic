@@ -83,7 +83,7 @@ pep8:
 	pep8 app/ tests/
 
 flake8:
-	flake8 app/ tests/
+	flake8 --max-complexity=10 app/ tests/
 
 pyflakes:
 	pyflakes app/*.py tests/*.py
