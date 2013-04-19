@@ -281,7 +281,7 @@ BB.addRegions({
     mainRegion: "#content"
 });
 
-BB.module('Projects', function (Projects, App, Backbone) {
+BB.module('Projects', function (Projects, App, Backbone, Marionette, $, _) {
     // Project Model
     // -------------
     Projects.Model = Backbone.Model.extend({
@@ -304,15 +304,15 @@ BB.module('Projects', function (Projects, App, Backbone) {
         url: '/api/projects.xml',
         model: Projects.Model
     });
-    Projects.ItemView = Backbone.Marionette.ItemView.extend({
+    Projects.ItemView = Marionette.ItemView.extend({
         tagName: "li",
         template: "#oneproject-template"
     });
-    Projects.EmptyView = Backbone.Marionette.ItemView.extend({
+    Projects.EmptyView = Marionette.ItemView.extend({
         template: "#emptyprojects-template"
     });
 
-    Projects.View = Backbone.Marionette.CompositeView.extend({
+    Projects.View = Marionette.CompositeView.extend({
         id: "projects",
         template: "#projects-template",
         itemView: Projects.ItemView,
@@ -335,7 +335,7 @@ BB.module('Projects', function (Projects, App, Backbone) {
             this.collection.bind("sync", this.render, this);
         }
     });
-    Projects.Header = Backbone.Marionette.View.extend({
+    Projects.Header = Marionette.View.extend({
         className: "page-header",
         template: "#header1-template",
         render: function () {
@@ -357,7 +357,7 @@ BB.module('Projects', function (Projects, App, Backbone) {
     });
 });
 
-BB.module('Companies', function (Companies, App, Backbone) {
+BB.module('Companies', function (Companies, App, Backbone, Marionette, $, _) {
     // Company Model
     // -------------
     Companies.Model = Backbone.Model.extend({
@@ -371,17 +371,17 @@ BB.module('Companies', function (Companies, App, Backbone) {
         model: Companies.Model
     });
 
-    Companies.ItemView = Backbone.Marionette.ItemView.extend({
+    Companies.ItemView = Marionette.ItemView.extend({
         tagName: "li",
         template: "#onecompany-template"
     });
 
-    Companies.EmptyView = Backbone.Marionette.ItemView.extend({
+    Companies.EmptyView = Marionette.ItemView.extend({
         tagName: "li",
         template: "#emptycompanies-template"
     });
 
-    Companies.View = Backbone.Marionette.CompositeView.extend({
+    Companies.View = Marionette.CompositeView.extend({
         tagName: "ul",
         id: "companies",
         className: "unstyled",
@@ -398,7 +398,7 @@ BB.module('Companies', function (Companies, App, Backbone) {
             this.collection.bind("sync", this.render, this);
         }
     });
-    Companies.Header = Backbone.Marionette.View.extend({
+    Companies.Header = Marionette.View.extend({
         className: "page-header",
         template: "#header1-template",
         render: function () {
@@ -421,7 +421,7 @@ BB.module('Companies', function (Companies, App, Backbone) {
 
 });
 
-BB.module('People', function (People, App, Backbone) {
+BB.module('People', function (People, App, Backbone, Marionette, $, _) {
     People.Model = Backbone.Model.extend({
         urlRoot: "/api/people/",
         name: function () {
@@ -438,19 +438,19 @@ BB.module('People', function (People, App, Backbone) {
         },
         model: People.Model
     });
-    People.ItemView = Backbone.Marionette.ItemView.extend({
+    People.ItemView = Marionette.ItemView.extend({
         templateHelpers: function () {return {item: this.model}; },
         tagName: "li",
         className: "media well well-small",
         template: "#personitem-template"
     });
 
-    People.EmptyView = Backbone.Marionette.ItemView.extend({
+    People.EmptyView = Marionette.ItemView.extend({
 //         tagName: "li",
         template: "#emptypeople-template"
     });
 
-    People.View = Backbone.Marionette.CompositeView.extend({
+    People.View = Marionette.CompositeView.extend({
         id: "people",
         template: "#people-template",
         itemView: People.ItemView,
@@ -473,7 +473,7 @@ BB.module('People', function (People, App, Backbone) {
             this.collection.bind("sync", this.render, this);
         }
     });
-    People.Header = Backbone.Marionette.View.extend({
+    People.Header = Marionette.View.extend({
         className: "page-header",
         template: "#header1-template",
         render: function () {
@@ -495,7 +495,7 @@ BB.module('People', function (People, App, Backbone) {
     });
 });
 
-BB.module('Time', function (Time, App, Backbone) {
+BB.module('Time', function (Time, App, Backbone, Marionette, $, _) {
     Time.Model = Backbone.Model.extend({
         urlRoot: "/api/time_entries/"
     });
@@ -523,19 +523,19 @@ BB.module('Time', function (Time, App, Backbone) {
         },
         model: Time.Model
     });
-    Time.ItemView = Backbone.Marionette.ItemView.extend({
+    Time.ItemView = Marionette.ItemView.extend({
         templateHelpers: function () {return {item: this.model}; },
         tagName: "tr",
         className: function () {return this.model.get('hours')>2 ? "warning" : ""; },
         template: "#time-template"
     });
 
-    Time.EmptyView = Backbone.Marionette.ItemView.extend({
+    Time.EmptyView = Marionette.ItemView.extend({
 //         tagName: "li",
         template: "#emptytime-template"
     });
 
-    Time.View = Backbone.Marionette.CompositeView.extend({
+    Time.View = Marionette.CompositeView.extend({
         id: "time-report",
         template: "#time-report-template",
         itemView: Time.ItemView,
@@ -576,7 +576,7 @@ BB.module('Time', function (Time, App, Backbone) {
             this.collection.bind("sync", this.render, this);
         }
     });
-    Time.Header = Backbone.Marionette.View.extend({
+    Time.Header = Marionette.View.extend({
         className: "page-header",
         template: "#header1-template",
         render: function () {
@@ -599,7 +599,7 @@ BB.module('Time', function (Time, App, Backbone) {
 });
 
 
-BB.module('Todo', function (Todo, App, Backbone) {
+BB.module('Todo', function (Todo, App, Backbone, Marionette, $, _) {
     Todo.Model = Backbone.Model.extend({
         urlRoot: "/api/todo_items/",
         complete: function () {
@@ -630,18 +630,18 @@ BB.module('Todo', function (Todo, App, Backbone) {
         },
         model: Todo.Model
     });
-    Todo.ItemView = Backbone.Marionette.ItemView.extend({
+    Todo.ItemView = Marionette.ItemView.extend({
         templateHelpers: function () {return {list: this.model}; },
         tagName: "dl",
         template: "#todolist-template"
     });
 
-    Todo.EmptyView = Backbone.Marionette.ItemView.extend({
+    Todo.EmptyView = Marionette.ItemView.extend({
         tagName: "li",
         template: "#emptytodos-template"
     });
 
-    Todo.View = Backbone.Marionette.CompositeView.extend({
+    Todo.View = Marionette.CompositeView.extend({
         tagName: "ul",
         id: "todos",
         className: "unstyled",
@@ -683,7 +683,7 @@ BB.module('Todo', function (Todo, App, Backbone) {
             return "All";
         }
     });
-    Todo.Header = Backbone.Marionette.View.extend({
+    Todo.Header = Marionette.View.extend({
         className: "page-header",
         template: "#header1-template",
         render: function () {
@@ -716,11 +716,11 @@ BB.module('Todo', function (Todo, App, Backbone) {
 
 });
 
-BB.module('Base', function (Base, App, Backbone) {
+BB.module('Base', function (Base, App, Backbone, Marionette, $, _) {
     Base.Me = App.People.Model.extend({
         url: "/api/me.xml"
     });
-    var NavBarView = Base.NavBarView = Backbone.Marionette.View.extend({
+    var NavBarView = Base.NavBarView = Marionette.View.extend({
         template: "#nav-template",
         className: "navbar-inner",
         render: function () {
@@ -734,7 +734,7 @@ BB.module('Base', function (Base, App, Backbone) {
 
     App.on("initialize:before", function (options) {
         App.me = new Base.Me();
-        var navbarView = new BB.Base.NavBarView({model: App.me});
+        var navbarView = new Base.NavBarView({model: App.me});
         App.navRegion.show(navbarView);
     });
 });
