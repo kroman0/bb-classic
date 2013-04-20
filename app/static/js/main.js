@@ -484,6 +484,21 @@ BB.module('People', function (People, App, Backbone, Marionette, $, _) {
             return "People";
         }
     });
+    People.PersonView = Marionette.ItemView.extend({
+        templateHelpers: function () {return {item: this.model}; },
+        template: '#person-template'
+    });
+    People.PersonHeader = Marionette.View.extend({
+        className: "page-header",
+        template: "#header1-template",
+        render: function () {
+            this.$el.html(_.template($(this.template).html(), this.name(), {variable: 'name'}));
+            return this;
+        },
+        name: function () {
+            return this.model.name();
+        }
+    });
     App.on("initialize:before", function (options) {
         App.collections.people = new People.Collection();
         App.views.peopleView = new People.View({
@@ -491,6 +506,12 @@ BB.module('People', function (People, App, Backbone, Marionette, $, _) {
         });
         App.views.peopleHeader = new People.Header({
             collection: App.collections.people
+        });
+        App.views.personView = new People.PersonView({
+            model: new People.Model()
+        });
+        App.views.personHeader = new People.PersonHeader({
+            model: new People.Model()
         });
     });
 });
@@ -799,6 +820,11 @@ workspace.on("route", function (route, params) {
 }).on("route:todos", function () {
     BB.headerRegion.show(BB.views.todosHeader);
     BB.mainRegion.show(BB.views.todosView);
+}).on("route:me", function () {
+    BB.views.personHeader.model = BB.me;
+    BB.views.personView.model = BB.me;
+    BB.headerRegion.show(BB.views.personHeader);
+    BB.mainRegion.show(BB.views.personView);
 }).on("route:defaultRoute", function (action) {
     this.navigate("projects", {
         trigger: true

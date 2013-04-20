@@ -386,24 +386,23 @@ div#time_report {
     </div>
 </script>
 <script type="text/template" id="person-template">
-    <%= view.renderheader() %>
     <img class="pull-right img-polaroid" width="55" height="55"
-         src="<%- view.model.get('avatar-url') %>"
-         alt="<%- view.model.name() %>">
-    <a href="mailto:<%- view.model.get('email-address') %>"><b><%- view.model.get('email-address') %></b></a><br />
-    <% if (view.model.get('im-service')&&view.model.get('im-handle')) { %>
-        <%- view.model.get('im-service') %>: <% if (view.model.get('im-service')=='Skype') { %>
-            <a href="skype:<%- view.model.get('im-handle') %>?call" title="Skype call to <%- view.model.name() %>"><%- view.model.get('im-handle') %></a>
+         src="<%- item.get('avatar-url') %>"
+         alt="<%- item.name() %>">
+    <a href="mailto:<%- item.get('email-address') %>"><b><%- item.get('email-address') %></b></a><br />
+    <% if (item.get('im-service')&&item.get('im-handle')) { %>
+        <%- item.get('im-service') %>: <% if (item.get('im-service')=='Skype') { %>
+            <a href="skype:<%- item.get('im-handle') %>?call" title="Skype call to <%- item.name() %>"><%- item.get('im-handle') %></a>
         <% } else { %>
-            <%- view.model.get('im-handle') %>
+            <%- item.get('im-handle') %>
         <% } %>
         <br />
     <% } %>
-    <% if (view.model.get('phone-number-office')) { %>Office phone: <%- view.model.get('phone-number-office') %><br /><% } %>
-    <% if (view.model.get('phone-number-mobile')) { %>Mobile phone: <%- view.model.get('phone-number-mobile') %><br /><% } %>
-    <% if (view.model.get('phone-number-home')) { %>Home phone: <%- view.model.get('phone-number-home') %><br /><% } %>
-    <% if (view.model.get('phone-number-fax')) { %>Fax phone: <%- view.model.get('phone-number-fax') %><br /><% } %>
-    <% if (view.model.get('time-zone-name')) { %>Time zone: <%- view.model.get('time-zone-name') %><% } %>
+    <% if (item.get('phone-number-office')) { %>Office phone: <%- item.get('phone-number-office') %><br /><% } %>
+    <% if (item.get('phone-number-mobile')) { %>Mobile phone: <%- item.get('phone-number-mobile') %><br /><% } %>
+    <% if (item.get('phone-number-home')) { %>Home phone: <%- item.get('phone-number-home') %><br /><% } %>
+    <% if (item.get('phone-number-fax')) { %>Fax phone: <%- item.get('phone-number-fax') %><br /><% } %>
+    <% if (item.get('time-zone-name')) { %>Time zone: <%- item.get('time-zone-name') %><% } %>
 </script>
 <script type="text/template" id="personitem-template">
     <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">
