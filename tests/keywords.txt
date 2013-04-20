@@ -8,7 +8,7 @@ Library  keywords.py
 *** Variables ***
 
 ${PORT} =  8080
-${DOMAIN} =  0.0.0.0
+${DOMAIN} =  localhost
 ${APP_URL} =  http://${DOMAIN}:${PORT}
 ${base_path} =  app/static/img/
 ${base_login} =  ${base_path}login.png
@@ -54,7 +54,7 @@ Click on ${text} in projectnav
     Sleep  2
 
 Start app
-    Start Process  bin/dev_appserver app --skip_sdk_update_check --host 0.0.0.0
+    Start Process  bin/dev_appserver app --skip_sdk_update_check
     Sleep  1
 
 Start Browser For Test
