@@ -1,7 +1,7 @@
 #!/usr/bin/make
 #
 
-.PHONY: run
+all: run
 
 run:
 	bin/dev_appserver app --skip_sdk_update_check --datastore_path=app.ds
@@ -42,15 +42,14 @@ clean:
 	rm -rf robot_* selenium-screenshot-* output.xml log.html report.html
 
 sauceget:
-	wget -q http://saucelabs.com/downloads/Sauce-Connect-latest.zip -O /tmp/Sauce-Connect-latest.zip
-	unzip -p Sauce-Connect-latest.zip Sauce-Connect.jar >/tmp/Sauce-Connect.jar
-	java -jar /tmp/Sauce-Connect.jar
+	wget http://saucelabs.com/downloads/Sauce-Connect-latest.zip -O /tmp/Sauce-Connect-latest.zip
+	unzip -oj /tmp/Sauce-Connect-latest.zip Sauce-Connect.jar -d /tmp
 
-sauceconnect:
-	java -jar /tmp/Sauce-Connect.jar $SAUCE_USERNAME $SAUCE_ACCESS_KEY
+sauceconnect: clean
+	java -jar /tmp/Sauce-Connect.jar $(SAUCE_USERNAME) $(SAUCE_ACCESS_KEY)
 
 sauce:	clean
-	ROBOT_DESIRED_CAPABILITIES=platform:Windows ROBOT_BROWSER=internetexplorer ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub bin/pybot tests
+	ROBOT_DESIRED_CAPABILITIES=platform:Windows ROBOT_BROWSER=internetexplorer ROBOT_REMOTE_URL=http://$(SAUCE_USERNAME):$(SAUCE_ACCESS_KEY)@ondemand.saucelabs.com:80/wd/hub bin/pybot tests
 
 bootstrap-update:
 	wget -q http://twitter.github.com/bootstrap/assets/bootstrap.zip -O /tmp/bootstrap.zip
