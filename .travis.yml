@@ -5,6 +5,7 @@ script:
 - make test
 after_script: 
 - kill $JAVA_PID
+- cat app.log
 before_install: 
 - pip install Pillow pycrypto
 language: python
