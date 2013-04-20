@@ -16,6 +16,7 @@ Test Teardown  Close All Browsers and Report Status
 *** Test Cases ***
 
 Test My Profile
+    [Tags]  profile  compare
     Test user login
     Click link  First Last
     Click link  My profile

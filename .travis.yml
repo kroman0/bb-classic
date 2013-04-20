@@ -21,7 +21,7 @@ env:
       dLo+JsWsQJBwnU3aRaZ31lXSg/CqBqs4J+iALXhO1P5lhcvdlNw=
   - ROBOT_BUILD_NUMBER=travis-$TRAVIS_BUILD_NUMBER
   - ROBOT_REMOTE_URL=http://$SAUCE_USERNAME:$SAUCE_ACCESS_KEY@ondemand.saucelabs.com:80/wd/hub
-  - ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_ID
+  - ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_NUMBER
   matrix:
   - ROBOT_BROWSER=firefox
   - ROBOT_BROWSER=chrome
@@ -32,5 +32,5 @@ install:
 - bin/buildout -Nq
 - curl -O http://saucelabs.com/downloads/Sauce-Connect-latest.zip
 - unzip Sauce-Connect-latest.zip
-- java -jar Sauce-Connect.jar $SAUCE_USERNAME $SAUCE_ACCESS_KEY -i $TRAVIS_JOB_ID -f CONNECTED &
+- java -jar Sauce-Connect.jar $SAUCE_USERNAME $SAUCE_ACCESS_KEY -i $TRAVIS_JOB_NUMBER -f CONNECTED &
 - JAVA_PID=$!
