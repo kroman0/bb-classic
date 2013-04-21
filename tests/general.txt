@@ -15,13 +15,11 @@ Test Teardown  Close All Browsers and Report Status
 
 *** Test Cases ***
 
-Test App
+Test Login Page
+    [Tags]  login  compare  general
     Reload Page Until  Location should contain  login
     Page should contain  BB
     Title should be  BB
-
-Test Login Page
-    Reload Page Until  Location should contain  login
     Page should contain  Please enter you credentials
     Page should contain element  name=subdomain
     Page should contain element  name=username
@@ -39,6 +37,7 @@ Test Login Page
     Wait Until Page Contains  First Last
 
 Test Nav Pages
+    [Tags]  navigation  compare  general
     Test user login
     Click link  Projects
     Location should be  ${APP_URL}/#projects

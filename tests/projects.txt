@@ -16,6 +16,7 @@ Test Teardown  Close All Browsers and Report Status
 *** Test Cases ***
 
 Test Projects Page
+    [Tags]  projects  boostrap
     Test user login
     Click link  Projects
     Wait Until Page Contains Element  link=Active

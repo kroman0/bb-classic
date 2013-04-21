@@ -45,7 +45,7 @@ def compare_screenshot_to_base(baseline, diff=100):
             "Image: %s is different from baseline: %s" % (path, baseline))
 
 
-def report_sauce_status(job_id, test_status, test_tags=list()):
+def report_sauce_status(job_id, test_status):
     """ Report test status to Sauce service
     """
     username = os.environ.get('SAUCE_USERNAME')
@@ -57,8 +57,7 @@ def report_sauce_status(job_id, test_status, test_tags=list()):
         return u"No Sauce environment variables found. Skipping..."
 
     token = base64.encodestring('%s:%s' % (username, access_key))[:-1]
-    body = json.dumps({'passed': test_status == 'PASS',
-                       'tags': test_tags})
+    body = json.dumps({'passed': test_status == 'PASS'})
 
     connection = httplib.HTTPConnection('saucelabs.com')
     connection.request('PUT', '/rest/v1/%s/jobs/%s' % (
