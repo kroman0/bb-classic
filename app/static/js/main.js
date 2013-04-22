@@ -825,6 +825,11 @@ workspace.on("route", function (route, params) {
     BB.views.personView.model = BB.me;
     BB.headerRegion.show(BB.views.personHeader);
     BB.mainRegion.show(BB.views.personView);
+}).on("route:person", function (id) {
+    BB.views.personHeader.model = BB.collections.people.get(id);
+    BB.views.personView.model = BB.collections.people.get(id);
+    BB.headerRegion.show(BB.views.personHeader);
+    BB.mainRegion.show(BB.views.personView);
 }).on("route:defaultRoute", function (action) {
     this.navigate("projects", {
         trigger: true
