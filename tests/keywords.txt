@@ -10,7 +10,7 @@ Library  keywords.py
 ${PORT} =  8080
 ${DOMAIN} =  localhost
 ${APP_URL} =  http://${DOMAIN}:${PORT}
-${base_path} =  app/static/img/
+${base_path} =  docs/
 ${base_login} =  ${base_path}login.png
 ${base_mypage} =  ${base_path}mypage.png
 ${base_projects} =  ${base_path}projects.png
