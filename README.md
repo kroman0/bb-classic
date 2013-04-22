@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/kroman0/bb-classic.png?branch=master)](https://travis-ci.org/kroman0/bb-classic)
-[![Sauce Status](https://saucelabs.com/buildstatus/kroman0)](https://saucelabs.com/u/kroman0)
+[![Selenium Test Status](https://saucelabs.com/buildstatus/bb-classic)](https://saucelabs.com/u/bb-classic)
 BB Classic
 ==========
 
@@ -59,11 +59,11 @@ Updating GAE application
 Screenhosts
 -----------
 
-![login](/app/static/img/login.png "login")
-![projects](/app/static/img/projects.png "projects")
-![companies](/app/static/img/companies.png "companies")
-![todos](/app/static/img/todos.png "todos")
-![time_report](/app/static/img/time_report.png "time_report")
-![people](/app/static/img/people.png "people")
-![mypage](/app/static/img/mypage.png "mypage")
+![login](/docs/login.png "login")
+![projects](/docs/projects.png "projects")
+![companies](/docs/companies.png "companies")
+![todos](/docs/todos.png "todos")
+![time_report](/docs/time_report.png "time_report")
+![people](/docs/people.png "people")
+![mypage](/docs/mypage.png "mypage")
 

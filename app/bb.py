@@ -383,14 +383,22 @@ class CrossDomain(BaseRequestHandler):
         else:
             self.response.out.write(json.dumps(COLLECTION))
 
+    def _testlogin(self):
+        """ chech test login
+        """
+        if self.subdomain == 'test' and self.username == 'test' and \
+                self.password == 'test' and self.sub_id == 'test':
+            self._testget()
+            return True
+        else:
+            return False
+
     def get(self):
         """ GET request
         """
         if not self.auth_check():
             return self.redirect('/login')
-        if self.subdomain == 'test' and self.username == 'test' and \
-                self.password == 'test' and self.sub_id == 'test':
-            self._testget()
+        if self._testlogin():
             return
         dev = self.dev()
         query = None
