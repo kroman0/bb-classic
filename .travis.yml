@@ -34,4 +34,3 @@ env:
   - ROBOT_BROWSER=firefox
   - ROBOT_BROWSER=chrome
   - ROBOT_BROWSER=internetexplorer
-  - ROBOT_BROWSER=opera
