@@ -63,8 +63,8 @@ Start Browser For Test
 #    Maximize browser window
 
 Close All Browsers and Report Status
-    Report test status
     Close All Browsers
+    Report test status
 
 Stop app
     Run  pkill -f dev_appserver
