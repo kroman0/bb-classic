@@ -58,7 +58,7 @@ def report_sauce_status(job_id, test_status):
         return u"No Sauce environment variables found. Skipping..."
 
     token = base64.encodestring('%s:%s' % (username, access_key))[:-1]
-    body = json.dumps({'passed': test_status == 'PASS'})
+    body = json.dumps({'passed': test_status == 'PASS', 'public': 'share'})
 
     connection = httplib.HTTPConnection('saucelabs.com')
     connection.request('PUT', '/rest/v1/%s/jobs/%s' % (
