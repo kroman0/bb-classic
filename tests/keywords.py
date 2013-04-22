@@ -30,9 +30,10 @@ def compare_screenshot_to_base(baseline, diff=100):
     img2 = Image.open(baseline)
     his1 = img1.histogram()
     his2 = img2.histogram()
+    sqrtdiff = lambda a, b: (a - b) ** 2
     rms = math.sqrt(
         reduce(operator.add,
-               map(lambda a, b: (a - b) ** 2, his1, his2)
+               map(sqrtdiff, his1, his2)
                ) / len(his1))
     logger.info("RMS diff: %s" % rms)
     if rms > 0:
