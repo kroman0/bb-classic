@@ -1,6 +1,11 @@
 /*jslint nomen: true*/
 /*global window, document, $, _, Backbone*/
-$(function () {
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'bbviews',
+], function ($, _, Backbone) {
     "use strict";
     var i,
         models = window.models = {},

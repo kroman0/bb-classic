@@ -1,0 +1,46 @@
+    <%= view.renderheader() %>
+    <% var pp=view.collection; if (pp.isEmpty()) { %>
+    <div class="alert alert-info">
+        No projects...
+    </div>
+    <% } else { %>
+    <div class="tabbable">
+    <ul class="nav nav-pills">
+    <% var fprst=_.first(pp.pluck('status'));
+       _.each(_.uniq(pp.pluck('status')), function (status) { %>
+        <li class="prstatus<% if (fprst==status) { %> active<% } %> pull-right">
+            <a href="#projects_<%- status %>" data-toggle="tab"><%- status %></a>
+        </li>
+    <% }) %>
+    </ul>
+    <div class="tab-content">
+    <% _.each(pp.groupBy(function(i){ return i.get('status')}), function (plist, status) { %>
+        <div class="tab-pane fade<% if (fprst==status) { %> in active<% } %>" id="projects_<%- status %>">
+            <div class="tabbable row-fluid">
+            <ul class="nav nav-list span4 pull-right">
+            <% var fprcoid=_.first(plist).get('company').id;
+            _.each(_.groupBy(plist, function(item){ return item.get('company').id}), function (list, coid) { %>
+                <li<% if (fprcoid==coid) { %> class="active"<% } %>>
+                    <a href="#projects_<%- status %>_<%- coid %>" data-toggle="tab"><%- _.first(list).get('company').name %></a>
+                </li>
+            <% }) %>
+            </ul>
+            <div class="tab-content span8">
+            <% _.each(_.groupBy(plist, function(item){ return item.get('company').id}), function (list, coid) { %>
+                <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">
+                    <ul class="unstyled">
+                    <% _.each(list, function (item) { %>
+                        <li>
+                            <h3><a href="#projects/<%- item.id %>"><%- item.get('name') %></a></h3>
+                        </li>
+                    <% }) %>
+                    </ul>
+                </div>
+            <% }) %>
+            </div>
+            </div>
+        </div>
+    <% }) %>
+    </div>
+    </div>
+    <% } %>

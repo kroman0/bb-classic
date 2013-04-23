@@ -58,7 +58,8 @@ require.config({
         bbviews: {
             deps: [
                 'bootstrap',
-                'bbcollections'
+                'bbcollections',
+                'text'
             ]
         },
         bbmain: {
@@ -77,6 +78,7 @@ require.config({
         bbcollections: 'collections',
         bbviews: 'views',
         bbmain: 'main',
+        text: 'text',
     }
 });
 

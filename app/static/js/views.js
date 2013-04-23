@@ -1,6 +1,13 @@
 /*jslint nomen: true*/
-/*global window, $, _, Backbone*/
-(function () {
+/*global define, window*/
+define([
+    'jquery',
+    'underscore',
+    'backbone',
+    'text!projects.html',
+    'bbmodels',
+    'bbcollections',
+], function ($, _, Backbone, projectsTemplate) {
     "use strict";
     var BBView = Backbone.View.extend({
         render: function () {
@@ -72,6 +79,10 @@
     window.ProjectsView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce();
+        },
+        render: function () {
+            this.$el.html(_.template(projectsTemplate, this, {variable: 'view'}));
+            return this;
         },
         template: '#projects-template',
         name: function () {
@@ -444,4 +455,4 @@
             this.model.bind("change", this.render, this);
         }
     });
-}());
+});
