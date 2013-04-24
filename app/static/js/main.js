@@ -7,7 +7,8 @@ define([
     'bbgeneral',
     'bbmodels',
     'bbcollections',
-    'bbviews'
+    'bbviews',
+    'backboneanalytics'
 ], function ($, _, Backbone, onReset, bbmodels, bbcollections, bbviews) {
     "use strict";
     var i,

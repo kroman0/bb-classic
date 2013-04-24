@@ -32,6 +32,11 @@ require.config({
                 'backbone'
             ]
         },
+        backboneanalytics: {
+            deps: [
+                'backbone'
+            ]
+        },
         backbonepageable: {
             deps: [
                 'backbone'
@@ -69,6 +74,7 @@ require.config({
         },
         bbmain: {
             deps: [
+                'backboneanalytics',
                 'bbmodels',
                 'bbcollections',
                 'bbviews'
@@ -80,6 +86,7 @@ require.config({
         jquery: 'jquery-1.7.2',
         jquerydeserialize: 'jquery.deserialize',
         backbonecache: 'backbone.fetch-cache',
+        backboneanalytics: 'backbone.analytics',
         bbgeneral: 'general',
         bbmodels: 'models',
         bbcollections: 'collections',
@@ -91,6 +98,8 @@ require.config({
 
 require([
 	'bbmain',
+    'json2',
+    'bootstrap',
 ], function (Backbone) {
 // 	/*jshint nonew:false*/
 // 	// Initialize routing and start Backbone.history()
