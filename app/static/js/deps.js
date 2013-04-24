@@ -39,26 +39,32 @@ require.config({
         },
         bbgeneral: {
             deps: [
-                'jquerydeserialize',
-                'backbone.fetch-cache',
-                'backbone-pageable'
+                'backbone'
             ]
         },
         bbmodels: {
             deps: [
-                'bbgeneral'
+                'underscore',
+                'backbone'
             ]
         },
         bbcollections: {
             deps: [
+                'underscore',
+                'backbone',
                 'backbone-pageable',
+                'bbgeneral',
                 'bbmodels'
             ]
         },
         bbviews: {
             deps: [
                 'bootstrap',
-                'text'
+                'jquery',
+                'jquerydeserialize',
+                'text',
+                'jquerydeserialize',
+                'backbonecache'
             ]
         },
         bbmain: {

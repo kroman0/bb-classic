@@ -4,7 +4,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!projects.html'
+    'text!projects.html',
+    'jquerydeserialize',
+    'backbonecache'
 ], function ($, _, Backbone, projectsTemplate) {
     "use strict";
     var bbviews = {},
