@@ -310,7 +310,7 @@ div#time_report {
             <% } else { %>
             <ul class="unstyled">
             <% _.each(pp.filter(function(i){return i.get('company').id==cid}), function (item) { %>
-                <li><a href="#projects/<%- item.id %>"><i class="<%- item.icon() %>"></i>&nbsp;<%- item.get('name') %></a></li>
+                <li><i class="<%- item.icon() %>"></i>&nbsp;<a href="#projects/<%- item.id %>"><%- item.get('name') %></a></li>
             <% }) %>
             </ul>
             <% } %>
