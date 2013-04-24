@@ -8,7 +8,7 @@ define([
     'bbmodels',
     'bbcollections',
     'bbviews'
-], function ($, _, Backbone, onReset, bbmodels, bbcollections) {
+], function ($, _, Backbone, onReset, bbmodels, bbcollections, bbviews) {
     "use strict";
     var i,
         models = window.models = {},
@@ -63,19 +63,19 @@ define([
     collections.todos = new bbcollections.TodoLists();
     collections.times = new bbcollections.TimeEntries();
     views.current = null;
-    views.projects = new window.ProjectsView(_.extend({
+    views.projects = new bbviews.ProjectsView(_.extend({
         collection: collections.projects
     }, viewdata));
-    views.companies = new window.CompaniesView(_.extend({
+    views.companies = new bbviews.CompaniesView(_.extend({
         collection: collections.companies
     }, viewdata));
-    views.people = new window.AllPeopleView(_.extend({
+    views.people = new bbviews.AllPeopleView(_.extend({
         collection: collections.people
     }, viewdata));
-    views.time_report = new window.TimeReportView(_.extend({
+    views.time_report = new bbviews.TimeReportView(_.extend({
         collection: collections.times
     }, viewdata));
-    views.todos = new window.TodosView(_.extend({
+    views.todos = new bbviews.TodosView(_.extend({
         collection: collections.todos,
         mydata: models.mydata
     }, viewdata));
@@ -97,42 +97,42 @@ define([
     collections.project_todo_item_comments = new bbcollections.TodoComments();
     collections.project_post_comments = new bbcollections.PostComments();
     collections.project_calendar_entry_comments = new bbcollections.CalendarEntryComments();
-    views.company_view = new window.CompanyView(_.extend({
+    views.company_view = new bbviews.CompanyView(_.extend({
         model: models.company
     }, viewdata));
-    views.person_view = new window.PersonView(_.extend({
+    views.person_view = new bbviews.PersonView(_.extend({
         model: models.person
     }, viewdata));
     oproject = _.extend({
         model: models.project
     }, viewdata);
-    views.project_view = new window.ProjectView(oproject);
-    views.project_people = new window.PeopleView(oproject);
-    views.project_categories = new window.CategoriesView(oproject);
-    views.project_category = new window.CategoryView(oproject);
-    views.project_posts = new window.PostsView(oproject);
-    views.project_post = new window.PostView(oproject);
-    views.project_calendar = new window.CalendarView(oproject);
-    views.project_calendar_entry = new window.CalendarEntryView(oproject);
-    views.project_files = new window.FilesView(oproject);
-    views.project_file = new window.FileView(oproject);
-    views.project_time_entries = new window.TimeEntriesView(oproject);
-    views.todo_time_entries = new window.TodoTimeEntriesView(oproject);
-    views.project_post_comments = new window.PostCommentsView(oproject);
-    views.project_calendar_entry_comments = new window.CalendarEntryCommentsView(oproject);
+    views.project_view = new bbviews.ProjectView(oproject);
+    views.project_people = new bbviews.PeopleView(oproject);
+    views.project_categories = new bbviews.CategoriesView(oproject);
+    views.project_category = new bbviews.CategoryView(oproject);
+    views.project_posts = new bbviews.PostsView(oproject);
+    views.project_post = new bbviews.PostView(oproject);
+    views.project_calendar = new bbviews.CalendarView(oproject);
+    views.project_calendar_entry = new bbviews.CalendarEntryView(oproject);
+    views.project_files = new bbviews.FilesView(oproject);
+    views.project_file = new bbviews.FileView(oproject);
+    views.project_time_entries = new bbviews.TimeEntriesView(oproject);
+    views.todo_time_entries = new bbviews.TodoTimeEntriesView(oproject);
+    views.project_post_comments = new bbviews.PostCommentsView(oproject);
+    views.project_calendar_entry_comments = new bbviews.CalendarEntryCommentsView(oproject);
     views.todo = function (prid, item) {
         if (!views.todo[item.id]) {
-            views.todo[item.id] = new window.TodoView({model: item, collections: collections, project_id: prid});
+            views.todo[item.id] = new bbviews.TodoView({model: item, collections: collections, project_id: prid});
         }
         return views.todo[item.id];
     };
     otodo = _.extend({
         todo: views.todo
     }, oproject);
-    views.project_todo_lists = new window.TodoListsView(otodo);
-    views.project_todo_list = new window.TodoListView(otodo);
-    views.project_todo_item = new window.TodoItemView(otodo);
-    views.project_todo_item_comments = new window.TodoItemCommentsView(otodo);
+    views.project_todo_lists = new bbviews.TodoListsView(otodo);
+    views.project_todo_list = new bbviews.TodoListView(otodo);
+    views.project_todo_item = new bbviews.TodoItemView(otodo);
+    views.project_todo_item_comments = new bbviews.TodoItemCommentsView(otodo);
     window.workspace = new Workspace();
     window.workspace.on("route", function (route, params) {
         var id, cur_item;
@@ -242,7 +242,7 @@ define([
             trigger: true
         });
     });
-    views.navbar = new window.NavView({
+    views.navbar = new bbviews.NavView({
         model: models.mydata,
         el: '.navbar'
     }).render();

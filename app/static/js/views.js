@@ -1,5 +1,5 @@
 /*jslint nomen: true*/
-/*global define, window*/
+/*global define*/
 define([
     'jquery',
     'underscore',
@@ -7,28 +7,29 @@ define([
     'text!projects.html'
 ], function ($, _, Backbone, projectsTemplate) {
     "use strict";
-    var BBView = Backbone.View.extend({
-        render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
-            return this;
-        },
-        renderitem: function (item) {
-            return _.template($(this.itemtemplate).html(), item, {variable: 'item'});
-        },
-        rendercomments: function (comments) {
-            return _.template($('#comments-template').html(), comments, {variable: 'comments'});
-        },
-        renderpager: function () {
-            return _.template($('#pager-template').html(), this, {variable: 'view'});
-        },
-        renderheader: function () {
-            return _.template($('#header-template').html(), this, {variable: 'view'});
-        },
-        renderprojectnav: function () {
-            return _.template($('#project-nav-template').html(), this, {variable: 'view'});
-        }
-    });
-    window.TimeReportView = BBView.extend({
+    var bbviews = {},
+        BBView = Backbone.View.extend({
+            render: function () {
+                this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+                return this;
+            },
+            renderitem: function (item) {
+                return _.template($(this.itemtemplate).html(), item, {variable: 'item'});
+            },
+            rendercomments: function (comments) {
+                return _.template($('#comments-template').html(), comments, {variable: 'comments'});
+            },
+            renderpager: function () {
+                return _.template($('#pager-template').html(), this, {variable: 'view'});
+            },
+            renderheader: function () {
+                return _.template($('#header-template').html(), this, {variable: 'view'});
+            },
+            renderprojectnav: function () {
+                return _.template($('#project-nav-template').html(), this, {variable: 'view'});
+            }
+        });
+    bbviews.TimeReportView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -64,7 +65,7 @@ define([
             return this;
         }
     });
-    window.AllPeopleView = BBView.extend({
+    bbviews.AllPeopleView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -74,7 +75,7 @@ define([
             return "People";
         }
     });
-    window.ProjectsView = BBView.extend({
+    bbviews.ProjectsView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce();
         },
@@ -87,7 +88,7 @@ define([
             return "Projects";
         }
     });
-    window.ProjectView = BBView.extend({
+    bbviews.ProjectView = BBView.extend({
         deps: function () {
             return this.options.collections.projects.fetchonce();
         },
@@ -96,7 +97,7 @@ define([
             return this.model.get('name');
         }
     });
-    window.CompaniesView = BBView.extend({
+    bbviews.CompaniesView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce();
         },
@@ -105,7 +106,7 @@ define([
             return "Companies";
         }
     });
-    window.CompanyView = BBView.extend({
+    bbviews.CompanyView = BBView.extend({
         deps: function () {
             return this.options.collections.companies.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
@@ -114,7 +115,7 @@ define([
             return this.model.get('name');
         }
     });
-    window.PeopleView = BBView.extend({
+    bbviews.PeopleView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -124,7 +125,7 @@ define([
             return this.model.get('name') + " > People";
         }
     });
-    window.TimeEntriesView = BBView.extend({
+    bbviews.TimeEntriesView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -147,7 +148,7 @@ define([
             return this.model.get('name') + " > Time";
         }
     });
-    window.TodoTimeEntriesView = window.TimeEntriesView.extend({
+    bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
         pagerid: "todo-time",
         events: {
             "click .todo-time.previous": "previous",
@@ -155,7 +156,7 @@ define([
         },
         template: '#todo-time-template'
     });
-    window.PostCommentsView = BBView.extend({
+    bbviews.PostCommentsView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
@@ -168,7 +169,7 @@ define([
             return this.model.get('name') + " > Posts > " + title + " > Comments";
         }
     });
-    window.CalendarEntryCommentsView = BBView.extend({
+    bbviews.CalendarEntryCommentsView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
@@ -181,7 +182,7 @@ define([
             return this.model.get('name') + " > Calendar > " + title + " > Comments";
         }
     });
-    window.PostsView = BBView.extend({
+    bbviews.PostsView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -191,7 +192,7 @@ define([
             return this.model.get('name') + " > Posts";
         }
     });
-    window.PostView = BBView.extend({
+    bbviews.PostView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
@@ -204,7 +205,7 @@ define([
             return this.model.get('name') + " > Posts > " + title;
         }
     });
-    window.FilesView = BBView.extend({
+    bbviews.FilesView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
@@ -226,7 +227,7 @@ define([
             return this.model.get('name') + " > Files";
         }
     });
-    window.FileView = BBView.extend({
+    bbviews.FileView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
@@ -238,7 +239,7 @@ define([
             return this.model.get('name') + " > Files > " + title;
         }
     });
-    window.CalendarView = BBView.extend({
+    bbviews.CalendarView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -248,7 +249,7 @@ define([
             return this.model.get('name') + " > Calendar";
         }
     });
-    window.CalendarEntryView = BBView.extend({
+    bbviews.CalendarEntryView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
@@ -261,7 +262,7 @@ define([
             return this.model.get('name') + " > Calendar > " + title;
         }
     });
-    window.CategoriesView = BBView.extend({
+    bbviews.CategoriesView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -284,7 +285,7 @@ define([
             return this.model.get('name') + " > Categories";
         }
     });
-    window.CategoryView = BBView.extend({
+    bbviews.CategoryView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
@@ -297,7 +298,7 @@ define([
             return this.model.get('name') + " > Categories > " + title;
         }
     });
-    window.PersonView = BBView.extend({
+    bbviews.PersonView = BBView.extend({
         deps: function () {
             return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -306,7 +307,7 @@ define([
             return this.model.name();
         }
     });
-    window.TodosView = BBView.extend({
+    bbviews.TodosView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
@@ -346,7 +347,7 @@ define([
             return "All";
         }
     });
-    window.TodoListsView = BBView.extend({
+    bbviews.TodoListsView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -359,7 +360,7 @@ define([
             return "To-dos";
         }
     });
-    window.TodoListView = BBView.extend({
+    bbviews.TodoListView = BBView.extend({
         cur_item: null,
         deps: function () {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
@@ -381,7 +382,7 @@ define([
             return this;
         }
     });
-    window.TodoItemView = BBView.extend({
+    bbviews.TodoItemView = BBView.extend({
         todo_item: null,
         cur_item: null,
         deps: function () {
@@ -405,7 +406,7 @@ define([
             return this;
         }
     });
-    window.TodoItemCommentsView = BBView.extend({
+    bbviews.TodoItemCommentsView = BBView.extend({
         todo_item: null,
         cur_item: null,
         deps: function () {
@@ -428,7 +429,7 @@ define([
             return this;
         }
     });
-    window.TodoView = BBView.extend({
+    bbviews.TodoView = BBView.extend({
         events: {
             "click .todo.icon-completed": "uncomplete",
             "click .todo.icon-uncompleted": "complete"
@@ -447,10 +448,11 @@ define([
             return this;
         }
     });
-    window.NavView = BBView.extend({
+    bbviews.NavView = BBView.extend({
         template: '#nav-template',
         initialize: function () {
             this.model.bind("change", this.render, this);
         }
     });
+    return bbviews;
 });
