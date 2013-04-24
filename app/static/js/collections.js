@@ -4,8 +4,9 @@ define([
     'underscore',
     'backbone',
     'backbone-pageable',
+    'bbgeneral',
     'bbmodels'
-], function (_, Backbone, PageableCollection, bbmodels) {
+], function (_, Backbone, PageableCollection, onReset, bbmodels) {
     "use strict";
     var BBCollectionExtra = {
             fetchonce: function () {
@@ -20,8 +21,8 @@ define([
                 if (!this[id]) {
                     this[id] = this.clone();
                     this[id].parent_id = id;
-                    this[id].on("reset", window.onReset);
-                    this[id].on("sync", window.onReset);
+                    this[id].on("reset", onReset);
+                    this[id].on("sync", onReset);
                 }
                 return this[id];
             }

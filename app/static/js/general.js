@@ -1,8 +1,10 @@
 /*jslint nomen: true*/
-/*global window, _, Backbone*/
-(function () {
+/*global define*/
+define([
+    'backbone'
+], function (Backbone) {
     "use strict";
-    window.onReset = function () {
+    var onReset = function () {
         Backbone.history.loadUrl();
     };
     // uniq_hash = [];
@@ -21,4 +23,5 @@
     //         }
     //     }
     // };
-}());
+    return onReset;
+});

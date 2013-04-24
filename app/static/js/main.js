@@ -4,9 +4,10 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'bbgeneral',
     'bbmodels',
     'bbviews'
-], function ($, _, Backbone, bbmodels) {
+], function ($, _, Backbone, onReset, bbmodels) {
     "use strict";
     var i,
         models = window.models = {},
@@ -79,8 +80,8 @@ define([
     }, viewdata));
     for (i in collections) {
         if (collections.hasOwnProperty(i)) {
-            collections[i].on("reset", window.onReset);
-            collections[i].on("sync", window.onReset);
+            collections[i].on("reset", onReset);
+            collections[i].on("sync", onReset);
         }
     }
     collections.project_people = new window.People();
