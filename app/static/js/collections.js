@@ -8,7 +8,8 @@ define([
     'bbmodels'
 ], function (_, Backbone, PageableCollection, onReset, bbmodels) {
     "use strict";
-    var BBCollectionExtra = {
+    var bbcollections = {},
+        BBCollectionExtra = {
             fetchonce: function () {
                 var fetched = this.fetched;
                 if (!fetched) {
@@ -29,29 +30,29 @@ define([
         },
         BBCollection = Backbone.Collection.extend(BBCollectionExtra),
         BBPCollection = PageableCollection.extend(BBCollectionExtra);
-    window.Projects = BBCollection.extend({
+    bbcollections.Projects = BBCollection.extend({
         url: '/api/projects.xml',
         model: bbmodels.Project
     });
-    window.Companies = BBCollection.extend({
+    bbcollections.Companies = BBCollection.extend({
         url: '/api/companies.xml',
         model: bbmodels.Company
     });
-    window.People = BBCollection.extend({
+    bbcollections.People = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
             return _.isFinite(this.parent_id) ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
         },
         model: bbmodels.Person
     });
-    window.Posts = BBCollection.extend({
+    bbcollections.Posts = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
             return '/api/projects/' + this.parent_id + '/posts.xml';
         },
         model: bbmodels.Post
     });
-    window.Attachments = BBPCollection.extend({
+    bbcollections.Attachments = BBPCollection.extend({
         mode: 'client',
         parent_id: null, // project id
         url: function () {
@@ -59,14 +60,14 @@ define([
         },
         model: bbmodels.Attachment
     });
-    window.Calendar = BBCollection.extend({
+    bbcollections.Calendar = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
             return '/api/projects/' + this.parent_id + '/calendar_entries.xml';
         },
         model: bbmodels.CalendarEntry
     });
-    window.Categories = BBPCollection.extend({
+    bbcollections.Categories = BBPCollection.extend({
         mode: 'client',
         parent_id: null, // project id
         url: function () {
@@ -74,7 +75,7 @@ define([
         },
         model: bbmodels.Category
     });
-    window.TimeEntries = BBPCollection.extend({
+    bbcollections.TimeEntries = BBPCollection.extend({
         mode: 'client',
         parent_id: null, // project id
         parent: 'projects',
@@ -98,17 +99,17 @@ define([
         },
         model: bbmodels.TimeEntry
     });
-    window.TodoTimeEntries = window.TimeEntries.extend({
+    bbcollections.TodoTimeEntries = bbcollections.TimeEntries.extend({
         parent: 'todo_items'
     });
-    window.TodoItems = BBCollection.extend({
+    bbcollections.TodoItems = BBCollection.extend({
         parent_id: null,
         url: function () {
             return '/api/todo_lists/' + this.parent_id + '/todo_items.xml';
         },
         model: bbmodels.TodoItem
     });
-    window.TodoLists = BBCollection.extend({
+    bbcollections.TodoLists = BBCollection.extend({
         responsible_party: null, // person id
         parent_id: null, // project id
         filter_status: null, // filter for project [all\pending\finished]
@@ -129,7 +130,7 @@ define([
         },
         model: bbmodels.TodoList
     });
-    window.PostComments = BBCollection.extend({
+    bbcollections.PostComments = BBCollection.extend({
         parent_id: null, // parent id
         parent_type: 'posts', // posts|milestones|todo_items
         url: function () {
@@ -137,10 +138,11 @@ define([
         },
         model: bbmodels.Comment
     });
-    window.TodoComments = window.PostComments.extend({
+    bbcollections.TodoComments = bbcollections.PostComments.extend({
         parent_type: 'todo_items'
     });
-    window.CalendarEntryComments = window.PostComments.extend({
+    bbcollections.CalendarEntryComments = bbcollections.PostComments.extend({
         parent_type: 'milestones'
     });
+    return bbcollections;
 });

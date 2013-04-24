@@ -6,8 +6,9 @@ define([
     'backbone',
     'bbgeneral',
     'bbmodels',
+    'bbcollections',
     'bbviews'
-], function ($, _, Backbone, onReset, bbmodels) {
+], function ($, _, Backbone, onReset, bbmodels, bbcollections) {
     "use strict";
     var i,
         models = window.models = {},
@@ -56,11 +57,11 @@ define([
     models.project = new bbmodels.Project();
     models.company = new bbmodels.Company();
     models.person = new bbmodels.Person();
-    collections.projects = new window.Projects();
-    collections.companies = new window.Companies();
-    collections.people = new window.People();
-    collections.todos = new window.TodoLists();
-    collections.times = new window.TimeEntries();
+    collections.projects = new bbcollections.Projects();
+    collections.companies = new bbcollections.Companies();
+    collections.people = new bbcollections.People();
+    collections.todos = new bbcollections.TodoLists();
+    collections.times = new bbcollections.TimeEntries();
     views.current = null;
     views.projects = new window.ProjectsView(_.extend({
         collection: collections.projects
@@ -84,18 +85,18 @@ define([
             collections[i].on("sync", onReset);
         }
     }
-    collections.project_people = new window.People();
-    collections.project_categories = new window.Categories();
-    collections.project_posts = new window.Posts();
-    collections.project_files = new window.Attachments();
-    collections.project_todo_lists = new window.TodoLists();
-    collections.project_calendar = new window.Calendar();
-    collections.project_time_entries = new window.TimeEntries();
-    collections.todo_items = new window.TodoItems();
-    collections.todo_time_entries = new window.TodoTimeEntries();
-    collections.project_todo_item_comments = new window.TodoComments();
-    collections.project_post_comments = new window.PostComments();
-    collections.project_calendar_entry_comments = new window.CalendarEntryComments();
+    collections.project_people = new bbcollections.People();
+    collections.project_categories = new bbcollections.Categories();
+    collections.project_posts = new bbcollections.Posts();
+    collections.project_files = new bbcollections.Attachments();
+    collections.project_todo_lists = new bbcollections.TodoLists();
+    collections.project_calendar = new bbcollections.Calendar();
+    collections.project_time_entries = new bbcollections.TimeEntries();
+    collections.todo_items = new bbcollections.TodoItems();
+    collections.todo_time_entries = new bbcollections.TodoTimeEntries();
+    collections.project_todo_item_comments = new bbcollections.TodoComments();
+    collections.project_post_comments = new bbcollections.PostComments();
+    collections.project_calendar_entry_comments = new bbcollections.CalendarEntryComments();
     views.company_view = new window.CompanyView(_.extend({
         model: models.company
     }, viewdata));

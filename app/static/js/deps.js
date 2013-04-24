@@ -58,12 +58,13 @@ require.config({
         bbviews: {
             deps: [
                 'bootstrap',
-                'bbcollections',
                 'text'
             ]
         },
         bbmain: {
             deps: [
+                'bbmodels',
+                'bbcollections',
                 'bbviews'
             ]
         }

@@ -4,9 +4,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!projects.html',
-    'bbmodels',
-    'bbcollections'
+    'text!projects.html'
 ], function ($, _, Backbone, projectsTemplate) {
     "use strict";
     var BBView = Backbone.View.extend({
