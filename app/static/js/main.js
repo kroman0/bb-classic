@@ -1,11 +1,12 @@
 /*jslint nomen: true*/
-/*global window, document, $, _, Backbone*/
+/*global define, window, document*/
 define([
     'jquery',
     'underscore',
     'backbone',
-    'bbviews',
-], function ($, _, Backbone) {
+    'bbmodels',
+    'bbviews'
+], function ($, _, Backbone, bbmodels) {
     "use strict";
     var i,
         models = window.models = {},
@@ -50,10 +51,10 @@ define([
                 "*actions": "defaultRoute"
             }
         });
-    models.mydata = new window.MyModel();
-    models.project = new window.Project();
-    models.company = new window.Company();
-    models.person = new window.Person();
+    models.mydata = new bbmodels.MyModel();
+    models.project = new bbmodels.Project();
+    models.company = new bbmodels.Company();
+    models.person = new bbmodels.Person();
     collections.projects = new window.Projects();
     collections.companies = new window.Companies();
     collections.people = new window.People();

@@ -6,7 +6,7 @@ define([
     'backbone',
     'text!projects.html',
     'bbmodels',
-    'bbcollections',
+    'bbcollections'
 ], function ($, _, Backbone, projectsTemplate) {
     "use strict";
     var BBView = Backbone.View.extend({

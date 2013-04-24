@@ -1,6 +1,11 @@
 /*jslint nomen: true*/
 /*global window, define*/
-define(['underscore', 'backbone', 'backbone-pageable'], function (_, Backbone, PageableCollection) {
+define([
+    'underscore',
+    'backbone',
+    'backbone-pageable',
+    'bbmodels'
+], function (_, Backbone, PageableCollection, bbmodels) {
     "use strict";
     var BBCollectionExtra = {
             fetchonce: function () {
@@ -25,25 +30,25 @@ define(['underscore', 'backbone', 'backbone-pageable'], function (_, Backbone, P
         BBPCollection = PageableCollection.extend(BBCollectionExtra);
     window.Projects = BBCollection.extend({
         url: '/api/projects.xml',
-        model: window.Project
+        model: bbmodels.Project
     });
     window.Companies = BBCollection.extend({
         url: '/api/companies.xml',
-        model: window.Company
+        model: bbmodels.Company
     });
     window.People = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
             return _.isFinite(this.parent_id) ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
         },
-        model: window.Person
+        model: bbmodels.Person
     });
     window.Posts = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
             return '/api/projects/' + this.parent_id + '/posts.xml';
         },
-        model: window.Post
+        model: bbmodels.Post
     });
     window.Attachments = BBPCollection.extend({
         mode: 'client',
@@ -51,14 +56,14 @@ define(['underscore', 'backbone', 'backbone-pageable'], function (_, Backbone, P
         url: function () {
             return '/api/projects/' + this.parent_id + '/attachments.xml';
         },
-        model: window.Attachment
+        model: bbmodels.Attachment
     });
     window.Calendar = BBCollection.extend({
         parent_id: null, // project id
         url: function () {
             return '/api/projects/' + this.parent_id + '/calendar_entries.xml';
         },
-        model: window.CalendarEntry
+        model: bbmodels.CalendarEntry
     });
     window.Categories = BBPCollection.extend({
         mode: 'client',
@@ -66,7 +71,7 @@ define(['underscore', 'backbone', 'backbone-pageable'], function (_, Backbone, P
         url: function () {
             return '/api/projects/' + this.parent_id + '/categories.xml';
         },
-        model: window.Category
+        model: bbmodels.Category
     });
     window.TimeEntries = BBPCollection.extend({
         mode: 'client',
@@ -90,7 +95,7 @@ define(['underscore', 'backbone', 'backbone-pageable'], function (_, Backbone, P
             }
             return '/api/time_entries/report.xml';
         },
-        model: window.TimeEntry
+        model: bbmodels.TimeEntry
     });
     window.TodoTimeEntries = window.TimeEntries.extend({
         parent: 'todo_items'
@@ -100,7 +105,7 @@ define(['underscore', 'backbone', 'backbone-pageable'], function (_, Backbone, P
         url: function () {
             return '/api/todo_lists/' + this.parent_id + '/todo_items.xml';
         },
-        model: window.TodoItem
+        model: bbmodels.TodoItem
     });
     window.TodoLists = BBCollection.extend({
         responsible_party: null, // person id
@@ -121,7 +126,7 @@ define(['underscore', 'backbone', 'backbone-pageable'], function (_, Backbone, P
             }
             return '/api/todo_lists.xml?responsible_party=' + this.responsible_party;
         },
-        model: window.TodoList
+        model: bbmodels.TodoList
     });
     window.PostComments = BBCollection.extend({
         parent_id: null, // parent id
@@ -129,7 +134,7 @@ define(['underscore', 'backbone', 'backbone-pageable'], function (_, Backbone, P
         url: function () {
             return '/api/' + this.parent_type + '/' + this.parent_id + '/comments.xml';
         },
-        model: window.Comment
+        model: bbmodels.Comment
     });
     window.TodoComments = window.PostComments.extend({
         parent_type: 'todo_items'
