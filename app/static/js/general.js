@@ -5,16 +5,6 @@
     window.onReset = function () {
         Backbone.history.loadUrl();
     };
-    var urlError = function () {
-        throw new Error('A "url" property or function must be specified');
-    };
-    Backbone.Model.prototype.url = function () {
-        var base = _.result(this, 'urlRoot') || _.result(this.collection, 'url') || urlError();
-        if (!this.isNew()) {
-            base = base + (base.charAt(base.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.id) + '.xml';
-        }
-        return base;
-    };
     // uniq_hash = [];
     // var add_hash = function () {
     //     if(window.workspace){
