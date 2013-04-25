@@ -15,12 +15,24 @@ Test Teardown  Close All Browsers and Report Status
 
 *** Test Cases ***
 
-Test My Profile
+My profile page should contains my info
     [Tags]  profile  compare
+    Given an bb-classic app
+    Then go to my profile page
+    and my info be visible
+
+
+*** Keywords ***
+
+an bb-classic app
     Test user login
+
+go to my profile page
     Click link  First Last
     Click link  My profile
     Location should be  ${APP_URL}/#me
+
+my info be visible
     Page should contain element  link=name@domain.com
     Page should contain element  link=example
     Page should contain  Mobile phone: +000 (00) 000-0000
@@ -30,4 +42,3 @@ Test My Profile
     Page should contain  Time zone: Europe/Kiev
 #    Capture Page Screenshot  mypage.png
 #    Compare screenshot to base  ${base_mypage}
-
