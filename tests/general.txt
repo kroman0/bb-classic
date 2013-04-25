@@ -15,52 +15,75 @@ Test Teardown  Close All Browsers and Report Status
 
 *** Test Cases ***
 
-Test Login Page
+Login page should have inputs and validate submit
     [Tags]  login  compare  general
+    Given an bb-classic app login page
+    Then page should contain  Please enter you credentials
+    and page should contain element  name=subdomain
+    and page should contain element  name=username
+    and page should contain element  name=password
+#    Capture Page Screenshot  login.png
+#    Compare screenshot to base  ${base_login}
+    When enter subdomain field
+    and click button  Log in
+    Then page should contain  Please enter all fields!
+    When enter username field
+    and click button  Log in
+    Then page should contain  Please enter all fields!
+    When enter password field
+    and click button  Log in
+    Then Wait Until Page Contains  First Last
+
+Navigation menu should work correctly
+    [Tags]  navigation  compare  general
+    Given an bb-classic app
+    When click on "Projects" link in navbar
+    Then location should be  ${APP_URL}/#projects
+    and heading should be "Projects"
+#    Sleep  0.5
+#    Capture Page Screenshot  projects.png
+#    Compare screenshot to base  ${base_projects}
+    When click on "Companies" link in navbar
+    Then location should be  ${APP_URL}/#companies
+    and heading should be "Companies"
+#    Sleep  0.5
+#    Capture Page Screenshot  companies.png
+#    Compare screenshot to base  ${base_companies}
+    When click on "To-Dos" link in navbar
+    Then location should be  ${APP_URL}/#todos
+    and heading should be "My to-dos"
+#    Sleep  0.5
+#    Capture Page Screenshot  todos.png
+#    Compare screenshot to base  ${base_todos}
+    When click on "Time" link in navbar
+    Then location should be  ${APP_URL}/#time_report
+    and heading should be "Time report"
+#    Sleep  0.5
+#    Capture Page Screenshot  time_report.png
+#    Compare screenshot to base  ${base_time_report}
+    When click on "People" link in navbar
+    Then location should be  ${APP_URL}/#people
+    and heading should be "People"
+#    Sleep  0.5
+#    Capture Page Screenshot  people.png
+#    Compare screenshot to base  ${base_people}
+
+
+*** Keywords ***
+
+an bb-classic app
+    Test user login
+
+an bb-classic app login page
     Reload Page Until  Location should contain  login
     Page should contain  BB
     Title should be  BB
-    Page should contain  Please enter you credentials
-    Page should contain element  name=subdomain
-    Page should contain element  name=username
-    Page should contain element  name=password
-#    Capture Page Screenshot  login.png
-#    Compare screenshot to base  ${base_login}
-    Input Text  name=subdomain  test
-    Click button  Log in
-    Page should contain  Please enter all fields!
-    Input Text  name=username  test
-    Click button  Log in
-    Page should contain  Please enter all fields!
-    Input Password  name=password  test
-    Click button  Log in
-    Wait Until Page Contains  First Last
 
-Test Nav Pages
-    [Tags]  navigation  compare  general
-    Test user login
-    Click link  Projects
-    Location should be  ${APP_URL}/#projects
-    Sleep  0.5
-#    Capture Page Screenshot  projects.png
-#    Compare screenshot to base  ${base_projects}
-    Click link  Companies
-    Location should be  ${APP_URL}/#companies
-    Sleep  0.5
-#    Capture Page Screenshot  companies.png
-#    Compare screenshot to base  ${base_companies}
-    Click link  To-Dos
-    Location should be  ${APP_URL}/#todos
-    Sleep  0.5
-#    Capture Page Screenshot  todos.png
-#    Compare screenshot to base  ${base_todos}
-    Click link  Time
-    Location should be  ${APP_URL}/#time_report
-    Sleep  0.5
-#    Capture Page Screenshot  time_report.png
-#    Compare screenshot to base  ${base_time_report}
-    Click link  People
-    Location should be  ${APP_URL}/#people
-    Sleep  0.5
-#    Capture Page Screenshot  people.png
-#    Compare screenshot to base  ${base_people}
+enter ${name} field
+    Input Text  name=${name}  test
+
+click on ${name} link in navbar
+    Click link  xpath=//*[contains(@class,"navbar")]//a[contains(text(),${name})]
+
+heading should be ${heading}
+    Page should contain element  xpath=//h1[contains(text(),${heading})]
