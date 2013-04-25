@@ -18,22 +18,22 @@ Test Teardown  Close All Browsers and Report Status
 Projects page should contains links to projects
     [Tags]  projects  boostrap
     Given an projects page
-    Then click on "Company name #0" in active state
-    and link to Name of #0 should be visible
+    When click on "Company name #0" in active state
+    Then link to Name of #0 should be visible
     and link to Name of #5 should not be visible
     and link to Name of #10 should not be visible
     and link to Name of #15 should be visible
     and link to Name of #20 should not be visible
     and link to Name of #25 should not be visible
-    Then click on "Company name #0" in on_hold state
-    and link to Name of #0 should not be visible
+    When click on "Company name #0" in on_hold state
+    Then link to Name of #0 should not be visible
     and link to Name of #5 should not be visible
     and link to Name of #10 should be visible
     and link to Name of #15 should not be visible
     and link to Name of #20 should not be visible
     and link to Name of #25 should be visible
-    Then click on "Company name #0" in archived state
-    and link to Name of #0 should not be visible
+    When click on "Company name #0" in archived state
+    Then link to Name of #0 should not be visible
     and link to Name of #5 should be visible
     and link to Name of #10 should not be visible
     and link to Name of #15 should not be visible

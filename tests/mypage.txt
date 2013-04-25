@@ -18,8 +18,8 @@ Test Teardown  Close All Browsers and Report Status
 My profile page should contains my info
     [Tags]  profile  compare
     Given an bb-classic app
-    Then go to my profile page
-    and my info be visible
+    When go to my profile page
+    Then my info be visible
 
 
 *** Keywords ***
