@@ -15,29 +15,45 @@ Test Teardown  Close All Browsers and Report Status
 
 *** Test Cases ***
 
-Test Projects Page
+Projects page should contains links to projects
     [Tags]  projects  boostrap
+    Given an projects page
+    When click on "Company name #0" in active state
+    Then link to Name of #0 should be visible
+    and link to Name of #5 should not be visible
+    and link to Name of #10 should not be visible
+    and link to Name of #15 should be visible
+    and link to Name of #20 should not be visible
+    and link to Name of #25 should not be visible
+    When click on "Company name #0" in on_hold state
+    Then link to Name of #0 should not be visible
+    and link to Name of #5 should not be visible
+    and link to Name of #10 should be visible
+    and link to Name of #15 should not be visible
+    and link to Name of #20 should not be visible
+    and link to Name of #25 should be visible
+    When click on "Company name #0" in archived state
+    Then link to Name of #0 should not be visible
+    and link to Name of #5 should be visible
+    and link to Name of #10 should not be visible
+    and link to Name of #15 should not be visible
+    and link to Name of #20 should be visible
+    and link to Name of #25 should not be visible
+
+
+
+*** Keywords ***
+
+an projects page
     Test user login
     Click link  Projects
     Wait Until Page Contains Element  link=Active
-    Click on "Company name #0" in active state and wait effect
-    Element Should Be Visible  link=Name of #0
-    Element Should Not Be Visible  link=Name of #5
-    Element Should Not Be Visible  link=Name of #10
-    Element Should Be Visible  link=Name of #15
-    Element Should Not Be Visible  link=Name of #20
-    Element Should Not Be Visible  link=Name of #25
-    Click on "Company name #0" in on_hold state and wait effect
-    Element Should Not Be Visible  link=Name of #0
-    Element Should Not Be Visible  link=Name of #5
-    Element Should Be Visible  link=Name of #10
-    Element Should Not Be Visible  link=Name of #15
-    Element Should Not Be Visible  link=Name of #20
-    Element Should Be Visible  link=Name of #25
-    Click on "Company name #0" in archived state and wait effect
-    Element Should Not Be Visible  link=Name of #0
-    Element Should Be Visible  link=Name of #5
-    Element Should Not Be Visible  link=Name of #10
-    Element Should Not Be Visible  link=Name of #15
-    Element Should Be Visible  link=Name of #20
-    Element Should Not Be Visible  link=Name of #25
+
+click on ${text} in ${state} state
+    Click on ${text} in ${state} state and wait effect
+
+link to ${name} should be visible
+    Element Should Be Visible  link=${name}
+
+link to ${name} should not be visible
+    Element Should Not Be Visible  link=${name}

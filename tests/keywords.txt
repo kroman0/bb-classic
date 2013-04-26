@@ -45,9 +45,9 @@ ${SESSION_ID} =
 
 Click on ${text} in ${state} state and wait effect
     Click link  ${state}
-    Sleep  0.5
+    Wait Until Keyword Succeeds  5 sec  0.1 sec  Element Should Be Visible  xpath=//*[@id="projects_${state}"]//a[contains(text(),${text})]
     Click element  xpath=//*[@id="projects_${state}"]//a[contains(text(),${text})]
-    Sleep  0.5
+    Wait Until Keyword Succeeds  5 sec  0.1 sec  Element Should Be Visible  xpath=//*[@id="projects_${state}"]//*[@id="projects_${state}_${text[-2]}"]//a
 
 Click on ${text} in projectnav
     Click element  xpath=//*[contains(@class,"projectnav")]//a[contains(text(),${text})]
@@ -55,7 +55,7 @@ Click on ${text} in projectnav
 
 Start app
     Start Process  bin/dev_appserver app --skip_sdk_update_check
-    Sleep  1
+#    Sleep  1
 
 Start Browser For Test
     Start browser
@@ -103,7 +103,7 @@ Start browser
     ${BUILD_NUMBER} =  Get Environment Variable  ROBOT_BUILD_NUMBER  manual-${BUILD_MANUAL}
     ${DESIRED_CAPABILITIES} =  Get Environment Variable  ROBOT_DESIRED_CAPABILITIES  platform:Linux
     ${BUILD_TAGS} =  Evaluate  " ".join(${TEST_TAGS})
-    ${BUILD_INFO} =  Set variable  build:${BUILD_NUMBER},name:${SUITE_NAME} | ${TEST_NAME},tags:${BUILD_TAGS},public:public
+    ${BUILD_INFO} =  Set variable  build:${BUILD_NUMBER},name:${TEST_NAME},tags:${BUILD_TAGS},public:public
     Open browser  ${APP_URL}  ${BROWSER}  remote_url=${REMOTE_URL}  desired_capabilities=${DESIRED_CAPABILITIES},${BUILD_INFO}
     Run keyword and ignore error  Set session id
 
