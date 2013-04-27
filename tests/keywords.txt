@@ -43,6 +43,9 @@ ${SESSION_ID} =
 
 *** Keywords ***
 
+Wait for data loading
+    Wait Until Keyword Succeeds  5 sec  0.1 sec  Element Should Not Be Visible  css=.alert
+
 Click on ${text} in ${state} state and wait effect
     Click link  ${state}
     Wait Until Keyword Succeeds  5 sec  0.1 sec  Element Should Be Visible  xpath=//*[@id="projects_${state}"]//a[contains(text(),${text})]
@@ -51,11 +54,10 @@ Click on ${text} in ${state} state and wait effect
 
 Click on ${text} in projectnav
     Click element  xpath=//*[contains(@class,"projectnav")]//a[contains(text(),${text})]
-    Sleep  2
+    Wait for data loading
 
 Start app
     Start Process  bin/dev_appserver app --skip_sdk_update_check
-#    Sleep  1
 
 Start Browser For Test
     Start browser
@@ -71,7 +73,6 @@ Stop app
     ${out} =  Read Process Output
     Append to file  app.log  ${out}
     Stop All Processes
-    Sleep  1
 
 Reload Page Until
     [Arguments]  @{condition}

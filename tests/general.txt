@@ -40,31 +40,31 @@ Navigation menu should work correctly
     When click on "Projects" link in navbar
     Then location should be  ${APP_URL}/#projects
     and heading should be "Projects"
-#    Sleep  0.5
+#    Wait for data loading
 #    Capture Page Screenshot  projects.png
 #    Compare screenshot to base  ${base_projects}
     When click on "Companies" link in navbar
     Then location should be  ${APP_URL}/#companies
     and heading should be "Companies"
-#    Sleep  0.5
+#    Wait for data loading
 #    Capture Page Screenshot  companies.png
 #    Compare screenshot to base  ${base_companies}
     When click on "To-Dos" link in navbar
     Then location should be  ${APP_URL}/#todos
     and heading should be "My to-dos"
-#    Sleep  0.5
+#    Wait for data loading
 #    Capture Page Screenshot  todos.png
 #    Compare screenshot to base  ${base_todos}
     When click on "Time" link in navbar
     Then location should be  ${APP_URL}/#time_report
     and heading should be "Time report"
-#    Sleep  0.5
+#    Wait for data loading
 #    Capture Page Screenshot  time_report.png
 #    Compare screenshot to base  ${base_time_report}
     When click on "People" link in navbar
     Then location should be  ${APP_URL}/#people
     and heading should be "People"
-#    Sleep  0.5
+#    Wait for data loading
 #    Capture Page Screenshot  people.png
 #    Compare screenshot to base  ${base_people}
 
