@@ -107,7 +107,7 @@ Test user login
     Input Text  name=username  test
     Input Password  name=password  test
     Click button  Log in
-    Wait Until Page Contains  First Last
+    Wait Until Page Contains  First Last  10 sec
 
 Test user logout
     Click link  First Last
