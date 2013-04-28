@@ -68,11 +68,7 @@ Navigation menu should work correctly
 #    Capture Page Screenshot  people.png
 #    Compare screenshot to base  ${base_people}
 
-
 *** Keywords ***
-
-an bb-classic app
-    Test user login
 
 an bb-classic app login page
     Reload Page Until  Location should contain  login
@@ -82,8 +78,3 @@ an bb-classic app login page
 enter ${name} field
     Input Text  name=${name}  test
 
-click on ${name} link in navbar
-    Click link  xpath=//*[contains(@class,"navbar")]//a[contains(text(),${name})]
-
-heading should be ${heading}
-    Page should contain element  xpath=//h1[contains(text(),${heading})]

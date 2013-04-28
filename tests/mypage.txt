@@ -24,9 +24,6 @@ My profile page should contains my info
 
 *** Keywords ***
 
-an bb-classic app
-    Test user login
-
 go to my profile page
     Click link  First Last
     Click link  My profile

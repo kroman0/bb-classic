@@ -43,6 +43,23 @@ ${SESSION_ID} =
 
 *** Keywords ***
 
+an bb-classic app
+    Test user login
+
+an bb-classic app login page
+    Reload Page Until  Location should contain  login
+    Page should contain  BB
+    Title should be  BB
+
+enter ${name} field
+    Input Text  name=${name}  test
+
+click on ${name} link in navbar
+    Click link  xpath=//*[contains(@class,"navbar")]//a[contains(text(),${name})]
+
+heading should be ${heading}
+    Page should contain element  xpath=//h1[contains(text(),${heading})]
+
 Wait for data loading
     Wait Until Keyword Succeeds  5 sec  0.1 sec  Element Should Not Be Visible  css=.alert
 
