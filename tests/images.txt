@@ -25,6 +25,9 @@ Generate screenshots
     Click link  Companies
     Wait for data loading
     Capture Page Screenshot  ${base_companies}
+    Click link  Name of #0
+    Wait for data loading
+    Capture Page Screenshot  ${base_company}
     Click link  To-Dos
     Wait for data loading
     Capture Page Screenshot  ${base_todos}
