@@ -33,12 +33,14 @@ Development
 - Minify javascript `make minify`
 - Selelium testing:
   - Run tests in foreground `make test`
-  - Run tests in xvfb `make xtest`
+  - Run tests in background `make xtest`
 - Selelium testing with SauceLab:
   - Get sauce connect `make sauceget`
   - Connect to SauceLab `make sauceconnect`
   - Run selenium tests on SauceLab `make sauce`
-- Update screenshots `make screenshots`
+- Update screenshots
+  - update in foreground `make screenshots`
+  - update in background `make xscreenshots`
 - Update libraries `make update-all`
   - Update bootstrap `make bootstrap-update`
   - Update underscore.js `make underscore-update`
