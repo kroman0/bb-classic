@@ -25,6 +25,35 @@
   Backbone.fetchCache = (Backbone.fetchCache || {});
   Backbone.fetchCache._cache = (Backbone.fetchCache._cache || {});
 
+  Backbone.fetchCache.priorityFn = function(a, b) {
+    if (!a || !a.expires || !b || !b.expires) {
+      return a;
+    }
+
+    return a.expires - b.expires;
+  };
+
+  Backbone.fetchCache._prioritize = function() {
+    var sorted = _.values(this._cache).sort(this.priorityFn);
+    var index = _.indexOf(_.values(this._cache), sorted[0]);
+    return _.keys(this._cache)[index];
+  };
+
+  Backbone.fetchCache._deleteCacheWithPriority = function() {
+    Backbone.fetchCache._cache[this._prioritize()] = null;
+    delete Backbone.fetchCache._cache[this._prioritize()];
+
+    try {
+      localStorage.setItem('backboneCache', JSON.stringify(Backbone.fetchCache._cache));
+    } catch (err) {
+      if (err.name.toUpperCase() === 'QUOTA_EXCEEDED_ERR') {
+        this._deleteCacheWithPriority();
+      } else {
+        throw(err);
+      }
+    }
+  };
+
   if (typeof Backbone.fetchCache.localStorage === 'undefined') {
     Backbone.fetchCache.localStorage = true;
   }
@@ -52,7 +81,15 @@
 
   function setLocalStorage() {
     if (!supportLocalStorage || !Backbone.fetchCache.localStorage) { return; }
-    localStorage.setItem('backboneCache', JSON.stringify(Backbone.fetchCache._cache));
+    try {
+      localStorage.setItem('backboneCache', JSON.stringify(Backbone.fetchCache._cache));
+    } catch (err) {
+      if (err.name.toUpperCase() === 'QUOTA_EXCEEDED_ERR') {
+        this._deleteCacheWithPriority();
+      } else {
+        throw(err);
+      }
+    }
   }
 
   function getLocalStorage() {
