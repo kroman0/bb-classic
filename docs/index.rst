@@ -34,6 +34,13 @@ Modules source code documentation
    keys
    crypto
 
+Acceptance tests
+================
+
+.. toctree::
+
+   keywords
+
 Indices and tables
 ==================
 
