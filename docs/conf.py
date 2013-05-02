@@ -18,6 +18,15 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #sys.path.insert(0, os.path.abspath('.'))
 
+sys.path.append(os.path.abspath('../app'))
+sys.path.append(os.path.abspath('../parts/google_appengine'))
+sys.path.append(os.path.abspath('../parts/google_appengine/lib'))
+sys.path.append(os.path.abspath('../parts/google_appengine/lib/webapp2-2.5.2'))
+sys.path.append(os.path.abspath('../parts/google_appengine/lib/webob-1.2.3'))
+sys.path.append(os.path.abspath('../parts/google_appengine/lib/django-0.96'))
+sys.path.append(os.path.abspath('../parts/google_appengine/lib/yaml-3.10'))
+sys.path.append(os.path.abspath('../app'))
+
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
