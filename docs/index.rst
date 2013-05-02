@@ -23,6 +23,16 @@ Contents
    projects
    companies
 
+Modules source code documentation
+=================================
+
+.. toctree::
+   :maxdepth: 2
+   :glob:
+
+   bb
+   keys
+   crypto
 
 Indices and tables
 ==================
