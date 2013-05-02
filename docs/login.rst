@@ -1,4 +1,4 @@
 Login page
 ==========
 
-.. image:: ../login.png
+.. image:: login.png

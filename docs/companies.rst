@@ -4,9 +4,9 @@ Companies page
 All companies
 -------------
 
-.. image:: ../companies.png
+.. image:: companies.png
 
 One company
 -----------
 
-.. image:: ../company.png
+.. image:: company.png

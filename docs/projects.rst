@@ -4,9 +4,9 @@ Projects page
 All projects
 ------------
 
-.. image:: ../projects.png
+.. image:: projects.png
 
 Project overview
 ----------------
 
-.. image:: ../project_overview.png
+.. image:: project_overview.png
