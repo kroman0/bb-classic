@@ -15,8 +15,8 @@ import json
 def compare_screenshot_to_base(baseline, diff=100):
     """Calculate the exact difference between two images.
 
-    :param baseline: base screenshot to campare
-    :param diff: value of maximum difference
+    :param string baseline: base screenshot to compare
+    :param int diff: value of maximum difference
 
     Example::
 
@@ -56,8 +56,9 @@ def compare_screenshot_to_base(baseline, diff=100):
 def report_sauce_status(job_id, test_status):
     """Report test status to Sauce service
 
-    :param job_id: saucelabs job id
-    :param test_status: status of test
+    :param string job_id: saucelabs job id
+    :param string test_status: status of test
+    :return: request status code
 
     Example::
 
@@ -88,15 +89,12 @@ def set_window_size(width, height):
     """Sets the `width` and `height` of the current window to the specified
     values.
 
-    :param width: window width
-    :param height: window height
+    :param string|int width: window width
+    :param string|int height: window height
 
     Example::
 
         Set Window Size  ${800}  ${600}
-        ${width}  ${height}=  Get Window Size
-        Should Be Equal  ${width}  ${800}
-        Should Be Equal  ${height}  ${600}
 
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
@@ -105,6 +103,8 @@ def set_window_size(width, height):
 
 def get_session_id():
     """Get session id
+
+    :return: session id
 
     Example::
 
