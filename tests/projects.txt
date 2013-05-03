@@ -20,53 +20,53 @@ Projects page should contains links to projects
     Given an projects page
     When click on "Company name #0" in active state
     Then link to Name of #0 should be visible
-    and link to Name of #5 should not be visible
-    and link to Name of #10 should not be visible
-    and link to Name of #15 should be visible
-    and link to Name of #20 should not be visible
-    and link to Name of #25 should not be visible
+    And link to Name of #5 should not be visible
+    And link to Name of #10 should not be visible
+    And link to Name of #15 should be visible
+    And link to Name of #20 should not be visible
+    And link to Name of #25 should not be visible
     When click on "Company name #0" in on_hold state
     Then link to Name of #0 should not be visible
-    and link to Name of #5 should not be visible
-    and link to Name of #10 should be visible
-    and link to Name of #15 should not be visible
-    and link to Name of #20 should not be visible
-    and link to Name of #25 should be visible
+    And link to Name of #5 should not be visible
+    And link to Name of #10 should be visible
+    And link to Name of #15 should not be visible
+    And link to Name of #20 should not be visible
+    And link to Name of #25 should be visible
     When click on "Company name #0" in archived state
     Then link to Name of #0 should not be visible
-    and link to Name of #5 should be visible
-    and link to Name of #10 should not be visible
-    and link to Name of #15 should not be visible
-    and link to Name of #20 should be visible
-    and link to Name of #25 should not be visible
+    And link to Name of #5 should be visible
+    And link to Name of #10 should not be visible
+    And link to Name of #15 should not be visible
+    And link to Name of #20 should be visible
+    And link to Name of #25 should not be visible
 
 Project navigation should work correctly
     [Tags]  navigation  projects
     Given an projects page
     When click link  Name of #0
     Then location should be  ${APP_URL}/#projects/0
-    and heading should be "Name of #0"
+    And heading should be "Name of #0"
     When click on "Messages" in projectnav
     Then location should be  ${APP_URL}/#projects/0/posts
-    and heading should be "Name of #0 > Posts"
+    And heading should be "Name of #0 > Posts"
     When click on "To-Dos" in projectnav
     Then location should be  ${APP_URL}/#projects/0/todo_lists
-    and heading should be "Name of #0 > To-dos"
+    And heading should be "Name of #0 > To-dos"
     When click on "Calendar" in projectnav
     Then location should be  ${APP_URL}/#projects/0/calendar
-    and heading should be "Name of #0 > Calendar"
+    And heading should be "Name of #0 > Calendar"
     When click on "Time" in projectnav
     Then location should be  ${APP_URL}/#projects/0/time_entries
-    and heading should be "Name of #0 > Time"
+    And heading should be "Name of #0 > Time"
     When click on "Files" in projectnav
     Then location should be  ${APP_URL}/#projects/0/files
-    and heading should be "Name of #0 > Files"
+    And heading should be "Name of #0 > Files"
     When click on "Categories" in projectnav
     Then location should be  ${APP_URL}/#projects/0/categories
-    and heading should be "Name of #0 > Categories"
+    And heading should be "Name of #0 > Categories"
     When click on "People" in projectnav
     Then location should be  ${APP_URL}/#projects/0/people
-    and heading should be "Name of #0 > People"
+    And heading should be "Name of #0 > People"
 
 
 *** Keywords ***
