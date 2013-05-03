@@ -16,6 +16,7 @@ Test Teardown  Close All Browsers and Report Status
 *** Test Cases ***
 
 My profile page should contains my info
+    [Documentation]  My profile page should contains info about me.
     [Tags]  profile  compare
     Given an bb-classic app
     When go to my profile page
