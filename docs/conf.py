@@ -40,6 +40,7 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.coverage',
     'sphinx.ext.viewcode',
+    'sphinxcontrib_robotdoc',
 ]
 
 # Add any paths that contain templates here, relative to this directory.

@@ -1,5 +1,4 @@
-ez_setup
-google-appengine
+sphinxcontrib-robotdoc
 Pillow
 Jinja2==2.6
 Pygments==1.6
