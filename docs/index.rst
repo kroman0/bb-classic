@@ -43,6 +43,8 @@ Acceptance tests
 
    tests
    keywords
+   settings
+   variables
 
 Indices and tables
 ==================
