@@ -41,6 +41,7 @@ Acceptance tests
    :maxdepth: 2
    :glob:
 
+   tests
    keywords
 
 Indices and tables
