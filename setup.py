@@ -21,6 +21,8 @@ setup(name='bb-classic',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'robotframework-selenium2library',
+          'google-appengine',
           # -*- Extra requirements: -*-
       ],
       entry_points="""
