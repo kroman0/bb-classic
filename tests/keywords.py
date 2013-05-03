@@ -1,4 +1,7 @@
-""" keywords for tests
+"""
+Keywords for tests
+==================
+
 """
 from PIL import Image
 from PIL import ImageChops

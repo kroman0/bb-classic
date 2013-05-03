@@ -1,5 +1,5 @@
-keys`s module source code documentation
-=======================================
+keys`s module
+=============
 
 .. automodule:: keys
     :members:

@@ -1,4 +1,7 @@
-""" Main BB classic app module
+"""
+Main BB classic app module
+==========================
+
 """
 import webapp2
 import os

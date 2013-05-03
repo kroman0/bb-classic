@@ -1,5 +1,5 @@
-bb`s module source code documentation
-=====================================
+bb`s module
+===========
 
 .. automodule:: bb
     :members:

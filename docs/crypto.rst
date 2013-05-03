@@ -1,5 +1,5 @@
-crypto`s module source code documentation
-=========================================
+crypto`s module
+===============
 
 .. automodule:: crypto
     :members:
