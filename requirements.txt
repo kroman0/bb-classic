@@ -1,3 +1,5 @@
+google-appengine
+Pillow
 Jinja2==2.6
 Pygments==1.6
 Sphinx==1.2b1
