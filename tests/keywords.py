@@ -13,8 +13,15 @@ import json
 
 
 def compare_screenshot_to_base(baseline, diff=100):
-    """
-    Calculate the exact difference between two images.
+    """Calculate the exact difference between two images.
+
+    :param baseline: base screenshot to campare
+    :param diff: value of maximum difference
+
+    Example::
+
+        Compare screenshot to base  base_screenshot.jpg
+
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
     path = driver._get_screenshot_paths(None)[0]
@@ -47,7 +54,15 @@ def compare_screenshot_to_base(baseline, diff=100):
 
 
 def report_sauce_status(job_id, test_status):
-    """ Report test status to Sauce service
+    """Report test status to Sauce service
+
+    :param job_id: saucelabs job id
+    :param test_status: status of test
+
+    Example::
+
+        Report sauce status  ${SESSION_ID}  ${TEST_STATUS}
+
     """
     username = os.environ.get('SAUCE_USERNAME')
     access_key = os.environ.get('SAUCE_ACCESS_KEY')
@@ -70,21 +85,31 @@ def report_sauce_status(job_id, test_status):
 
 
 def set_window_size(width, height):
-    """ Sets the `width` and `height` of the current window
-        to the specified values.
+    """Sets the `width` and `height` of the current window to the specified
+    values.
 
-    Example:
-    | Set Window Size | ${800} | ${600} |
-    | ${width} | ${height}= | Get Window Size |
-    | Should Be Equal | ${width} | ${800} |
-    | Should Be Equal | ${height} | ${600} |
+    :param width: window width
+    :param height: window height
+
+    Example::
+
+        Set Window Size  ${800}  ${600}
+        ${width}  ${height}=  Get Window Size
+        Should Be Equal  ${width}  ${800}
+        Should Be Equal  ${height}  ${600}
+
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
     return driver._current_browser().set_window_size(int(width), int(height))
 
 
 def get_session_id():
-    """ Get session id
+    """Get session id
+
+    Example::
+
+        ${SESSION_ID} =  Get Session Id
+
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
     try:
