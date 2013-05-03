@@ -16,6 +16,7 @@ Test Teardown  Close All Browsers and Report Status
 *** Test Cases ***
 
 Projects page should contains links to projects
+    [Documentation]  Projects page should contains correct links to projects if company and projects state selected.
     [Tags]  projects  boostrap
     Given an projects page
     When click on "Company name #0" in active state
@@ -41,6 +42,7 @@ Projects page should contains links to projects
     And link to Name of #25 should not be visible
 
 Project navigation should work correctly
+    [Documentation]  Projects navigation should change location and heading correctly.
     [Tags]  navigation  projects
     Given an projects page
     When click link  Name of #0
