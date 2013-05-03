@@ -16,6 +16,7 @@ Test Teardown  Close All Browsers and Report Status
 *** Test Cases ***
 
 Login page should have inputs and validate submit
+    [Documentation]  Login page should have input[name=subdomain], input[name=username], input[name=password] and should validate inputs on submit.
     [Tags]  login  compare  general
     Given an bb-classic app login page
     Then page should contain  Please enter you credentials
@@ -35,6 +36,7 @@ Login page should have inputs and validate submit
     Then Wait Until Page Contains  First Last
 
 Navigation menu should work correctly
+    [Documentation]  Navigation menu should change location and heading correctly.
     [Tags]  navigation  compare  general
     Given an bb-classic app
     When click on "Projects" link in navbar
