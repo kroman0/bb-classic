@@ -18,7 +18,7 @@ import json
 def compare_screenshot_to_base(baseline, diff=100):
     """Calculate the exact difference between two images.
 
-    :param string baseline: base screenshot to compare
+    :param string baseline: [required] base screenshot to compare
     :param int diff: value of maximum difference
 
     Example::
@@ -59,9 +59,10 @@ def compare_screenshot_to_base(baseline, diff=100):
 def report_sauce_status(job_id, test_status):
     """Report test status to Sauce service
 
-    :param string job_id: saucelabs job id
-    :param string test_status: status of test
-    :return: request status code
+    :param string job_id: [required] saucelabs job id
+    :param string test_status: [required] status of test
+    :returns: request status code
+    :rtype: int
 
     Example::
 
@@ -92,8 +93,8 @@ def set_window_size(width, height):
     """Sets the `width` and `height` of the current window to the specified
     values.
 
-    :param string|int width: window width
-    :param string|int height: window height
+    :param string|int width: [required] window width
+    :param string|int height: [required] window height
 
     Example::
 
@@ -107,7 +108,8 @@ def set_window_size(width, height):
 def get_session_id():
     """Get session id
 
-    :return: session id
+    :returns: session id
+    :rtype: string
 
     Example::
 
