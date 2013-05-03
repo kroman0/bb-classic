@@ -1,3 +1,4 @@
+ez_setup
 google-appengine
 Pillow
 Jinja2==2.6
