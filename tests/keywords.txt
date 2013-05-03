@@ -45,48 +45,60 @@ ${SESSION_ID} =
 *** Keywords ***
 
 an bb-classic app
+    [Documentation]  Go to application page.
     Test user login
 
 an bb-classic app login page
+    [Documentation]  Go to application login page.
     Reload Page Until  Location should contain  login
     Page should contain  BB
     Title should be  BB
 
 enter ${name} field
+    [Documentation]  Enter "test" text in input field.
     Input Text  name=${name}  test
 
 click on ${name} link in navbar
+    [Documentation]  Click on link in navbar.
     Click link  xpath=//*[contains(@class,"navbar")]//a[contains(text(),${name})]
 
 heading should be ${heading}
+    [Documentation]  Check if heading contain text.
     Page should contain element  xpath=//h1[contains(text(),${heading})]
 
 Wait for data loading
+    [Documentation]  Waiting for loading data from server.
     Wait Until Keyword Succeeds  5 sec  0.1 sec  Element Should Not Be Visible  css=.alert
 
 Click on ${text} in ${state} state and wait effect
+    [Documentation]  Switch state filter, wait, click on link in state block and wait.
     Click link  ${state}
     Wait Until Keyword Succeeds  5 sec  0.1 sec  Element Should Be Visible  xpath=//*[@id="projects_${state}"]//a[contains(text(),${text})]
     Click element  xpath=//*[@id="projects_${state}"]//a[contains(text(),${text})]
     Wait Until Keyword Succeeds  5 sec  0.1 sec  Element Should Be Visible  xpath=//*[@id="projects_${state}"]//*[@id="projects_${state}_${text[-2]}"]//a
 
 Click on ${text} in projectnav
+    [Documentation]  Click on link in project navigation.
     Click element  xpath=//*[contains(@class,"projectnav")]//a[contains(text(),${text})]
     Wait for data loading
 
 Start app
+    [Documentation]  Start application.
     Start Process  bin/dev_appserver app --skip_sdk_update_check
 
 Start Browser For Test
+    [Documentation]  Start browser.
     Start browser
     Set Window Size  1024  768
 #    Maximize browser window
 
 Close All Browsers and Report Status
+    [Documentation]  Close browser and report test status.
     Close All Browsers
     Report test status
 
 Stop app
+    [Documentation]  Stop application.
     Run  pkill -f dev_appserver
     ${out} =  Read Process Output
     Append to file  app.log  ${out}
@@ -94,6 +106,7 @@ Stop app
 
 Reload Page Until
     [Arguments]  @{condition}
+    [Documentation]  Reload page 10 times until condition wil be true.
     :FOR  ${try}  IN RANGE  10
     \   ${status}=  Run Keyword And Ignore Error  @{condition}
     \   ${raise error}=  Set Variable If  ${status}[0]=='PASS'  'False'  'True'
@@ -103,6 +116,7 @@ Reload Page Until
     Run Keyword If  ${raise error}=="True"  Fail  "${condition}"
 
 Test user login
+    [Documentation]  Login by test user.
     Reload Page Until  Location should contain  login
     Input Text  name=subdomain  test
     Input Text  name=username  test
@@ -111,11 +125,13 @@ Test user login
     Wait Until Page Contains  First Last  15 sec
 
 Test user logout
+    [Documentation]  Logout.
     Click link  First Last
     Click link  Logout
     Click link  log in
 
 Start browser
+    [Documentation]  Prepare environment and start browser.
     ${BROWSER} =  Get Environment Variable  ROBOT_BROWSER  Firefox
     ${REMOTE_URL} =  Get Environment Variable  ROBOT_REMOTE_URL  ${REMOTE_URL}
     ${BUILD_MANUAL} =  Evaluate  random.randint(0,10**6)  random
@@ -127,9 +143,11 @@ Start browser
     Run keyword and ignore error  Set session id
 
 Set session id
+    [Documentation]  Get session id and set variable.
     Keyword should exist  Get session id
     ${SESSION_ID} =  Get session id
     Set test variable  ${SESSION_ID}  ${SESSION_ID}
 
 Report test status
+    [Documentation]  Report test status to saucelabs.
     Run keyword unless  '${SESSION_ID}' == ''  Report sauce status  ${SESSION_ID}  ${TEST_STATUS}

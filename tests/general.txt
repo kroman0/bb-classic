@@ -69,9 +69,3 @@ Navigation menu should work correctly
 #    Wait for data loading
 #    Capture Page Screenshot  people.png
 #    Compare screenshot to base  ${base_people}
-
-*** Keywords ***
-
-enter ${name} field
-    Input Text  name=${name}  test
-

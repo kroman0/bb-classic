@@ -74,15 +74,19 @@ Project navigation should work correctly
 *** Keywords ***
 
 an projects page
-    Test user login
+    [Documentation]  Go to projects page.
+    Given Test user login
     When click link  Projects
     Then wait for data loading
 
 click on ${text} in ${state} state
+    [Documentation]  Click on link in state block.
     Click on ${text} in ${state} state and wait effect
 
 link to ${name} should be visible
+    [Documentation]  Check if link is visible.
     Element Should Be Visible  link=${name}
 
 link to ${name} should not be visible
+    [Documentation]  Check if link is not visible.
     Element Should Not Be Visible  link=${name}
