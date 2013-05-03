@@ -1,29 +1,5 @@
 sphinxcontrib-robotdoc
 webapp2
 django==1.1.3
-Jinja2==2.6
-Pygments==1.6
 Sphinx==1.2b1
-appfy.recipe.gae==0.9.3
-collective.recipe.sphinxbuilder==0.7.3
-decorator==3.4.0
-robotentrypoints==0.1
-robotframework==2.7.7
-robotframework-selenium2library==1.2.0
-selenium==2.32.0
-z3c.recipe.scripts==1.0.1
-zc.recipe.egg==1.3.2
-
-#Required by:
-#collective.recipe.sphinxbuilder 0.7.3
 docutils==0.10
-
-#Required by:
-#collective.recipe.sphinxbuilder 0.7.3
-#zc.recipe.egg 1.3.2
-#zc.buildout 2.1.0
-setuptools==0.6c12dev-r88846
-
-#Required by:
-#collective.recipe.sphinxbuilder 0.7.3
-zc.buildout==2.1.0
