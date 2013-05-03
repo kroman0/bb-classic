@@ -1,5 +1,5 @@
 sphinxcontrib-robotdoc
-wepapp2
+webapp2
 Jinja2==2.6
 Pygments==1.6
 Sphinx==1.2b1
