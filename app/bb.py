@@ -139,7 +139,15 @@ class GetSubjectException(Exception):
 
 
 def absolute_url(subdomain, relative_url='', params='', query='', fragment=''):
-    """ absolute url for request
+    """ Prepare absolute url for request
+
+    :param string subdomain: [required] basecamphq subdomain
+    :param string relative_url: relative url
+    :param string params: url parameters
+    :param string query: url query
+    :param string fragment: url fragment
+    :returns: absolute url for request
+    :rtype: string
     """
     if type(query) == dict:
         query = urlencode(query)
@@ -149,6 +157,11 @@ def absolute_url(subdomain, relative_url='', params='', query='', fragment=''):
 
 def get_headers(username, password):
     """ Prepare request headers
+
+    :param string username: [required] username
+    :param string password: [required] password
+    :returns: headers dict
+    :rtype: dict
     """
     headers = {
         'Content-Type': 'application/xml',
@@ -162,6 +175,13 @@ def get_headers(username, password):
 
 def get_subject_id(username, password, subdomain):
     """ Get 'subject_id' for report query - it is id of logged in user.
+
+    :param string username: [required] username
+    :param string password: [required] password
+    :param string subdomain: [required] subdomain
+    :returns: id of logged in user
+    :raises: `GetSubjectException <#bb.GetSubjectException>`_
+    :rtype: string
     """
     headers = get_headers(username, password)
     result = urlfetch.fetch(url=absolute_url(
@@ -175,10 +195,18 @@ def get_subject_id(username, password, subdomain):
 
 class CacheInfo(db.Model):
     """ Model for the cached response.
+
+    Attributes:
+
+    * `url` - `Fetch URL`
+    * `status_code` - `Response status`
+    * `headers` - `Response headers`
+    * `content` - `Response content`
+    * `date` - `Date when response was added to the cache`
     """
     url = db.StringProperty('Fetch URL', required=True)
-    status_code = db.IntegerProperty(
-        'Response status', required=True, indexed=False)
+    status_code = db.IntegerProperty('Response status',
+                                     required=True, indexed=False)
     headers = db.ListProperty(db.Blob, 'Response headers', indexed=False)
     content = db.BlobProperty('Response content')
     date = db.DateTimeProperty('Date when response was added to the cache',
