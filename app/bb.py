@@ -2,6 +2,11 @@
 Main BB classic app module
 ==========================
 
+* `/` - `Main Page Handler <#bb.MainPage>`_
+* `/login` - `Login Page Handler <#bb.LoginPage>`_
+* `/logout` - `Logout Page Handler <#bb.LogoutPage>`_
+* `/api/.*` - `Cross Domain Handler <#bb.CrossDomain>`_
+
 """
 import webapp2
 import os
@@ -243,6 +248,8 @@ class BaseRequestHandler(webapp2.RequestHandler):
 
 class MainPage(BaseRequestHandler):
     """ Main Page Handler
+
+    * :http:get:`/` - `MainPage GET <#bb.MainPage.get>`_
     """
     def get(self):
         """ GET request
@@ -257,6 +264,9 @@ class MainPage(BaseRequestHandler):
 
 class LoginPage(BaseRequestHandler):
     """ Login Page Handler
+
+    * :http:get:`/login` - `LoginPage GET <#bb.LoginPage.get>`_
+    * :http:post:`/login` - `LoginPage POST <#bb.LoginPage.post>`_
     """
     def get(self):
         """ GET request
@@ -306,6 +316,8 @@ class LoginPage(BaseRequestHandler):
 
 class LogoutPage(BaseRequestHandler):
     """ Logout Page Handler
+
+    * :http:get:`/logout` - `LogoutPage GET <#bb.LogoutPage.get>`_
     """
     def get(self):
         """ GET request
@@ -320,6 +332,11 @@ class LogoutPage(BaseRequestHandler):
 
 def convertchilds(childs):
     """ convert childs
+
+    :param list childs: [required] list of nodes
+    :returns: converted childs
+    :raises: Exception
+    :rtype: list
     """
     result = []
     for item in [y for y in childs if NODE_ONE(y)]:
@@ -330,6 +347,11 @@ def convertchilds(childs):
 
 def convertsubnodes(childs):
     """ convert subnodes
+
+    :param list childs: [required] list of nodes
+    :returns: converted nodes
+    :raises: Exception
+    :rtype: dict|string
     """
     subnodes = [y for y in childs if NODE_ONE(y)]
     if subnodes:
@@ -341,6 +363,11 @@ def convertsubnodes(childs):
 
 def convert(node):
     """ convert xml to dict
+
+    :param string node: [required] xml node to convert
+    :returns: converted node
+    :raises: Exception
+    :rtype: tuple(string, valuetype)
     """
     name = node.nodeName
     if node.getAttribute("nil") == "true":
@@ -364,12 +391,22 @@ def convert(node):
 
 def fetch_request(url, headers):
     """ Fetch request
+
+    :param string url: [required] request url
+    :param dict headers: [required] request headers
+    :returns: request response
+    :raises: Exception
+    :rtype: `Response <https://developers.google.com/appengine/docs/python/urlfetch/responseobjects>`_
     """
     return urlfetch.fetch(url=url, method=urlfetch.GET, headers=headers)
 
 
 def save_request(url, result):
     """ Save request
+
+    :param string url: [required] request url
+    :param result: [required] request response
+    :type result: Response
     """
     einfo = CacheInfo(url=url, status_code=result.status_code,
                       headers=[db.Blob('%s:%s' % (k, v))
@@ -396,6 +433,9 @@ def save_request(url, result):
 
 class CrossDomain(BaseRequestHandler):
     """ Cross Domain Handler
+
+    * :http:put:`/api/.*` - `CrossDomain PUT <#bb.CrossDomain.put>`_
+    * :http:get:`/api/.*` - `CrossDomain GET <#bb.CrossDomain.get>`_
     """
     def put(self):
         """ PUT request
