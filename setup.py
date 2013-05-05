@@ -21,8 +21,9 @@ setup(name='bb-classic',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'robotframework-selenium2library',
           'google-appengine',
+          'webapp2',
+          'django==1.1.3',
           # -*- Extra requirements: -*-
       ],
       entry_points="""
