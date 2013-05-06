@@ -1,9 +1,15 @@
-[![Build Status](https://travis-ci.org/kroman0/bb-classic.png?branch=master)](https://travis-ci.org/kroman0/bb-classic)
-[![Selenium Test Status](https://saucelabs.com/buildstatus/bb-classic)](https://saucelabs.com/u/bb-classic)
 BB Classic
 ==========
 
 Basecamp on Backbone, Twitter Bootstrap, GAE
+
+Links
+-----
+
+- [GAE](https://bb-classic.appspot.com/)
+- [RTD](https://bb-classic.readthedocs.org/)
+- [![Build Status](https://travis-ci.org/kroman0/bb-classic.png?branch=master)](https://travis-ci.org/kroman0/bb-classic)
+- [![Selenium Test Status](https://saucelabs.com/buildstatus/bb-classic)](https://saucelabs.com/u/bb-classic)
 
 Installation
 ------------
@@ -13,8 +19,6 @@ Installation
 - Build buildout `bin/buildout`
 - Run application `make`
 - Open [url](http://localhost:8080/) in browser
-
-- - -
 
 Development
 -----------
@@ -48,13 +52,7 @@ Development
   - Update backbone-pageable `make backbone-pageable-update`
   - Update backbone-fetch-cache `make backbone-fetch-cache-update`
 - Cleanup `make clean`
-
-- - -
-
-Updating GAE application
-------------------------
-
-- Deploy `make deploy`
+- Deploy GAE application `make deploy`
 
 - - -
 
