@@ -16,6 +16,7 @@ Test Teardown  Close All Browsers and Report Status
 *** Test Cases ***
 
 My profile page should contains my info
+    [Documentation]  My profile page should contains info about me.
     [Tags]  profile  compare
     Given an bb-classic app
     When go to my profile page
@@ -24,15 +25,14 @@ My profile page should contains my info
 
 *** Keywords ***
 
-an bb-classic app
-    Test user login
-
 go to my profile page
+    [Documentation]  Go to my profile page thru the user actions menu.
     Click link  First Last
     Click link  My profile
     Location should be  ${APP_URL}/#me
 
 my info be visible
+    [Documentation]  Check if page contains user info.
     Page should contain element  link=name@domain.com
     Page should contain element  link=example
     Page should contain  Mobile phone: +000 (00) 000-0000

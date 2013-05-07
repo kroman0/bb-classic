@@ -1,0 +1,5 @@
+sphinxcontrib-robotdoc
+sphinxcontrib-httpdomain
+Sphinx==1.2b1
+docutils==0.10
+robotframework-selenium2library

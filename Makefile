@@ -13,6 +13,9 @@ xtest:	clean
 	xvfb-run bin/pybot -e screenshots tests
 
 screenshots:
+	bin/pybot -i screenshots tests/
+
+xscreenshots:
 	xvfb-run bin/pybot -i screenshots tests/
 
 backup:

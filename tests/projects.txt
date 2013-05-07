@@ -16,44 +16,77 @@ Test Teardown  Close All Browsers and Report Status
 *** Test Cases ***
 
 Projects page should contains links to projects
+    [Documentation]  Projects page should contains correct links to projects if company and projects state selected.
     [Tags]  projects  boostrap
     Given an projects page
     When click on "Company name #0" in active state
     Then link to Name of #0 should be visible
-    and link to Name of #5 should not be visible
-    and link to Name of #10 should not be visible
-    and link to Name of #15 should be visible
-    and link to Name of #20 should not be visible
-    and link to Name of #25 should not be visible
+    And link to Name of #5 should not be visible
+    And link to Name of #10 should not be visible
+    And link to Name of #15 should be visible
+    And link to Name of #20 should not be visible
+    And link to Name of #25 should not be visible
     When click on "Company name #0" in on_hold state
     Then link to Name of #0 should not be visible
-    and link to Name of #5 should not be visible
-    and link to Name of #10 should be visible
-    and link to Name of #15 should not be visible
-    and link to Name of #20 should not be visible
-    and link to Name of #25 should be visible
+    And link to Name of #5 should not be visible
+    And link to Name of #10 should be visible
+    And link to Name of #15 should not be visible
+    And link to Name of #20 should not be visible
+    And link to Name of #25 should be visible
     When click on "Company name #0" in archived state
     Then link to Name of #0 should not be visible
-    and link to Name of #5 should be visible
-    and link to Name of #10 should not be visible
-    and link to Name of #15 should not be visible
-    and link to Name of #20 should be visible
-    and link to Name of #25 should not be visible
+    And link to Name of #5 should be visible
+    And link to Name of #10 should not be visible
+    And link to Name of #15 should not be visible
+    And link to Name of #20 should be visible
+    And link to Name of #25 should not be visible
 
+Project navigation should work correctly
+    [Documentation]  Projects navigation should change location and heading correctly.
+    [Tags]  navigation  projects
+    Given an projects page
+    When click link  Name of #0
+    Then location should be  ${APP_URL}/#projects/0
+    And heading should be "Name of #0"
+    When click on "Messages" in projectnav
+    Then location should be  ${APP_URL}/#projects/0/posts
+    And heading should be "Name of #0 > Posts"
+    When click on "To-Dos" in projectnav
+    Then location should be  ${APP_URL}/#projects/0/todo_lists
+    And heading should be "Name of #0 > To-dos"
+    When click on "Calendar" in projectnav
+    Then location should be  ${APP_URL}/#projects/0/calendar
+    And heading should be "Name of #0 > Calendar"
+    When click on "Time" in projectnav
+    Then location should be  ${APP_URL}/#projects/0/time_entries
+    And heading should be "Name of #0 > Time"
+    When click on "Files" in projectnav
+    Then location should be  ${APP_URL}/#projects/0/files
+    And heading should be "Name of #0 > Files"
+    When click on "Categories" in projectnav
+    Then location should be  ${APP_URL}/#projects/0/categories
+    And heading should be "Name of #0 > Categories"
+    When click on "People" in projectnav
+    Then location should be  ${APP_URL}/#projects/0/people
+    And heading should be "Name of #0 > People"
 
 
 *** Keywords ***
 
 an projects page
-    Test user login
-    Click link  Projects
-    Wait Until Page Contains Element  link=Active
+    [Documentation]  Go to projects page.
+    Given Test user login
+    When click link  Projects
+    Then wait for data loading
 
 click on ${text} in ${state} state
+    [Documentation]  Click on link in state block.
     Click on ${text} in ${state} state and wait effect
 
 link to ${name} should be visible
+    [Documentation]  Check if link is visible.
     Element Should Be Visible  link=${name}
 
 link to ${name} should not be visible
+    [Documentation]  Check if link is not visible.
     Element Should Not Be Visible  link=${name}
