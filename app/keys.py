@@ -14,30 +14,46 @@ KEYRING_SIZE = 14
 
 def generate_raw_key():
     """ generate raw key
+
+    :returns: generated key
+    :rtype: string
     """
     return base64.b64encode(repr(random.uniform(1, 1000)))
 
 
 def generate_marker():
     """ regenerate_raw_key implementation satisfies needs
+
+    :returns: generated key
+    :rtype: string
     """
     return generate_raw_key()
 
 
 def generate_key():
     """ generate key
+
+    :returns: generated key pair
+    :rtype: tuple of string
     """
     return (generate_raw_key(), generate_marker())
 
 
 class Keyring(db.Model):
     """ Keyring db model
+
+    Attributes:
+
+    * `data` - `encoded key data`
     """
     data = db.TextProperty()
 
 
 def refresh():
     """ refresh keys
+
+    :returns: fresh keys
+    :rtype: list of key pairs
     """
     keys = [generate_key() for i in xrange(KEYRING_SIZE)]
     delete()
@@ -47,6 +63,8 @@ def refresh():
 
 def setkeys(keys):
     """ set keys
+
+    :param list keys: [required] list of key pairs
     """
     encoded = pickle.dumps(keys)
     db.put(Keyring(data=encoded))
@@ -72,6 +90,9 @@ def delete():
 
 def _db_get():
     """ get keyring from db
+
+    :returns: keyring
+    :rtype: `Keyring <#keys.Keyring>`_
     """
     query = db.GqlQuery('SELECT * FROM Keyring')
     keyring = query.fetch(1)
@@ -80,6 +101,9 @@ def _db_get():
 
 def data():
     """ get keys
+
+    :returns: key
+    :rtype: string
     """
     # read from the memcache
     keyring = memcache.get('keyring')
@@ -99,5 +123,8 @@ def data():
 
 def current():
     """ get current key
+
+    :returns: get next key
+    :rtype: string
     """
     return data().next()
