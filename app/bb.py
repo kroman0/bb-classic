@@ -396,7 +396,7 @@ def fetch_request(url, headers):
     :param dict headers: [required] request headers
     :returns: request response
     :raises: Exception
-    :rtype: `Response <https://developers.google.com/appengine/docs/python/urlfetch/responseobjects>`_
+    :rtype: `Response <http://goo.gl/F0G1l>`_
     """
     return urlfetch.fetch(url=url, method=urlfetch.GET, headers=headers)
 
