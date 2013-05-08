@@ -122,7 +122,8 @@ Test user login
     Input Text  name=username  test
     Input Password  name=password  test
     Click button  Log in
-    Run Keyword And Ignore Error  Wait Until Page Contains  First Last  15 sec
+    Sleep  5
+    Wait Until Page Contains  First Last  15 sec
 
 Test user logout
     [Documentation]  Logout.
