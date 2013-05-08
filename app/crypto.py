@@ -1,4 +1,10 @@
-""" crypto module
+"""
+crypto module
+=============
+
+* `/genkeys` - `Generate keys handler <#crypto.GenkeysPage>`_
+* `/addkey` - `Add key handler <#crypto.AddkeyPage>`_
+
 """
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -52,6 +58,9 @@ def encode_data(values, delimiter='\n'):
 
 class AddkeyPage(webapp.RequestHandler):
     """ Add key handler
+
+    * :http:get:`/addkey` - `AddkeyPage GET <#crypto.AddkeyPage.get>`_
+    * :http:post:`/addkey` - `AddkeyPage POST <#crypto.AddkeyPage.post>`_
     """
 
     def get(self):
@@ -67,6 +76,9 @@ class AddkeyPage(webapp.RequestHandler):
 
 class GenkeysPage(webapp.RequestHandler):
     """ Generate keys handler
+
+    * :http:get:`/genkeys` - `GenkeysPage GET <#crypto.GenkeysPage.get>`_
+    * :http:post:`/genkeys` - `GenkeysPage POST <#crypto.GenkeysPage.post>`_
     """
 
     def get(self):
@@ -78,8 +90,6 @@ class GenkeysPage(webapp.RequestHandler):
         """ POST request
         """
         keys.refresh()
-        # import pdb; pdb.Pdb(stdin=sys.__stdin__,
-        # stdout=sys.__stdout__).set_trace()
 
 
 APPLICATION = webapp.WSGIApplication([

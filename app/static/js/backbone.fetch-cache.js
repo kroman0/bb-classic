@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v0.1.2
+  backbone.fetch-cache v0.1.4
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
@@ -24,6 +24,26 @@
 
   Backbone.fetchCache = (Backbone.fetchCache || {});
   Backbone.fetchCache._cache = (Backbone.fetchCache._cache || {});
+
+  Backbone.fetchCache.priorityFn = function(a, b) {
+    if (!a || !a.expires || !b || !b.expires) {
+      return a;
+    }
+
+    return a.expires - b.expires;
+  };
+
+  Backbone.fetchCache._prioritize = function() {
+    var sorted = _.values(this._cache).sort(this.priorityFn);
+    var index = _.indexOf(_.values(this._cache), sorted[0]);
+    return _.keys(this._cache)[index];
+  };
+
+  Backbone.fetchCache._deleteCacheWithPriority = function() {
+    Backbone.fetchCache._cache[this._prioritize()] = null;
+    delete Backbone.fetchCache._cache[this._prioritize()];
+    Backbone.fetchCache.setLocalStorage();
+  };
 
   if (typeof Backbone.fetchCache.localStorage === 'undefined') {
     Backbone.fetchCache.localStorage = true;
@@ -52,12 +72,21 @@
 
   function setLocalStorage() {
     if (!supportLocalStorage || !Backbone.fetchCache.localStorage) { return; }
-    localStorage.setItem('backboneCache', JSON.stringify(Backbone.fetchCache._cache));
+    try {
+      localStorage.setItem('backboneCache', JSON.stringify(Backbone.fetchCache._cache));
+    } catch (err) {
+      if (err.name.toUpperCase() === 'QUOTA_EXCEEDED_ERR') {
+        this._deleteCacheWithPriority();
+      } else {
+        throw(err);
+      }
+    }
   }
 
   function getLocalStorage() {
     if (!supportLocalStorage || !Backbone.fetchCache.localStorage) { return; }
-    Backbone.fetchCache._cache = JSON.parse(localStorage.getItem('backboneCache')) || {};
+    var json = localStorage.getItem('backboneCache') || '{}';
+    Backbone.fetchCache._cache = JSON.parse(json);
   }
 
   // Instance methods

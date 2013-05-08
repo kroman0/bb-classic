@@ -15,52 +15,57 @@ Test Teardown  Close All Browsers and Report Status
 
 *** Test Cases ***
 
-Test Login Page
+Login page should have inputs and validate submit
+    [Documentation]  Login page should have input[name=subdomain], input[name=username], input[name=password] and should validate inputs on submit.
     [Tags]  login  compare  general
-    Reload Page Until  Location should contain  login
-    Page should contain  BB
-    Title should be  BB
-    Page should contain  Please enter you credentials
-    Page should contain element  name=subdomain
-    Page should contain element  name=username
-    Page should contain element  name=password
+    Given an bb-classic app login page
+    Then page should contain  Please enter you credentials
+    And page should contain element  name=subdomain
+    And page should contain element  name=username
+    And page should contain element  name=password
 #    Capture Page Screenshot  login.png
 #    Compare screenshot to base  ${base_login}
-    Input Text  name=subdomain  test
-    Click button  Log in
-    Page should contain  Please enter all fields!
-    Input Text  name=username  test
-    Click button  Log in
-    Page should contain  Please enter all fields!
-    Input Password  name=password  test
-    Click button  Log in
-    Wait Until Page Contains  First Last
+    When enter subdomain field
+    And click button  Log in
+    Then page should contain  Please enter all fields!
+    When enter username field
+    And click button  Log in
+    Then page should contain  Please enter all fields!
+    When enter password field
+    And click button  Log in
+    Then Wait Until Page Contains  First Last
 
-Test Nav Pages
+Navigation menu should work correctly
+    [Documentation]  Navigation menu should change location and heading correctly.
     [Tags]  navigation  compare  general
-    Test user login
-    Click link  Projects
-    Location should be  ${APP_URL}/#projects
-    Sleep  0.5
+    Given an bb-classic app
+    When click on "Projects" link in navbar
+    Then location should be  ${APP_URL}/#projects
+    And heading should be "Projects"
+#    Wait for data loading
 #    Capture Page Screenshot  projects.png
 #    Compare screenshot to base  ${base_projects}
-    Click link  Companies
-    Location should be  ${APP_URL}/#companies
-    Sleep  0.5
+    When click on "Companies" link in navbar
+    Then location should be  ${APP_URL}/#companies
+    And heading should be "Companies"
+#    Wait for data loading
 #    Capture Page Screenshot  companies.png
 #    Compare screenshot to base  ${base_companies}
-    Click link  To-Dos
-    Location should be  ${APP_URL}/#todos
-    Sleep  0.5
+    When click on "To-Dos" link in navbar
+    Then location should be  ${APP_URL}/#todos
+    And heading should be "My to-dos"
+#    Wait for data loading
 #    Capture Page Screenshot  todos.png
 #    Compare screenshot to base  ${base_todos}
-    Click link  Time
-    Location should be  ${APP_URL}/#time_report
-    Sleep  0.5
+    When click on "Time" link in navbar
+    Then location should be  ${APP_URL}/#time_report
+    And heading should be "Time report"
+#    Wait for data loading
 #    Capture Page Screenshot  time_report.png
 #    Compare screenshot to base  ${base_time_report}
-    Click link  People
-    Location should be  ${APP_URL}/#people
-    Sleep  0.5
+    When click on "People" link in navbar
+    Then location should be  ${APP_URL}/#people
+    And heading should be "People"
+#    Wait for data loading
 #    Capture Page Screenshot  people.png
 #    Compare screenshot to base  ${base_people}

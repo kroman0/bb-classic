@@ -15,24 +15,27 @@ Test Teardown  Close All Browsers
 
 *** Test Cases ***
 
-Generate images
+Generate screenshots
     [Tags]  screenshots
     Sleep  1
     Capture Page Screenshot  ${base_login}
     Test user login
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_projects}
     Click link  Companies
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_companies}
+    Click link  Name of #0
+    Wait for data loading
+    Capture Page Screenshot  ${base_company}
     Click link  To-Dos
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_todos}
     Click link  Time
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_time_report}
     Click link  People
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_people}
     Click link  First Last
     Click link  My profile
@@ -43,44 +46,44 @@ Generate images
     Click on "Messages" in projectnav
     Capture Page Screenshot  ${base_project_messages}
     Click link  Title #0
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_message}
     Click element  css=.icon-comment
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_message_comments}
     Click on "To-Dos" in projectnav
     Capture Page Screenshot  ${base_project_todos}
     Click link  Name of #0
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_todolist}
     Click link  Todo content #0
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_todo}
     Click element  css=.icon-comment
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_todo_comments}
     Click on "Calendar" in projectnav
     Capture Page Screenshot  ${base_project_calendar}
     Click link  Title #0
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_calendar_entry}
     Click element  css=.icon-comment
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_calendar_entry_comments}
     Click on "Time" in projectnav
     Capture Page Screenshot  ${base_project_time}
     Click on "Files" in projectnav
     Capture Page Screenshot  ${base_project_files}
     Click link  Name of #0
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_file}
     Click on "Categories" in projectnav
     Capture Page Screenshot  ${base_project_categories}
     Click link  Name of #0
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_category}
     Click on "People" in projectnav
     Capture Page Screenshot  ${base_project_people}
     Click link  First#0 Last
-    Sleep  2
+    Wait for data loading
     Capture Page Screenshot  ${base_project_person}

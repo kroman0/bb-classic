@@ -1,4 +1,12 @@
-""" Main BB classic app module
+"""
+Main BB classic app module
+==========================
+
+* `/` - `Main Page Handler <#bb.MainPage>`_
+* `/login` - `Login Page Handler <#bb.LoginPage>`_
+* `/logout` - `Logout Page Handler <#bb.LogoutPage>`_
+* `/api/.*` - `Cross Domain Handler <#bb.CrossDomain>`_
+
 """
 import webapp2
 import os
@@ -136,7 +144,15 @@ class GetSubjectException(Exception):
 
 
 def absolute_url(subdomain, relative_url='', params='', query='', fragment=''):
-    """ absolute url for request
+    """ Prepare absolute url for request
+
+    :param string subdomain: [required] basecamphq subdomain
+    :param string relative_url: relative url
+    :param string params: url parameters
+    :param string query: url query
+    :param string fragment: url fragment
+    :returns: absolute url for request
+    :rtype: string
     """
     if type(query) == dict:
         query = urlencode(query)
@@ -146,6 +162,11 @@ def absolute_url(subdomain, relative_url='', params='', query='', fragment=''):
 
 def get_headers(username, password):
     """ Prepare request headers
+
+    :param string username: [required] username
+    :param string password: [required] password
+    :returns: headers dict
+    :rtype: dict
     """
     headers = {
         'Content-Type': 'application/xml',
@@ -159,6 +180,13 @@ def get_headers(username, password):
 
 def get_subject_id(username, password, subdomain):
     """ Get 'subject_id' for report query - it is id of logged in user.
+
+    :param string username: [required] username
+    :param string password: [required] password
+    :param string subdomain: [required] subdomain
+    :returns: id of logged in user
+    :raises: `GetSubjectException <#bb.GetSubjectException>`_
+    :rtype: string
     """
     headers = get_headers(username, password)
     result = urlfetch.fetch(url=absolute_url(
@@ -172,10 +200,18 @@ def get_subject_id(username, password, subdomain):
 
 class CacheInfo(db.Model):
     """ Model for the cached response.
+
+    Attributes:
+
+    * `url` - `Fetch URL`
+    * `status_code` - `Response status`
+    * `headers` - `Response headers`
+    * `content` - `Response content`
+    * `date` - `Date when response was added to the cache`
     """
     url = db.StringProperty('Fetch URL', required=True)
-    status_code = db.IntegerProperty(
-        'Response status', required=True, indexed=False)
+    status_code = db.IntegerProperty('Response status',
+                                     required=True, indexed=False)
     headers = db.ListProperty(db.Blob, 'Response headers', indexed=False)
     content = db.BlobProperty('Response content')
     date = db.DateTimeProperty('Date when response was added to the cache',
@@ -212,6 +248,8 @@ class BaseRequestHandler(webapp2.RequestHandler):
 
 class MainPage(BaseRequestHandler):
     """ Main Page Handler
+
+    * :http:get:`/` - `MainPage GET <#bb.MainPage.get>`_
     """
     def get(self):
         """ GET request
@@ -226,6 +264,9 @@ class MainPage(BaseRequestHandler):
 
 class LoginPage(BaseRequestHandler):
     """ Login Page Handler
+
+    * :http:get:`/login` - `LoginPage GET <#bb.LoginPage.get>`_
+    * :http:post:`/login` - `LoginPage POST <#bb.LoginPage.post>`_
     """
     def get(self):
         """ GET request
@@ -275,6 +316,8 @@ class LoginPage(BaseRequestHandler):
 
 class LogoutPage(BaseRequestHandler):
     """ Logout Page Handler
+
+    * :http:get:`/logout` - `LogoutPage GET <#bb.LogoutPage.get>`_
     """
     def get(self):
         """ GET request
@@ -289,6 +332,11 @@ class LogoutPage(BaseRequestHandler):
 
 def convertchilds(childs):
     """ convert childs
+
+    :param list childs: [required] list of nodes
+    :returns: converted childs
+    :raises: Exception
+    :rtype: list
     """
     result = []
     for item in [y for y in childs if NODE_ONE(y)]:
@@ -299,6 +347,11 @@ def convertchilds(childs):
 
 def convertsubnodes(childs):
     """ convert subnodes
+
+    :param list childs: [required] list of nodes
+    :returns: converted nodes
+    :raises: Exception
+    :rtype: dict|string
     """
     subnodes = [y for y in childs if NODE_ONE(y)]
     if subnodes:
@@ -310,6 +363,11 @@ def convertsubnodes(childs):
 
 def convert(node):
     """ convert xml to dict
+
+    :param string node: [required] xml node to convert
+    :returns: converted node
+    :raises: Exception
+    :rtype: tuple(string, valuetype)
     """
     name = node.nodeName
     if node.getAttribute("nil") == "true":
@@ -333,12 +391,22 @@ def convert(node):
 
 def fetch_request(url, headers):
     """ Fetch request
+
+    :param string url: [required] request url
+    :param dict headers: [required] request headers
+    :returns: request response
+    :raises: Exception
+    :rtype: `Response <http://goo.gl/F0G1l>`_
     """
     return urlfetch.fetch(url=url, method=urlfetch.GET, headers=headers)
 
 
 def save_request(url, result):
     """ Save request
+
+    :param string url: [required] request url
+    :param result: [required] request response
+    :type result: Response
     """
     einfo = CacheInfo(url=url, status_code=result.status_code,
                       headers=[db.Blob('%s:%s' % (k, v))
@@ -365,6 +433,9 @@ def save_request(url, result):
 
 class CrossDomain(BaseRequestHandler):
     """ Cross Domain Handler
+
+    * :http:put:`/api/.*` - `CrossDomain PUT <#bb.CrossDomain.put>`_
+    * :http:get:`/api/.*` - `CrossDomain GET <#bb.CrossDomain.get>`_
     """
     def put(self):
         """ PUT request
