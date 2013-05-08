@@ -68,7 +68,7 @@ heading should be ${heading}
 
 Wait for data loading
     [Documentation]  Waiting for loading data from server.
-    Wait Until Keyword Succeeds  5 sec  0.1 sec  Element Should Not Be Visible  css=.alert
+    Wait Until Keyword Succeeds  10 sec  0.1 sec  Element Should Not Be Visible  css=.alert
 
 Click on ${text} in ${state} state and wait effect
     [Documentation]  Switch state filter, wait, click on link in state block and wait.
@@ -122,7 +122,7 @@ Test user login
     Input Text  name=username  test
     Input Password  name=password  test
     Click button  Log in
-    Wait Until Page Contains  First Last  15 sec
+    Run Keyword And Ignore Error  Wait Until Page Contains  First Last  15 sec
 
 Test user logout
     [Documentation]  Logout.
