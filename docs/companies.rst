@@ -1,5 +1,5 @@
-Companies page
-==============
+Companies pages
+===============
 
 All companies
 -------------
