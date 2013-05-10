@@ -55,7 +55,7 @@ def refresh():
     :returns: fresh keys
     :rtype: list of key pairs
     """
-    keys = [generate_key() for i in xrange(KEYRING_SIZE)]
+    keys = [generate_key() for keys in xrange(KEYRING_SIZE)]
     delete()
     setkeys(keys)
     return keys
