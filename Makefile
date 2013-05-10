@@ -81,6 +81,9 @@ update-all: bootstrap-update backbone-update underscore-update backbone-pageable
 pylint:
 	pylint -f colorized --rcfile=.pylintrc app/*.py tests/*.py
 
+pylint-html:
+	pylint -f html --rcfile=.pylintrc app/*.py tests/*.py >/tmp/pylint.html; firefox /tmp/pylint.html
+
 pep8:
 	pep8 app/ tests/
 
