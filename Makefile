@@ -76,6 +76,10 @@ backbone-fetch-cache-update:
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.js -O app/static/js/backbone.fetch-cache.js
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.min.js -O app/static/js/backbone.fetch-cache.min.js
 
+requirejs-update:
+	wget -q http://requirejs.org/docs/release/2.1.6/comments/require.js -O app/static/js/require.js
+	wget -q http://requirejs.org/docs/release/2.1.6/minified/require.js -O app/static/js/require.min.js
+
 update-all: bootstrap-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update
 
 pylint:
