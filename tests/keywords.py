@@ -62,7 +62,7 @@ def report_sauce_status(job_id, test_status):
     :param string job_id: [required] saucelabs job id
     :param string test_status: [required] status of test
     :returns: request status code
-    :rtype: int
+    :rtype: int or string
 
     Example::
 
@@ -119,6 +119,6 @@ def get_session_id():
     driver = BuiltIn().get_library_instance('Selenium2Library')
     try:
         session_id = driver._cache.current.session_id
-    except:
+    except AttributeError:
         session_id = ""
     return session_id

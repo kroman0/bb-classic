@@ -79,7 +79,10 @@ backbone-fetch-cache-update:
 update-all: bootstrap-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update
 
 pylint:
-	pylint app/*.py tests/*.py
+	pylint -f colorized --rcfile=.pylintrc app/*.py tests/*.py
+
+pylint-html:
+	pylint -f html --rcfile=.pylintrc app/*.py tests/*.py >/tmp/pylint.html; firefox /tmp/pylint.html
 
 pep8:
 	pep8 app/ tests/
