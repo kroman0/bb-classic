@@ -64,18 +64,7 @@ div#time_report {
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
 </script>
-<script src="/static/js/json2.min.js"></script>
-<script src="/static/js/jquery-1.7.2.min.js"></script>
-<script src="/static/js/jquery.deserialize-min.js"></script>
-<script src="/static/js/bootstrap.min.js"></script>
-<script src="/static/js/underscore-min.js"></script>
-<script src="/static/js/backbone-min.js"></script>
-<!--[if !IE]><!-->
-<script src="/static/js/backbone.fetch-cache.min.js"></script>
-<!--<![endif]-->
-<script src="/static/js/backbone-pageable.min.js"></script>
-<script src="/static/js/backbone.analytics-min.js"></script>
-<script src="/static/js/main-min.js"></script>
+<script data-main="/static/js/deps.min" src="/static/js/require.min.js"></script>
 {% endif %}
 <script type="text/template" id="time-template">
     <tr <% if(item.get('hours')>2){ %>class="warning"<% } %>>
