@@ -57,7 +57,7 @@ require.config({
             deps: [
                 'underscore',
                 'backbone',
-                'backbone-pageable',
+                'backbonepageable',
                 'bbgeneral',
                 'bbmodels'
             ]
@@ -85,6 +85,7 @@ require.config({
         json2: 'json2',
         jquery: 'jquery-1.7.2',
         jquerydeserialize: 'jquery.deserialize',
+        backbonepageable: 'backbone-pageable',
         backbonecache: 'backbone.fetch-cache',
         backboneanalytics: 'backbone.analytics',
         bbgeneral: 'general',

@@ -3,7 +3,7 @@
 define([
     'underscore',
     'backbone',
-    'backbone-pageable',
+    'backbonepageable',
     'bbgeneral',
     'bbmodels'
 ], function (_, Backbone, PageableCollection, onReset, bbmodels) {
