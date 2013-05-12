@@ -31,7 +31,11 @@ minify:
 	uglifyjs app/static/js/json2.js -o app/static/js/json2.min.js
 	uglifyjs app/static/js/jquery.deserialize.js -o app/static/js/jquery.deserialize-min.js
 	uglifyjs app/static/js/backbone.analytics.js -o app/static/js/backbone.analytics-min.js
-	uglifyjs app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js -o app/static/js/main-min.js
+	uglifyjs app/static/js/general.js -o app/static/js/general.min.js
+	uglifyjs app/static/js/models.js -o app/static/js/models.min.js
+	uglifyjs app/static/js/collections.js -o app/static/js/collections.min.js
+	uglifyjs app/static/js/views.js -o app/static/js/views.min.js
+	uglifyjs app/static/js/main.js -o app/static/js/main.min.js
 
 jshint:
 	jshint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js
