@@ -435,6 +435,7 @@ class CrossDomain(BaseRequestHandler):
     """ Cross Domain Handler
 
     * :http:put:`/api/.*` - `CrossDomain PUT <#bb.CrossDomain.put>`_
+    * :http:post:`/api/.*` - `CrossDomain POST <#bb.CrossDomain.post>`_
     * :http:get:`/api/.*` - `CrossDomain GET <#bb.CrossDomain.get>`_
     """
     def put(self):
@@ -442,6 +443,20 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
+        #url = absolute_url(self.subdomain, self.request.path_qs[4:])
+        #headers = get_headers(self.username, self.password)
+        #result = urlfetch.fetch(url=url, method=urlfetch.PUT, headers=headers)
+        # self.response.headers['Content-Type'] = 'application/json'
+        # self.response.out.write(self.request.body)
+
+    def post(self):
+        """ POST request
+        """
+        if not self.auth_check():
+            return self.redirect('/login')
+        #url = absolute_url(self.subdomain, self.request.path_qs[4:])
+        #headers = get_headers(self.username, self.password)
+        #result = urlfetch.fetch(url=url, payload=data, method=urlfetch.POST, headers=headers)
         # self.response.headers['Content-Type'] = 'application/json'
         # self.response.out.write(self.request.body)
 
