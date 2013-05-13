@@ -47,7 +47,7 @@
         urlRoot: "/api/categories/"
     });
     window.TimeEntry = BBModel.extend({
-        urlRoot: "/api/time_entries/"
+//         urlRoot: "/api/time_entries/"
     });
     window.TodoItem = BBModel.extend({
         urlRoot: "/api/todo_items/",

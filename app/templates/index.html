@@ -35,6 +35,35 @@ form#makereport {
 div#time_report {
     width: auto;
 }
+.addtime th {
+    padding: 4px;
+}
+.addtime th > * {
+    padding: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+    width: 100%;
+    height: 100%;
+    border-width: 0;
+    box-shadow: none;
+}
+.addtime input, .addtime select {
+    padding: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+    border-width: 0;
+    box-shadow: none;
+    height: 100%;
+    width: 100%;
+}
+.addtime select {
+    padding-left: 10px;
+    vertical-align: top;
+}
+.addtime .icon-user {
+    position: absolute;
+    margin-top: 2px;
+}
     </style>
     <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -498,6 +527,8 @@ div#time_report {
     <%= view.renderheader() %>
     <%= view.renderprojectnav() %>
     <% var tt=view.collection; var prid=view.model.id;
+    var pp=view.options.collections.people;
+    var mid=view.options.mydata?view.options.mydata.id:0;
     if (tt.isEmpty()) { %>
     <div class="alert alert-info">
         No time entries...
@@ -514,6 +545,25 @@ div#time_report {
             </tr>
         </thead>
         <tbody>
+            <tr class="addtime">
+                <th><input type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></th>
+                <th><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></th>
+                <th>
+                    <div>
+                        <i class="icon-user"></i><select name="person-id">
+                            <% pp.each(function (i) { %>
+                                <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </th>
+                <th>
+                    <div>
+                        <input type="text" class="input-small" name="description">
+                        <button id="add">Add</button>
+                    </div>
+                </th>
+            </tr>
             <% tt.each(function (item) { %>
                 <%= view.renderitem(item) %>
             <% }) %>

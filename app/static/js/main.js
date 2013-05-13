@@ -108,7 +108,10 @@ $(function () {
     views.project_calendar_entry = new window.CalendarEntryView(oproject);
     views.project_files = new window.FilesView(oproject);
     views.project_file = new window.FileView(oproject);
-    views.project_time_entries = new window.TimeEntriesView(oproject);
+    var otime = _.extend({
+        mydata: models.mydata
+    }, oproject);
+    views.project_time_entries = new window.TimeEntriesView(otime);
     views.todo_time_entries = new window.TodoTimeEntriesView(oproject);
     views.project_post_comments = new window.PostCommentsView(oproject);
     views.project_calendar_entry_comments = new window.CalendarEntryCommentsView(oproject);
