@@ -12,6 +12,7 @@ $(function () {
         },
         oproject,
         otodo,
+        otime,
         Workspace = Backbone.Router.extend({
             routes: {
                 "projects": "projects",
@@ -108,7 +109,7 @@ $(function () {
     views.project_calendar_entry = new window.CalendarEntryView(oproject);
     views.project_files = new window.FilesView(oproject);
     views.project_file = new window.FileView(oproject);
-    var otime = _.extend({
+    otime = _.extend({
         mydata: models.mydata
     }, oproject);
     views.project_time_entries = new window.TimeEntriesView(otime);
