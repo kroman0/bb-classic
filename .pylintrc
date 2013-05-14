@@ -1,0 +1,7 @@
+[MASTER]
+init-hook='import sys; sys.path.append("parts/google_appengine/lib/webapp2-2.5.2/"); sys.path.append("parts/google_appengine/"); sys.path.append("parts/google_appengine/lib/"); sys.path.append("/usr/lib/python2.7/dist-packages/"); sys.path.append("app");'
+
+[MESSAGES CONTROL]
+#disable=F0401
+disable=E1101,R0904
+

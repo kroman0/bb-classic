@@ -2,7 +2,19 @@
 /*global window, _, Backbone*/
 (function () {
     "use strict";
-    window.Project = Backbone.Model.extend({
+    var urlError = function () {
+            throw new Error('A "url" property or function must be specified');
+        },
+        BBModel = Backbone.Model.extend({
+            url: function () {
+                var base = _.result(this, 'urlRoot') || _.result(this.collection, 'url') || urlError();
+                if (!this.isNew()) {
+                    base = base + (base.charAt(base.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.id) + '.xml';
+                }
+                return base;
+            }
+        });
+    window.Project = BBModel.extend({
         urlRoot: "/api/projects/",
         icon: function () {
             switch (this.get('status')) {
@@ -15,29 +27,29 @@
             }
         }
     });
-    window.Company = Backbone.Model.extend({
+    window.Company = BBModel.extend({
         urlRoot: "/api/companies/"
     });
-    window.Person = Backbone.Model.extend({
+    window.Person = BBModel.extend({
         urlRoot: "/api/people/",
         name: function () {
             return this.get('first-name') + ' ' + this.get('last-name');
         }
     });
-    window.Post = Backbone.Model.extend({
+    window.Post = BBModel.extend({
         urlRoot: "/api/posts/"
     });
-    window.Attachment = Backbone.Model.extend();
-    window.CalendarEntry = Backbone.Model.extend({
+    window.Attachment = BBModel.extend();
+    window.CalendarEntry = BBModel.extend({
         urlRoot: "/api/projects/#{project_id}/calendar_entries/"
     });
-    window.Category = Backbone.Model.extend({
+    window.Category = BBModel.extend({
         urlRoot: "/api/categories/"
     });
-    window.TimeEntry = Backbone.Model.extend({
-        urlRoot: "/api/time_entries/"
+    window.TimeEntry = BBModel.extend({
+//         urlRoot: "/api/time_entries/"
     });
-    window.TodoItem = Backbone.Model.extend({
+    window.TodoItem = BBModel.extend({
         urlRoot: "/api/todo_items/",
         complete: function () {
             this.save('completed', true, {url: _.result(this, 'url').replace('.xml', '/complete.xml')});
@@ -46,10 +58,10 @@
             this.save('completed', false, {url: _.result(this, 'url').replace('.xml', '/uncomplete.xml')});
         }
     });
-    window.TodoList = Backbone.Model.extend({
+    window.TodoList = BBModel.extend({
         urlRoot: "/api/todo_lists/"
     });
-    window.Comment = Backbone.Model.extend({
+    window.Comment = BBModel.extend({
         urlRoot: "/api/comments/"
     });
     window.MyModel = window.Person.extend({

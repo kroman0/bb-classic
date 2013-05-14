@@ -117,12 +117,13 @@
     });
     window.TimeEntriesView = BBView.extend({
         deps: function () {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
+            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
         pagerid: "project-time",
         events: {
             "click .project-time.previous": "previous",
-            "click .project-time.next": "next"
+            "click .project-time.next": "next",
+            "click #add": "addtime"
         },
         previous: function (e) {
             e.preventDefault();
@@ -131,6 +132,21 @@
         next: function (e) {
             e.preventDefault();
             return this.collection.hasNext() && this.collection.getNextPage();
+        },
+        addtime: function (e) {
+            e.preventDefault();
+            var data = {},
+                item;
+            data.date = this.$('[name=date]').val();
+            data.description = this.$('[name=description]').val();
+            data.hours = parseFloat(this.$('[name=hours]').val(), 10);
+            data['person-id'] = parseInt(this.$('[name=person-id]').val(), 10);
+            data['project-id'] = this.model.id;
+            data['person-name'] = this.$('[name=person-id]').find(':selected').text();
+            item = this.collection.create(data, {wait: true});
+//             this.collection.fullCollection.comparator = function(i){return 3000-parseInt(i.get('date'), 10)};
+//             this.collection.fullCollection.sort();
+            this.render();
         },
         itemtemplate: '#time-template',
         template: '#project-time-template',
