@@ -135,12 +135,18 @@
         },
         addtime: function (e) {
             e.preventDefault();
-            var data = {};
+            var data = {},
+                item;
             data.date = this.$('[name=date]').val();
             data.description = this.$('[name=description]').val();
             data.hours = parseFloat(this.$('[name=hours]').val(), 10);
             data['person-id'] = parseInt(this.$('[name=person-id]').val(), 10);
-            this.collection.create(data, {wait: true});
+            data['project-id'] = this.model.id;
+            data['person-name'] = this.$('[name=person-id]').find(':selected').text();
+            item = this.collection.create(data, {wait: true});
+//             this.collection.fullCollection.comparator = function(i){return 3000-parseInt(i.get('date'), 10)};
+//             this.collection.fullCollection.sort();
+            this.render();
         },
         itemtemplate: '#time-template',
         template: '#project-time-template',

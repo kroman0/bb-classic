@@ -64,6 +64,15 @@ div#time_report {
     position: absolute;
     margin-top: 2px;
 }
+.addtime button {
+    margin-left: 5px;
+    position: absolute;
+    border: 1px solid;
+    display: none;
+}
+.addtime:hover button {
+    display: inline;
+}
     </style>
     <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -560,7 +569,7 @@ div#time_report {
                 <th>
                     <div>
                         <input type="text" class="input-small" name="description">
-                        <button id="add">Add</button>
+                        <button id="add"><i class="icon-plus"></i></button>
                     </div>
                 </th>
             </tr>
