@@ -73,6 +73,22 @@ div#time_report {
 .addtime:hover button {
     display: inline;
 }
+button#edit {
+    display: none;
+    border: 1px solid;
+    float: right;
+    margin-right: -34px;
+}
+button#remove {
+    display: none;
+    border: 1px solid;
+    float: right;
+    margin-right: -62px;
+}
+tr:hover button#edit,
+tr:hover button#remove {
+    display: inline;
+}
     </style>
     <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -145,6 +161,8 @@ div#time_report {
                 <a href="#projects/<%- item.get('project-id') %>/time_entries"><i class="icon-folder-close"></i></a>
             <% } %>
             <%- item.get('description') %>
+            <button id="edit"><i class="icon-edit"></i></button>
+            <button id="remove"><i class="icon-remove"></i></button>
         </td>
     </tr>
 </script>
