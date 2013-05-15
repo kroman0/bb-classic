@@ -38,7 +38,8 @@ div#time_report {
 .addtime th {
     padding: 4px;
 }
-.addtime th > * {
+.addtime th > *,
+.edittime th > * {
     padding: 0;
     border-radius: 0;
     margin-bottom: 0;
@@ -47,7 +48,10 @@ div#time_report {
     border-width: 0;
     box-shadow: none;
 }
-.addtime input, .addtime select {
+.addtime input,
+.addtime select,
+.edittime input,
+.edittime select {
     padding: 0;
     border-radius: 0;
     margin-bottom: 0;
@@ -56,21 +60,25 @@ div#time_report {
     height: 100%;
     width: 100%;
 }
-.addtime select {
+.addtime select,
+.edittime select {
     padding-left: 10px;
     vertical-align: top;
 }
-.addtime .icon-user {
+.addtime .icon-user,
+.edittime .icon-user {
     position: absolute;
     margin-top: 2px;
 }
-.addtime button {
+.addtime button,
+.edittime button {
     margin-left: 5px;
     position: absolute;
     border: 1px solid;
     display: none;
 }
-.addtime:hover button {
+.addtime:hover button,
+.edittime:hover button {
     display: inline;
 }
 button#edit {
@@ -150,6 +158,7 @@ tr:hover button#remove {
 <script src="/static/js/main.min.js"></script>
 {% endif %}
 <script type="text/template" id="time-template">
+    <% if (!item.edit) { %>
     <tr <% if(item.get('hours')>2){ %>class="warning"<% } %>>
         <td><%- item.get('date') %></td>
         <td><%- item.get('hours') %></td>
@@ -161,10 +170,31 @@ tr:hover button#remove {
                 <a href="#projects/<%- item.get('project-id') %>/time_entries"><i class="icon-folder-close"></i></a>
             <% } %>
             <%- item.get('description') %>
-            <button id="edit"><i class="icon-edit"></i></button>
-            <button id="remove"><i class="icon-remove"></i></button>
+            <button id="edit" data-id="<%- item.id %>"><i class="icon-edit"></i></button>
+            <button id="remove" data-id="<%- item.id %>"><i class="icon-remove"></i></button>
         </td>
     </tr>
+    <% } else { %>
+    <tr class="edittime">
+        <th><input type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get('date') %>"></th>
+        <th><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get('hours') %>"></th>
+        <th>
+            <div>
+                <i class="icon-user"></i><select name="person-id">
+                    <% collections.people.each(function (i) { %>
+                        <option value="<%- i.id %>" <% if (i.id==item.get('person-id')) { %>selected="selected"<% } %>><%- i.name() %></option>
+                    <% }) %>
+                </select>
+            </div>
+        </th>
+        <th>
+            <div>
+                <input type="text" class="input-small" name="description" value="<%- item.get('description') %>">
+                <button id="save" data-id="<%- item.id %>"><i class="icon-ok"></i></button>
+            </div>
+        </th>
+    </tr>
+    <% } %>
 </script>
 <script type="text/template" id="pager-template">
     <% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>

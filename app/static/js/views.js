@@ -123,7 +123,10 @@
         events: {
             "click .project-time.previous": "previous",
             "click .project-time.next": "next",
-            "click #add": "addtime"
+            "click #add": "addtime",
+            "click #edit": "edittime",
+            "click #remove": "removetime",
+            "click #save": "savetime"
         },
         previous: function (e) {
             e.preventDefault();
@@ -137,15 +140,44 @@
             e.preventDefault();
             var data = {},
                 item;
-            data.date = this.$('[name=date]').val();
-            data.description = this.$('[name=description]').val();
-            data.hours = parseFloat(this.$('[name=hours]').val(), 10);
-            data['person-id'] = parseInt(this.$('[name=person-id]').val(), 10);
+            data.date = this.$('.addtime [name=date]').val();
+            data.description = this.$('.addtime [name=description]').val();
+            data.hours = parseFloat(this.$('.addtime [name=hours]').val(), 10);
+            data['person-id'] = parseInt(this.$('.addtime [name=person-id]').val(), 10);
             data['project-id'] = this.model.id;
-            data['person-name'] = this.$('[name=person-id]').find(':selected').text();
+            data['person-name'] = this.$('.addtime [name=person-id]').find(':selected').text();
             item = this.collection.create(data, {wait: true});
 //             this.collection.fullCollection.comparator = function(i){return 3000-parseInt(i.get('date'), 10)};
 //             this.collection.fullCollection.sort();
+            this.render();
+        },
+        edittime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data("id"),
+                model = this.collection.get(id);
+            model.edit = true;
+            this.render();
+        },
+        removetime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data("id"),
+                model = this.collection.get(id);
+            model.destroy();
+            this.render();
+        },
+        savetime: function (e) {
+            e.preventDefault();
+            var data = {},
+                id = $(e.currentTarget).data("id"),
+                model = this.collection.get(id);
+            data.date = this.$('.edittime [name=date]').val();
+            data.description = this.$('.edittime [name=description]').val();
+            data.hours = parseFloat(this.$('.edittime [name=hours]').val(), 10);
+            data['person-id'] = parseInt(this.$('.edittime [name=person-id]').val(), 10);
+            data['project-id'] = this.model.id;
+            data['person-name'] = this.$('.edittime [name=person-id]').find(':selected').text();
+            model.edit = false;
+            model.save(data, {wait: true});
             this.render();
         },
         itemtemplate: '#time-template',

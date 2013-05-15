@@ -7,11 +7,27 @@
         },
         BBModel = Backbone.Model.extend({
             url: function () {
-                var base = _.result(this, 'urlRoot') || _.result(this.collection, 'url') || urlError();
+                return this.getUrl();
+            },
+            getUrl: function () {
+                var base;
                 if (!this.isNew()) {
+                    base = _.result(this, 'urlRoot') || _.result(this.collection, 'url') || urlError();
                     base = base + (base.charAt(base.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.id) + '.xml';
+                } else {
+                    base = _.result(this.collection, 'url') || urlError();
                 }
                 return base;
+            },
+            sync: function() {
+                switch (arguments[0]) {
+                    case "read":    arguments[2].url = _.result(arguments[1], 'url'); break;
+                    case "create":  arguments[2].url = _.result(arguments[1], 'url'); break;
+                    case "update":  arguments[2].url = _.result(arguments[1], 'getUrl'); break;
+                    case "delete":  arguments[2].url = _.result(arguments[1], 'getUrl'); break;
+                    default: break;
+                }
+                return Backbone.sync.apply(this, arguments);
             }
         });
     window.Project = BBModel.extend({
@@ -47,7 +63,7 @@
         urlRoot: "/api/categories/"
     });
     window.TimeEntry = BBModel.extend({
-//         urlRoot: "/api/time_entries/"
+        urlRoot: "/api/time_entries/"
     });
     window.TodoItem = BBModel.extend({
         urlRoot: "/api/todo_items/",
