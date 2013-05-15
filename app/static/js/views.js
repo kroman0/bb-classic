@@ -126,7 +126,8 @@
             "click #add": "addtime",
             "click #edit": "edittime",
             "click #remove": "removetime",
-            "click #save": "savetime"
+            "click #save": "savetime",
+            "click th": "sorttime"
         },
         previous: function (e) {
             e.preventDefault();
@@ -146,11 +147,17 @@
             data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
             return data;
         },
+        sorttime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data('sort') || $(e.currentTarget).text();
+            this.collection.fullCollection.comparator = function(m) {
+                return m.get(id);
+            };
+            this.collection.fullCollection.sort();
+        },
         addtime: function (e) {
             e.preventDefault();
             var item = this.collection.create(this.parseData('.addtime'), {wait: true});
-//             this.collection.fullCollection.comparator = function(i){return 3000-parseInt(i.get('date'), 10)};
-//             this.collection.fullCollection.sort();
             this.render();
         },
         edittime: function (e) {
