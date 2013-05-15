@@ -136,17 +136,19 @@
             e.preventDefault();
             return this.collection.hasNext() && this.collection.getNextPage();
         },
+        parseData: function (selector) {
+            var data = {};
+            data.date = this.$(selector + ' [name=date]').val();
+            data.description = this.$(selector + ' [name=description]').val();
+            data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
+            data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
+            data['project-id'] = this.model.id;
+            data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
+            return data;
+        },
         addtime: function (e) {
             e.preventDefault();
-            var data = {},
-                item;
-            data.date = this.$('.addtime [name=date]').val();
-            data.description = this.$('.addtime [name=description]').val();
-            data.hours = parseFloat(this.$('.addtime [name=hours]').val(), 10);
-            data['person-id'] = parseInt(this.$('.addtime [name=person-id]').val(), 10);
-            data['project-id'] = this.model.id;
-            data['person-name'] = this.$('.addtime [name=person-id]').find(':selected').text();
-            item = this.collection.create(data, {wait: true});
+            var item = this.collection.create(this.parseData('.addtime'), {wait: true});
 //             this.collection.fullCollection.comparator = function(i){return 3000-parseInt(i.get('date'), 10)};
 //             this.collection.fullCollection.sort();
             this.render();
@@ -167,17 +169,10 @@
         },
         savetime: function (e) {
             e.preventDefault();
-            var data = {},
-                id = $(e.currentTarget).data("id"),
+            var id = $(e.currentTarget).data("id"),
                 model = this.collection.get(id);
-            data.date = this.$('.edittime [name=date]').val();
-            data.description = this.$('.edittime [name=description]').val();
-            data.hours = parseFloat(this.$('.edittime [name=hours]').val(), 10);
-            data['person-id'] = parseInt(this.$('.edittime [name=person-id]').val(), 10);
-            data['project-id'] = this.model.id;
-            data['person-name'] = this.$('.edittime [name=person-id]').find(':selected').text();
             model.edit = false;
-            model.save(data, {wait: true});
+            model.save(this.parseData('.edittime'));
             this.render();
         },
         itemtemplate: '#time-template',
