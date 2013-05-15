@@ -19,15 +19,20 @@
                 }
                 return base;
             },
-            sync: function() {
-                switch (arguments[0]) {
-                    case "read":    arguments[2].url = _.result(arguments[1], 'url'); break;
-                    case "create":  arguments[2].url = _.result(arguments[1], 'url'); break;
-                    case "update":  arguments[2].url = _.result(arguments[1], 'getUrl'); break;
-                    case "delete":  arguments[2].url = _.result(arguments[1], 'getUrl'); break;
-                    default: break;
+            sync: function (method, model, options) {
+                switch (method) {
+                case "read":
+                case "create":
+                    options.url = _.result(model, 'url');
+                    break;
+                case "update":
+                case "delete":
+                    options.url = _.result(model, 'getUrl');
+                    break;
+                default:
+                    break;
                 }
-                return Backbone.sync.apply(this, arguments);
+                return Backbone.sync(method, model, options);
             }
         });
     window.Project = BBModel.extend({
