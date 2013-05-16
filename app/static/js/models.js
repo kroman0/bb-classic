@@ -20,17 +20,19 @@
                 return base;
             },
             sync: function (method, model, options) {
-                switch (method) {
-                case "read":
-                case "create":
-                    options.url = _.result(model, 'url');
-                    break;
-                case "update":
-                case "delete":
-                    options.url = _.result(model, 'getUrl');
-                    break;
-                default:
-                    break;
+                if (!options.url) {
+                    switch (method) {
+                    case "read":
+                    case "create":
+                        options.url = _.result(model, 'url');
+                        break;
+                    case "update":
+                    case "delete":
+                        options.url = _.result(model, 'getUrl');
+                        break;
+                    default:
+                        break;
+                    }
                 }
                 return Backbone.sync(method, model, options);
             }
