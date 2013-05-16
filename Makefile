@@ -30,6 +30,7 @@ deploy: clean minify
 minify:
 	uglifyjs app/static/js/json2.js -o app/static/js/json2.min.js
 	uglifyjs app/static/js/jquery.deserialize.js -o app/static/js/jquery.deserialize-min.js
+	uglifyjs app/static/js/bootstrap-datepicker.js -o app/static/js/bootstrap-datepicker.min.js
 	uglifyjs app/static/js/backbone.analytics.js -o app/static/js/backbone.analytics-min.js
 	uglifyjs app/static/js/general.js -o app/static/js/general.min.js
 	uglifyjs app/static/js/models.js -o app/static/js/models.min.js
@@ -63,6 +64,10 @@ bootstrap-update:
 	unzip -oj /tmp/bootstrap.zip bootstrap/css/* -d app/static/css/
 	unzip -oj /tmp/bootstrap.zip bootstrap/img/* -d app/static/img/
 	unzip -oj /tmp/bootstrap.zip bootstrap/js/* -d app/static/js/
+
+bootstrap-datepicker-update:
+	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/master/js/bootstrap-datepicker.js -O app/static/js/bootstrap-datepicker.js
+	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/master/css/datepicker.css -O app/static/css/datepicker.css
 
 backbone-update:
 	wget -q http://backbonejs.org/backbone.js -O app/static/js/backbone.js
