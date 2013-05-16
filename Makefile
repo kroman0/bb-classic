@@ -39,10 +39,10 @@ minify:
 	uglifyjs app/static/js/main.js -o app/static/js/main.min.js
 
 jshint:
-	jshint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js
+	jshint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js app/static/js/deps.js app/static/js/deps.min.js
 
 jslint:
-	jslint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js
+	jslint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/views.js app/static/js/main.js app/static/js/deps.js app/static/js/deps.min.js
 
 clean:
 	find . -name \*~ -exec rm {} \;
