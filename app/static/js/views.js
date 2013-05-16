@@ -123,11 +123,11 @@
         events: {
             "click .project-time.previous": "previous",
             "click .project-time.next": "next",
-            "click #add": "addtime",
-            "click #edit": "edittime",
-            "click #remove": "removetime",
-            "click #save": "savetime",
-            "click thead>tr>th": "sorttime"
+            "click .project-time #add": "addtime",
+            "click .project-time #edit": "edittime",
+            "click .project-time #remove": "removetime",
+            "click .project-time #save": "savetime",
+            "click .project-time thead>tr>th": "sorttime"
         },
         previous: function (e) {
             e.preventDefault();
@@ -190,7 +190,12 @@
         pagerid: "todo-time",
         events: {
             "click .todo-time.previous": "previous",
-            "click .todo-time.next": "next"
+            "click .todo-time.next": "next",
+            "click .todo-time #add": "addtime",
+            "click .todo-time #edit": "edittime",
+            "click .todo-time #remove": "removetime",
+            "click .todo-time #save": "savetime",
+            "click .todo-time thead>tr>th": "sorttime"
         },
         template: '#todo-time-template'
     });

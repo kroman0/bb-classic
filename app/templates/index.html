@@ -66,8 +66,15 @@ div#time_report {
     padding-left: 10px;
     vertical-align: top;
 }
+.edittime input[name=description] {
+    padding-left: 18px;
+    vertical-align: top;
+    width: 94%;
+}
 .addtime .icon-user,
-.edittime .icon-user {
+.edittime .icon-user,
+.edittime .icon-file,
+.edittime .icon-folder-close {
     position: absolute;
     margin-top: 2px;
 }
@@ -82,17 +89,17 @@ div#time_report {
 .edittime:hover button {
     display: inline;
 }
-button#edit {
-    display: none;
-    border: 1px solid;
-    float: right;
-    margin-right: -34px;
-}
+button#edit,
 button#remove {
     display: none;
     border: 1px solid;
     float: right;
-    margin-right: -62px;
+}
+button#edit {
+    margin-right: -33px;
+}
+button#remove {
+    margin-right: -61px;
 }
 tr:hover button#edit,
 tr:hover button#remove {
@@ -192,6 +199,11 @@ tr:hover button#remove {
         </th>
         <th>
             <div>
+                <% if (item.get('todo-item-id')) { %>
+                    <a href="#projects/<%- item.get('project-id') %>/time_entries/todo_items/<%- item.get('todo-item-id') %>"><i class="icon-file"></i></a>
+                <% } else { %>
+                    <a href="#projects/<%- item.get('project-id') %>/time_entries"><i class="icon-folder-close"></i></a>
+                <% } %>
                 <input type="text" class="input-small" name="description" value="<%- item.get('description') %>">
                 <button id="save" data-id="<%- item.id %>"><i class="icon-ok"></i></button>
             </div>
@@ -595,7 +607,7 @@ tr:hover button#remove {
     </div>
     <% } else { %>
     <%= view.renderpager() %>
-    <table class="table table-hover table-condensed table-bordered">
+    <table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">
         <thead>
             <tr>
                 <th>date</th>
@@ -636,22 +648,43 @@ tr:hover button#remove {
     <%= view.renderheader() %>
     <%= view.renderprojectnav() %>
     <% var tt=view.collection; var prid=view.model.id;
+    var pp=view.options.collections.people;
+    var mid=view.options.mydata?view.options.mydata.id:0;
     if (tt.isEmpty()) { %>
     <div class="alert alert-info">
         No time entries...
     </div>
     <% } else { %>
     <%= view.renderpager() %>
-    <table class="table table-hover table-condensed table-bordered">
+    <table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">
         <thead>
             <tr>
                 <th>date</th>
                 <th>hours</th>
-                <th>person</th>
+                <th data-sort="person-id">person</th>
                 <th>description</th>
             </tr>
         </thead>
         <tbody>
+            <tr class="addtime">
+                <th><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></th>
+                <th><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></th>
+                <th>
+                    <div>
+                        <i class="icon-user"></i><select name="person-id">
+                            <% pp.each(function (i) { %>
+                                <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </th>
+                <th>
+                    <div>
+                        <input type="text" class="input-small" name="description">
+                        <button id="add"><i class="icon-plus"></i></button>
+                    </div>
+                </th>
+            </tr>
             <% tt.each(function (item) { %>
                 <%= view.renderitem(item) %>
             <% }) %>
