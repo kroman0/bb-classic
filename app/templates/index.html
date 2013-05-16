@@ -8,6 +8,7 @@
     <meta name="author" content="">
     <!-- Bootstrap -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/static/css/datepicker.css" rel="stylesheet" media="screen">
     <style type="text/css">
 .prstatus {
     text-decoration: underline;
@@ -118,6 +119,7 @@ tr:hover button#remove {
 <script src="/static/js/jquery-1.7.2.js"></script>
 <script src="/static/js/jquery.deserialize.js"></script>
 <script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/bootstrap-datepicker.js"></script>
 <script src="/static/js/underscore.js"></script>
 <script src="/static/js/backbone.js"></script>
 <!--[if !IE]><!-->
@@ -144,6 +146,7 @@ tr:hover button#remove {
 <script src="/static/js/jquery-1.7.2.min.js"></script>
 <script src="/static/js/jquery.deserialize-min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/bootstrap-datepicker.min.js"></script>
 <script src="/static/js/underscore-min.js"></script>
 <script src="/static/js/backbone-min.js"></script>
 <!--[if !IE]><!-->
@@ -176,7 +179,7 @@ tr:hover button#remove {
     </tr>
     <% } else { %>
     <tr class="edittime">
-        <th><input type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get('date') %>"></th>
+        <th><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get('date') %>"></th>
         <th><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get('hours') %>"></th>
         <th>
             <div>
@@ -237,12 +240,12 @@ tr:hover button#remove {
         <div class="modal-body">
         <div class="input-prepend">
             <span class="add-on">From</span>
-            <input type="text" class="input-small" name="from" placeholder="YYYYMMDD">
+            <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="input-small" name="from" placeholder="YYYYMMDD">
         </div>
         <br />
         <div class="input-prepend">
             <span class="add-on">To</span>
-            <input type="text" class="input-small" name="to" placeholder="YYYYMMDD">
+            <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="input-small" name="to" placeholder="YYYYMMDD">
         </div>
         <br />
         <div class="input-prepend">
@@ -603,7 +606,7 @@ tr:hover button#remove {
         </thead>
         <tbody>
             <tr class="addtime">
-                <th><input type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></th>
+                <th><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></th>
                 <th><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></th>
                 <th>
                     <div>
