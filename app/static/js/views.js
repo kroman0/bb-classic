@@ -129,12 +129,17 @@ define([
     });
     bbviews.TimeEntriesView = BBView.extend({
         deps: function () {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
+            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
         pagerid: "project-time",
         events: {
             "click .project-time.previous": "previous",
-            "click .project-time.next": "next"
+            "click .project-time.next": "next",
+            "click .project-time #add": "addtime",
+            "click .project-time #edit": "edittime",
+            "click .project-time #remove": "removetime",
+            "click .project-time #save": "savetime",
+            "click .project-time thead>tr>th": "sorttime"
         },
         previous: function (e) {
             e.preventDefault();
@@ -143,6 +148,49 @@ define([
         next: function (e) {
             e.preventDefault();
             return this.collection.hasNext() && this.collection.getNextPage();
+        },
+        parseData: function (selector) {
+            var data = {};
+            data.date = this.$(selector + ' [name=date]').val();
+            data.description = this.$(selector + ' [name=description]').val();
+            data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
+            data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
+            data['project-id'] = this.model.id;
+            data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
+            return data;
+        },
+        sorttime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data('sort') || $(e.currentTarget).text();
+            this.collection.setSorting(id, -this.collection.state.order);
+            this.collection.fullCollection.sort();
+        },
+        addtime: function (e) {
+            e.preventDefault();
+            var item = this.collection.create(this.parseData('.addtime'), {wait: true});
+            this.render();
+        },
+        edittime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data("id"),
+                model = this.collection.get(id);
+            model.edit = true;
+            this.render();
+        },
+        removetime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data("id"),
+                model = this.collection.get(id);
+            model.destroy();
+            this.render();
+        },
+        savetime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data("id"),
+                model = this.collection.get(id);
+            model.edit = false;
+            model.save(this.parseData('.edittime'));
+            this.render();
         },
         itemtemplate: '#time-template',
         template: '#project-time-template',
@@ -154,7 +202,12 @@ define([
         pagerid: "todo-time",
         events: {
             "click .todo-time.previous": "previous",
-            "click .todo-time.next": "next"
+            "click .todo-time.next": "next",
+            "click .todo-time #add": "addtime",
+            "click .todo-time #edit": "edittime",
+            "click .todo-time #remove": "removetime",
+            "click .todo-time #save": "savetime",
+            "click .todo-time thead>tr>th": "sorttime"
         },
         template: '#todo-time-template'
     });

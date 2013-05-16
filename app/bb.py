@@ -11,6 +11,7 @@ Main BB classic app module
 import webapp2
 import os
 import json
+import logging
 from google.appengine.ext.webapp import template
 from google.appengine.api import urlfetch
 from google.appengine.ext import db
@@ -21,6 +22,8 @@ from urlparse import urlunparse
 from urllib import urlencode
 
 import crypto
+
+LOGGER = logging.getLogger("bb")
 
 _ = lambda x: os.path.join(os.path.dirname(__file__), 'templates', x)
 
@@ -415,19 +418,36 @@ def save_request(url, result):
     einfo.put()
 
 
-# def dict2xml(data):
-    #""" convert dict to xml
-    #"""
-    # from xml.dom.minidom import Document
-    # d = Document()
-    # p = d.createElement("photo")
-    # d.appendChild(p)
-    # a = d.createAttribute("asd")
-    # p.attributes.setNamedItem(a)
-    # a.value = "dsa"
-    # t = d.createTextNode("test")
-    # p.appendChild(t)
-    # d.toprettyxml()
+REQUEST2XML = {
+    "time_entries.xml": ("time-entry",)
+}
+
+
+def dict2xml(data, tags):
+    """ convert dict to xml
+
+<time-entry>
+  <person-id>#{person-id}</person-id>
+  <date>#{date}</date>
+  <hours>#{hours}</hours>
+  <description>#{description}</description>
+</time-entry>
+    """
+    from xml.dom.minidom import Document
+    dom = item = Document()
+    for tag in tags:
+        elem = dom.createElement(tag)
+        item.appendChild(elem)
+        item = elem
+    #a = dom.createAttribute("asd")
+    #p.attributes.setNamedItem(a)
+    #a.value = "dsa"
+    for key, value in data.items():
+        elem = dom.createElement(key)
+        text = dom.createTextNode(unicode(value))
+        elem.appendChild(text)
+        item.appendChild(elem)
+    return dom.toprettyxml()
     #'<?xml version="1.0" ?>\n<photo asd="dsa">test</photo>\n'
 
 
@@ -435,15 +455,69 @@ class CrossDomain(BaseRequestHandler):
     """ Cross Domain Handler
 
     * :http:put:`/api/.*` - `CrossDomain PUT <#bb.CrossDomain.put>`_
+    * :http:post:`/api/.*` - `CrossDomain POST <#bb.CrossDomain.post>`_
+    * :http:delete:`/api/.*` - `CrossDomain DELETE <#bb.CrossDomain.delete>`_
     * :http:get:`/api/.*` - `CrossDomain GET <#bb.CrossDomain.get>`_
     """
+    @property
+    def apiurl(self):
+        """ get api url
+        """
+        return self.request.path_qs[4:]
+
+    @property
+    def fullurl(self):
+        """ get full url
+        """
+        return absolute_url(self.subdomain, self.apiurl)
+
     def put(self):
         """ PUT request
         """
         if not self.auth_check():
             return self.redirect('/login')
-        # self.response.headers['Content-Type'] = 'application/json'
-        # self.response.out.write(self.request.body)
+        headers = get_headers(self.username, self.password)
+        if not self._testlogin():
+            result = urlfetch.fetch(url=self.fullurl,
+                                    method=urlfetch.PUT,
+                                    headers=headers)
+            if result.status_code != 200:
+                self.response.set_status(result.status_code)
+                self.response.out.write(result.content)
+                return
+
+    def delete(self):
+        """ DELETE request
+        """
+        if not self.auth_check():
+            return self.redirect('/login')
+        headers = get_headers(self.username, self.password)
+        if not self._testlogin():
+            result = urlfetch.fetch(url=self.fullurl,
+                                    method=urlfetch.DELETE,
+                                    headers=headers)
+            if result.status_code != 200:
+                self.response.set_status(result.status_code)
+                self.response.out.write(result.content)
+                return
+
+    def post(self):
+        """ POST request
+        """
+        if not self.auth_check():
+            return self.redirect('/login')
+        entrytype = self.apiurl.split("/")[-1]
+        tags = REQUEST2XML.get(entrytype, ("request"))
+        jsondata = json.loads(self.request.body)
+        xmldata = dict2xml(jsondata, tags)
+        headers = get_headers(self.username, self.password)
+        if not self._testlogin():
+            result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
+                                    method=urlfetch.POST, headers=headers)
+            if result.status_code != 201:
+                self.response.set_status(result.status_code)
+                self.response.out.write(result.content)
+                return
 
     def _testget(self):
         """ test data

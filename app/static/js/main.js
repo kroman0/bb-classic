@@ -21,6 +21,7 @@ define([
         },
         oproject,
         otodo,
+        otime,
         Workspace = Backbone.Router.extend({
             routes: {
                 "projects": "projects",
@@ -117,8 +118,11 @@ define([
     views.project_calendar_entry = new bbviews.CalendarEntryView(oproject);
     views.project_files = new bbviews.FilesView(oproject);
     views.project_file = new bbviews.FileView(oproject);
-    views.project_time_entries = new bbviews.TimeEntriesView(oproject);
-    views.todo_time_entries = new bbviews.TodoTimeEntriesView(oproject);
+    otime = _.extend({
+        mydata: models.mydata
+    }, oproject);
+    views.project_time_entries = new bbviews.TimeEntriesView(otime);
+    views.todo_time_entries = new bbviews.TodoTimeEntriesView(otime);
     views.project_post_comments = new bbviews.PostCommentsView(oproject);
     views.project_calendar_entry_comments = new bbviews.CalendarEntryCommentsView(oproject);
     views.todo = function (prid, item) {
