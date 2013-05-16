@@ -85,7 +85,7 @@ backbone-fetch-cache-update:
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.js -O app/static/js/backbone.fetch-cache.js
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.min.js -O app/static/js/backbone.fetch-cache.min.js
 
-update-all: bootstrap-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update
+update-all: bootstrap-update bootstrap-datepicker-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update
 
 pylint:
 	pylint -f colorized --rcfile=.pylintrc app/*.py tests/*.py
