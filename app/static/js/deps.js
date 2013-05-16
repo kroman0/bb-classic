@@ -27,6 +27,12 @@ require.config({
                 'jquery'
             ]
         },
+        datepicker: {
+            deps: [
+                'jquery',
+                'bootstrap'
+            ]
+        },
         backbonecache: {
             deps: [
                 'backbone'
@@ -88,6 +94,7 @@ require.config({
         backbonepageable: 'backbone-pageable',
         backbonecache: 'backbone.fetch-cache',
         backboneanalytics: 'backbone.analytics',
+        datepicker: 'bootstrap-datepicker',
         bbgeneral: 'general',
         bbmodels: 'models',
         bbcollections: 'collections',
@@ -101,6 +108,7 @@ require([
 	'bbmain',
     'json2',
     'bootstrap',
+    'datepicker'
 ], function (Backbone) {
 // 	/*jshint nonew:false*/
 // 	// Initialize routing and start Backbone.history()
