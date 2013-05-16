@@ -89,7 +89,7 @@ requirejs-update:
 	wget -q http://requirejs.org/docs/release/2.1.6/comments/require.js -O app/static/js/require.js
 	wget -q http://requirejs.org/docs/release/2.1.6/minified/require.js -O app/static/js/require.min.js
 
-update-all: bootstrap-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update
+pdate-all: bootstrap-update bootstrap-datepicker-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update requirejs-update
 
 pylint:
 	pylint -f colorized --rcfile=.pylintrc app/*.py tests/*.py
