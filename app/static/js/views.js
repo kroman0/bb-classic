@@ -127,7 +127,7 @@
             "click #edit": "edittime",
             "click #remove": "removetime",
             "click #save": "savetime",
-            "click th": "sorttime"
+            "click thead>tr>th": "sorttime"
         },
         previous: function (e) {
             e.preventDefault();
@@ -150,9 +150,7 @@
         sorttime: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).data('sort') || $(e.currentTarget).text();
-            this.collection.fullCollection.comparator = function(m) {
-                return m.get(id);
-            };
+            this.collection.setSorting(id, -this.collection.state.order);
             this.collection.fullCollection.sort();
         },
         addtime: function (e) {
