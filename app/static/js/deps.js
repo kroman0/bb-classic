@@ -72,7 +72,6 @@ require.config({
                 'bootstrap',
                 'jquery',
                 'jquerydeserialize',
-                'text',
                 'jquerydeserialize',
                 'backbonecache'
             ]
@@ -99,7 +98,6 @@ require.config({
         bbcollections: 'collections',
         bbviews: 'views',
         bbmain: 'main',
-        text: 'text',
     }
 });
 
