@@ -92,7 +92,7 @@ requirejs-update:
 pdate-all: bootstrap-update bootstrap-datepicker-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update requirejs-update
 
 pylint:
-	pylint -f colorized --rcfile=.pylintrc app/*.py tests/*.py
+	pylint -f colorized --rcfile=.pylintrc -r n app/*.py tests/*.py
 
 pylint-html:
 	pylint -f html --rcfile=.pylintrc app/*.py tests/*.py >/tmp/pylint.html; firefox /tmp/pylint.html

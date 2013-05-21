@@ -303,7 +303,7 @@ define([
         template: '#project-post-template',
         itemtemplate: '#post-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('title');
             return this.model.get('name') + " > Posts > " + title;
         }
@@ -337,7 +337,7 @@ define([
         },
         template: '#project-file-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('name');
             return this.model.get('name') + " > Files > " + title;
         }
@@ -360,7 +360,7 @@ define([
         template: '#project-calendar-entry-template',
         itemtemplate: '#calendar-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('title');
             return this.model.get('name') + " > Calendar > " + title;
         }
@@ -396,7 +396,7 @@ define([
         template: '#project-category-template',
         itemtemplate: '#category-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('name');
             return this.model.get('name') + " > Categories > " + title;
         }
@@ -471,7 +471,7 @@ define([
         template: '#project-todo-list-template',
         itemtemplate: '#todolist-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('name');
             return this.model.get('name') + " > To-dos > " + title;
         },
@@ -494,9 +494,9 @@ define([
         template: '#project-todo-item-template',
         itemtemplate: '#todolist-template',
         name: function () {
-            var list = this.cur_item && this.collection.get(this.cur_item),
+            var list = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = list && list.get('name'),
-                item = this.todo_item && this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item),
+                item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
                 itemtitle = item && item.get('content');
             return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle;
         },
@@ -519,7 +519,7 @@ define([
         name: function () {
             var list = this.cur_item && this.todo_lists.get(this.cur_item),
                 title = list && list.get('name'),
-                item = this.todo_item && this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item),
+                item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
                 itemtitle = item && item.get('content');
             return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle + " > Comments";
         },

@@ -10,3 +10,8 @@ Acceptance tests
 .. robot_tests::
    :source: ../tests/projects.txt
 
+Generate screenshots
+====================
+
+.. robot_tests::
+   :source: ../tests/images.txt
