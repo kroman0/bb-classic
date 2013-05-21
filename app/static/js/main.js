@@ -114,7 +114,7 @@ $(function () {
         mydata: models.mydata
     }, oproject);
     views.project_time_entries = new window.TimeEntriesView(otime);
-    views.todo_time_entries = new window.TodoTimeEntriesView(oproject);
+    views.todo_time_entries = new window.TodoTimeEntriesView(otime);
     views.project_post_comments = new window.PostCommentsView(oproject);
     views.project_calendar_entry_comments = new window.CalendarEntryCommentsView(oproject);
     views.todo = function (prid, item) {

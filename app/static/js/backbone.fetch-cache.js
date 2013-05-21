@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v0.1.4
+  backbone.fetch-cache v0.1.5
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
@@ -18,8 +18,11 @@
 }(this, function (_, Backbone) {
 
   // Setup
-  var modelFetch = Backbone.Model.prototype.fetch,
-      collectionFetch = Backbone.Collection.prototype.fetch,
+  var superMethods = {
+        modelFetch: Backbone.Model.prototype.fetch,
+        modelSync: Backbone.Model.prototype.sync,
+        collectionFetch: Backbone.Collection.prototype.fetch
+      },
       supportLocalStorage = typeof window.localStorage !== 'undefined';
 
   Backbone.fetchCache = (Backbone.fetchCache || {});
@@ -55,8 +58,14 @@
     var url = _.isFunction(instance.url) ? instance.url() : instance.url,
         expires = false;
 
-    // need url to use as cache key so return if we can't get it
+    // Need url to use as cache key so return if we can't get it
     if (!url) { return; }
+
+    // Never set the cache if user has explicitly said not to
+    if (opts.cache === false) { return; }
+
+    // Don't set the cache unless cache: true or prefill: true option is passed
+    if (!(opts.cache || opts.prefill)) { return; }
 
     if (opts.expires !== false) {
       expires = (new Date()).getTime() + ((opts.expires || 5 * 60) * 1000);
@@ -70,12 +79,17 @@
     Backbone.fetchCache.setLocalStorage();
   }
 
+  function clearItem(key) {
+    delete Backbone.fetchCache._cache[key];
+  }
+
   function setLocalStorage() {
     if (!supportLocalStorage || !Backbone.fetchCache.localStorage) { return; }
     try {
       localStorage.setItem('backboneCache', JSON.stringify(Backbone.fetchCache._cache));
     } catch (err) {
-      if (err.name.toUpperCase() === 'QUOTA_EXCEEDED_ERR') {
+      var code = err.code || err.number || err.message;
+      if (code === 22) {
         this._deleteCacheWithPriority();
       } else {
         throw(err);
@@ -119,14 +133,42 @@
     }
 
     // Delegate to the actual fetch method and store the attributes in the cache
-    modelFetch.apply(this, arguments)
+    superMethods.modelFetch.apply(this, arguments)
       // resolve the returned promise when the AJAX call completes
       .done( _.bind(promise.resolve, this, this) )
       // Set the new data in the cache
-      .done( _.bind(Backbone.fetchCache.setCache, null, this, opts) );
+      .done( _.bind(Backbone.fetchCache.setCache, null, this, opts) )
+      // Reject the promise on fail
+      .fail( _.bind(promise.reject, this, this) );
 
     // return a promise which provides the same methods as a jqXHR object
     return promise;
+  };
+
+  // Override Model.prototype.sync and try to clear cache items if it looks
+  // like they are being updated.
+  Backbone.Model.prototype.sync = function(method, model, options) {
+    // Only empty the cache if we're doing a create, update, patch or delete.
+    if (method === 'read') {
+      return superMethods.modelSync.apply(this, arguments);
+    }
+
+    var collection = model.collection,
+        keys = [],
+        i, len;
+
+    // Build up a list of keys to delete from the cache, starting with this
+    keys.push(_.isFunction(model.url) ? model.url() : model.url);
+
+    // If this model has a collection, also try to delete the cache for that
+    if (!!collection) {
+      keys.push(_.isFunction(collection.url) ? collection.url() : collection.url);
+    }
+
+    // Empty cache for all found keys
+    for (i = 0, len = keys.length; i < len; i++) { clearItem(keys[i]); }
+
+    return superMethods.modelSync.apply(this, arguments);
   };
 
   Backbone.Collection.prototype.fetch = function(opts) {
@@ -158,11 +200,13 @@
     }
 
     // Delegate to the actual fetch method and store the attributes in the cache
-    collectionFetch.apply(this, arguments)
+    superMethods.collectionFetch.apply(this, arguments)
       // resolve the returned promise when the AJAX call completes
       .done( _.bind(promise.resolve, this, this) )
       // Set the new data in the cache
-      .done( _.bind(Backbone.fetchCache.setCache, null, this, opts) );
+      .done( _.bind(Backbone.fetchCache.setCache, null, this, opts) )
+      // Reject the promise on fail
+      .fail( _.bind(promise.reject, this, this) );
 
     // return a promise which provides the same methods as a jqXHR object
     return promise;
@@ -172,7 +216,9 @@
   getLocalStorage();
 
   // Exports
+  Backbone.fetchCache._superMethods = superMethods;
   Backbone.fetchCache.setCache = setCache;
+  Backbone.fetchCache.clearItem = clearItem;
   Backbone.fetchCache.setLocalStorage = setLocalStorage;
   Backbone.fetchCache.getLocalStorage = getLocalStorage;
 

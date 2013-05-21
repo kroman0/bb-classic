@@ -456,6 +456,7 @@ class CrossDomain(BaseRequestHandler):
 
     * :http:put:`/api/.*` - `CrossDomain PUT <#bb.CrossDomain.put>`_
     * :http:post:`/api/.*` - `CrossDomain POST <#bb.CrossDomain.post>`_
+    * :http:delete:`/api/.*` - `CrossDomain DELETE <#bb.CrossDomain.delete>`_
     * :http:get:`/api/.*` - `CrossDomain GET <#bb.CrossDomain.get>`_
     """
     @property
@@ -479,6 +480,21 @@ class CrossDomain(BaseRequestHandler):
         if not self._testlogin():
             result = urlfetch.fetch(url=self.fullurl,
                                     method=urlfetch.PUT,
+                                    headers=headers)
+            if result.status_code != 200:
+                self.response.set_status(result.status_code)
+                self.response.out.write(result.content)
+                return
+
+    def delete(self):
+        """ DELETE request
+        """
+        if not self.auth_check():
+            return self.redirect('/login')
+        headers = get_headers(self.username, self.password)
+        if not self._testlogin():
+            result = urlfetch.fetch(url=self.fullurl,
+                                    method=urlfetch.DELETE,
                                     headers=headers)
             if result.status_code != 200:
                 self.response.set_status(result.status_code)

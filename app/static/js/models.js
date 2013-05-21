@@ -7,11 +7,34 @@
         },
         BBModel = Backbone.Model.extend({
             url: function () {
-                var base = _.result(this, 'urlRoot') || _.result(this.collection, 'url') || urlError();
+                return this.getUrl();
+            },
+            getUrl: function () {
+                var base;
                 if (!this.isNew()) {
+                    base = _.result(this, 'urlRoot') || _.result(this.collection, 'url') || urlError();
                     base = base + (base.charAt(base.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.id) + '.xml';
+                } else {
+                    base = _.result(this.collection, 'url') || urlError();
                 }
                 return base;
+            },
+            sync: function (method, model, options) {
+                if (!options.url) {
+                    switch (method) {
+                    case "read":
+                    case "create":
+                        options.url = _.result(model, 'url');
+                        break;
+                    case "update":
+                    case "delete":
+                        options.url = _.result(model, 'getUrl');
+                        break;
+                    default:
+                        break;
+                    }
+                }
+                return Backbone.sync(method, model, options);
             }
         });
     window.Project = BBModel.extend({
@@ -47,7 +70,7 @@
         urlRoot: "/api/categories/"
     });
     window.TimeEntry = BBModel.extend({
-//         urlRoot: "/api/time_entries/"
+        urlRoot: "/api/time_entries/"
     });
     window.TodoItem = BBModel.extend({
         urlRoot: "/api/todo_items/",

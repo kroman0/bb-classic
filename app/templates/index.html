@@ -8,6 +8,7 @@
     <meta name="author" content="">
     <!-- Bootstrap -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/static/css/datepicker.css" rel="stylesheet" media="screen">
     <style type="text/css">
 .prstatus {
     text-decoration: underline;
@@ -38,7 +39,8 @@ div#time_report {
 .addtime th {
     padding: 4px;
 }
-.addtime th > * {
+.addtime th > *,
+.edittime th > * {
     padding: 0;
     border-radius: 0;
     margin-bottom: 0;
@@ -47,7 +49,10 @@ div#time_report {
     border-width: 0;
     box-shadow: none;
 }
-.addtime input, .addtime select {
+.addtime input,
+.addtime select,
+.edittime input,
+.edittime select {
     padding: 0;
     border-radius: 0;
     margin-bottom: 0;
@@ -56,21 +61,48 @@ div#time_report {
     height: 100%;
     width: 100%;
 }
-.addtime select {
+.addtime select,
+.edittime select {
     padding-left: 10px;
     vertical-align: top;
 }
-.addtime .icon-user {
+.edittime input[name=description] {
+    padding-left: 18px;
+    vertical-align: top;
+    width: 94%;
+}
+.addtime .icon-user,
+.edittime .icon-user,
+.edittime .icon-file,
+.edittime .icon-folder-close {
     position: absolute;
     margin-top: 2px;
 }
-.addtime button {
+.addtime button,
+.edittime button {
     margin-left: 5px;
     position: absolute;
     border: 1px solid;
     display: none;
 }
-.addtime:hover button {
+.addtime:hover button,
+.edittime:hover button {
+    display: inline;
+}
+button#edit,
+button#remove {
+    display: none;
+    border: 1px solid;
+    float: right;
+}
+button#edit {
+    margin-right: -33px;
+}
+button#remove {
+    margin-right: -61px;
+}
+tr:hover button#edit,
+tr:hover button#remove {
     display: inline;
 }
     </style>
@@ -95,6 +127,7 @@ div#time_report {
 <script src="/static/js/jquery-1.7.2.js"></script>
 <script src="/static/js/jquery.deserialize.js"></script>
 <script src="/static/js/bootstrap.js"></script>
+<script src="/static/js/bootstrap-datepicker.js"></script>
 <script src="/static/js/underscore.js"></script>
 <script src="/static/js/backbone.js"></script>
 <!--[if !IE]><!-->
@@ -122,6 +155,7 @@ div#time_report {
 <script src="/static/js/jquery-1.7.2.min.js"></script>
 <script src="/static/js/jquery.deserialize-min.js"></script>
 <script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/bootstrap-datepicker.min.js"></script>
 <script src="/static/js/underscore-min.js"></script>
 <script src="/static/js/backbone-min.js"></script>
 <!--[if !IE]><!-->
@@ -136,25 +170,9 @@ div#time_report {
 <script src="/static/js/views.min.js"></script>
 <script src="/static/js/main.min.js"></script>
 {% endif %}
-
-
-<script type="text/template" id="angry_cats-template">
-  <thead>
-    <tr class='header'>
-      <th>Name</th>
-    </tr>
-  </thead>
-  <tbody>
-  </tbody>
-</script>
-
-<script type="text/template" id="angry_cat-template">
-  <td><%= name %></td>
-</script>
 <script type="text/template" id="oneproject-template">
     <h3><a href="#projects/<%- id %>"><%- name %></a></h3>
 </script>
-
 <script type="text/template" id="time-template">
     <td><%- item.get('date') %></td>
     <td><%- item.get('hours') %></td>
@@ -218,12 +236,12 @@ div#time_report {
         <div class="modal-body">
         <div class="input-prepend">
             <span class="add-on">From</span>
-            <input type="text" class="input-small" name="from" placeholder="YYYYMMDD">
+            <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="input-small" name="from" placeholder="YYYYMMDD">
         </div>
         <br />
         <div class="input-prepend">
             <span class="add-on">To</span>
-            <input type="text" class="input-small" name="to" placeholder="YYYYMMDD">
+            <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="input-small" name="to" placeholder="YYYYMMDD">
         </div>
         <br />
         <div class="input-prepend">
@@ -553,18 +571,18 @@ div#time_report {
     </div>
     <% } else { %>
     <%= view.renderpager() %>
-    <table class="table table-hover table-condensed table-bordered">
+    <table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">
         <thead>
             <tr>
                 <th>date</th>
                 <th>hours</th>
-                <th>person</th>
+                <th data-sort="person-id">person</th>
                 <th>description</th>
             </tr>
         </thead>
         <tbody>
             <tr class="addtime">
-                <th><input type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></th>
+                <th><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></th>
                 <th><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></th>
                 <th>
                     <div>
@@ -594,22 +612,43 @@ div#time_report {
     <%= view.renderheader() %>
     <%= view.renderprojectnav() %>
     <% var tt=view.collection; var prid=view.model.id;
+    var pp=view.options.collections.people;
+    var mid=view.options.mydata?view.options.mydata.id:0;
     if (tt.isEmpty()) { %>
     <div class="alert alert-info">
         No time entries...
     </div>
     <% } else { %>
     <%= view.renderpager() %>
-    <table class="table table-hover table-condensed table-bordered">
+    <table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">
         <thead>
             <tr>
                 <th>date</th>
                 <th>hours</th>
-                <th>person</th>
+                <th data-sort="person-id">person</th>
                 <th>description</th>
             </tr>
         </thead>
         <tbody>
+            <tr class="addtime">
+                <th><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></th>
+                <th><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></th>
+                <th>
+                    <div>
+                        <i class="icon-user"></i><select name="person-id">
+                            <% pp.each(function (i) { %>
+                                <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                </th>
+                <th>
+                    <div>
+                        <input type="text" class="input-small" name="description">
+                        <button id="add"><i class="icon-plus"></i></button>
+                    </div>
+                </th>
+            </tr>
             <% tt.each(function (item) { %>
                 <%= view.renderitem(item) %>
             <% }) %>

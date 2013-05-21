@@ -123,7 +123,11 @@
         events: {
             "click .project-time.previous": "previous",
             "click .project-time.next": "next",
-            "click #add": "addtime"
+            "click .project-time #add": "addtime",
+            "click .project-time #edit": "edittime",
+            "click .project-time #remove": "removetime",
+            "click .project-time #save": "savetime",
+            "click .project-time thead>tr>th": "sorttime"
         },
         previous: function (e) {
             e.preventDefault();
@@ -133,19 +137,47 @@
             e.preventDefault();
             return this.collection.hasNext() && this.collection.getNextPage();
         },
+        parseData: function (selector) {
+            var data = {};
+            data.date = this.$(selector + ' [name=date]').val();
+            data.description = this.$(selector + ' [name=description]').val();
+            data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
+            data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
+            data['project-id'] = this.model.id;
+            data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
+            return data;
+        },
+        sorttime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data('sort') || $(e.currentTarget).text();
+            this.collection.setSorting(id, -this.collection.state.order);
+            this.collection.fullCollection.sort();
+        },
         addtime: function (e) {
             e.preventDefault();
-            var data = {},
-                item;
-            data.date = this.$('[name=date]').val();
-            data.description = this.$('[name=description]').val();
-            data.hours = parseFloat(this.$('[name=hours]').val(), 10);
-            data['person-id'] = parseInt(this.$('[name=person-id]').val(), 10);
-            data['project-id'] = this.model.id;
-            data['person-name'] = this.$('[name=person-id]').find(':selected').text();
-            item = this.collection.create(data, {wait: true});
-//             this.collection.fullCollection.comparator = function(i){return 3000-parseInt(i.get('date'), 10)};
-//             this.collection.fullCollection.sort();
+            var item = this.collection.create(this.parseData('.addtime'), {wait: true});
+            this.render();
+        },
+        edittime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data("id"),
+                model = this.collection.get(id);
+            model.edit = true;
+            this.render();
+        },
+        removetime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data("id"),
+                model = this.collection.get(id);
+            model.destroy();
+            this.render();
+        },
+        savetime: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data("id"),
+                model = this.collection.get(id);
+            model.edit = false;
+            model.save(this.parseData('.edittime'));
             this.render();
         },
         itemtemplate: '#time-template',
@@ -158,7 +190,12 @@
         pagerid: "todo-time",
         events: {
             "click .todo-time.previous": "previous",
-            "click .todo-time.next": "next"
+            "click .todo-time.next": "next",
+            "click .todo-time #add": "addtime",
+            "click .todo-time #edit": "edittime",
+            "click .todo-time #remove": "removetime",
+            "click .todo-time #save": "savetime",
+            "click .todo-time thead>tr>th": "sorttime"
         },
         template: '#todo-time-template'
     });
@@ -206,7 +243,7 @@
         template: '#project-post-template',
         itemtemplate: '#post-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('title');
             return this.model.get('name') + " > Posts > " + title;
         }
@@ -240,7 +277,7 @@
         },
         template: '#project-file-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('name');
             return this.model.get('name') + " > Files > " + title;
         }
@@ -263,7 +300,7 @@
         template: '#project-calendar-entry-template',
         itemtemplate: '#calendar-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('title');
             return this.model.get('name') + " > Calendar > " + title;
         }
@@ -299,7 +336,7 @@
         template: '#project-category-template',
         itemtemplate: '#category-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('name');
             return this.model.get('name') + " > Categories > " + title;
         }
@@ -374,7 +411,7 @@
         template: '#project-todo-list-template',
         itemtemplate: '#todolist-template',
         name: function () {
-            var item = this.cur_item && this.collection.get(this.cur_item),
+            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = item && item.get('name');
             return this.model.get('name') + " > To-dos > " + title;
         },
@@ -397,9 +434,9 @@
         template: '#project-todo-item-template',
         itemtemplate: '#todolist-template',
         name: function () {
-            var list = this.cur_item && this.collection.get(this.cur_item),
+            var list = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
                 title = list && list.get('name'),
-                item = this.todo_item && this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item),
+                item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
                 itemtitle = item && item.get('content');
             return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle;
         },
@@ -422,7 +459,7 @@
         name: function () {
             var list = this.cur_item && this.todo_lists.get(this.cur_item),
                 title = list && list.get('name'),
-                item = this.todo_item && this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item),
+                item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
                 itemtitle = item && item.get('content');
             return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle + " > Comments";
         },
