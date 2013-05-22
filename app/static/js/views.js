@@ -4,23 +4,23 @@
     "use strict";
     var BBView = Backbone.View.extend({
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(window.templates[this.template], this, {variable: 'view'}));
             return this;
         },
         renderitem: function (item) {
-            return _.template($(this.itemtemplate).html(), item, {variable: 'item'});
+            return _.template(window.templates[this.itemtemplate], item, {variable: 'item'});
         },
         rendercomments: function (comments) {
-            return _.template($('#comments-template').html(), comments, {variable: 'comments'});
+            return _.template(window.templates['#comments-template'], comments, {variable: 'comments'});
         },
         renderpager: function () {
-            return _.template($('#pager-template').html(), this, {variable: 'view'});
+            return _.template(window.templates['#pager-template'], this, {variable: 'view'});
         },
         renderheader: function () {
-            return _.template($('#header-template').html(), this, {variable: 'view'});
+            return _.template(window.templates['#header-template'], this, {variable: 'view'});
         },
         renderprojectnav: function () {
-            return _.template($('#project-nav-template').html(), this, {variable: 'view'});
+            return _.template(window.templates['#project-nav-template'], this, {variable: 'view'});
         }
     });
     window.TimeReportView = BBView.extend({
@@ -52,7 +52,7 @@
             return "Time report";
         },
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(window.templates[this.template], this, {variable: 'view'}));
             if (this.collection.filter_report) {
                 this.$el.find('form#makereport').deserialize(this.collection.filter_report);
             }
@@ -416,7 +416,7 @@
             return this.model.get('name') + " > To-dos > " + title;
         },
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(window.templates[this.template], this, {variable: 'view'}));
             if (_.isFinite(this.cur_item)) {
                 this.options.collections.todo_items.get_or_create(this.cur_item).each(function (item) {
                     this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
@@ -441,7 +441,7 @@
             return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle;
         },
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(window.templates[this.template], this, {variable: 'view'}));
             var item = this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
             if (item) {
                 this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
@@ -464,7 +464,7 @@
             return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle + " > Comments";
         },
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(window.templates[this.template], this, {variable: 'view'}));
             var item = this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
             if (item) {
                 this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
@@ -486,7 +486,7 @@
         tagName: 'dd',
         template: '#todo-template',
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(window.templates[this.template], this, {variable: 'view'}));
             this.delegateEvents();
             return this;
         }
