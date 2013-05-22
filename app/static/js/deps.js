@@ -69,6 +69,7 @@ require.config({
         },
         bbviews: {
             deps: [
+                'bbtemplates',
                 'bootstrap',
                 'jquery',
                 'jquerydeserialize',
@@ -96,6 +97,7 @@ require.config({
         bbgeneral: 'general',
         bbmodels: 'models',
         bbcollections: 'collections',
+        bbtemplates: 'templates',
         bbviews: 'views',
         bbmain: 'main',
     }

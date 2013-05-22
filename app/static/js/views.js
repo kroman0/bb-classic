@@ -1,82 +1,34 @@
 /*jslint nomen: true*/
-/*jshint multistr: true */
 /*global define*/
-var projectsTemplate = '\
-<%= view.renderheader() %>\
-<% var pp=view.collection; if (pp.isEmpty()) { %>\
-<div class="alert alert-info">\
-    No projects...\
-</div>\
-<% } else { %>\
-<div class="tabbable">\
-<ul class="nav nav-pills">\
-<% var fprst=_.first(pp.pluck("status"));\
-    _.each(_.uniq(pp.pluck("status")), function (status) { %>\
-    <li class="prstatus<% if (fprst==status) { %> active<% } %> pull-right">\
-        <a href="#projects_<%- status %>" data-toggle="tab"><%- status %></a>\
-    </li>\
-<% }) %>\
-</ul>\
-<div class="tab-content">\
-<% _.each(pp.groupBy(function(i){ return i.get("status")}), function (plist, status) { %>\
-    <div class="tab-pane fade<% if (fprst==status) { %> in active<% } %>" id="projects_<%- status %>">\
-        <div class="tabbable row-fluid">\
-        <ul class="nav nav-list span4 pull-right">\
-        <% var fprcoid=_.first(plist).get("company").id;\
-        _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>\
-            <li<% if (fprcoid==coid) { %> class="active"<% } %>>\
-                <a href="#projects_<%- status %>_<%- coid %>" data-toggle="tab"><%- _.first(list).get("company").name %></a>\
-            </li>\
-        <% }) %>\
-        </ul>\
-        <div class="tab-content span8">\
-        <% _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>\
-            <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">\
-                <ul class="unstyled">\
-                <% _.each(list, function (item) { %>\
-                    <li>\
-                        <h3><a href="#projects/<%- item.id %>"><%- item.get("name") %></a></h3>\
-                    </li>\
-                <% }) %>\
-                </ul>\
-            </div>\
-        <% }) %>\
-        </div>\
-        </div>\
-    </div>\
-<% }) %>\
-</div>\
-</div>\
-<% } %>';
-
 define([
     'jquery',
     'underscore',
     'backbone',
+    'bbtemplates',
     'jquerydeserialize',
     'backbonecache'
-], function ($, _, Backbone) {
+], function ($, _, Backbone, templates) {
     "use strict";
     var bbviews = {},
         BBView = Backbone.View.extend({
             render: function () {
-                this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+                this.$el.html(_.template(templates[this.template], this, {variable: 'view'}));
                 return this;
             },
             renderitem: function (item) {
-                return _.template($(this.itemtemplate).html(), item, {variable: 'item'});
+                return _.template(templates[this.itemtemplate], item, {variable: 'item'});
             },
             rendercomments: function (comments) {
-                return _.template($('#comments-template').html(), comments, {variable: 'comments'});
+                return _.template(templates['#comments-template'], comments, {variable: 'comments'});
             },
             renderpager: function () {
-                return _.template($('#pager-template').html(), this, {variable: 'view'});
+                return _.template(templates['#pager-template'], this, {variable: 'view'});
             },
             renderheader: function () {
-                return _.template($('#header-template').html(), this, {variable: 'view'});
+                return _.template(templates['#header-template'], this, {variable: 'view'});
             },
             renderprojectnav: function () {
-                return _.template($('#project-nav-template').html(), this, {variable: 'view'});
+                return _.template(templates['#project-nav-template'], this, {variable: 'view'});
             }
         });
     bbviews.TimeReportView = BBView.extend({
@@ -108,7 +60,7 @@ define([
             return "Time report";
         },
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(templates[this.template], this, {variable: 'view'}));
             if (this.collection.filter_report) {
                 this.$el.find('form#makereport').deserialize(this.collection.filter_report);
             }
@@ -128,10 +80,6 @@ define([
     bbviews.ProjectsView = BBView.extend({
         deps: function () {
             return this.collection.fetchonce();
-        },
-        render: function () {
-            this.$el.html(_.template(projectsTemplate, this, {variable: 'view'}));
-            return this;
         },
         template: '#projects-template',
         name: function () {
@@ -476,7 +424,7 @@ define([
             return this.model.get('name') + " > To-dos > " + title;
         },
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(templates[this.template], this, {variable: 'view'}));
             if (_.isFinite(this.cur_item)) {
                 this.options.collections.todo_items.get_or_create(this.cur_item).each(function (item) {
                     this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
@@ -501,7 +449,7 @@ define([
             return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle;
         },
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(templates[this.template], this, {variable: 'view'}));
             var item = this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
             if (item) {
                 this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
@@ -524,7 +472,7 @@ define([
             return this.model.get('name') + " > To-dos > " + title + " > " + itemtitle + " > Comments";
         },
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(templates[this.template], this, {variable: 'view'}));
             var item = this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
             if (item) {
                 this.$el.find(".todoitemsholder").append(this.options.todo(this.model.id, item).render().el);
@@ -546,7 +494,7 @@ define([
         tagName: 'dd',
         template: '#todo-template',
         render: function () {
-            this.$el.html(_.template($(this.template).html(), this, {variable: 'view'}));
+            this.$el.html(_.template(templates[this.template], this, {variable: 'view'}));
             this.delegateEvents();
             return this;
         }
