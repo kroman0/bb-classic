@@ -45,6 +45,12 @@ jshint:
 jslint:
 	jslint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
 
+gjslint:
+	gjslint --disable 0011,0110,0130,0220 app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+
+fixjsstyle:
+	fixjsstyle --disable 0011,0110,0130,0220 app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+
 clean:
 	find . -name \*~ -exec rm {} \;
 	find . -name \*.pyc -exec rm {} \;
@@ -105,4 +111,4 @@ pyflakes:
 
 pytest: pep8 pyflakes flake8 pylint
 
-jstest: jshint jslint
+jstest: jshint jslint gjslint
