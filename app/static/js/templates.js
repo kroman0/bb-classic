@@ -1,7 +1,7 @@
 /*jshint multistr: true*/
 /*global window*/
 var templates = window.templates = {};
-templates["#time-template"] = '\n\
+templates['#time-template'] = '\n\
 <% if (!item.edit) { %>\n\
 <tr <% if(item.get("hours")>2){ %>class="warning"<% } %>>\n\
     <td><%- item.get("date") %></td>\n\
@@ -44,7 +44,7 @@ templates["#time-template"] = '\n\
     </th>\n\
 </tr>\n\
 <% } %>';
-templates["#pager-template"] = '\n\
+templates['#pager-template'] = '\n\
 <% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>\n\
 <ul class="pager">\n\
     <li class="<%- view.pagerid %> previous<% if(!view.collection.hasPrevious()){ %> disabled<% } %>">\n\
@@ -55,12 +55,12 @@ templates["#pager-template"] = '\n\
     </li>\n\
 </ul>\n\
 <% } %>';
-templates["#header-template"] = '\n\
+templates['#header-template'] = '\n\
 <div class="page-header">\n\
     <h1><%- view.name() %></h1>\n\
     <% if (view.model && view.model.get("company")) { %><small><a href="#companies/<%- view.model.get("company").id %>"><%- view.model.get("company").name %></a></small><% } %>\n\
 </div>';
-templates["#project-nav-template"] = '\n\
+templates['#project-nav-template'] = '\n\
 <ul class="nav nav-tabs projectnav">\n\
     <li><a href="#projects/<%- view.model.id %>">Overview</a></li>\n\
     <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>\n\
@@ -71,7 +71,7 @@ templates["#project-nav-template"] = '\n\
     <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>\n\
     <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>\n\
 </ul>';
-templates["#time-report-template"] = '\n\
+templates['#time-report-template'] = '\n\
 <%= view.renderheader() %>\n\
 <div id="time_report" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="makereportlabel" aria-hidden="true">\n\
 <div class="modal-header">\n\
@@ -161,7 +161,7 @@ if (tt.isEmpty()) { %>\n\
 </table>\n\
 <%= view.renderpager() %>\n\
 <% } %>';
-templates["#projects-template"] = '\n\
+templates['#projects-template'] = '\n\
 <%= view.renderheader() %>\n\
 <% var pp=view.collection; if (pp.isEmpty()) { %>\n\
 <div class="alert alert-info">\n\
@@ -208,11 +208,11 @@ templates["#projects-template"] = '\n\
 </div>\n\
 </div>\n\
 <% } %>';
-templates["#project-template"] = '\n\
+templates['#project-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% if (view.model.get("announcement")) { %><p><%= view.model.get("announcement") %></p><% } %>';
-templates["#companies-template"] = '\n\
+templates['#companies-template'] = '\n\
 <%= view.renderheader() %>\n\
 <% cc=view.collection; if (cc.isEmpty()) { %>\n\
 <div class="alert alert-info">\n\
@@ -243,7 +243,7 @@ templates["#companies-template"] = '\n\
 <% }) %>\n\
 </dl>\n\
 <% } %>';
-templates["#company-template"] = '\n\
+templates['#company-template'] = '\n\
 <%= view.renderheader() %>\n\
 <div class="row">\n\
     <div class="span4">\n\
@@ -290,7 +290,7 @@ templates["#company-template"] = '\n\
         <% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><br /><% } %>\n\
     </div>\n\
 </div>';
-templates["#person-template"] = '\n\
+templates['#person-template'] = '\n\
 <%= view.renderheader() %>\n\
 <img class="pull-right img-polaroid" width="55" height="55"\n\
      src="<%- view.model.get("avatar-url") %>"\n\
@@ -309,7 +309,7 @@ templates["#person-template"] = '\n\
 <% if (view.model.get("phone-number-home")) { %>Home phone: <%- view.model.get("phone-number-home") %><br /><% } %>\n\
 <% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><br /><% } %>\n\
 <% if (view.model.get("time-zone-name")) { %>Time zone: <%- view.model.get("time-zone-name") %><% } %>';
-templates["#personitem-template"] = '\n\
+templates['#personitem-template'] = '\n\
 <li class="media well well-small">\n\
     <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">\n\
         <img class="media-object img-polaroid" src="<%- item.get("avatar-url") %>" alt="<%- item.name() %>">\n\
@@ -339,7 +339,7 @@ templates["#personitem-template"] = '\n\
         <% if (item.get("time-zone-name")) { %>Time zone: <%- item.get("time-zone-name") %><% } %>\n\
     </div>\n\
 </li>';
-templates["#people-template"] = '\n\
+templates['#people-template'] = '\n\
 <%= view.renderheader() %>\n\
 <% var pp=view.collection; var co=view.options.collections.companies;\n\
 if (pp.isEmpty()) { %>\n\
@@ -380,7 +380,7 @@ if (co.isEmpty()) { %>\n\
 </div>\n\
 </div>\n\
 <% }} %>';
-templates["#project-people-template"] = '\n\
+templates['#project-people-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var pp=view.collection;  var cc=view.options.collections.companies;\n\
@@ -416,7 +416,7 @@ _.each(pc, function (id) { %>\n\
 </div>\n\
 </div>\n\
 <% }} %>';
-templates["#project-time-template"] = '\n\
+templates['#project-time-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var tt=view.collection; var prid=view.model.id;\n\
@@ -464,7 +464,7 @@ if (tt.isEmpty()) { %>\n\
 </table>\n\
 <%= view.renderpager() %>\n\
 <% } %>';
-templates["#todo-time-template"] = '\n\
+templates['#todo-time-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var tt=view.collection; var prid=view.model.id;\n\
@@ -512,7 +512,7 @@ if (tt.isEmpty()) { %>\n\
 </table>\n\
 <%= view.renderpager() %>\n\
 <% } %>';
-templates["#post-template"] = '\n\
+templates['#post-template'] = '\n\
 <li class="thumbnail">\n\
     <h3>\n\
         <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>\n\
@@ -549,7 +549,7 @@ templates["#post-template"] = '\n\
     </ul>\n\
     <% } %>\n\
 </li>';
-templates["#project-posts-template"] = '\n\
+templates['#project-posts-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var pp=view.collection; var prid=view.model.id;\n\
@@ -564,7 +564,7 @@ if (pp.isEmpty()) { %>\n\
 <% }) %>\n\
  </ul>\n\
 <% } %>';
-templates["#project-post-template"] = '\n\
+templates['#project-post-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var pp=view.collection; var prid=view.model.id; var item=pp.get(view.cur_item);\n\
@@ -577,7 +577,7 @@ if (pp.isEmpty()) { %>\n\
     <%= view.renderitem(item) %>\n\
 </ul>\n\
 <% } %>';
-templates["#project-post-comments-template"] = '\n\
+templates['#project-post-comments-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var item=view.options.collections.project_posts.get_or_create(view.model.id).get(view.cur_item);\n\
@@ -587,7 +587,7 @@ if (item) { %>\n\
 </ul>\n\
 <% } %>\n\
 <%= view.rendercomments(view.collection) %>';
-templates["#project-files-template"] = '\n\
+templates['#project-files-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var ff=view.collection; var prid=view.model.id; var pp=view.options.collections.people;\n\
@@ -628,7 +628,7 @@ if (ff.isEmpty()) { %>\n\
 </ul>\n\
 <%= view.renderpager() %>\n\
 <% } %>';
-templates["#project-file-template"] = '\n\
+templates['#project-file-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var ff=view.collection; var prid=view.model.id; var pp=view.options.collections.people;\n\
@@ -665,7 +665,7 @@ if (ff.isEmpty()) { %>\n\
     </li>\n\
 </ul>\n\
 <% } %>';
-templates["#calendar-template"] = '\n\
+templates['#calendar-template'] = '\n\
 <li class="thumbnail">\n\
     <h3>\n\
         <a <% if (item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>">\n\
@@ -709,7 +709,7 @@ templates["#calendar-template"] = '\n\
         <% } %>\n\
     </small>\n\
 </li>';
-templates["#project-calendar-template"] = '\n\
+templates['#project-calendar-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var cc=view.collection; var prid=view.model.id;\n\
@@ -724,7 +724,7 @@ if (cc.isEmpty()) { %>\n\
 <% }) %>\n\
 </ul>\n\
 <% } %>';
-templates["#project-calendar-entry-template"] = '\n\
+templates['#project-calendar-entry-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);\n\
@@ -737,7 +737,7 @@ if (cc.isEmpty()) { %>\n\
     <%= view.renderitem(item) %>\n\
  </ul>\n\
 <% } %>';
-templates["#project-calendar-entry-comments-template"] = '\n\
+templates['#project-calendar-entry-comments-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var item=view.options.collections.project_calendar.get_or_create(view.model.id).get(view.cur_item);\n\
@@ -747,7 +747,7 @@ if (item) { %>\n\
 </ul>\n\
 <% } %>\n\
 <%= view.rendercomments(view.collection) %>';
-templates["#category-template"] = '\n\
+templates['#category-template'] = '\n\
 <dt>\n\
     <h3>\n\
         <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.id %>"><%- item.get("name") %></a>\n\
@@ -756,7 +756,7 @@ templates["#category-template"] = '\n\
 <dd>\n\
     <%- item.get("type") %><br />Elements: <%- item.get("elements-count") %>\n\
 </dd>';
-templates["#project-categories-template"] = '\n\
+templates['#project-categories-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var cc=view.collection; var prid=view.model.id;\n\
@@ -773,7 +773,7 @@ if (cc.isEmpty()) { %>\n\
 </dl>\n\
 <%= view.renderpager() %>\n\
 <% } %>';
-templates["#project-category-template"] = '\n\
+templates['#project-category-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);\n\
@@ -786,7 +786,7 @@ if (cc.isEmpty()) { %>\n\
     <%= view.renderitem(item) %>\n\
 </dl>\n\
 <% } %>';
-templates["#todo-template"] = '\n\
+templates['#todo-template'] = '\n\
 <% var item=view.model;\n\
 var prid=view.options.project_id;\n\
 var list=view.options.collections.project_todo_lists.get_or_create(prid).get(item.get("todo-list-id"));\n\
@@ -806,7 +806,7 @@ if (item.get("completed")) { %>\n\
 <a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %>">\n\
     <i class="icon-comment"></i>\n\
 </a>';
-templates["#todolist-template"] = '\n\
+templates['#todolist-template'] = '\n\
 <dt>\n\
     <a <% if (item.get("completed")) { %>class="muted"<% } %>\n\
        href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>">\n\
@@ -814,7 +814,7 @@ templates["#todolist-template"] = '\n\
     </a>\n\
     <small><%= item.get("description") %></small>\n\
 </dt>';
-templates["#todo-lists-template"] = '\n\
+templates['#todo-lists-template'] = '\n\
 <%= view.renderheader() %>\n\
 <% var td=view.collection;\n\
 var pp=view.options.collections.people;\n\
@@ -876,7 +876,7 @@ var mid=party==null?view.options.mydata.id:view.collection.responsible_party; %>
 <% }) %>\n\
 </dl>\n\
 <% } %>';
-templates["#project-todo-lists-template"] = '\n\
+templates['#project-todo-lists-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;\n\
@@ -916,7 +916,7 @@ if (td.isEmpty()) { %>\n\
 </div>\n\
 </div>\n\
 <% } %>';
-templates["#project-todo-list-template"] = '\n\
+templates['#project-todo-list-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;\n\
@@ -958,7 +958,7 @@ if (td.isEmpty()) { %>\n\
 </div>\n\
 </div>\n\
 <% } %>';
-templates["#project-todo-item-template"] = '\n\
+templates['#project-todo-item-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var td=view.collection; var todo_items=view.options.collections.todo_items;\n\
@@ -974,7 +974,7 @@ if (td.isEmpty()||items.isEmpty()) { %>\n\
     <%= view.renderitem(list) %>\n\
 </dl>\n\
 <% } %>';
-templates["#project-todo-item-comments-template"] = '\n\
+templates['#project-todo-item-comments-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\
 <% var td=view.todo_lists; var todo_items=view.options.collections.todo_items;\n\
@@ -991,7 +991,7 @@ if (td.isEmpty()||items.isEmpty()) { %>\n\
 </dl>\n\
 <% } %>\n\
 <%= view.rendercomments(ccc) %>';
-templates["#comments-template"] = '\n\
+templates['#comments-template'] = '\n\
 <% if (comments.isEmpty()) { %>\n\
 <div class="alert alert-info">\n\
     No comments...\n\
@@ -1026,7 +1026,7 @@ templates["#comments-template"] = '\n\
     <% }) %>\n\
 </ul>\n\
 <% } %>';
-templates["#nav-template"] = '\n\
+templates['#nav-template'] = '\n\
 <div class="navbar-inner">\n\
 <button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar" type="button">\n\
     <span class="icon-bar"></span>\n\
