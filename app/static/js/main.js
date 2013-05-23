@@ -1,4 +1,4 @@
-/*jslint nomen: true*/
+/*jslint nomen: true, white: true*/
 /*global define, window, document*/
 define([
     'jquery',
@@ -9,8 +9,8 @@ define([
     'bbcollections',
     'bbviews',
     'backboneanalytics'
-], function ($, _, Backbone, onReset, bbmodels, bbcollections, bbviews) {
-    "use strict";
+], function($, _, Backbone, onReset, bbmodels, bbcollections, bbviews) {
+    'use strict';
     var i,
         models = window.models = {},
         collections = window.collections = {},
@@ -24,35 +24,35 @@ define([
         otime,
         Workspace = Backbone.Router.extend({
             routes: {
-                "projects": "projects",
-                "projects:tab": "projects",
-                "projects/:id": "project",
-                "projects/:id/todo_lists": "project_todo_lists",
-                "projects/:id/todo_lists/:tlid": "project_todo_list",
-                "projects/:id/todo_lists/:tlid/:tiid": "project_todo_item",
-                "projects/:id/todo_lists/:tlid/:tiid/comments": "project_todo_item_comments",
-                "projects/:id/time_entries/todo_items/:tiid": "todo_time_entries",
-                "projects/:id/time_entries": "project_time_entries",
-                "projects/:id/people": "project_people",
-                "projects/:id/posts": "project_posts",
-                "projects/:id/posts/:pid": "project_post",
-                "projects/:id/posts/:pid/comments": "project_post_comments",
-                "projects/:id/files": "project_files",
-                "projects/:id/files/:fid": "project_file",
-                "projects/:id/calendar": "project_calendar",
-                "projects/:id/calendar/:cid": "project_calendar_entry",
-                "projects/:id/calendar/:cid/comments": "project_calendar_entry_comments",
-                "projects/:id/categories": "project_categories",
-                "projects/:id/categories/:cid": "project_category",
-                "companies": "companies",
-                "companies/:id": "company",
-                "people": "people",
-                "people:tab": "people",
-                "people/:id": "person",
-                "me": "me",
-                "todos": "todos",
-                "time_report": "time_report",
-                "*actions": "defaultRoute"
+                'projects': 'projects',
+                'projects:tab': 'projects',
+                'projects/:id': 'project',
+                'projects/:id/todo_lists': 'project_todo_lists',
+                'projects/:id/todo_lists/:tlid': 'project_todo_list',
+                'projects/:id/todo_lists/:tlid/:tiid': 'project_todo_item',
+                'projects/:id/todo_lists/:tlid/:tiid/comments': 'project_todo_item_comments',
+                'projects/:id/time_entries/todo_items/:tiid': 'todo_time_entries',
+                'projects/:id/time_entries': 'project_time_entries',
+                'projects/:id/people': 'project_people',
+                'projects/:id/posts': 'project_posts',
+                'projects/:id/posts/:pid': 'project_post',
+                'projects/:id/posts/:pid/comments': 'project_post_comments',
+                'projects/:id/files': 'project_files',
+                'projects/:id/files/:fid': 'project_file',
+                'projects/:id/calendar': 'project_calendar',
+                'projects/:id/calendar/:cid': 'project_calendar_entry',
+                'projects/:id/calendar/:cid/comments': 'project_calendar_entry_comments',
+                'projects/:id/categories': 'project_categories',
+                'projects/:id/categories/:cid': 'project_category',
+                'companies': 'companies',
+                'companies/:id': 'company',
+                'people': 'people',
+                'people:tab': 'people',
+                'people/:id': 'person',
+                'me': 'me',
+                'todos': 'todos',
+                'time_report': 'time_report',
+                '*actions': 'defaultRoute'
             }
         });
     models.mydata = new bbmodels.MyModel();
@@ -83,8 +83,8 @@ define([
     }, viewdata));
     for (i in collections) {
         if (collections.hasOwnProperty(i)) {
-            collections[i].on("reset", onReset);
-            collections[i].on("sync", onReset);
+            collections[i].on('reset', onReset);
+            collections[i].on('sync', onReset);
         }
     }
     collections.project_people = new bbcollections.People();
@@ -125,7 +125,7 @@ define([
     views.todo_time_entries = new bbviews.TodoTimeEntriesView(otime);
     views.project_post_comments = new bbviews.PostCommentsView(oproject);
     views.project_calendar_entry_comments = new bbviews.CalendarEntryCommentsView(oproject);
-    views.todo = function (prid, item) {
+    views.todo = function(prid, item) {
         if (!views.todo[item.id]) {
             views.todo[item.id] = new bbviews.TodoView({model: item, collections: collections, project_id: prid});
         }
@@ -139,11 +139,11 @@ define([
     views.project_todo_item = new bbviews.TodoItemView(otodo);
     views.project_todo_item_comments = new bbviews.TodoItemCommentsView(otodo);
     window.workspace = new Workspace();
-    window.workspace.on("route", function (route, params) {
+    window.workspace.on('route', function(route, params) {
         var id, cur_item;
-        if (_.contains(["projects", "companies", "people", "time_report", "todos"], route)) {
+        if (_.contains(['projects', 'companies', 'people', 'time_report', 'todos'], route)) {
             views.current = views[route].render();
-        } else if (_.contains(["project_people", "project_categories", "project_time_entries", "project_posts", "project_files", "project_calendar", "project_todo_lists"], route)) {
+        } else if (_.contains(['project_people', 'project_categories', 'project_time_entries', 'project_posts', 'project_files', 'project_calendar', 'project_todo_lists'], route)) {
             id = parseInt(params[0], 10);
             if (collections.projects.get(id)) {
                 views[route].model = collections.projects.get(id);
@@ -152,7 +152,7 @@ define([
             }
             views[route].collection = collections[route].get_or_create(id);
             views.current = views[route].render();
-        } else if (_.contains(["project_post", "project_file", "project_calendar_entry", "project_category", "project_todo_list"], route)) {
+        } else if (_.contains(['project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list'], route)) {
             id = parseInt(params[0], 10);
             cur_item = parseInt(params[1], 10);
             if (collections.projects.get(id)) {
@@ -162,17 +162,17 @@ define([
             }
             views[route].cur_item = cur_item;
             switch (route) {
-            case "project_calendar_entry":
+            case 'project_calendar_entry':
                 views[route].collection = collections.project_calendar.get_or_create(id);
                 break;
-            case "project_category":
+            case 'project_category':
                 views[route].collection = collections.project_categories.get_or_create(id);
                 break;
             default:
-                views[route].collection = collections[route + "s"].get_or_create(id);
+                views[route].collection = collections[route + 's'].get_or_create(id);
             }
             views.current = views[route].render();
-        } else if (_.contains(["project_calendar_entry_comments", "project_post_comments", "todo_time_entries"], route)) {
+        } else if (_.contains(['project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
             id = parseInt(params[0], 10);
             cur_item = parseInt(params[1], 10);
             if (collections.projects.get(id)) {
@@ -185,19 +185,19 @@ define([
             views.current = views[route].render();
         }
         if (views.current) {
-            document.title = views.current.name() + " - BB";
+            document.title = views.current.name() + ' - BB';
         }
 //         add_hash();
         if (views.current && views.current.deps) {
             views.current.deps();
         }
-        $(_.filter($(".navbar ul.nav li").removeClass("active"), function (i) {
-            return $(i).find("a:visible")[0] && document.location.hash.indexOf($(i).find("a:visible")[0].hash) !== -1;
-        })).addClass("active");
-        $(_.filter($("div.content ul.projectnav li").removeClass("active"), function (i) {
-            return $(i).find("a:visible")[0] && document.location.hash.indexOf($(i).find("a:visible")[0].hash) !== -1;
-        })).filter(":last").addClass("active");
-    }).on("route:project_todo_item", function (id, tlid, tiid) {
+        $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
+            return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
+        })).addClass('active');
+        $(_.filter($('div.content ul.projectnav li').removeClass('active'), function(i) {
+            return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
+        })).filter(':last').addClass('active');
+    }).on('route:project_todo_item', function(id, tlid, tiid) {
         if (collections.projects.get(id)) {
             views.project_todo_item.model = collections.projects.get(id);
         } else {
@@ -207,7 +207,7 @@ define([
         views.project_todo_item.todo_item = tiid;
         views.project_todo_item.collection = collections.project_todo_lists.get_or_create(id);
         views.current = views.project_todo_item.render();
-    }).on("route:project_todo_item_comments", function (id, tlid, tiid) {
+    }).on('route:project_todo_item_comments', function(id, tlid, tiid) {
         if (collections.projects.get(id)) {
             views.project_todo_item_comments.model = collections.projects.get(id);
         } else {
@@ -218,32 +218,32 @@ define([
         views.project_todo_item_comments.todo_lists = collections.project_todo_lists.get_or_create(id);
         views.project_todo_item_comments.collection = collections.project_todo_item_comments.get_or_create(tiid);
         views.current = views.project_todo_item_comments.render();
-    }).on("route:project", function (id) {
+    }).on('route:project', function(id) {
         if (collections.projects.get(id)) {
             views.project_view.model = collections.projects.get(id);
         } else {
             views.project_view.model.id = id;
         }
         views.current = views.project_view.render();
-    }).on("route:company", function (id) {
+    }).on('route:company', function(id) {
         if (collections.companies.get(id)) {
             views.company_view.model = collections.companies.get(id);
         } else {
             views.company_view.model.id = id;
         }
         views.current = views.company_view.render();
-    }).on("route:person", function (id) {
+    }).on('route:person', function(id) {
         if (collections.people.get(id)) {
             views.person_view.model = collections.people.get(id);
         } else {
             views.person_view.model.id = id;
         }
         views.current = views.person_view.render();
-    }).on("route:me", function () {
+    }).on('route:me', function() {
         views.person_view.model = models.mydata;
         views.current = views.person_view.render();
-    }).on("route:defaultRoute", function (action) {
-        this.navigate("projects", {
+    }).on('route:defaultRoute', function(action) {
+        this.navigate('projects', {
             trigger: true
         });
     });
@@ -251,7 +251,7 @@ define([
         model: models.mydata,
         el: '.navbar'
     }).render();
-    models.mydata.once("sync", function () {
+    models.mydata.once('sync', function() {
         Backbone.history.start();
     });
     models.mydata.fetch();

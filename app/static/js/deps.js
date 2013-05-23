@@ -1,3 +1,4 @@
+/*jslint white: true*/
 /*global require*/
 
 // Require.js allows us to configure shortcut alias
@@ -109,5 +110,5 @@ require([
     'bootstrap',
     'datepicker'
 ], function () {
-    "use strict";
+    'use strict';
 });
