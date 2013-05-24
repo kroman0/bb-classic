@@ -6,6 +6,9 @@
             return _.template(window.templates[template], data, settings);
         },
         BBView = Backbone.View.extend({
+            deps: function() {
+                return this.collection.fetchonce();
+            },
             render: function(template) {
                 this.$el.html(render(this.template, this, {variable: 'view'}));
                 return this;
@@ -37,6 +40,9 @@
             }
         }),
         TitleBBView = BBView.extend({
+            deps: function() {
+                return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
+            },
             cur_item: null,
             Title: function() {
                 var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item;
@@ -87,9 +93,6 @@
         }
     });
     window.ProjectsView = BBView.extend({
-        deps: function() {
-            return this.collection.fetchonce();
-        },
         template: '#projects-template',
         name: function() {
             return 'Projects';
@@ -105,9 +108,6 @@
         }
     });
     window.CompaniesView = BBView.extend({
-        deps: function() {
-            return this.collection.fetchonce();
-        },
         template: '#companies-template',
         name: function() {
             return 'Companies';
@@ -243,9 +243,6 @@
         }
     });
     window.PostView = TitleBBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
         template: '#project-post-template',
         itemtemplate: '#post-template',
         nameParent: 'Posts'
@@ -282,9 +279,6 @@
         }
     });
     window.CalendarEntryView = TitleBBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
         template: '#project-calendar-entry-template',
         itemtemplate: '#calendar-template',
         nameParent: 'Calendar'
@@ -305,9 +299,6 @@
         }
     });
     window.CategoryView = TitleBBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
         template: '#project-category-template',
         itemtemplate: '#category-template',
         nameParent: 'Categories'
