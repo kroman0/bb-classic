@@ -6,6 +6,10 @@
             throw new Error('A "url" property or function must be specified');
         },
         BBModel = Backbone.Model.extend({
+            mainattr: 'name',
+            name: function() {
+                return this.get(this.mainattr);
+            },
             url: function() {
                 return this.getUrl();
             },
@@ -60,19 +64,23 @@
         }
     });
     window.Post = BBModel.extend({
+        mainattr: 'title',
         urlRoot: '/api/posts/'
     });
     window.Attachment = BBModel.extend();
     window.CalendarEntry = BBModel.extend({
+        mainattr: 'title',
         urlRoot: '/api/projects/#{project_id}/calendar_entries/'
     });
     window.Category = BBModel.extend({
         urlRoot: '/api/categories/'
     });
     window.TimeEntry = BBModel.extend({
+        mainattr: 'description',
         urlRoot: '/api/time_entries/'
     });
     window.TodoItem = BBModel.extend({
+        mainattr: 'content',
         urlRoot: '/api/todo_items/',
         complete: function() {
             this.save('completed', true, {url: _.result(this, 'url').replace('.xml', '/complete.xml')});
@@ -85,6 +93,7 @@
         urlRoot: '/api/todo_lists/'
     });
     window.Comment = BBModel.extend({
+        mainattr: 'body',
         urlRoot: '/api/comments/'
     });
     window.MyModel = window.Person.extend({
