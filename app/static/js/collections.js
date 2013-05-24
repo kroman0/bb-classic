@@ -22,7 +22,14 @@
             }
         },
         BBCollection = Backbone.Collection.extend(BBCollectionExtra),
-        BBPCollection = Backbone.PageableCollection.extend(BBCollectionExtra);
+        BBPCollection = Backbone.PageableCollection.extend(BBCollectionExtra),
+        PBBCollection = BBCollection.extend({
+            parent_id: null // project id
+        }),
+        PBBPCollection = BBPCollection.extend({
+            mode: 'client',
+            parent_id: null // project id
+        });
     window.Projects = BBCollection.extend({
         url: '/api/projects.xml',
         model: window.Project
@@ -31,46 +38,37 @@
         url: '/api/companies.xml',
         model: window.Company
     });
-    window.People = BBCollection.extend({
-        parent_id: null, // project id
+    window.People = PBBCollection.extend({
         url: function() {
             return _.isFinite(this.parent_id) ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
         },
         model: window.Person
     });
-    window.Posts = BBCollection.extend({
-        parent_id: null, // project id
+    window.Posts = PBBCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/posts.xml';
         },
         model: window.Post
     });
-    window.Attachments = BBPCollection.extend({
-        mode: 'client',
-        parent_id: null, // project id
+    window.Attachments = PBBPCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/attachments.xml';
         },
         model: window.Attachment
     });
-    window.Calendar = BBCollection.extend({
-        parent_id: null, // project id
+    window.Calendar = PBBCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/calendar_entries.xml';
         },
         model: window.CalendarEntry
     });
-    window.Categories = BBPCollection.extend({
-        mode: 'client',
-        parent_id: null, // project id
+    window.Categories = PBBPCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/categories.xml';
         },
         model: window.Category
     });
-    window.TimeEntries = BBPCollection.extend({
-        mode: 'client',
-        parent_id: null, // project id
+    window.TimeEntries = PBBPCollection.extend({
         parent: 'projects',
         filter_report: null, // report filter
         //         This action accepts the following query parameters:
@@ -95,16 +93,14 @@
     window.TodoTimeEntries = window.TimeEntries.extend({
         parent: 'todo_items'
     });
-    window.TodoItems = BBCollection.extend({
-        parent_id: null,
+    window.TodoItems = PBBCollection.extend({
         url: function() {
             return '/api/todo_lists/' + this.parent_id + '/todo_items.xml';
         },
         model: window.TodoItem
     });
-    window.TodoLists = BBCollection.extend({
+    window.TodoLists = PBBCollection.extend({
         responsible_party: null, // person id
-        parent_id: null, // project id
         filter_status: null, // filter for project [all\pending\finished]
         url: function() {
             if (_.isFinite(this.parent_id) && this.filter_status) {
@@ -123,8 +119,7 @@
         },
         model: window.TodoList
     });
-    window.PostComments = BBCollection.extend({
-        parent_id: null, // parent id
+    window.PostComments = PBBCollection.extend({
         parent_type: 'posts', // posts|milestones|todo_items
         url: function() {
             return '/api/' + this.parent_type + '/' + this.parent_id + '/comments.xml';
