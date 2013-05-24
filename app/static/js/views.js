@@ -26,8 +26,18 @@
                 return render('#project-nav-template', this, {variable: 'view'});
             }
         }),
+        PagesBBView = BBView.extend({
+            previous: function(e) {
+                e.preventDefault();
+                return this.collection.hasPrevious() && this.collection.getPreviousPage();
+            },
+            next: function(e) {
+                e.preventDefault();
+                return this.collection.hasNext() && this.collection.getNextPage();
+            }
+        }),
         BBViewProto = BBView.prototype;
-    window.TimeReportView = BBView.extend({
+    window.TimeReportView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -36,14 +46,6 @@
             'click .time-report.previous': 'previous',
             'click .time-report.next': 'next',
             'click #getreport': 'getreport'
-        },
-        previous: function(e) {
-            e.preventDefault();
-            return this.collection.hasPrevious() && this.collection.getPreviousPage();
-        },
-        next: function(e) {
-            e.preventDefault();
-            return this.collection.hasNext() && this.collection.getNextPage();
         },
         getreport: function(e) {
             e.preventDefault();
@@ -119,7 +121,7 @@
             return this.model.get('name') + ' > People';
         }
     });
-    window.TimeEntriesView = BBView.extend({
+    window.TimeEntriesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
@@ -132,14 +134,6 @@
             'click .project-time #remove': 'removetime',
             'click .project-time #save': 'savetime',
             'click .project-time thead>tr>th': 'sorttime'
-        },
-        previous: function(e) {
-            e.preventDefault();
-            return this.collection.hasPrevious() && this.collection.getPreviousPage();
-        },
-        next: function(e) {
-            e.preventDefault();
-            return this.collection.hasNext() && this.collection.getNextPage();
         },
         parseData: function(selector) {
             var data = {};
@@ -252,7 +246,7 @@
             return this.model.get('name') + ' > Posts > ' + title;
         }
     });
-    window.FilesView = BBView.extend({
+    window.FilesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
@@ -260,14 +254,6 @@
         events: {
             'click .project-files.previous': 'previous',
             'click .project-files.next': 'next'
-        },
-        previous: function(e) {
-            e.preventDefault();
-            return this.collection.hasPrevious() && this.collection.getPreviousPage();
-        },
-        next: function(e) {
-            e.preventDefault();
-            return this.collection.hasNext() && this.collection.getNextPage();
         },
         template: '#project-files-template',
         name: function() {
@@ -309,7 +295,7 @@
             return this.model.get('name') + ' > Calendar > ' + title;
         }
     });
-    window.CategoriesView = BBView.extend({
+    window.CategoriesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -317,14 +303,6 @@
         events: {
             'click .project-categories.previous': 'previous',
             'click .project-categories.next': 'next'
-        },
-        previous: function(e) {
-            e.preventDefault();
-            return this.collection.hasPrevious() && this.collection.getPreviousPage();
-        },
-        next: function(e) {
-            e.preventDefault();
-            return this.collection.hasNext() && this.collection.getNextPage();
         },
         template: '#project-categories-template',
         itemtemplate: '#category-template',
