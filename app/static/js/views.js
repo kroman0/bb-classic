@@ -41,7 +41,11 @@
             Title: function() {
                 var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item;
                 return item && item.name();
-           }
+            },
+            nameParent: null,
+            name: function() {
+                return this.model.name() + ' > ' + this.nameParent + ' > ' + this.Title();
+            }
         }),
         BBViewProto = BBView.prototype;
     window.TimeReportView = PagesBBView.extend({
@@ -244,9 +248,7 @@
         },
         template: '#project-post-template',
         itemtemplate: '#post-template',
-        name: function() {
-            return this.model.name() + ' > Posts > ' + this.Title();
-        }
+        nameParent: 'Posts'
     });
     window.FilesView = PagesBBView.extend({
         deps: function() {
@@ -267,9 +269,7 @@
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
         template: '#project-file-template',
-        name: function() {
-            return this.model.name() + ' > Files > ' + this.Title();
-        }
+        nameParent: 'Files'
     });
     window.CalendarView = BBView.extend({
         deps: function() {
@@ -287,9 +287,7 @@
         },
         template: '#project-calendar-entry-template',
         itemtemplate: '#calendar-template',
-        name: function() {
-            return this.model.name() + ' > Calendar > ' + this.Title();
-        }
+        nameParent: 'Calendar'
     });
     window.CategoriesView = PagesBBView.extend({
         deps: function() {
@@ -312,9 +310,7 @@
         },
         template: '#project-category-template',
         itemtemplate: '#category-template',
-        name: function() {
-            return this.model.name() + ' > Categories > ' + this.Title();
-        }
+        nameParent: 'Categories'
     });
     window.PersonView = BBView.extend({
         deps: function() {
@@ -384,9 +380,7 @@
         },
         template: '#project-todo-list-template',
         itemtemplate: '#todolist-template',
-        name: function() {
-            return this.model.name() + ' > To-dos > ' + this.Title();
-        },
+        nameParent: 'To-dos',
         render: function() {
             BBViewProto.render.apply(this, arguments);
             if (_.isFinite(this.cur_item)) {
