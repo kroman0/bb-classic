@@ -36,11 +36,12 @@
                 return this.collection.hasNext() && this.collection.getNextPage();
             }
         }),
-        ItemBBView = BBView.extend({
+        TitleBBView = BBView.extend({
             cur_item: null,
-            getItem: function() {
-                return _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item;
-            }
+            Title: function() {
+                var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item;
+                return item && item.name();
+           }
         }),
         BBViewProto = BBView.prototype;
     window.TimeReportView = PagesBBView.extend({
@@ -96,7 +97,7 @@
         },
         template: '#project-template',
         name: function() {
-            return this.model.get('name');
+            return this.model.name();
         }
     });
     window.CompaniesView = BBView.extend({
@@ -114,7 +115,7 @@
         },
         template: '#company-template',
         name: function() {
-            return this.model.get('name');
+            return this.model.name();
         }
     });
     window.PeopleView = BBView.extend({
@@ -124,7 +125,7 @@
         template: '#project-people-template',
         itemtemplate: '#personitem-template',
         name: function() {
-            return this.model.get('name') + ' > People';
+            return this.model.name() + ' > People';
         }
     });
     window.TimeEntriesView = PagesBBView.extend({
@@ -187,7 +188,7 @@
         itemtemplate: '#time-template',
         template: '#project-time-template',
         name: function() {
-            return this.model.get('name') + ' > Time';
+            return this.model.name() + ' > Time';
         }
     });
     window.TodoTimeEntriesView = window.TimeEntriesView.extend({
@@ -203,8 +204,7 @@
         },
         template: '#todo-time-template'
     });
-    window.PostCommentsView = BBView.extend({
-        cur_item: null,
+    window.PostCommentsView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
         },
@@ -212,12 +212,11 @@
         itemtemplate: '#post-template',
         name: function() {
             var item = this.cur_item && this.options.collections.project_posts.get_or_create(this.model.id).get(this.cur_item),
-                title = item && item.get('title');
-            return this.model.get('name') + ' > Posts > ' + title + ' > Comments';
+                title = item && item.name();
+            return this.model.name() + ' > Posts > ' + title + ' > Comments';
         }
     });
-    window.CalendarEntryCommentsView = BBView.extend({
-        cur_item: null,
+    window.CalendarEntryCommentsView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
         },
@@ -225,8 +224,8 @@
         itemtemplate: '#calendar-template',
         name: function() {
             var item = this.cur_item && this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item),
-                title = item && item.get('title');
-            return this.model.get('name') + ' > Calendar > ' + title + ' > Comments';
+                title = item && item.name();
+            return this.model.name() + ' > Calendar > ' + title + ' > Comments';
         }
     });
     window.PostsView = BBView.extend({
@@ -236,20 +235,17 @@
         template: '#project-posts-template',
         itemtemplate: '#post-template',
         name: function() {
-            return this.model.get('name') + ' > Posts';
+            return this.model.name() + ' > Posts';
         }
     });
-    window.PostView = ItemBBView.extend({
-        cur_item: null,
+    window.PostView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
         template: '#project-post-template',
         itemtemplate: '#post-template',
         name: function() {
-            var item = this.getItem(),
-                title = item && item.get('title');
-            return this.model.get('name') + ' > Posts > ' + title;
+            return this.model.name() + ' > Posts > ' + this.Title();
         }
     });
     window.FilesView = PagesBBView.extend({
@@ -263,19 +259,16 @@
         },
         template: '#project-files-template',
         name: function() {
-            return this.model.get('name') + ' > Files';
+            return this.model.name() + ' > Files';
         }
     });
-    window.FileView = ItemBBView.extend({
-        cur_item: null,
+    window.FileView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
         template: '#project-file-template',
         name: function() {
-            var item = this.getItem(),
-                title = item && item.get('name');
-            return this.model.get('name') + ' > Files > ' + title;
+            return this.model.name() + ' > Files > ' + this.Title();
         }
     });
     window.CalendarView = BBView.extend({
@@ -285,20 +278,17 @@
         template: '#project-calendar-template',
         itemtemplate: '#calendar-template',
         name: function() {
-            return this.model.get('name') + ' > Calendar';
+            return this.model.name() + ' > Calendar';
         }
     });
-    window.CalendarEntryView = ItemBBView.extend({
-        cur_item: null,
+    window.CalendarEntryView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
         template: '#project-calendar-entry-template',
         itemtemplate: '#calendar-template',
         name: function() {
-            var item = this.getItem(),
-                title = item && item.get('title');
-            return this.model.get('name') + ' > Calendar > ' + title;
+            return this.model.name() + ' > Calendar > ' + this.Title();
         }
     });
     window.CategoriesView = PagesBBView.extend({
@@ -313,20 +303,17 @@
         template: '#project-categories-template',
         itemtemplate: '#category-template',
         name: function() {
-            return this.model.get('name') + ' > Categories';
+            return this.model.name() + ' > Categories';
         }
     });
-    window.CategoryView = ItemBBView.extend({
-        cur_item: null,
+    window.CategoryView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
         template: '#project-category-template',
         itemtemplate: '#category-template',
         name: function() {
-            var item = this.getItem(),
-                title = item && item.get('name');
-            return this.model.get('name') + ' > Categories > ' + title;
+            return this.model.name() + ' > Categories > ' + this.Title();
         }
     });
     window.PersonView = BBView.extend({
@@ -386,22 +373,19 @@
         itemtemplate: '#todolist-template',
         name: function() {
             if (_.isFinite(this.collection.parent_id)) {
-                return this.model.get('name') + ' > To-dos';
+                return this.model.name() + ' > To-dos';
             }
             return 'To-dos';
         }
     });
-    window.TodoListView = ItemBBView.extend({
-        cur_item: null,
+    window.TodoListView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-list-template',
         itemtemplate: '#todolist-template',
         name: function() {
-            var item = this.getItem(),
-                title = item && item.get('name');
-            return this.model.get('name') + ' > To-dos > ' + title;
+            return this.model.name() + ' > To-dos > ' + this.Title();
         },
         render: function() {
             BBViewProto.render.apply(this, arguments);
@@ -413,20 +397,17 @@
             return this;
         }
     });
-    window.TodoItemView = ItemBBView.extend({
+    window.TodoItemView = TitleBBView.extend({
         todo_item: null,
-        cur_item: null,
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-item-template',
         itemtemplate: '#todolist-template',
         name: function() {
-            var list = this.getItem(),
-                title = list && list.get('name'),
-                item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
-                itemtitle = item && item.get('content');
-            return this.model.get('name') + ' > To-dos > ' + title + ' > ' + itemtitle;
+            var item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
+                itemtitle = item && item.name();
+            return this.model.name() + ' > To-dos > ' + this.Title() + ' > ' + itemtitle;
         },
         render: function() {
             BBViewProto.render.apply(this, arguments);
@@ -437,19 +418,18 @@
             return this;
         }
     });
-    window.TodoItemCommentsView = BBView.extend({
+    window.TodoItemCommentsView = TitleBBView.extend({
         todo_item: null,
-        cur_item: null,
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-item-comments-template',
         name: function() {
             var list = this.cur_item && this.todo_lists.get(this.cur_item),
-                title = list && list.get('name'),
+                title = list && list.name(),
                 item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
-                itemtitle = item && item.get('content');
-            return this.model.get('name') + ' > To-dos > ' + title + ' > ' + itemtitle + ' > Comments';
+                itemtitle = item && item.name();
+            return this.model.name() + ' > To-dos > ' + title + ' > ' + itemtitle + ' > Comments';
         },
         render: function() {
             BBViewProto.render.apply(this, arguments);
