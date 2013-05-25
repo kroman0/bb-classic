@@ -29,7 +29,14 @@ define([
             }
         },
         BBCollection = Backbone.Collection.extend(BBCollectionExtra),
-        BBPCollection = PageableCollection.extend(BBCollectionExtra);
+        BBPCollection = PageableCollection.extend(BBCollectionExtra),
+        PBBCollection = BBCollection.extend({
+            parent_id: null // project id
+        }),
+        PBBPCollection = BBPCollection.extend({
+            mode: 'client',
+            parent_id: null // project id
+        });
     bbcollections.Projects = BBCollection.extend({
         url: '/api/projects.xml',
         model: bbmodels.Project
@@ -38,46 +45,37 @@ define([
         url: '/api/companies.xml',
         model: bbmodels.Company
     });
-    bbcollections.People = BBCollection.extend({
-        parent_id: null, // project id
+    bbcollections.People = PBBCollection.extend({
         url: function() {
             return _.isFinite(this.parent_id) ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
         },
         model: bbmodels.Person
     });
-    bbcollections.Posts = BBCollection.extend({
-        parent_id: null, // project id
+    bbcollections.Posts = PBBCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/posts.xml';
         },
         model: bbmodels.Post
     });
-    bbcollections.Attachments = BBPCollection.extend({
-        mode: 'client',
-        parent_id: null, // project id
+    bbcollections.Attachments = PBBPCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/attachments.xml';
         },
         model: bbmodels.Attachment
     });
-    bbcollections.Calendar = BBCollection.extend({
-        parent_id: null, // project id
+    bbcollections.Calendar = PBBCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/calendar_entries.xml';
         },
         model: bbmodels.CalendarEntry
     });
-    bbcollections.Categories = BBPCollection.extend({
-        mode: 'client',
-        parent_id: null, // project id
+    bbcollections.Categories = PBBPCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/categories.xml';
         },
         model: bbmodels.Category
     });
-    bbcollections.TimeEntries = BBPCollection.extend({
-        mode: 'client',
-        parent_id: null, // project id
+    bbcollections.TimeEntries = PBBPCollection.extend({
         parent: 'projects',
         filter_report: null, // report filter
         //         This action accepts the following query parameters:
@@ -102,16 +100,14 @@ define([
     bbcollections.TodoTimeEntries = bbcollections.TimeEntries.extend({
         parent: 'todo_items'
     });
-    bbcollections.TodoItems = BBCollection.extend({
-        parent_id: null,
+    bbcollections.TodoItems = PBBCollection.extend({
         url: function() {
             return '/api/todo_lists/' + this.parent_id + '/todo_items.xml';
         },
         model: bbmodels.TodoItem
     });
-    bbcollections.TodoLists = BBCollection.extend({
+    bbcollections.TodoLists = PBBCollection.extend({
         responsible_party: null, // person id
-        parent_id: null, // project id
         filter_status: null, // filter for project [all\pending\finished]
         url: function() {
             if (_.isFinite(this.parent_id) && this.filter_status) {
@@ -130,8 +126,7 @@ define([
         },
         model: bbmodels.TodoList
     });
-    bbcollections.PostComments = BBCollection.extend({
-        parent_id: null, // parent id
+    bbcollections.PostComments = PBBCollection.extend({
         parent_type: 'posts', // posts|milestones|todo_items
         url: function() {
             return '/api/' + this.parent_type + '/' + this.parent_id + '/comments.xml';

@@ -14,6 +14,9 @@ define([
             return _.template(templates[template], data, settings);
         },
         BBView = Backbone.View.extend({
+            deps: function() {
+                return this.collection.fetchonce();
+            },
             render: function(template) {
                 this.$el.html(render(this.template, this, {variable: 'view'}));
                 return this;
@@ -34,8 +37,32 @@ define([
                 return render('#project-nav-template', this, {variable: 'view'});
             }
         }),
+        PagesBBView = BBView.extend({
+            previous: function(e) {
+                e.preventDefault();
+                return this.collection.hasPrevious() && this.collection.getPreviousPage();
+            },
+            next: function(e) {
+                e.preventDefault();
+                return this.collection.hasNext() && this.collection.getNextPage();
+            }
+        }),
+        TitleBBView = BBView.extend({
+            deps: function() {
+                return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
+            },
+            cur_item: null,
+            Title: function() {
+                var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item;
+                return item && item.name();
+            },
+            nameParent: null,
+            name: function() {
+                return this.model.name() + ' > ' + this.nameParent + ' > ' + this.Title();
+            }
+        }),
         BBViewProto = BBView.prototype;
-    bbviews.TimeReportView = BBView.extend({
+    bbviews.TimeReportView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -44,14 +71,6 @@ define([
             'click .time-report.previous': 'previous',
             'click .time-report.next': 'next',
             'click #getreport': 'getreport'
-        },
-        previous: function(e) {
-            e.preventDefault();
-            return this.collection.hasPrevious() && this.collection.getPreviousPage();
-        },
-        next: function(e) {
-            e.preventDefault();
-            return this.collection.hasNext() && this.collection.getNextPage();
         },
         getreport: function(e) {
             e.preventDefault();
@@ -82,9 +101,6 @@ define([
         }
     });
     bbviews.ProjectsView = BBView.extend({
-        deps: function() {
-            return this.collection.fetchonce();
-        },
         template: '#projects-template',
         name: function() {
             return 'Projects';
@@ -96,13 +112,10 @@ define([
         },
         template: '#project-template',
         name: function() {
-            return this.model.get('name');
+            return this.model.name();
         }
     });
     bbviews.CompaniesView = BBView.extend({
-        deps: function() {
-            return this.collection.fetchonce();
-        },
         template: '#companies-template',
         name: function() {
             return 'Companies';
@@ -114,7 +127,7 @@ define([
         },
         template: '#company-template',
         name: function() {
-            return this.model.get('name');
+            return this.model.name();
         }
     });
     bbviews.PeopleView = BBView.extend({
@@ -124,10 +137,10 @@ define([
         template: '#project-people-template',
         itemtemplate: '#personitem-template',
         name: function() {
-            return this.model.get('name') + ' > People';
+            return this.model.name() + ' > People';
         }
     });
-    bbviews.TimeEntriesView = BBView.extend({
+    bbviews.TimeEntriesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
@@ -141,14 +154,6 @@ define([
             'click .project-time #save': 'savetime',
             'click .project-time thead>tr>th': 'sorttime'
         },
-        previous: function(e) {
-            e.preventDefault();
-            return this.collection.hasPrevious() && this.collection.getPreviousPage();
-        },
-        next: function(e) {
-            e.preventDefault();
-            return this.collection.hasNext() && this.collection.getNextPage();
-        },
         parseData: function(selector) {
             var data = {};
             data.date = this.$(selector + ' [name=date]').val();
@@ -156,7 +161,7 @@ define([
             data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
             data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
             data['project-id'] = this.model.id;
-            data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
+//             data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
             return data;
         },
         sorttime: function(e) {
@@ -195,7 +200,7 @@ define([
         itemtemplate: '#time-template',
         template: '#project-time-template',
         name: function() {
-            return this.model.get('name') + ' > Time';
+            return this.model.name() + ' > Time';
         }
     });
     bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
@@ -211,8 +216,7 @@ define([
         },
         template: '#todo-time-template'
     });
-    bbviews.PostCommentsView = BBView.extend({
-        cur_item: null,
+    bbviews.PostCommentsView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
         },
@@ -220,12 +224,11 @@ define([
         itemtemplate: '#post-template',
         name: function() {
             var item = this.cur_item && this.options.collections.project_posts.get_or_create(this.model.id).get(this.cur_item),
-                title = item && item.get('title');
-            return this.model.get('name') + ' > Posts > ' + title + ' > Comments';
+                title = item && item.name();
+            return this.model.name() + ' > Posts > ' + title + ' > Comments';
         }
     });
-    bbviews.CalendarEntryCommentsView = BBView.extend({
-        cur_item: null,
+    bbviews.CalendarEntryCommentsView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
         },
@@ -233,8 +236,8 @@ define([
         itemtemplate: '#calendar-template',
         name: function() {
             var item = this.cur_item && this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item),
-                title = item && item.get('title');
-            return this.model.get('name') + ' > Calendar > ' + title + ' > Comments';
+                title = item && item.name();
+            return this.model.name() + ' > Calendar > ' + title + ' > Comments';
         }
     });
     bbviews.PostsView = BBView.extend({
@@ -244,23 +247,15 @@ define([
         template: '#project-posts-template',
         itemtemplate: '#post-template',
         name: function() {
-            return this.model.get('name') + ' > Posts';
+            return this.model.name() + ' > Posts';
         }
     });
-    bbviews.PostView = BBView.extend({
-        cur_item: null,
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
+    bbviews.PostView = TitleBBView.extend({
         template: '#project-post-template',
         itemtemplate: '#post-template',
-        name: function() {
-            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
-                title = item && item.get('title');
-            return this.model.get('name') + ' > Posts > ' + title;
-        }
+        nameParent: 'Posts'
     });
-    bbviews.FilesView = BBView.extend({
+    bbviews.FilesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
@@ -269,30 +264,17 @@ define([
             'click .project-files.previous': 'previous',
             'click .project-files.next': 'next'
         },
-        previous: function(e) {
-            e.preventDefault();
-            return this.collection.hasPrevious() && this.collection.getPreviousPage();
-        },
-        next: function(e) {
-            e.preventDefault();
-            return this.collection.hasNext() && this.collection.getNextPage();
-        },
         template: '#project-files-template',
         name: function() {
-            return this.model.get('name') + ' > Files';
+            return this.model.name() + ' > Files';
         }
     });
-    bbviews.FileView = BBView.extend({
-        cur_item: null,
+    bbviews.FileView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
         template: '#project-file-template',
-        name: function() {
-            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
-                title = item && item.get('name');
-            return this.model.get('name') + ' > Files > ' + title;
-        }
+        nameParent: 'Files'
     });
     bbviews.CalendarView = BBView.extend({
         deps: function() {
@@ -301,23 +283,15 @@ define([
         template: '#project-calendar-template',
         itemtemplate: '#calendar-template',
         name: function() {
-            return this.model.get('name') + ' > Calendar';
+            return this.model.name() + ' > Calendar';
         }
     });
-    bbviews.CalendarEntryView = BBView.extend({
-        cur_item: null,
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
+    bbviews.CalendarEntryView = TitleBBView.extend({
         template: '#project-calendar-entry-template',
         itemtemplate: '#calendar-template',
-        name: function() {
-            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
-                title = item && item.get('title');
-            return this.model.get('name') + ' > Calendar > ' + title;
-        }
+        nameParent: 'Calendar'
     });
-    bbviews.CategoriesView = BBView.extend({
+    bbviews.CategoriesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -326,32 +300,16 @@ define([
             'click .project-categories.previous': 'previous',
             'click .project-categories.next': 'next'
         },
-        previous: function(e) {
-            e.preventDefault();
-            return this.collection.hasPrevious() && this.collection.getPreviousPage();
-        },
-        next: function(e) {
-            e.preventDefault();
-            return this.collection.hasNext() && this.collection.getNextPage();
-        },
         template: '#project-categories-template',
         itemtemplate: '#category-template',
         name: function() {
-            return this.model.get('name') + ' > Categories';
+            return this.model.name() + ' > Categories';
         }
     });
-    bbviews.CategoryView = BBView.extend({
-        cur_item: null,
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
+    bbviews.CategoryView = TitleBBView.extend({
         template: '#project-category-template',
         itemtemplate: '#category-template',
-        name: function() {
-            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
-                title = item && item.get('name');
-            return this.model.get('name') + ' > Categories > ' + title;
-        }
+        nameParent: 'Categories'
     });
     bbviews.PersonView = BBView.extend({
         deps: function() {
@@ -410,23 +368,18 @@ define([
         itemtemplate: '#todolist-template',
         name: function() {
             if (_.isFinite(this.collection.parent_id)) {
-                return this.model.get('name') + ' > To-dos';
+                return this.model.name() + ' > To-dos';
             }
             return 'To-dos';
         }
     });
-    bbviews.TodoListView = BBView.extend({
-        cur_item: null,
+    bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-list-template',
         itemtemplate: '#todolist-template',
-        name: function() {
-            var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
-                title = item && item.get('name');
-            return this.model.get('name') + ' > To-dos > ' + title;
-        },
+        nameParent: 'To-dos',
         render: function() {
             BBViewProto.render.apply(this, arguments);
             if (_.isFinite(this.cur_item)) {
@@ -437,20 +390,17 @@ define([
             return this;
         }
     });
-    bbviews.TodoItemView = BBView.extend({
+    bbviews.TodoItemView = TitleBBView.extend({
         todo_item: null,
-        cur_item: null,
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-item-template',
         itemtemplate: '#todolist-template',
         name: function() {
-            var list = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item,
-                title = list && list.get('name'),
-                item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
-                itemtitle = item && item.get('content');
-            return this.model.get('name') + ' > To-dos > ' + title + ' > ' + itemtitle;
+            var item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
+                itemtitle = item && item.name();
+            return this.model.name() + ' > To-dos > ' + this.Title() + ' > ' + itemtitle;
         },
         render: function() {
             BBViewProto.render.apply(this, arguments);
@@ -461,19 +411,18 @@ define([
             return this;
         }
     });
-    bbviews.TodoItemCommentsView = BBView.extend({
+    bbviews.TodoItemCommentsView = TitleBBView.extend({
         todo_item: null,
-        cur_item: null,
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-item-comments-template',
         name: function() {
             var list = this.cur_item && this.todo_lists.get(this.cur_item),
-                title = list && list.get('name'),
+                title = list && list.name(),
                 item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
-                itemtitle = item && item.get('content');
-            return this.model.get('name') + ' > To-dos > ' + title + ' > ' + itemtitle + ' > Comments';
+                itemtitle = item && item.name();
+            return this.model.name() + ' > To-dos > ' + title + ' > ' + itemtitle + ' > Comments';
         },
         render: function() {
             BBViewProto.render.apply(this, arguments);

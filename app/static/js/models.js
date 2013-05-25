@@ -10,6 +10,10 @@ define([
             throw new Error('A "url" property or function must be specified');
         },
         BBModel = Backbone.Model.extend({
+            mainattr: 'name',
+            name: function() {
+                return this.get(this.mainattr);
+            },
             url: function() {
                 return this.getUrl();
             },
@@ -64,19 +68,23 @@ define([
         }
     });
     bbmodels.Post = BBModel.extend({
+        mainattr: 'title',
         urlRoot: '/api/posts/'
     });
     bbmodels.Attachment = BBModel.extend();
     bbmodels.CalendarEntry = BBModel.extend({
+        mainattr: 'title',
         urlRoot: '/api/projects/#{project_id}/calendar_entries/'
     });
     bbmodels.Category = BBModel.extend({
         urlRoot: '/api/categories/'
     });
     bbmodels.TimeEntry = BBModel.extend({
+        mainattr: 'description',
         urlRoot: '/api/time_entries/'
     });
     bbmodels.TodoItem = BBModel.extend({
+        mainattr: 'content',
         urlRoot: '/api/todo_items/',
         complete: function() {
             this.save('completed', true, {url: _.result(this, 'url').replace('.xml', '/complete.xml')});
@@ -89,6 +97,7 @@ define([
         urlRoot: '/api/todo_lists/'
     });
     bbmodels.Comment = BBModel.extend({
+        mainattr: 'body',
         urlRoot: '/api/comments/'
     });
     bbmodels.MyModel = bbmodels.Person.extend({
