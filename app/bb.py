@@ -476,15 +476,31 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
+        entrytype = self.apiurl.split("/")[-1]
+        tags = REQUEST2XML.get(entrytype, ("request"))
+        jsondata = json.loads(self.request.body)
+        xmldata = dict2xml(jsondata, tags)
         headers = get_headers(self.username, self.password)
-        if not self._testlogin():
-            result = urlfetch.fetch(url=self.fullurl,
+        if self._testlogin():
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.out.write(json.dumps(jsondata))
+        else:
+            result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
                                     method=urlfetch.PUT,
                                     headers=headers)
+            self.response.set_status(result.status_code)
             if result.status_code != 200:
-                self.response.set_status(result.status_code)
                 self.response.out.write(result.content)
                 return
+            result = fetch_request(self.fullurl, headers)
+            self.response.set_status(result.status_code)
+            content = result.content
+            dom = minidom.parseString(content)
+            if dom.childNodes:
+                parent = dom.childNodes[0]
+                result = convert(parent)[1]
+                self.response.headers['Content-Type'] = 'application/json'
+                self.response.out.write(json.dumps(result))
 
     def delete(self):
         """ DELETE request
@@ -511,13 +527,26 @@ class CrossDomain(BaseRequestHandler):
         jsondata = json.loads(self.request.body)
         xmldata = dict2xml(jsondata, tags)
         headers = get_headers(self.username, self.password)
-        if not self._testlogin():
+        if self._testlogin():
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.out.write(json.dumps(COLLECTION[0]))
+        else:
             result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
                                     method=urlfetch.POST, headers=headers)
+            self.response.set_status(result.status_code)
             if result.status_code != 201:
-                self.response.set_status(result.status_code)
                 self.response.out.write(result.content)
                 return
+            url = result.headers['Location']
+            result = fetch_request(url, headers)
+            self.response.set_status(result.status_code)
+            content = result.content
+            dom = minidom.parseString(content)
+            if dom.childNodes:
+                parent = dom.childNodes[0]
+                result = convert(parent)[1]
+                self.response.headers['Content-Type'] = 'application/json'
+                self.response.out.write(json.dumps(result))
 
     def _testget(self):
         """ test data
@@ -533,7 +562,6 @@ class CrossDomain(BaseRequestHandler):
         """
         if self.subdomain == 'test' and self.username == 'test' and \
                 self.password == 'test' and self.sub_id == 'test':
-            self._testget()
             return True
         else:
             return False
@@ -544,6 +572,7 @@ class CrossDomain(BaseRequestHandler):
         if not self.auth_check():
             return self.redirect('/login')
         if self._testlogin():
+            self._testget()
             return
         dev = self.dev()
         query = None
