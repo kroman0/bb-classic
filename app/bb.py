@@ -529,7 +529,9 @@ class CrossDomain(BaseRequestHandler):
         headers = get_headers(self.username, self.password)
         if self._testlogin():
             self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps(COLLECTION[0]))
+            item = COLLECTION[0].copy()
+            item.update(jsondata)
+            self.response.out.write(json.dumps(item))
         else:
             result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
                                     method=urlfetch.POST, headers=headers)
