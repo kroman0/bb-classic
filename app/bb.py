@@ -492,15 +492,8 @@ class CrossDomain(BaseRequestHandler):
             if result.status_code != 200:
                 self.response.out.write(result.content)
                 return
-            result = fetch_request(self.fullurl, headers)
-            self.response.set_status(result.status_code)
-            content = result.content
-            dom = minidom.parseString(content)
-            if dom.childNodes:
-                parent = dom.childNodes[0]
-                result = convert(parent)[1]
-                self.response.headers['Content-Type'] = 'application/json'
-                self.response.out.write(json.dumps(result))
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.out.write(json.dumps(jsondata))
 
     def delete(self):
         """ DELETE request
@@ -539,16 +532,16 @@ class CrossDomain(BaseRequestHandler):
             if result.status_code != 201:
                 self.response.out.write(result.content)
                 return
-            url = result.headers['Location']
-            result = fetch_request(url, headers)
+            location = result.headers['Location']
+            location = location.split('/')[-1]
+            if location.find('.') == -1:
+                item_id = int(location)
+            else:
+                item_id = int(location[:location.find('.')])
             self.response.set_status(result.status_code)
-            content = result.content
-            dom = minidom.parseString(content)
-            if dom.childNodes:
-                parent = dom.childNodes[0]
-                result = convert(parent)[1]
-                self.response.headers['Content-Type'] = 'application/json'
-                self.response.out.write(json.dumps(result))
+            jsondata.update({'id': item_id})
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.out.write(json.dumps(jsondata))
 
     def _testget(self):
         """ test data

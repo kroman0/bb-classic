@@ -153,7 +153,7 @@
             data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
             data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
             data['project-id'] = this.model.id;
-            data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
+//             data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
             return data;
         },
         sorttime: function(e) {
