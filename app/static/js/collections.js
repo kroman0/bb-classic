@@ -4,7 +4,7 @@
     'use strict';
     var bbcollections = window.bbcollections = {},
         bbmodels = window.bbmodels,
-        onReset = window.onReset,
+        onReset = window.bbgeneral.onReset,
         BBCollectionExtra = {
             fetchonce: function() {
                 var fetched = this.fetched;

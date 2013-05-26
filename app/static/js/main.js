@@ -9,7 +9,7 @@ $(function() {
         bbcollections = window.bbcollections,
         bbmodels = window.bbmodels,
         bbviews = window.bbviews,
-        onReset = window.onReset,
+        onReset = window.bbgeneral.onReset,
         viewdata = {
             el: '.content',
             collections: collections

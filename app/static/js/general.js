@@ -1,8 +1,17 @@
-/*jslint nomen: true, white: true*/
-/*global window, _, Backbone*/
-(function() {
+/*jslint white: true*/
+(function(root, factory) {
     'use strict';
-    window.onReset = function() {
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as an anonymous module.
+        root.define(['backbone'], factory);
+    } else {
+        // Browser globals
+        root.bbgeneral = factory(root.Backbone);
+    }
+}(this, function(Backbone) {
+    'use strict';
+    var bbgeneral = {};
+    bbgeneral.onReset = function() {
         Backbone.history.loadUrl();
     };
     // uniq_hash = [];
@@ -31,4 +40,5 @@
     //         }
     //     }
     // };
-}());
+    return bbgeneral;
+}));
