@@ -1,8 +1,16 @@
 /*jslint nomen: true, white: true*/
-/*global window, _, Backbone*/
-(function() {
+(function(root, factory) {
     'use strict';
-    var bbmodels = window.bbmodels = {},
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as an anonymous module.
+        root.define(['underscore', 'backbone'], factory);
+    } else {
+        // Browser globals
+        root.bbmodels = factory(root._, root.Backbone);
+    }
+}(this, function(_, Backbone) {
+    'use strict';
+    var bbmodels = {},
         urlError = function() {
             throw new Error('A "url" property or function must be specified');
         },
@@ -103,4 +111,5 @@
         },
         url: '/api/me.xml'
     });
-}());
+    return bbmodels;
+}));
