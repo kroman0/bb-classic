@@ -1,10 +1,17 @@
 /*jslint nomen: true, white: true*/
-/*global window, _, Backbone*/
-(function() {
+(function(root, factory) {
     'use strict';
-    var bbcollections = window.bbcollections = {},
-        bbmodels = window.bbmodels,
-        onReset = window.bbgeneral.onReset,
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as an anonymous module.
+        root.define(['underscore', 'backbone', 'bbgeneral', 'bbmodels'], factory);
+    } else {
+        // Browser globals
+        root.bbcollections = factory(root._, root.Backbone, root.bbgeneral, root.bbmodels);
+    }
+}(this, function(_, Backbone, bbgeneral, bbmodels) {
+    'use strict';
+    var bbcollections = {},
+        onReset = bbgeneral.onReset,
         BBCollectionExtra = {
             fetchonce: function() {
                 var fetched = this.fetched;
@@ -135,4 +142,5 @@
     bbcollections.CalendarEntryComments = bbcollections.PostComments.extend({
         parent_type: 'milestones'
     });
-}());
+    return bbcollections;
+}));
