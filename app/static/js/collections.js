@@ -2,7 +2,10 @@
 /*global window, _, Backbone*/
 (function() {
     'use strict';
-    var BBCollectionExtra = {
+    var bbcollections = window.bbcollections = {},
+        bbmodels = window.bbmodels,
+        onReset = window.onReset,
+        BBCollectionExtra = {
             fetchonce: function() {
                 var fetched = this.fetched;
                 if (!fetched) {
@@ -15,8 +18,8 @@
                 if (!this[id]) {
                     this[id] = this.clone();
                     this[id].parent_id = id;
-                    this[id].on('reset', window.onReset);
-                    this[id].on('sync', window.onReset);
+                    this[id].on('reset', onReset);
+                    this[id].on('sync', onReset);
                 }
                 return this[id];
             }
@@ -30,45 +33,45 @@
             mode: 'client',
             parent_id: null // project id
         });
-    window.Projects = BBCollection.extend({
+    bbcollections.Projects = BBCollection.extend({
         url: '/api/projects.xml',
-        model: window.Project
+        model: bbmodels.Project
     });
-    window.Companies = BBCollection.extend({
+    bbcollections.Companies = BBCollection.extend({
         url: '/api/companies.xml',
-        model: window.Company
+        model: bbmodels.Company
     });
-    window.People = PBBCollection.extend({
+    bbcollections.People = PBBCollection.extend({
         url: function() {
             return _.isFinite(this.parent_id) ? '/api/projects/' + this.parent_id + '/people.xml' : '/api/people.xml';
         },
-        model: window.Person
+        model: bbmodels.Person
     });
-    window.Posts = PBBCollection.extend({
+    bbcollections.Posts = PBBCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/posts.xml';
         },
-        model: window.Post
+        model: bbmodels.Post
     });
-    window.Attachments = PBBPCollection.extend({
+    bbcollections.Attachments = PBBPCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/attachments.xml';
         },
-        model: window.Attachment
+        model: bbmodels.Attachment
     });
-    window.Calendar = PBBCollection.extend({
+    bbcollections.Calendar = PBBCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/calendar_entries.xml';
         },
-        model: window.CalendarEntry
+        model: bbmodels.CalendarEntry
     });
-    window.Categories = PBBPCollection.extend({
+    bbcollections.Categories = PBBPCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/categories.xml';
         },
-        model: window.Category
+        model: bbmodels.Category
     });
-    window.TimeEntries = PBBPCollection.extend({
+    bbcollections.TimeEntries = PBBPCollection.extend({
         parent: 'projects',
         filter_report: null, // report filter
         //         This action accepts the following query parameters:
@@ -88,18 +91,18 @@
             }
             return '/api/time_entries/report.xml';
         },
-        model: window.TimeEntry
+        model: bbmodels.TimeEntry
     });
-    window.TodoTimeEntries = window.TimeEntries.extend({
+    bbcollections.TodoTimeEntries = bbcollections.TimeEntries.extend({
         parent: 'todo_items'
     });
-    window.TodoItems = PBBCollection.extend({
+    bbcollections.TodoItems = PBBCollection.extend({
         url: function() {
             return '/api/todo_lists/' + this.parent_id + '/todo_items.xml';
         },
-        model: window.TodoItem
+        model: bbmodels.TodoItem
     });
-    window.TodoLists = PBBCollection.extend({
+    bbcollections.TodoLists = PBBCollection.extend({
         responsible_party: null, // person id
         filter_status: null, // filter for project [all\pending\finished]
         url: function() {
@@ -117,19 +120,19 @@
             }
             return '/api/todo_lists.xml?responsible_party=' + this.responsible_party;
         },
-        model: window.TodoList
+        model: bbmodels.TodoList
     });
-    window.PostComments = PBBCollection.extend({
+    bbcollections.PostComments = PBBCollection.extend({
         parent_type: 'posts', // posts|milestones|todo_items
         url: function() {
             return '/api/' + this.parent_type + '/' + this.parent_id + '/comments.xml';
         },
-        model: window.Comment
+        model: bbmodels.Comment
     });
-    window.TodoComments = window.PostComments.extend({
+    bbcollections.TodoComments = bbcollections.PostComments.extend({
         parent_type: 'todo_items'
     });
-    window.CalendarEntryComments = window.PostComments.extend({
+    bbcollections.CalendarEntryComments = bbcollections.PostComments.extend({
         parent_type: 'milestones'
     });
 }());

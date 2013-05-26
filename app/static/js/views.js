@@ -2,8 +2,10 @@
 /*global window, $, _, Backbone*/
 (function() {
     'use strict';
-    var render = function(template, data, settings) {
-            return _.template(window.templates[template], data, settings);
+    var bbviews = window.bbviews = {},
+        templates = window.templates,
+        render = function(template, data, settings) {
+            return _.template(templates[template], data, settings);
         },
         BBView = Backbone.View.extend({
             deps: function() {
@@ -54,7 +56,7 @@
             }
         }),
         BBViewProto = BBView.prototype;
-    window.TimeReportView = PagesBBView.extend({
+    bbviews.TimeReportView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -82,7 +84,7 @@
             return this;
         }
     });
-    window.AllPeopleView = BBView.extend({
+    bbviews.AllPeopleView = BBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -92,13 +94,13 @@
             return 'People';
         }
     });
-    window.ProjectsView = BBView.extend({
+    bbviews.ProjectsView = BBView.extend({
         template: '#projects-template',
         name: function() {
             return 'Projects';
         }
     });
-    window.ProjectView = BBView.extend({
+    bbviews.ProjectView = BBView.extend({
         deps: function() {
             return this.options.collections.projects.fetchonce();
         },
@@ -107,13 +109,13 @@
             return this.model.name();
         }
     });
-    window.CompaniesView = BBView.extend({
+    bbviews.CompaniesView = BBView.extend({
         template: '#companies-template',
         name: function() {
             return 'Companies';
         }
     });
-    window.CompanyView = BBView.extend({
+    bbviews.CompanyView = BBView.extend({
         deps: function() {
             return this.options.collections.companies.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
@@ -122,7 +124,7 @@
             return this.model.name();
         }
     });
-    window.PeopleView = BBView.extend({
+    bbviews.PeopleView = BBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -132,7 +134,7 @@
             return this.model.name() + ' > People';
         }
     });
-    window.TimeEntriesView = PagesBBView.extend({
+    bbviews.TimeEntriesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
@@ -195,7 +197,7 @@
             return this.model.name() + ' > Time';
         }
     });
-    window.TodoTimeEntriesView = window.TimeEntriesView.extend({
+    bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
         pagerid: 'todo-time',
         events: {
             'click .todo-time.previous': 'previous',
@@ -208,7 +210,7 @@
         },
         template: '#todo-time-template'
     });
-    window.PostCommentsView = TitleBBView.extend({
+    bbviews.PostCommentsView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
         },
@@ -220,7 +222,7 @@
             return this.model.name() + ' > Posts > ' + title + ' > Comments';
         }
     });
-    window.CalendarEntryCommentsView = TitleBBView.extend({
+    bbviews.CalendarEntryCommentsView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
         },
@@ -232,7 +234,7 @@
             return this.model.name() + ' > Calendar > ' + title + ' > Comments';
         }
     });
-    window.PostsView = BBView.extend({
+    bbviews.PostsView = BBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -242,12 +244,12 @@
             return this.model.name() + ' > Posts';
         }
     });
-    window.PostView = TitleBBView.extend({
+    bbviews.PostView = TitleBBView.extend({
         template: '#project-post-template',
         itemtemplate: '#post-template',
         nameParent: 'Posts'
     });
-    window.FilesView = PagesBBView.extend({
+    bbviews.FilesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
@@ -261,14 +263,14 @@
             return this.model.name() + ' > Files';
         }
     });
-    window.FileView = TitleBBView.extend({
+    bbviews.FileView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
         template: '#project-file-template',
         nameParent: 'Files'
     });
-    window.CalendarView = BBView.extend({
+    bbviews.CalendarView = BBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -278,12 +280,12 @@
             return this.model.name() + ' > Calendar';
         }
     });
-    window.CalendarEntryView = TitleBBView.extend({
+    bbviews.CalendarEntryView = TitleBBView.extend({
         template: '#project-calendar-entry-template',
         itemtemplate: '#calendar-template',
         nameParent: 'Calendar'
     });
-    window.CategoriesView = PagesBBView.extend({
+    bbviews.CategoriesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -298,12 +300,12 @@
             return this.model.name() + ' > Categories';
         }
     });
-    window.CategoryView = TitleBBView.extend({
+    bbviews.CategoryView = TitleBBView.extend({
         template: '#project-category-template',
         itemtemplate: '#category-template',
         nameParent: 'Categories'
     });
-    window.PersonView = BBView.extend({
+    bbviews.PersonView = BBView.extend({
         deps: function() {
             return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
@@ -312,7 +314,7 @@
             return this.model.name();
         }
     });
-    window.TodosView = BBView.extend({
+    bbviews.TodosView = BBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
@@ -352,7 +354,7 @@
             return 'All';
         }
     });
-    window.TodoListsView = BBView.extend({
+    bbviews.TodoListsView = BBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
         },
@@ -365,7 +367,7 @@
             return 'To-dos';
         }
     });
-    window.TodoListView = TitleBBView.extend({
+    bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
@@ -382,7 +384,7 @@
             return this;
         }
     });
-    window.TodoItemView = TitleBBView.extend({
+    bbviews.TodoItemView = TitleBBView.extend({
         todo_item: null,
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
@@ -403,7 +405,7 @@
             return this;
         }
     });
-    window.TodoItemCommentsView = TitleBBView.extend({
+    bbviews.TodoItemCommentsView = TitleBBView.extend({
         todo_item: null,
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
@@ -425,7 +427,7 @@
             return this;
         }
     });
-    window.TodoView = BBView.extend({
+    bbviews.TodoView = BBView.extend({
         events: {
             'click .todo.icon-completed': 'uncomplete',
             'click .todo.icon-uncompleted': 'complete'
@@ -444,7 +446,7 @@
             return this;
         }
     });
-    window.NavView = BBView.extend({
+    bbviews.NavView = BBView.extend({
         template: '#nav-template',
         initialize: function() {
             this.model.bind('change', this.render, this);

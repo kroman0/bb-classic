@@ -2,7 +2,8 @@
 /*global window, _, Backbone*/
 (function() {
     'use strict';
-    var urlError = function() {
+    var bbmodels = window.bbmodels = {},
+        urlError = function() {
             throw new Error('A "url" property or function must be specified');
         },
         BBModel = Backbone.Model.extend({
@@ -41,7 +42,7 @@
                 return Backbone.sync(method, model, options);
             }
         });
-    window.Project = BBModel.extend({
+    bbmodels.Project = BBModel.extend({
         urlRoot: '/api/projects/',
         icon: function() {
             switch (this.get('status')) {
@@ -54,32 +55,32 @@
             }
         }
     });
-    window.Company = BBModel.extend({
+    bbmodels.Company = BBModel.extend({
         urlRoot: '/api/companies/'
     });
-    window.Person = BBModel.extend({
+    bbmodels.Person = BBModel.extend({
         urlRoot: '/api/people/',
         name: function() {
             return this.get('first-name') + ' ' + this.get('last-name');
         }
     });
-    window.Post = BBModel.extend({
+    bbmodels.Post = BBModel.extend({
         mainattr: 'title',
         urlRoot: '/api/posts/'
     });
-    window.Attachment = BBModel.extend();
-    window.CalendarEntry = BBModel.extend({
+    bbmodels.Attachment = BBModel.extend();
+    bbmodels.CalendarEntry = BBModel.extend({
         mainattr: 'title',
         urlRoot: '/api/projects/#{project_id}/calendar_entries/'
     });
-    window.Category = BBModel.extend({
+    bbmodels.Category = BBModel.extend({
         urlRoot: '/api/categories/'
     });
-    window.TimeEntry = BBModel.extend({
+    bbmodels.TimeEntry = BBModel.extend({
         mainattr: 'description',
         urlRoot: '/api/time_entries/'
     });
-    window.TodoItem = BBModel.extend({
+    bbmodels.TodoItem = BBModel.extend({
         mainattr: 'content',
         urlRoot: '/api/todo_items/',
         complete: function() {
@@ -89,14 +90,14 @@
             this.save('completed', false, {url: _.result(this, 'url').replace('.xml', '/uncomplete.xml')});
         }
     });
-    window.TodoList = BBModel.extend({
+    bbmodels.TodoList = BBModel.extend({
         urlRoot: '/api/todo_lists/'
     });
-    window.Comment = BBModel.extend({
+    bbmodels.Comment = BBModel.extend({
         mainattr: 'body',
         urlRoot: '/api/comments/'
     });
-    window.MyModel = window.Person.extend({
+    bbmodels.MyModel = bbmodels.Person.extend({
         defaults: {
             id: null
         },
