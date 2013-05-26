@@ -476,15 +476,24 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
+        entrytype = self.apiurl.split("/")[-1]
+        tags = REQUEST2XML.get(entrytype, ("request"))
+        jsondata = json.loads(self.request.body)
+        xmldata = dict2xml(jsondata, tags)
         headers = get_headers(self.username, self.password)
-        if not self._testlogin():
-            result = urlfetch.fetch(url=self.fullurl,
+        if self._testlogin():
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.out.write(json.dumps(jsondata))
+        else:
+            result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
                                     method=urlfetch.PUT,
                                     headers=headers)
+            self.response.set_status(result.status_code)
             if result.status_code != 200:
-                self.response.set_status(result.status_code)
                 self.response.out.write(result.content)
                 return
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.out.write(json.dumps(jsondata))
 
     def delete(self):
         """ DELETE request
@@ -511,13 +520,28 @@ class CrossDomain(BaseRequestHandler):
         jsondata = json.loads(self.request.body)
         xmldata = dict2xml(jsondata, tags)
         headers = get_headers(self.username, self.password)
-        if not self._testlogin():
+        if self._testlogin():
+            self.response.headers['Content-Type'] = 'application/json'
+            item = COLLECTION[0].copy()
+            item.update(jsondata)
+            self.response.out.write(json.dumps(item))
+        else:
             result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
                                     method=urlfetch.POST, headers=headers)
+            self.response.set_status(result.status_code)
             if result.status_code != 201:
-                self.response.set_status(result.status_code)
                 self.response.out.write(result.content)
                 return
+            location = result.headers['Location']
+            location = location.split('/')[-1]
+            if location.find('.') == -1:
+                item_id = int(location)
+            else:
+                item_id = int(location[:location.find('.')])
+            self.response.set_status(result.status_code)
+            jsondata.update({'id': item_id})
+            self.response.headers['Content-Type'] = 'application/json'
+            self.response.out.write(json.dumps(jsondata))
 
     def _testget(self):
         """ test data
@@ -533,7 +557,6 @@ class CrossDomain(BaseRequestHandler):
         """
         if self.subdomain == 'test' and self.username == 'test' and \
                 self.password == 'test' and self.sub_id == 'test':
-            self._testget()
             return True
         else:
             return False
@@ -544,6 +567,7 @@ class CrossDomain(BaseRequestHandler):
         if not self.auth_check():
             return self.redirect('/login')
         if self._testlogin():
+            self._testget()
             return
         dev = self.dev()
         query = None
