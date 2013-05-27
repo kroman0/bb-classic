@@ -1,10 +1,17 @@
-/*jslint nomen: true, white: true*/
-/*global define*/
-define([
-    'backbone'
-], function(Backbone) {
+/*jslint white: true*/
+(function(root, factory) {
     'use strict';
-    var onReset = function() {
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as an anonymous module.
+        root.define(['backbone'], factory);
+    } else {
+        // Browser globals
+        root.bbgeneral = factory(root.Backbone);
+    }
+}(this, function(Backbone) {
+    'use strict';
+    var bbgeneral = {};
+    bbgeneral.onReset = function() {
         Backbone.history.loadUrl();
     };
     // uniq_hash = [];
@@ -33,5 +40,5 @@ define([
     //         }
     //     }
     // };
-    return onReset;
-});
+    return bbgeneral;
+}));

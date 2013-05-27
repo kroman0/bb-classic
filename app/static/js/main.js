@@ -1,20 +1,21 @@
 /*jslint nomen: true, white: true*/
-/*global define, window, document*/
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'bbgeneral',
-    'bbmodels',
-    'bbcollections',
-    'bbviews',
-    'backboneanalytics'
-], function($, _, Backbone, onReset, bbmodels, bbcollections, bbviews) {
+/*global document*/
+(function(root, factory) {
+    'use strict';
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as an anonymous module.
+        root.define(['jquery', 'underscore', 'backbone', 'bbgeneral', 'bbmodels', 'bbcollections', 'bbviews', 'backboneanalytics'], factory);
+    } else {
+        // Browser globals
+        root.BB = factory(root.jQuery, root._, root.Backbone, root.bbgeneral, root.bbmodels, root.bbcollections, root.bbviews);
+    }
+}(this, function($, _, Backbone, bbgeneral, bbmodels, bbcollections, bbviews) {
     'use strict';
     var i,
-        models = window.models = {},
-        collections = window.collections = {},
-        views = window.views = {},
+        models = {},
+        collections = {},
+        views = {},
+        onReset = bbgeneral.onReset,
         viewdata = {
             el: '.content',
             collections: collections
@@ -54,7 +55,8 @@ define([
                 'time_report': 'time_report',
                 '*actions': 'defaultRoute'
             }
-        });
+        }),
+        workspace = new Workspace();
     models.mydata = new bbmodels.MyModel();
     models.project = new bbmodels.Project();
     models.company = new bbmodels.Company();
@@ -138,8 +140,7 @@ define([
     views.project_todo_list = new bbviews.TodoListView(otodo);
     views.project_todo_item = new bbviews.TodoItemView(otodo);
     views.project_todo_item_comments = new bbviews.TodoItemCommentsView(otodo);
-    window.workspace = new Workspace();
-    window.workspace.on('route', function(route, params) {
+    workspace.on('route', function(route, params) {
         var id, cur_item;
         if (_.contains(['projects', 'companies', 'people', 'time_report', 'todos'], route)) {
             views.current = views[route].render();
@@ -255,4 +256,10 @@ define([
         Backbone.history.start();
     });
     models.mydata.fetch();
-});
+    return {
+        models: models,
+        collections: collections,
+        views: views,
+        workspace: workspace
+    };
+}));

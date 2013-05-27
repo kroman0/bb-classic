@@ -1,17 +1,18 @@
 /*jslint nomen: true, white: true*/
-/*global define*/
-define([
-    'jquery',
-    'underscore',
-    'backbone',
-    'bbtemplates',
-    'jquerydeserialize',
-    'backbonecache'
-], function($, _, Backbone, templates) {
+(function(root, factory) {
+    'use strict';
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as an anonymous module.
+        root.define(['jquery', 'underscore', 'backbone', 'bbtemplates', 'jquerydeserialize', 'backbonecache'], factory);
+    } else {
+        // Browser globals
+        root.bbviews = factory(root.jQuery, root._, root.Backbone, root.bbtemplates);
+    }
+}(this, function($, _, Backbone, bbtemplates) {
     'use strict';
     var bbviews = {},
         render = function(template, data, settings) {
-            return _.template(templates[template], data, settings);
+            return _.template(bbtemplates[template], data, settings);
         },
         BBView = Backbone.View.extend({
             deps: function() {
@@ -172,7 +173,13 @@ define([
         },
         addtime: function(e) {
             e.preventDefault();
-            var item = this.collection.create(this.parseData('.addtime'), {wait: true});
+            var collection = this.collection,
+                item = this.collection.create(this.parseData('.addtime'), {
+                wait: true,
+                success: function(model, resp, options) {
+                    collection.fullCollection.sort();
+                    return true;
+                }});
             this.render();
         },
         edittime: function(e) {
@@ -459,4 +466,4 @@ define([
         }
     });
     return bbviews;
-});
+}));

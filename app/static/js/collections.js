@@ -1,14 +1,17 @@
 /*jslint nomen: true, white: true*/
-/*global define*/
-define([
-    'underscore',
-    'backbone',
-    'backbonepageable',
-    'bbgeneral',
-    'bbmodels'
-], function(_, Backbone, PageableCollection, onReset, bbmodels) {
+(function(root, factory) {
+    'use strict';
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as an anonymous module.
+        root.define(['underscore', 'backbone', 'backbonepageable', 'bbgeneral', 'bbmodels'], factory);
+    } else {
+        // Browser globals
+        root.bbcollections = factory(root._, root.Backbone, root.Backbone.PageableCollection, root.bbgeneral, root.bbmodels);
+    }
+}(this, function(_, Backbone, PageableCollection, bbgeneral, bbmodels) {
     'use strict';
     var bbcollections = {},
+        onReset = bbgeneral.onReset,
         BBCollectionExtra = {
             fetchonce: function() {
                 var fetched = this.fetched;
@@ -76,6 +79,10 @@ define([
         model: bbmodels.Category
     });
     bbcollections.TimeEntries = PBBPCollection.extend({
+        state: {
+            sortKey: 'id',
+            order: 1
+        },
         parent: 'projects',
         filter_report: null, // report filter
         //         This action accepts the following query parameters:
@@ -140,4 +147,4 @@ define([
         parent_type: 'milestones'
     });
     return bbcollections;
-});
+}));
