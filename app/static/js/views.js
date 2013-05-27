@@ -1,11 +1,18 @@
 /*jslint nomen: true, white: true*/
-/*global window, $, _, Backbone*/
-(function() {
+(function(root, factory) {
     'use strict';
-    var bbviews = window.bbviews = {},
-        templates = window.bbtemplates,
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as an anonymous module.
+        root.define(['jquery', 'underscore', 'backbone', 'bbtemplates'], factory);
+    } else {
+        // Browser globals
+        root.bbviews = factory(root.jQuery, root._, root.Backbone, root.bbtemplates);
+    }
+}(this, function($, _, Backbone, bbtemplates) {
+    'use strict';
+    var bbviews = {},
         render = function(template, data, settings) {
-            return _.template(templates[template], data, settings);
+            return _.template(bbtemplates[template], data, settings);
         },
         BBView = Backbone.View.extend({
             deps: function() {
@@ -452,4 +459,5 @@
             this.model.bind('change', this.render, this);
         }
     });
-}());
+    return bbviews;
+}));
