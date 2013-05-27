@@ -173,7 +173,13 @@
         },
         addtime: function(e) {
             e.preventDefault();
-            var item = this.collection.create(this.parseData('.addtime'), {wait: true});
+            var collection = this.collection,
+                item = this.collection.create(this.parseData('.addtime'), {
+                wait: true,
+                success: function(model, resp, options) {
+                    collection.fullCollection.sort();
+                    return true;
+                }});
             this.render();
         },
         edittime: function(e) {

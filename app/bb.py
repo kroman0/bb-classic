@@ -524,6 +524,7 @@ class CrossDomain(BaseRequestHandler):
             self.response.headers['Content-Type'] = 'application/json'
             item = COLLECTION[0].copy()
             item.update(jsondata)
+            item.update({'id': 30})
             self.response.out.write(json.dumps(item))
         else:
             result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
