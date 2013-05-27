@@ -3,7 +3,7 @@
 (function() {
     'use strict';
     var bbviews = window.bbviews = {},
-        templates = window.templates,
+        templates = window.bbtemplates,
         render = function(template, data, settings) {
             return _.template(templates[template], data, settings);
         },

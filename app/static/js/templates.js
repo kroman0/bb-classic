@@ -1,6 +1,6 @@
 /*jshint multistr: true*/
-/*global window*/
-var templates = window.templates = {};
+/*jslint white: true*/
+var templates = {};
 templates['#time-template'] = '\n\
 <% if (!item.edit) { %>\n\
 <tr <% if(item.get("hours")>2){ %>class="warning"<% } %>>\n\
@@ -1064,3 +1064,16 @@ templates['#nav-template'] = '\n\
 </ul>\n\
 <% } %>\n\
 </div>';
+(function(root, factory) {
+    'use strict';
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as an anonymous module.
+        root.define([], factory);
+    } else {
+        // Browser globals
+        root.bbtemplates = factory();
+    }
+}(this, function() {
+    'use strict';
+    return templates;
+}));
