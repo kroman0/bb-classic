@@ -47,44 +47,6 @@ require.config({
             deps: [
                 'backbone'
             ]
-        },
-        bbgeneral: {
-            deps: [
-                'backbone'
-            ]
-        },
-        bbmodels: {
-            deps: [
-                'underscore',
-                'backbone'
-            ]
-        },
-        bbcollections: {
-            deps: [
-                'underscore',
-                'backbone',
-                'backbonepageable',
-                'bbgeneral',
-                'bbmodels'
-            ]
-        },
-        bbviews: {
-            deps: [
-                'bbtemplates',
-                'bootstrap',
-                'jquery',
-                'jquerydeserialize',
-                'jquerydeserialize',
-                'backbonecache'
-            ]
-        },
-        bbmain: {
-            deps: [
-                'backboneanalytics',
-                'bbmodels',
-                'bbcollections',
-                'bbviews'
-            ]
         }
     },
     paths: {
@@ -109,6 +71,6 @@ require([
     'json2',
     'bootstrap',
     'datepicker'
-], function () {
+], function (BB) {
     'use strict';
 });
