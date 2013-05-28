@@ -1072,8 +1072,8 @@ templates['#nav-template'] = '\n\
 (function(root, factory) {
     'use strict';
     if (typeof root.define === 'function' && root.define.amd) {
-        // AMD. Register as an anonymous module.
-        root.define([], factory);
+        // AMD. Register as the bbtemplates module.
+        root.define('bbtemplates', [], factory);
     } else {
         // Browser globals
         root.bbtemplates = factory();

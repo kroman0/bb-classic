@@ -3,11 +3,28 @@
 (function(root, factory) {
     'use strict';
     if (typeof root.define === 'function' && root.define.amd) {
-        // AMD. Register as an anonymous module.
-        root.define(['jquery', 'underscore', 'backbone', 'bbgeneral', 'bbmodels', 'bbcollections', 'bbviews'], factory);
+        // AMD. Register as the bbmain module.
+        root.define('bbmain', [
+            'jquery',
+            'underscore',
+            'backbone',
+            'bbgeneral',
+            'bbmodels',
+            'bbcollections',
+            'bbviews',
+            'backboneanalytics'
+        ], factory);
     } else {
         // Browser globals
-        root.BB = factory(root.jQuery, root._, root.Backbone, root.bbgeneral, root.bbmodels, root.bbcollections, root.bbviews);
+        root.BB = factory(
+            root.jQuery,
+            root._,
+            root.Backbone,
+            root.bbgeneral,
+            root.bbmodels,
+            root.bbcollections,
+            root.bbviews
+        );
     }
 }(this, function($, _, Backbone, bbgeneral, bbmodels, bbcollections, bbviews) {
     'use strict';
