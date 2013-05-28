@@ -14,34 +14,37 @@ templates['#time-template'] = '\n\
             <a href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
         <% } %>\n\
         <%- item.get("description") %>\n\
-        <button id="edit" data-id="<%- item.id %>"><i class="icon-edit"></i></button>\n\
-        <button id="remove" data-id="<%- item.id %>"><i class="icon-remove"></i></button>\n\
+    </td>\n\
+    <td>\n\
+        <button id="edit" title="Edit" data-id="<%- item.id %>"><i class="icon-edit"></i></button>\n\
+        <button id="remove" title="Remove" data-id="<%- item.id %>"><i class="icon-trash"></i></button>\n\
     </td>\n\
 </tr>\n\
 <% } else { %>\n\
 <tr class="edittime">\n\
-    <th><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></th>\n\
-    <th><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></th>\n\
-    <th>\n\
+    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>\n\
+    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>\n\
+    <td>\n\
         <div>\n\
             <i class="icon-user"></i><select name="person-id">\n\
-                <% collections.people.each(function (i) { %>\n\
+                <% BB.collections.people.each(function (i) { %>\n\
                     <option value="<%- i.id %>" <% if (i.id==item.get("person-id")) { %>selected="selected"<% } %>><%- i.name() %></option>\n\
                 <% }) %>\n\
             </select>\n\
         </div>\n\
-    </th>\n\
-    <th>\n\
-        <div>\n\
-            <% if (item.get("todo-item-id")) { %>\n\
-                <a href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
-            <% } else { %>\n\
-                <a href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
-            <% } %>\n\
-            <input type="text" class="input-small" name="description" value="<%- item.get("description") %>">\n\
-            <button id="save" data-id="<%- item.id %>"><i class="icon-ok"></i></button>\n\
-        </div>\n\
-    </th>\n\
+    </td>\n\
+    <td>\n\
+        <% if (item.get("todo-item-id")) { %>\n\
+            <a href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
+        <% } else { %>\n\
+            <a href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
+        <% } %>\n\
+        <input type="text" class="input-small" name="description" value="<%- item.get("description") %>">\n\
+    </td>\n\
+    <td>\n\
+        <button id="save" title="Save" data-id="<%- item.id %>"><i class="icon-ok"></i></button>\n\
+        <button id="reset" title="Cancel" data-id="<%- item.id %>"><i class="icon-off"></i></button>\n\
+    </td>\n\
 </tr>\n\
 <% } %>';
 templates['#pager-template'] = '\n\
@@ -435,13 +438,14 @@ if (tt.isEmpty()) { %>\n\
             <th>hours</th>\n\
             <th data-sort="person-id">person</th>\n\
             <th>description</th>\n\
+            <th>&nbsp;</th>\n\
         </tr>\n\
     </thead>\n\
     <tbody>\n\
         <tr class="addtime">\n\
-            <th><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></th>\n\
-            <th><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></th>\n\
-            <th>\n\
+            <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></td>\n\
+            <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>\n\
+            <td>\n\
                 <div>\n\
                     <i class="icon-user"></i><select name="person-id">\n\
                         <% pp.each(function (i) { %>\n\
@@ -449,13 +453,13 @@ if (tt.isEmpty()) { %>\n\
                         <% }) %>\n\
                     </select>\n\
                 </div>\n\
-            </th>\n\
-            <th>\n\
-                <div>\n\
-                    <input type="text" class="input-small" name="description">\n\
-                    <button id="add"><i class="icon-plus"></i></button>\n\
-                </div>\n\
-            </th>\n\
+            </td>\n\
+            <td>\n\
+                <input type="text" class="input-small" name="description">\n\
+            </td>\n\
+            <td>\n\
+                <button id="add" title="Add"><i class="icon-plus"></i></button>\n\
+            </td>\n\
         </tr>\n\
         <% tt.each(function (item) { %>\n\
             <%= view.renderitem(item) %>\n\
@@ -483,13 +487,14 @@ if (tt.isEmpty()) { %>\n\
             <th>hours</th>\n\
             <th data-sort="person-id">person</th>\n\
             <th>description</th>\n\
+            <th>&nbsp;</th>\n\
         </tr>\n\
     </thead>\n\
     <tbody>\n\
         <tr class="addtime">\n\
-            <th><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></th>\n\
-            <th><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></th>\n\
-            <th>\n\
+            <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></td>\n\
+            <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>\n\
+            <td>\n\
                 <div>\n\
                     <i class="icon-user"></i><select name="person-id">\n\
                         <% pp.each(function (i) { %>\n\
@@ -497,13 +502,13 @@ if (tt.isEmpty()) { %>\n\
                         <% }) %>\n\
                     </select>\n\
                 </div>\n\
-            </th>\n\
-            <th>\n\
-                <div>\n\
-                    <input type="text" class="input-small" name="description">\n\
-                    <button id="add"><i class="icon-plus"></i></button>\n\
-                </div>\n\
-            </th>\n\
+            </td>\n\
+            <td>\n\
+                <input type="text" class="input-small" name="description">\n\
+            </td>\n\
+            <td>\n\
+                <button id="add" title="Add"><i class="icon-plus"></i></button>\n\
+            </td>\n\
         </tr>\n\
         <% tt.each(function (item) { %>\n\
             <%= view.renderitem(item) %>\n\
