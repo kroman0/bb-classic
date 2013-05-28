@@ -2,8 +2,8 @@
 (function(root, factory) {
     'use strict';
     if (typeof root.define === 'function' && root.define.amd) {
-        // AMD. Register as an anonymous module.
-        root.define(['backbone'], factory);
+        // AMD. Register as the bbgeneral module.
+        root.define('bbgeneral', ['backbone'], factory);
     } else {
         // Browser globals
         root.bbgeneral = factory(root.Backbone);

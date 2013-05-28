@@ -2,11 +2,17 @@
 (function(root, factory) {
     'use strict';
     if (typeof root.define === 'function' && root.define.amd) {
-        // AMD. Register as an anonymous module.
-        root.define(['underscore', 'backbone'], factory);
+        // AMD. Register as the bbmodels module.
+        root.define('bbmodels', [
+            'underscore',
+            'backbone'
+        ], factory);
     } else {
         // Browser globals
-        root.bbmodels = factory(root._, root.Backbone);
+        root.bbmodels = factory(
+            root._,
+            root.Backbone
+        );
     }
 }(this, function(_, Backbone) {
     'use strict';

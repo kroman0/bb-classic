@@ -2,11 +2,23 @@
 (function(root, factory) {
     'use strict';
     if (typeof root.define === 'function' && root.define.amd) {
-        // AMD. Register as an anonymous module.
-        root.define(['underscore', 'backbone', 'backbonepageable', 'bbgeneral', 'bbmodels'], factory);
+        // AMD. Register as the bbcollections module.
+        root.define('bbcollections', [
+            'underscore',
+            'backbone',
+            'backbonepageable',
+            'bbgeneral',
+            'bbmodels'
+        ], factory);
     } else {
         // Browser globals
-        root.bbcollections = factory(root._, root.Backbone, root.Backbone.PageableCollection, root.bbgeneral, root.bbmodels);
+        root.bbcollections = factory(
+            root._,
+            root.Backbone,
+            root.Backbone.PageableCollection,
+            root.bbgeneral,
+            root.bbmodels
+        );
     }
 }(this, function(_, Backbone, PageableCollection, bbgeneral, bbmodels) {
     'use strict';

@@ -2,11 +2,24 @@
 (function(root, factory) {
     'use strict';
     if (typeof root.define === 'function' && root.define.amd) {
-        // AMD. Register as an anonymous module.
-        root.define(['jquery', 'underscore', 'backbone', 'bbtemplates', 'jquerydeserialize', 'backbonecache'], factory);
+        // AMD. Register as the bbviews module.
+        root.define('bbviews', [
+            'jquery',
+            'underscore',
+            'backbone',
+            'bbtemplates',
+            'bootstrap',
+            'jquerydeserialize',
+            'backbonecache'
+        ], factory);
     } else {
         // Browser globals
-        root.bbviews = factory(root.jQuery, root._, root.Backbone, root.bbtemplates);
+        root.bbviews = factory(
+            root.jQuery,
+            root._,
+            root.Backbone,
+            root.bbtemplates
+        );
     }
 }(this, function($, _, Backbone, bbtemplates) {
     'use strict';
