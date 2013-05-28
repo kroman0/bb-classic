@@ -79,10 +79,6 @@
         model: bbmodels.Category
     });
     bbcollections.TimeEntries = PBBPCollection.extend({
-        state: {
-            sortKey: 'id',
-            order: 1
-        },
         parent: 'projects',
         filter_report: null, // report filter
         //         This action accepts the following query parameters:
