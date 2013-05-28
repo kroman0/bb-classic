@@ -1,6 +1,10 @@
 #!/usr/bin/make
 #
 
+BASE = app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+SCRIPTS = $(BASE)
+MINIFY = $(BASE) app/static/js/json2.js app/static/js/jquery.deserialize.js app/static/js/bootstrap-datepicker.js app/static/js/backbone.analytics.js
+
 all: run
 
 run:
@@ -28,28 +32,19 @@ deploy: clean minify
 	bin/appcfg update app --oauth2
 
 minify:
-	uglifyjs app/static/js/json2.js -o app/static/js/json2.min.js
-	uglifyjs app/static/js/jquery.deserialize.js -o app/static/js/jquery.deserialize-min.js
-	uglifyjs app/static/js/bootstrap-datepicker.js -o app/static/js/bootstrap-datepicker.min.js
-	uglifyjs app/static/js/backbone.analytics.js -o app/static/js/backbone.analytics-min.js
-	uglifyjs app/static/js/general.js -o app/static/js/general.min.js
-	uglifyjs app/static/js/models.js -o app/static/js/models.min.js
-	uglifyjs app/static/js/collections.js -o app/static/js/collections.min.js
-	uglifyjs app/static/js/templates.js -o app/static/js/templates.min.js
-	uglifyjs app/static/js/views.js -o app/static/js/views.min.js
-	uglifyjs app/static/js/main.js -o app/static/js/main.min.js
+	$(foreach JS,$(MINIFY),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"`;)
 
 jshint:
-	jshint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+	jshint $(SCRIPTS)
 
 jslint:
-	jslint app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+	jslint $(SCRIPTS)
 
 gjslint:
-	gjslint --disable 0011,0110,0130,0220 app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+	gjslint --disable 0011,0110,0130,0220 $(SCRIPTS)
 
 fixjsstyle:
-	fixjsstyle --disable 0011,0110,0130,0220 app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+	fixjsstyle --disable 0011,0110,0130,0220 $(SCRIPTS)
 
 clean:
 	find . -name \*~ -exec rm {} \;
