@@ -144,7 +144,7 @@ if (tt.isEmpty()) { %>\n\
             <th>hours</th>\n\
             <th>person</th>\n\
             <th>description</th>\n\
-            <th>&nbps;</th>\n\
+            <th>&nbsp;</th>\n\
         </tr>\n\
     </thead>\n\
     <tbody>\n\
