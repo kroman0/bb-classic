@@ -36,15 +36,10 @@ form#makereport {
 div#time_report {
     width: auto;
 }
-.addtime th {
-    padding: 4px;
-}
 .addtime th > *,
 .edittime th > * {
-    padding: 0;
     border-radius: 0;
     margin-bottom: 0;
-    width: 100%;
     height: 100%;
     border-width: 0;
     box-shadow: none;
@@ -68,7 +63,6 @@ div#time_report {
 }
 .edittime input[name=description] {
     padding-left: 18px;
-    vertical-align: top;
     width: 94%;
 }
 .addtime .icon-user,
@@ -80,30 +74,11 @@ div#time_report {
 }
 .addtime button,
 .edittime button {
-    margin-left: 5px;
-    position: absolute;
     border: 1px solid;
-    display: none;
-}
-.addtime:hover button,
-.edittime:hover button {
-    display: inline;
 }
 button#edit,
 button#remove {
-    display: none;
     border: 1px solid;
-    float: right;
-}
-button#edit {
-    margin-right: -33px;
-}
-button#remove {
-    margin-right: -61px;
-}
-tr:hover button#edit,
-tr:hover button#remove {
-    display: inline;
 }
     </style>
     <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
