@@ -153,6 +153,7 @@
             'click .project-time #edit': 'edittime',
             'click .project-time #remove': 'removetime',
             'click .project-time #save': 'savetime',
+            'click .project-time #reset': 'resettime',
             'click .project-time thead>tr>th': 'sorttime'
         },
         parseData: function(selector) {
@@ -177,7 +178,12 @@
                 item = this.collection.create(this.parseData('.addtime'), {
                 wait: true,
                 success: function(model, resp, options) {
-                    collection.fullCollection.sort();
+                    try {
+                        collection.fullCollection.sort();
+                    } catch (err) {
+                        collection.setSorting('id', 1);
+                        collection.fullCollection.sort();
+                    }
                     return true;
                 }});
             this.render();
@@ -187,6 +193,13 @@
             var id = $(e.currentTarget).data('id'),
                 model = this.collection.get(id);
             model.edit = true;
+            this.render();
+        },
+        resettime: function(e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).data('id'),
+                model = this.collection.get(id);
+            model.edit = false;
             this.render();
         },
         removetime: function(e) {
@@ -219,6 +232,7 @@
             'click .todo-time #edit': 'edittime',
             'click .todo-time #remove': 'removetime',
             'click .todo-time #save': 'savetime',
+            'click .todo-time #reset': 'resettime',
             'click .todo-time thead>tr>th': 'sorttime'
         },
         template: '#todo-time-template'
