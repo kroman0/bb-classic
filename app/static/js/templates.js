@@ -144,13 +144,14 @@ if (tt.isEmpty()) { %>\n\
             <th>hours</th>\n\
             <th>person</th>\n\
             <th>description</th>\n\
+            <th>&nbps;</th>\n\
         </tr>\n\
     </thead>\n\
     <tbody>\n\
         <% var prs=view.options.collections.projects;\n\
         _.each(_.uniq(tt.pluck("project-id")), function (prid) { %>\n\
         <tr class="info">\n\
-            <td colspan="4">\n\
+            <td colspan="5">\n\
                 <a href="#projects/<%- prid %>/time_entries">\n\
                     <%- prs.get(prid)?prs.get(prid).get("name"):prid %>\n\
                 </a>\n\
