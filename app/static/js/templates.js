@@ -2,7 +2,6 @@
 /*jslint white: true*/
 var templates = {};
 templates['#time-template'] = '\n\
-<% if (!item.edit) { %>\n\
 <tr <% if(item.get("hours")>2){ %>class="warning"<% } %>>\n\
     <td><%- item.get("date") %></td>\n\
     <td><%- item.get("hours") %></td>\n\
@@ -19,8 +18,8 @@ templates['#time-template'] = '\n\
         <button id="edit" title="Edit" data-id="<%- item.id %>"><i class="icon-edit"></i></button>\n\
         <button id="remove" title="Remove" data-id="<%- item.id %>"><i class="icon-trash"></i></button>\n\
     </td>\n\
-</tr>\n\
-<% } else { %>\n\
+</tr>';
+templates['#time-templateedit'] = '\n\
 <tr class="edittime">\n\
     <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>\n\
     <td><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>\n\
@@ -45,8 +44,7 @@ templates['#time-template'] = '\n\
         <button id="save" title="Save" data-id="<%- item.id %>"><i class="icon-ok"></i></button>\n\
         <button id="reset" title="Cancel" data-id="<%- item.id %>"><i class="icon-off"></i></button>\n\
     </td>\n\
-</tr>\n\
-<% } %>';
+</tr>';
 templates['#pager-template'] = '\n\
 <% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>\n\
 <ul class="pager">\n\

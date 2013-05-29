@@ -36,7 +36,7 @@
                 return this;
             },
             renderitem: function(item) {
-                return render(this.itemtemplate, item, {variable: 'item'});
+                return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, item, {variable: 'item'});
             },
             rendercomments: function(comments) {
                 return render('#comments-template', comments, {variable: 'comments'});
