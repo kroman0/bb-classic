@@ -137,7 +137,7 @@ if (tt.isEmpty()) { %>\n\
 </div>\n\
 <% } else { %>\n\
 <%= view.renderpager() %>\n\
-<table class="table table-hover table-condensed table-bordered">\n\
+<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">\n\
     <thead>\n\
         <tr>\n\
             <th>date</th>\n\
@@ -151,10 +151,12 @@ if (tt.isEmpty()) { %>\n\
         <% var prs=view.options.collections.projects;\n\
         _.each(_.uniq(tt.pluck("project-id")), function (prid) { %>\n\
         <tr class="info">\n\
-            <td colspan="5">\n\
+            <td colspan="4">\n\
                 <a href="#projects/<%- prid %>/time_entries">\n\
                     <%- prs.get(prid)?prs.get(prid).get("name"):prid %>\n\
                 </a>\n\
+            </td>\n\
+            <td>\n\
             </td>\n\
         </tr>\n\
         <% _.each(tt.where({"project-id":prid}), function (item) { %>\n\
