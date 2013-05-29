@@ -2,8 +2,7 @@
 /*jslint white: true*/
 var templates = {};
 templates['#time-template'] = '\n\
-<% if (!item.edit) { %>\n\
-<tr <% if(item.get("hours")>2){ %>class="warning"<% } %>>\n\
+<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> data-id="<%- item.id %>">\n\
     <td><%- item.get("date") %></td>\n\
     <td><%- item.get("hours") %></td>\n\
     <td><a href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- item.get("person-name") %></a></td>\n\
@@ -16,12 +15,12 @@ templates['#time-template'] = '\n\
         <%- item.get("description") %>\n\
     </td>\n\
     <td>\n\
-        <button id="edit" title="Edit" data-id="<%- item.id %>"><i class="icon-edit"></i></button>\n\
-        <button id="remove" title="Remove" data-id="<%- item.id %>"><i class="icon-trash"></i></button>\n\
+        <button id="edit" title="Edit"><i class="icon-edit"></i></button>\n\
+        <button id="remove" title="Remove"><i class="icon-trash"></i></button>\n\
     </td>\n\
-</tr>\n\
-<% } else { %>\n\
-<tr class="edittime">\n\
+</tr>';
+templates['#time-templateedit'] = '\n\
+<tr class="edittime" data-id="<%- item.id %>">\n\
     <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>\n\
     <td><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>\n\
     <td>\n\
@@ -42,11 +41,10 @@ templates['#time-template'] = '\n\
         <input type="text" class="input-small" name="description" value="<%- item.get("description") %>">\n\
     </td>\n\
     <td>\n\
-        <button id="save" title="Save" data-id="<%- item.id %>"><i class="icon-ok"></i></button>\n\
-        <button id="reset" title="Cancel" data-id="<%- item.id %>"><i class="icon-off"></i></button>\n\
+        <button id="save" title="Save"><i class="icon-ok"></i></button>\n\
+        <button id="reset" title="Cancel"><i class="icon-off"></i></button>\n\
     </td>\n\
-</tr>\n\
-<% } %>';
+</tr>';
 templates['#pager-template'] = '\n\
 <% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>\n\
 <ul class="pager">\n\
@@ -137,13 +135,14 @@ if (tt.isEmpty()) { %>\n\
 </div>\n\
 <% } else { %>\n\
 <%= view.renderpager() %>\n\
-<table class="table table-hover table-condensed table-bordered">\n\
+<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">\n\
     <thead>\n\
         <tr>\n\
             <th>date</th>\n\
             <th>hours</th>\n\
             <th>person</th>\n\
             <th>description</th>\n\
+            <th>&nbsp;</th>\n\
         </tr>\n\
     </thead>\n\
     <tbody>\n\
@@ -154,6 +153,8 @@ if (tt.isEmpty()) { %>\n\
                 <a href="#projects/<%- prid %>/time_entries">\n\
                     <%- prs.get(prid)?prs.get(prid).get("name"):prid %>\n\
                 </a>\n\
+            </td>\n\
+            <td>\n\
             </td>\n\
         </tr>\n\
         <% _.each(tt.where({"project-id":prid}), function (item) { %>\n\

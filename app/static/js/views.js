@@ -36,7 +36,7 @@
                 return this;
             },
             renderitem: function(item) {
-                return render(this.itemtemplate, item, {variable: 'item'});
+                return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, item, {variable: 'item'});
             },
             rendercomments: function(comments) {
                 return render('#comments-template', comments, {variable: 'comments'});
@@ -203,31 +203,31 @@
         },
         edittime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).data('id'),
+            var id = $(e.currentTarget).parents('tr').data('id'),
                 model = this.collection.get(id);
             model.edit = true;
             this.render();
         },
         resettime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).data('id'),
+            var id = $(e.currentTarget).parents('tr').data('id'),
                 model = this.collection.get(id);
             model.edit = false;
             this.render();
         },
         removetime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).data('id'),
+            var id = $(e.currentTarget).parents('tr').data('id'),
                 model = this.collection.get(id);
             model.destroy();
             this.render();
         },
         savetime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).data('id'),
+            var id = $(e.currentTarget).parents('tr').data('id'),
                 model = this.collection.get(id);
             model.edit = false;
-            model.save(this.parseData('.edittime'));
+            model.save(this.parseData('.edittime[data-id=' + id + ']'));
             this.render();
         },
         itemtemplate: '#time-template',
