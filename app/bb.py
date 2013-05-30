@@ -477,14 +477,17 @@ class CrossDomain(BaseRequestHandler):
         if not self.auth_check():
             return self.redirect('/login')
         entrytype = self.apiurl.split("/")[-1]
-        tags = REQUEST2XML.get(entrytype, ("request"))
         jsondata = json.loads(self.request.body)
-        xmldata = dict2xml(jsondata, tags)
         headers = get_headers(self.username, self.password)
         if self._testlogin():
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write(json.dumps(jsondata))
         else:
+            tags = REQUEST2XML.get(entrytype, '')
+            if tags:
+                xmldata = dict2xml(jsondata, tags)
+            else:
+                xmldata = tags
             result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
                                     method=urlfetch.PUT,
                                     headers=headers)
