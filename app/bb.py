@@ -8,18 +8,19 @@ Main BB classic app module
 * `/api/.*` - `Cross Domain Handler <#bb.CrossDomain>`_
 
 """
-import webapp2
-import os
+import base64
+import datetime
 import json
 import logging
-from google.appengine.ext.webapp import template
+import os
+import webapp2
 from google.appengine.api import urlfetch
 from google.appengine.ext import db
-from xml.dom import minidom
-import datetime
-import base64
-from urlparse import urlunparse
+from google.appengine.ext.webapp import template
+from re import compile as rec
 from urllib import urlencode
+from urlparse import urlunparse
+from xml.dom.minidom import Document, parseString
 
 import crypto
 
@@ -195,7 +196,7 @@ def get_subject_id(username, password, subdomain):
     result = urlfetch.fetch(url=absolute_url(
         subdomain, '/me.xml'), method=urlfetch.GET, headers=headers)
     if result.status_code == 200:
-        dom = minidom.parseString(result.content)
+        dom = parseString(result.content)
         return str(dom.getElementsByTagName('id')[0].firstChild.nodeValue)
     else:
         raise GetSubjectException('Can\'t get subject_id')
@@ -419,36 +420,42 @@ def save_request(url, result):
 
 
 REQUEST2XML = {
-    "time_entries.xml": ("time-entry",)
+    rec(r".*\/time_entries.xml"): ("time-entry",),
+    rec(r".*\/time_entries\/\d*\.xml"): ("time-entry",),
+    rec(r".*"): None
 }
+
+
+def get_xml_for_request(url):
+    """ Get xml base tags for request
+
+    :param string url: [required] url
+    :returns: tuple of base tags or None
+    :rtype: tuple or None
+    """
+    res = [r for r in REQUEST2XML if r.match(url)]
+    return REQUEST2XML.get(res[0])
 
 
 def dict2xml(data, tags):
     """ convert dict to xml
 
-<time-entry>
-  <person-id>#{person-id}</person-id>
-  <date>#{date}</date>
-  <hours>#{hours}</hours>
-  <description>#{description}</description>
-</time-entry>
+    :param dict data: [required] dict with data to convert
+    :param tuple tags: [required] tuple of base tags
+    :returns: pretty xml
+    :rtype: string
     """
-    from xml.dom.minidom import Document
     dom = item = Document()
     for tag in tags:
         elem = dom.createElement(tag)
         item.appendChild(elem)
         item = elem
-    #a = dom.createAttribute("asd")
-    #p.attributes.setNamedItem(a)
-    #a.value = "dsa"
     for key, value in data.items():
         elem = dom.createElement(key)
         text = dom.createTextNode(unicode(value))
         elem.appendChild(text)
         item.appendChild(elem)
     return dom.toprettyxml()
-    #'<?xml version="1.0" ?>\n<photo asd="dsa">test</photo>\n'
 
 
 class CrossDomain(BaseRequestHandler):
@@ -479,6 +486,7 @@ class CrossDomain(BaseRequestHandler):
         entrytype = self.apiurl.split("/")[-1]
         jsondata = json.loads(self.request.body)
         headers = get_headers(self.username, self.password)
+        LOGGER.info(get_xml_for_request(self.apiurl))
         if self._testlogin():
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write(json.dumps(jsondata))
@@ -591,7 +599,7 @@ class CrossDomain(BaseRequestHandler):
             if dev:
                 save_request(url, result)
             content = result.content
-        dom = minidom.parseString(content)
+        dom = parseString(content)
         if dom.childNodes:
             parent = dom.childNodes[0]
             result = convert(parent)[1]
