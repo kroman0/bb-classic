@@ -104,6 +104,9 @@ flake8:
 pyflakes:
 	pyflakes app/*.py tests/*.py
 
+clonedigger:
+	clonedigger app tests && firefox output.html
+
 pytest: pep8 pyflakes flake8 pylint
 
 jstest: jshint jslint gjslint
