@@ -27,6 +27,7 @@ def compare_screenshot_to_base(baseline, diff=100):
 
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
+    # pylint: disable=W0212
     path = driver._get_screenshot_paths(None)[0]
 
     current_browser = driver._current_browser()
@@ -41,6 +42,7 @@ def compare_screenshot_to_base(baseline, diff=100):
     his1 = img1.histogram()
     his2 = img2.histogram()
     sqrtdiff = lambda a, b: (a - b) ** 2
+    # pylint: disable=W0141
     rms = math.sqrt(
         reduce(operator.add,
                map(sqrtdiff, his1, his2)
@@ -102,6 +104,7 @@ def set_window_size(width, height):
 
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
+    # pylint: disable=W0212
     return driver._current_browser().set_window_size(int(width), int(height))
 
 
@@ -118,6 +121,7 @@ def get_session_id():
     """
     driver = BuiltIn().get_library_instance('Selenium2Library')
     try:
+        # pylint: disable=W0212
         session_id = driver._cache.current.session_id
     except AttributeError:
         session_id = ""
