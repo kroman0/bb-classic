@@ -1,11 +1,31 @@
 /*jslint nomen: true, white: true*/
-/*global window, $, _, Backbone*/
-(function() {
+(function(root, factory) {
     'use strict';
-    var bbviews = window.bbviews = {},
-        templates = window.templates,
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as the bbviews module.
+        root.define('bbviews', [
+            'jquery',
+            'underscore',
+            'backbone',
+            'bbtemplates',
+            'bootstrap',
+            'jquerydeserialize',
+            'backbonecache'
+        ], factory);
+    } else {
+        // Browser globals
+        root.bbviews = factory(
+            root.jQuery,
+            root._,
+            root.Backbone,
+            root.bbtemplates
+        );
+    }
+}(this, function($, _, Backbone, bbtemplates) {
+    'use strict';
+    var bbviews = {},
         render = function(template, data, settings) {
-            return _.template(templates[template], data, settings);
+            return _.template(bbtemplates[template], data, settings);
         },
         BBView = Backbone.View.extend({
             deps: function() {
@@ -16,7 +36,7 @@
                 return this;
             },
             renderitem: function(item) {
-                return render(this.itemtemplate, item, {variable: 'item'});
+                return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, item, {variable: 'item'});
             },
             rendercomments: function(comments) {
                 return render('#comments-template', comments, {variable: 'comments'});
@@ -146,6 +166,7 @@
             'click .project-time #edit': 'edittime',
             'click .project-time #remove': 'removetime',
             'click .project-time #save': 'savetime',
+            'click .project-time #reset': 'resettime',
             'click .project-time thead>tr>th': 'sorttime'
         },
         parseData: function(selector) {
@@ -166,29 +187,47 @@
         },
         addtime: function(e) {
             e.preventDefault();
-            var item = this.collection.create(this.parseData('.addtime'), {wait: true});
+            var collection = this.collection,
+                item = this.collection.create(this.parseData('.addtime'), {
+                wait: true,
+                success: function(model, resp, options) {
+                    try {
+                        collection.fullCollection.sort();
+                    } catch (err) {
+                        collection.setSorting('id', 1);
+                        collection.fullCollection.sort();
+                    }
+                    return true;
+                }});
             this.render();
         },
         edittime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).data('id'),
+            var id = $(e.currentTarget).parents('tr').data('id'),
                 model = this.collection.get(id);
             model.edit = true;
             this.render();
         },
+        resettime: function(e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).parents('tr').data('id'),
+                model = this.collection.get(id);
+            model.edit = false;
+            this.render();
+        },
         removetime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).data('id'),
+            var id = $(e.currentTarget).parents('tr').data('id'),
                 model = this.collection.get(id);
             model.destroy();
             this.render();
         },
         savetime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).data('id'),
+            var id = $(e.currentTarget).parents('tr').data('id'),
                 model = this.collection.get(id);
             model.edit = false;
-            model.save(this.parseData('.edittime'));
+            model.save(this.parseData('.edittime[data-id=' + id + ']'));
             this.render();
         },
         itemtemplate: '#time-template',
@@ -206,6 +245,7 @@
             'click .todo-time #edit': 'edittime',
             'click .todo-time #remove': 'removetime',
             'click .todo-time #save': 'savetime',
+            'click .todo-time #reset': 'resettime',
             'click .todo-time thead>tr>th': 'sorttime'
         },
         template: '#todo-time-template'
@@ -452,4 +492,5 @@
             this.model.bind('change', this.render, this);
         }
     });
-}());
+    return bbviews;
+}));

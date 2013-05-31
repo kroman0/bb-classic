@@ -1,10 +1,29 @@
 /*jslint nomen: true, white: true*/
-/*global window, _, Backbone*/
-(function() {
+(function(root, factory) {
     'use strict';
-    var bbcollections = window.bbcollections = {},
-        bbmodels = window.bbmodels,
-        onReset = window.onReset,
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as the bbcollections module.
+        root.define('bbcollections', [
+            'underscore',
+            'backbone',
+            'backbonepageable',
+            'bbgeneral',
+            'bbmodels'
+        ], factory);
+    } else {
+        // Browser globals
+        root.bbcollections = factory(
+            root._,
+            root.Backbone,
+            root.Backbone.PageableCollection,
+            root.bbgeneral,
+            root.bbmodels
+        );
+    }
+}(this, function(_, Backbone, PageableCollection, bbgeneral, bbmodels) {
+    'use strict';
+    var bbcollections = {},
+        onReset = bbgeneral.onReset,
         BBCollectionExtra = {
             fetchonce: function() {
                 var fetched = this.fetched;
@@ -25,7 +44,7 @@
             }
         },
         BBCollection = Backbone.Collection.extend(BBCollectionExtra),
-        BBPCollection = Backbone.PageableCollection.extend(BBCollectionExtra),
+        BBPCollection = PageableCollection.extend(BBCollectionExtra),
         PBBCollection = BBCollection.extend({
             parent_id: null // project id
         }),
@@ -135,4 +154,5 @@
     bbcollections.CalendarEntryComments = bbcollections.PostComments.extend({
         parent_type: 'milestones'
     });
-}());
+    return bbcollections;
+}));

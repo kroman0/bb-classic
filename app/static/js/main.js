@@ -1,16 +1,39 @@
 /*jslint nomen: true, white: true*/
-/*global window, document, $, _, Backbone, Marionette*/
-$(function() {
+/*global document*/
+(function(root, factory) {
+    'use strict';
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as the bbmain module.
+        root.define('bbmain', [
+            'jquery',
+            'underscore',
+            'backbone',
+            'bbgeneral',
+            'bbmodels',
+            'bbcollections',
+            'bbviews',
+            'backboneanalytics'
+        ], factory);
+    } else {
+        // Browser globals
+        root.BB = factory(
+            root.jQuery,
+            root._,
+            root.Backbone,
+            root.bbgeneral,
+            root.bbmodels,
+            root.bbcollections,
+            root.bbviews
+        );
+    }
+}(this, function($, _, Backbone, bbgeneral, bbmodels, bbcollections, bbviews) {
     'use strict';
     return;
     var i,
-        models = window.models = {},
-        collections = window.collections = {},
-        views = window.views = {},
-        bbcollections = window.bbcollections,
-        bbmodels = window.bbmodels,
-        bbviews = window.bbviews,
-        onReset = window.onReset,
+        models = {},
+        collections = {},
+        views = {},
+        onReset = bbgeneral.onReset,
         viewdata = {
             el: '.content',
             collections: collections
@@ -50,7 +73,8 @@ $(function() {
                 'time_report': 'time_report',
                 '*actions': 'defaultRoute'
             }
-        });
+        }),
+        workspace = new Workspace();
     models.mydata = new bbmodels.MyModel();
     models.project = new bbmodels.Project();
     models.company = new bbmodels.Company();
@@ -134,8 +158,7 @@ $(function() {
     views.project_todo_list = new bbviews.TodoListView(otodo);
     views.project_todo_item = new bbviews.TodoItemView(otodo);
     views.project_todo_item_comments = new bbviews.TodoItemCommentsView(otodo);
-    window.workspace = new Workspace();
-    window.workspace.on('route', function(route, params) {
+    workspace.on('route', function(route, params) {
         var id, cur_item;
         if (_.contains(['projects', 'companies', 'people', 'time_report', 'todos'], route)) {
             views.current = views[route].render();
@@ -251,7 +274,13 @@ $(function() {
         Backbone.history.start();
     });
     models.mydata.fetch();
-});
+    return {
+        models: models,
+        collections: collections,
+        views: views,
+        workspace: workspace
+    };
+}));
 
 // container = new Backbone.Marionette.Region({
 //   el: "#container"
