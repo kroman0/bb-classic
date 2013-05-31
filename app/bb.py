@@ -8,18 +8,19 @@ Main BB classic app module
 * `/api/.*` - `Cross Domain Handler <#bb.CrossDomain>`_
 
 """
-import webapp2
-import os
+import base64
+import datetime
 import json
 import logging
-from google.appengine.ext.webapp import template
+import os
+import webapp2
 from google.appengine.api import urlfetch
 from google.appengine.ext import db
-from xml.dom import minidom
-import datetime
-import base64
-from urlparse import urlunparse
+from google.appengine.ext.webapp import template
+from re import compile as rec
 from urllib import urlencode
+from urlparse import urlunparse
+from xml.dom.minidom import Document, parseString
 
 import crypto
 
@@ -195,7 +196,7 @@ def get_subject_id(username, password, subdomain):
     result = urlfetch.fetch(url=absolute_url(
         subdomain, '/me.xml'), method=urlfetch.GET, headers=headers)
     if result.status_code == 200:
-        dom = minidom.parseString(result.content)
+        dom = parseString(result.content)
         return str(dom.getElementsByTagName('id')[0].firstChild.nodeValue)
     else:
         raise GetSubjectException('Can\'t get subject_id')
@@ -288,25 +289,18 @@ class LoginPage(BaseRequestHandler):
         # test login
         if subdomain == 'test' and login == 'test' and pwd == 'test':
             subject_id = 'test'
-            data = [login, pwd, subject_id, subdomain]
-            expires = (datetime.datetime.now() + datetime.timedelta(weeks=4))\
-                .strftime('%a, %d-%b-%Y %H:%M:%S UTC')
-            ssid_cookie = 'ssid=%s; expires=%s' % \
-                (crypto.encode_data(tuple(data)), expires)
-            self.response.headers.add_header('Set-Cookie', str(ssid_cookie))
-            return
+        else:
+            # check whether all needed data is given
+            if not (subdomain and login and pwd):
+                self.error(401)
+                return
 
-        # check whether all needed data is given
-        if not (subdomain and login and pwd):
-            self.error(401)
-            return
-
-        # make a request to the Basecamp API
-        try:
-            subject_id = get_subject_id(login, pwd, subdomain)
-        except GetSubjectException:
-            self.error(401)
-            return
+            # make a request to the Basecamp API
+            try:
+                subject_id = get_subject_id(login, pwd, subdomain)
+            except GetSubjectException:
+                self.error(401)
+                return
 
         # save login information in a cookie
         data = [login, pwd, subject_id, subdomain]
@@ -392,18 +386,6 @@ def convert(node):
     return (name, value)
 
 
-def fetch_request(url, headers):
-    """ Fetch request
-
-    :param string url: [required] request url
-    :param dict headers: [required] request headers
-    :returns: request response
-    :raises: Exception
-    :rtype: `Response <http://goo.gl/F0G1l>`_
-    """
-    return urlfetch.fetch(url=url, method=urlfetch.GET, headers=headers)
-
-
 def save_request(url, result):
     """ Save request
 
@@ -419,36 +401,42 @@ def save_request(url, result):
 
 
 REQUEST2XML = {
-    "time_entries.xml": ("time-entry",)
+    rec(r".*\/time_entries.xml"): ("time-entry",),
+    rec(r".*\/time_entries\/\d*\.xml"): ("time-entry",),
+    rec(r".*"): None
 }
+
+
+def get_xml_for_request(url):
+    """ Get xml base tags for request
+
+    :param string url: [required] url
+    :returns: tuple of base tags or None
+    :rtype: tuple or None
+    """
+    res = [r for r in REQUEST2XML if r.match(url)]
+    return REQUEST2XML.get(res[0])
 
 
 def dict2xml(data, tags):
     """ convert dict to xml
 
-<time-entry>
-  <person-id>#{person-id}</person-id>
-  <date>#{date}</date>
-  <hours>#{hours}</hours>
-  <description>#{description}</description>
-</time-entry>
+    :param dict data: [required] dict with data to convert
+    :param tuple tags: [required] tuple of base tags
+    :returns: pretty xml
+    :rtype: string
     """
-    from xml.dom.minidom import Document
     dom = item = Document()
     for tag in tags:
         elem = dom.createElement(tag)
         item.appendChild(elem)
         item = elem
-    #a = dom.createAttribute("asd")
-    #p.attributes.setNamedItem(a)
-    #a.value = "dsa"
     for key, value in data.items():
         elem = dom.createElement(key)
         text = dom.createTextNode(unicode(value))
         elem.appendChild(text)
         item.appendChild(elem)
     return dom.toprettyxml()
-    #'<?xml version="1.0" ?>\n<photo asd="dsa">test</photo>\n'
 
 
 class CrossDomain(BaseRequestHandler):
@@ -459,6 +447,20 @@ class CrossDomain(BaseRequestHandler):
     * :http:delete:`/api/.*` - `CrossDomain DELETE <#bb.CrossDomain.delete>`_
     * :http:get:`/api/.*` - `CrossDomain GET <#bb.CrossDomain.get>`_
     """
+    def fetch_request(self, url, method, headers, data=None):
+        """ Fetch request
+
+        :param string url: [required] request url
+        :param dict headers: [required] request headers
+        :returns: request response
+        :raises: Exception
+        :rtype: `Response <http://goo.gl/F0G1l>`_
+        """
+        result = urlfetch.fetch(url=url, payload=data, method=method,
+                                headers=headers)
+        self.response.set_status(result.status_code)
+        return result
+
     @property
     def apiurl(self):
         """ get api url
@@ -477,18 +479,19 @@ class CrossDomain(BaseRequestHandler):
         if not self.auth_check():
             return self.redirect('/login')
         entrytype = self.apiurl.split("/")[-1]
-        tags = REQUEST2XML.get(entrytype, ("request"))
         jsondata = json.loads(self.request.body)
-        xmldata = dict2xml(jsondata, tags)
         headers = get_headers(self.username, self.password)
         if self._testlogin():
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write(json.dumps(jsondata))
         else:
-            result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
-                                    method=urlfetch.PUT,
-                                    headers=headers)
-            self.response.set_status(result.status_code)
+            tags = REQUEST2XML.get(entrytype, '')
+            if tags:
+                xmldata = dict2xml(jsondata, tags)
+            else:
+                xmldata = tags
+            result = self.fetch_request(self.fullurl, urlfetch.PUT, headers,
+                                        xmldata)
             if result.status_code != 200:
                 self.response.out.write(result.content)
                 return
@@ -502,11 +505,8 @@ class CrossDomain(BaseRequestHandler):
             return self.redirect('/login')
         headers = get_headers(self.username, self.password)
         if not self._testlogin():
-            result = urlfetch.fetch(url=self.fullurl,
-                                    method=urlfetch.DELETE,
-                                    headers=headers)
+            result = self.fetch_request(self.fullurl, urlfetch.DELETE, headers)
             if result.status_code != 200:
-                self.response.set_status(result.status_code)
                 self.response.out.write(result.content)
                 return
 
@@ -527,9 +527,8 @@ class CrossDomain(BaseRequestHandler):
             item.update({'id': 30})
             self.response.out.write(json.dumps(item))
         else:
-            result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
-                                    method=urlfetch.POST, headers=headers)
-            self.response.set_status(result.status_code)
+            result = self.fetch_request(self.fullurl, urlfetch.POST, headers,
+                                        xmldata)
             if result.status_code != 201:
                 self.response.out.write(result.content)
                 return
@@ -579,16 +578,14 @@ class CrossDomain(BaseRequestHandler):
             content = query[0].content
         else:
             headers = get_headers(self.username, self.password)
-            result = fetch_request(url, headers)
-            self.response.set_status(result.status_code)
-            self.response.headers.update(result.headers)
+            result = self.fetch_request(url, urlfetch.GET, headers)
             if result.status_code != 200:
                 self.response.out.write(result.content)
                 return
             if dev:
                 save_request(url, result)
             content = result.content
-        dom = minidom.parseString(content)
+        dom = parseString(content)
         if dom.childNodes:
             parent = dom.childNodes[0]
             result = convert(parent)[1]
