@@ -289,25 +289,18 @@ class LoginPage(BaseRequestHandler):
         # test login
         if subdomain == 'test' and login == 'test' and pwd == 'test':
             subject_id = 'test'
-            data = [login, pwd, subject_id, subdomain]
-            expires = (datetime.datetime.now() + datetime.timedelta(weeks=4))\
-                .strftime('%a, %d-%b-%Y %H:%M:%S UTC')
-            ssid_cookie = 'ssid=%s; expires=%s' % \
-                (crypto.encode_data(tuple(data)), expires)
-            self.response.headers.add_header('Set-Cookie', str(ssid_cookie))
-            return
+        else:
+            # check whether all needed data is given
+            if not (subdomain and login and pwd):
+                self.error(401)
+                return
 
-        # check whether all needed data is given
-        if not (subdomain and login and pwd):
-            self.error(401)
-            return
-
-        # make a request to the Basecamp API
-        try:
-            subject_id = get_subject_id(login, pwd, subdomain)
-        except GetSubjectException:
-            self.error(401)
-            return
+            # make a request to the Basecamp API
+            try:
+                subject_id = get_subject_id(login, pwd, subdomain)
+            except GetSubjectException:
+                self.error(401)
+                return
 
         # save login information in a cookie
         data = [login, pwd, subject_id, subdomain]
@@ -393,18 +386,6 @@ def convert(node):
     return (name, value)
 
 
-def fetch_request(url, headers):
-    """ Fetch request
-
-    :param string url: [required] request url
-    :param dict headers: [required] request headers
-    :returns: request response
-    :raises: Exception
-    :rtype: `Response <http://goo.gl/F0G1l>`_
-    """
-    return urlfetch.fetch(url=url, method=urlfetch.GET, headers=headers)
-
-
 def save_request(url, result):
     """ Save request
 
@@ -466,6 +447,20 @@ class CrossDomain(BaseRequestHandler):
     * :http:delete:`/api/.*` - `CrossDomain DELETE <#bb.CrossDomain.delete>`_
     * :http:get:`/api/.*` - `CrossDomain GET <#bb.CrossDomain.get>`_
     """
+    def fetch_request(self, url, method, headers, data=None):
+        """ Fetch request
+
+        :param string url: [required] request url
+        :param dict headers: [required] request headers
+        :returns: request response
+        :raises: Exception
+        :rtype: `Response <http://goo.gl/F0G1l>`_
+        """
+        result = urlfetch.fetch(url=url, payload=data, method=method,
+                                headers=headers)
+        self.response.set_status(result.status_code)
+        return result
+
     @property
     def apiurl(self):
         """ get api url
@@ -486,7 +481,6 @@ class CrossDomain(BaseRequestHandler):
         entrytype = self.apiurl.split("/")[-1]
         jsondata = json.loads(self.request.body)
         headers = get_headers(self.username, self.password)
-        LOGGER.info(get_xml_for_request(self.apiurl))
         if self._testlogin():
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write(json.dumps(jsondata))
@@ -496,10 +490,8 @@ class CrossDomain(BaseRequestHandler):
                 xmldata = dict2xml(jsondata, tags)
             else:
                 xmldata = tags
-            result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
-                                    method=urlfetch.PUT,
-                                    headers=headers)
-            self.response.set_status(result.status_code)
+            result = self.fetch_request(self.fullurl, urlfetch.PUT, headers,
+                                        xmldata)
             if result.status_code != 200:
                 self.response.out.write(result.content)
                 return
@@ -513,11 +505,8 @@ class CrossDomain(BaseRequestHandler):
             return self.redirect('/login')
         headers = get_headers(self.username, self.password)
         if not self._testlogin():
-            result = urlfetch.fetch(url=self.fullurl,
-                                    method=urlfetch.DELETE,
-                                    headers=headers)
+            result = self.fetch_request(self.fullurl, urlfetch.DELETE, headers)
             if result.status_code != 200:
-                self.response.set_status(result.status_code)
                 self.response.out.write(result.content)
                 return
 
@@ -538,9 +527,8 @@ class CrossDomain(BaseRequestHandler):
             item.update({'id': 30})
             self.response.out.write(json.dumps(item))
         else:
-            result = urlfetch.fetch(url=self.fullurl, payload=xmldata,
-                                    method=urlfetch.POST, headers=headers)
-            self.response.set_status(result.status_code)
+            result = self.fetch_request(self.fullurl, urlfetch.POST, headers,
+                                        xmldata)
             if result.status_code != 201:
                 self.response.out.write(result.content)
                 return
@@ -590,9 +578,7 @@ class CrossDomain(BaseRequestHandler):
             content = query[0].content
         else:
             headers = get_headers(self.username, self.password)
-            result = fetch_request(url, headers)
-            self.response.set_status(result.status_code)
-            self.response.headers.update(result.headers)
+            result = self.fetch_request(url, urlfetch.GET, headers)
             if result.status_code != 200:
                 self.response.out.write(result.content)
                 return
