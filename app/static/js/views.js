@@ -175,9 +175,14 @@
             data.description = this.$(selector + ' [name=description]').val();
             data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
             data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
-            data['project-id'] = this.model.id;
+//             data['project-id'] = this.model.id;
 //             data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
             return data;
+        },
+        finishItem: function(item) {
+            item.set('project-id', this.model.id, {silent: true});
+            item.set('person-name', this.options.collections.people.get(item.get('person-id')).name(), {silent: true});
+            return item;
         },
         sorttime: function(e) {
             e.preventDefault();
@@ -187,15 +192,16 @@
         },
         addtime: function(e) {
             e.preventDefault();
-            var collection = this.collection,
+            var context = this,
                 item = this.collection.create(this.parseData('.addtime'), {
                 wait: true,
                 success: function(model, resp, options) {
+                    context.finishItem(model);
                     try {
-                        collection.fullCollection.sort();
+                        context.collection.fullCollection.sort();
                     } catch (err) {
-                        collection.setSorting('id', 1);
-                        collection.fullCollection.sort();
+                        context.collection.setSorting('id', 1);
+                        context.collection.fullCollection.sort();
                     }
                     return true;
                 }});
@@ -247,6 +253,12 @@
             'click .todo-time #save': 'savetime',
             'click .todo-time #reset': 'resettime',
             'click .todo-time thead>tr>th': 'sorttime'
+        },
+        finishItem: function(item) {
+            item.set('project-id', this.model.id, {silent: true});
+            item.set('todo-item-id', this.cur_item, {silent: true});
+            item.set('person-name', this.options.collections.people.get(item.get('person-id')).name(), {silent: true});
+            return item;
         },
         template: '#todo-time-template'
     });
