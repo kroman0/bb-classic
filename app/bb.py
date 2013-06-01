@@ -403,7 +403,6 @@ def save_request(url, result):
 REQUEST2XML = {
     rec(r".*\/time_entries.xml"): ("time-entry",),
     rec(r".*\/time_entries\/\d*\.xml"): ("time-entry",),
-    rec(r".*"): None
 }
 
 
@@ -415,7 +414,7 @@ def get_xml_for_request(url):
     :rtype: tuple or None
     """
     res = [r for r in REQUEST2XML if r.match(url)]
-    return REQUEST2XML.get(res[0])
+    return REQUEST2XML.get(res[0]) if res else None
 
 
 def dict2xml(data, tags):
@@ -480,16 +479,16 @@ class CrossDomain(BaseRequestHandler):
             return self.redirect('/login')
         entrytype = self.apiurl.split("/")[-1]
         jsondata = json.loads(self.request.body)
-        headers = get_headers(self.username, self.password)
         if self._testlogin():
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write(json.dumps(jsondata))
         else:
-            tags = REQUEST2XML.get(entrytype, '')
+            tags = get_xml_for_request(self.apiurl)
             if tags:
                 xmldata = dict2xml(jsondata, tags)
             else:
                 xmldata = tags
+            headers = get_headers(self.username, self.password)
             result = self.fetch_request(self.fullurl, urlfetch.PUT, headers,
                                         xmldata)
             if result.status_code != 200:
@@ -515,11 +514,7 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
-        entrytype = self.apiurl.split("/")[-1]
-        tags = REQUEST2XML.get(entrytype, ("request"))
         jsondata = json.loads(self.request.body)
-        xmldata = dict2xml(jsondata, tags)
-        headers = get_headers(self.username, self.password)
         if self._testlogin():
             self.response.headers['Content-Type'] = 'application/json'
             item = COLLECTION[0].copy()
@@ -527,6 +522,13 @@ class CrossDomain(BaseRequestHandler):
             item.update({'id': 30})
             self.response.out.write(json.dumps(item))
         else:
+            tags = get_xml_for_request(self.apiurl)
+            if tags:
+                xmldata = dict2xml(jsondata, tags)
+            else:
+                xmldata = tags
+            xmldata = dict2xml(jsondata, tags)
+            headers = get_headers(self.username, self.password)
             result = self.fetch_request(self.fullurl, urlfetch.POST, headers,
                                         xmldata)
             if result.status_code != 201:
