@@ -1,4 +1,6 @@
---- 
+---
+addons:
+  sauce_connect: true
 before_install: 
 - pip install Pillow pycrypto
 python: "2.7"
@@ -9,12 +11,7 @@ before_script:
 install: 
 - python bootstrap.py
 - bin/buildout -Nq
-- curl -O http://saucelabs.com/downloads/Sauce-Connect-latest.zip
-- unzip Sauce-Connect-latest.zip
-- java -jar Sauce-Connect.jar $SAUCE_USERNAME $SAUCE_ACCESS_KEY -i $TRAVIS_JOB_NUMBER -f CONNECTED &
-- JAVA_PID=$!
 after_script: 
-- kill $JAVA_PID
 - cat app.log
 language: python
 env: 
