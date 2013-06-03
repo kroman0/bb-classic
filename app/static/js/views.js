@@ -76,84 +76,6 @@
             }
         }),
         BBViewProto = BBView.prototype;
-    bbviews.TimeReportView = PagesBBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
-        },
-        pagerid: 'time-report',
-        events: {
-            'click .time-report.previous': 'previous',
-            'click .time-report.next': 'next',
-            'click #getreport': 'getreport',
-            'click .time-report #edit': 'edittime',
-            'click .time-report #remove': 'removetime',
-            'click .time-report #save': 'savetime',
-            'click .time-report #reset': 'resettime',
-            'click .time-report thead>tr>th': 'sorttime'
-        },
-        parseData: function(selector) {
-            var data = {};
-            data.date = this.$(selector + ' [name=date]').val();
-            data.description = this.$(selector + ' [name=description]').val();
-            data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
-            data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
-//             data['project-id'] = this.model.id;
-//             data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
-            return data;
-        },
-        sorttime: function(e) {
-            e.preventDefault();
-            var id = $(e.currentTarget).data('sort') || $(e.currentTarget).text();
-            this.collection.setSorting(id, -this.collection.state.order);
-            this.collection.fullCollection.sort();
-        },
-        edittime: function(e) {
-            e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.edit = true;
-            this.render();
-        },
-        resettime: function(e) {
-            e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.edit = false;
-            this.render();
-        },
-        removetime: function(e) {
-            e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.destroy();
-            this.render();
-        },
-        savetime: function(e) {
-            e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.edit = false;
-            model.save(this.parseData('.edittime[data-id=' + id + ']'));
-            this.render();
-        },
-        getreport: function(e) {
-            e.preventDefault();
-            this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
-            this.collection.fetch({cache: true});
-        },
-        template: '#time-report-template',
-        itemtemplate: '#time-template',
-        name: function() {
-            return 'Time report';
-        },
-        render: function() {
-            BBViewProto.render.apply(this, arguments);
-            if (this.collection.filter_report) {
-                this.$el.find('form#makereport').deserialize(this.collection.filter_report);
-            }
-            return this;
-        }
-    });
     bbviews.AllPeopleView = BBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
@@ -311,6 +233,38 @@
             return item;
         },
         template: '#todo-time-template'
+    });
+    bbviews.TimeReportView = bbviews.TimeEntriesView.extend({
+        deps: function() {
+            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
+        },
+        pagerid: 'time-report',
+        events: {
+            'click .time-report.previous': 'previous',
+            'click .time-report.next': 'next',
+            'click #getreport': 'getreport',
+            'click .time-report #edit': 'edittime',
+            'click .time-report #remove': 'removetime',
+            'click .time-report #save': 'savetime',
+            'click .time-report #reset': 'resettime',
+            'click .time-report thead>tr>th': 'sorttime'
+        },
+        getreport: function(e) {
+            e.preventDefault();
+            this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
+            this.collection.fetch({cache: true});
+        },
+        template: '#time-report-template',
+        name: function() {
+            return 'Time report';
+        },
+        render: function() {
+            BBViewProto.render.apply(this, arguments);
+            if (this.collection.filter_report) {
+                this.$el.find('form#makereport').deserialize(this.collection.filter_report);
+            }
+            return this;
+        }
     });
     bbviews.PostCommentsView = TitleBBView.extend({
         deps: function() {
