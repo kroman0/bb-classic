@@ -230,6 +230,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
     sub_id = None
     subdomain = None
 
+    @property
     def dev(self):
         """ Check develompent environment
         """
@@ -261,7 +262,7 @@ class MainPage(BaseRequestHandler):
         if self.auth_check():
             self.response.out.write(template.render(
                 _('index.html'),
-                {'dev': self.dev()}))
+                {'dev': self.dev}))
         else:
             return self.redirect('/login')
 
@@ -277,7 +278,7 @@ class LoginPage(BaseRequestHandler):
         """
         self.response.out.write(template.render(
             _('login.html'),
-            {'dev': self.dev()}))
+            {'dev': self.dev}))
 
     def post(self):
         """ POST request
@@ -324,7 +325,7 @@ class LogoutPage(BaseRequestHandler):
             'ssid=%s; expires=Fri, 31-Dec-2008 23:59:59 GMT;' % ssid)
         self.response.out.write(template.render(
             _('logout.html'),
-            {'dev': self.dev()}))
+            {'dev': self.dev}))
 
 
 def convertchilds(childs):
@@ -502,7 +503,7 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
-        if self._testlogin():
+        if self._testlogin:
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write(json.dumps(self.jsondata))
         else:
@@ -518,7 +519,7 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
-        if not self._testlogin():
+        if not self._testlogin:
             result = self.fetch_request(urlfetch.DELETE)
             if result.status_code != 200:
                 self.response.out.write(result.content)
@@ -529,7 +530,7 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
-        if self._testlogin():
+        if self._testlogin:
             self.response.headers['Content-Type'] = 'application/json'
             item = COLLECTION[0].copy()
             item.update(self.jsondata)
@@ -561,6 +562,7 @@ class CrossDomain(BaseRequestHandler):
         else:
             self.response.out.write(json.dumps(COLLECTION))
 
+    @property
     def _testlogin(self):
         """ chech test login
         """
@@ -575,10 +577,10 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
-        if self._testlogin():
+        if self._testlogin:
             self._testget()
             return
-        dev = self.dev()
+        dev = self.dev
         query = None
         url = self.fullurl
         if dev:
