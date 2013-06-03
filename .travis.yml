@@ -6,8 +6,6 @@ before_install:
 python: "2.7"
 script: 
 - make test
-before_script: 
-- bash -c "while [ ! -f CONNECTED ]; do sleep 2; done"
 install: 
 - python bootstrap.py
 - bin/buildout -Nq
