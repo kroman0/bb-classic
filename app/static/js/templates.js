@@ -140,9 +140,9 @@ if (tt.isEmpty()) { %>\n\
         <tr>\n\
             <th>date</th>\n\
             <th>hours</th>\n\
-            <th>person</th>\n\
+            <th data-sort="person-id">person</th>\n\
             <th>description</th>\n\
-            <th>&nbsp;</th>\n\
+            <th data-sort="id">&nbsp;</th>\n\
         </tr>\n\
     </thead>\n\
     <tbody>\n\
@@ -439,7 +439,7 @@ if (tt.isEmpty()) { %>\n\
             <th>hours</th>\n\
             <th data-sort="person-id">person</th>\n\
             <th>description</th>\n\
-            <th>&nbsp;</th>\n\
+            <th data-sort="id">&nbsp;</th>\n\
         </tr>\n\
     </thead>\n\
     <tbody>\n\
@@ -488,7 +488,7 @@ if (tt.isEmpty()) { %>\n\
             <th>hours</th>\n\
             <th data-sort="person-id">person</th>\n\
             <th>description</th>\n\
-            <th>&nbsp;</th>\n\
+            <th data-sort="id">&nbsp;</th>\n\
         </tr>\n\
     </thead>\n\
     <tbody>\n\
