@@ -149,13 +149,15 @@ if (tt.isEmpty()) { %>\n\
         <% var prs=view.options.collections.projects;\n\
         _.each(_.uniq(tt.pluck("project-id")), function (prid) { %>\n\
         <tr class="info">\n\
-            <td colspan="4">\n\
+            <td>\n\
                 <a href="#projects/<%- prid %>/time_entries">\n\
                     <%- prs.get(prid)?prs.get(prid).get("name"):prid %>\n\
                 </a>\n\
             </td>\n\
             <td>\n\
+                <%- _.reduce(_.map(tt.where({"project-id":prid}),function(i){return i.get("hours");}),function(memo, num) { return memo + num; }, 0) %>\n\
             </td>\n\
+            <td colspan="3">&nbsp;</td>\n\
         </tr>\n\
         <% _.each(tt.where({"project-id":prid}), function (item) { %>\n\
             <%= view.renderitem(item) %>\n\
