@@ -1,0 +1,86 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=15  implicit_wait=0.1
+
+Resource  keywords.txt
+
+Suite Setup  Start app
+
+Suite Teardown  Stop app
+
+Test Setup  Start Browser For Test
+
+Test Teardown  Close All Browsers and Report Status
+
+
+*** Test Cases ***
+
+User can edit, delete and sort time entries on time report page
+    [Documentation]  User should edit, delete and sort time entries.
+    [Tags]  times  crud
+    Given an bb-classic app
+    And click on "Time" link in navbar
+    When user edit time entry
+    Then page should contain edited entry
+    When user delete time entry
+    Then page should not contain deleted entry
+    When user sort time entries
+    Then page should contain sorted entries
+
+User can add, edit, delete and sort time entries on project time page
+    [Documentation]  User should add, edit, delete and sort time entries.
+    [Tags]  times  crud  projects
+    Given an bb-classic app
+    And click link  Name of #0
+    And click on "Time" in projectnav
+    When user edit time entry
+    Then page should contain edited entry
+    When user delete time entry
+    Then page should not contain deleted entry
+    When user sort time entries
+    Then page should contain sorted entries
+    When user add time entry
+    Then page should contain added entry
+
+
+*** Keywords ***
+
+user add time entry
+    [Documentation]  user can add time entry
+    Wait Until Page Contains Element  css=tr.addtime button#add
+    Input Text  css=tr.addtime [name="description"]  added description
+    Click Button  css=tr.addtime button#add
+
+page should contain added entry
+    [Documentation]  added item should be present
+    Wait Until Page Contains  added description
+
+user edit time entry
+    [Documentation]  user can edit time entry
+    Wait Until Page Contains Element  css=tr[data-id="0"] button#edit
+    Click Button  css=tr[data-id="0"] button#edit
+    Wait Until Page Contains Element  css=tr.edittime[data-id="0"] [name="description"]
+    Input Text  css=tr.edittime[data-id="0"] [name="description"]  edited description
+    Click Button  css=tr[data-id="0"] button#save
+
+page should contain edited entry
+    [Documentation]  edited item should be present
+    Wait Until Page Contains  edited description
+
+user delete time entry
+    [Documentation]  user can delete time entry
+    Wait Until Page Contains Element  css=tr[data-id="0"] button#remove
+    Click Button  css=tr[data-id="0"] button#remove
+
+page should not contain deleted entry
+    [Documentation]  deleted item should not be present
+    Page should not contain  edited description
+
+user sort time entries
+    [Documentation]  sort time entries by date
+    Click Element  xpath=//table/thead/tr/th[contains(text(), "date")]
+
+page should contain sorted entries
+    [Documentation]  time entries must be sorted
+    Page should contain  2012-12-24
+    Page should not contain  2001-01-01

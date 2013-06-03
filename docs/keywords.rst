@@ -13,5 +13,8 @@ Acceptance tests keywords
 .. robot_keywords::
    :source: ../tests/keywords.txt
 
+.. robot_keywords::
+   :source: ../tests/times.txt
+
 .. automodule:: keywords
     :members:

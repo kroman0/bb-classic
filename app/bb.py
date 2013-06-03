@@ -230,6 +230,7 @@ class BaseRequestHandler(webapp2.RequestHandler):
     sub_id = None
     subdomain = None
 
+    @property
     def dev(self):
         """ Check develompent environment
         """
@@ -261,7 +262,7 @@ class MainPage(BaseRequestHandler):
         if self.auth_check():
             self.response.out.write(template.render(
                 _('index.html'),
-                {'dev': self.dev()}))
+                {'dev': self.dev}))
         else:
             return self.redirect('/login')
 
@@ -277,7 +278,7 @@ class LoginPage(BaseRequestHandler):
         """
         self.response.out.write(template.render(
             _('login.html'),
-            {'dev': self.dev()}))
+            {'dev': self.dev}))
 
     def post(self):
         """ POST request
@@ -324,7 +325,7 @@ class LogoutPage(BaseRequestHandler):
             'ssid=%s; expires=Fri, 31-Dec-2008 23:59:59 GMT;' % ssid)
         self.response.out.write(template.render(
             _('logout.html'),
-            {'dev': self.dev()}))
+            {'dev': self.dev}))
 
 
 def convertchilds(childs):
@@ -403,7 +404,6 @@ def save_request(url, result):
 REQUEST2XML = {
     rec(r".*\/time_entries.xml"): ("time-entry",),
     rec(r".*\/time_entries\/\d*\.xml"): ("time-entry",),
-    rec(r".*"): None
 }
 
 
@@ -415,7 +415,12 @@ def get_xml_for_request(url):
     :rtype: tuple or None
     """
     res = [r for r in REQUEST2XML if r.match(url)]
-    return REQUEST2XML.get(res[0])
+    return REQUEST2XML.get(res[0]) if res else None
+
+
+FILTER_JSON_ATTRIBUTE = [
+    "person-name",
+]
 
 
 def dict2xml(data, tags):
@@ -432,6 +437,8 @@ def dict2xml(data, tags):
         item.appendChild(elem)
         item = elem
     for key, value in data.items():
+        if key in FILTER_JSON_ATTRIBUTE:
+            continue
         elem = dom.createElement(key)
         text = dom.createTextNode(unicode(value))
         elem.appendChild(text)
@@ -447,7 +454,7 @@ class CrossDomain(BaseRequestHandler):
     * :http:delete:`/api/.*` - `CrossDomain DELETE <#bb.CrossDomain.delete>`_
     * :http:get:`/api/.*` - `CrossDomain GET <#bb.CrossDomain.get>`_
     """
-    def fetch_request(self, url, method, headers, data=None):
+    def fetch_request(self, method, data=None):
         """ Fetch request
 
         :param string url: [required] request url
@@ -456,7 +463,8 @@ class CrossDomain(BaseRequestHandler):
         :raises: Exception
         :rtype: `Response <http://goo.gl/F0G1l>`_
         """
-        result = urlfetch.fetch(url=url, payload=data, method=method,
+        headers = get_headers(self.username, self.password)
+        result = urlfetch.fetch(url=self.fullurl, payload=data, method=method,
                                 headers=headers)
         self.response.set_status(result.status_code)
         return result
@@ -473,39 +481,46 @@ class CrossDomain(BaseRequestHandler):
         """
         return absolute_url(self.subdomain, self.apiurl)
 
+    @property
+    def jsondata(self):
+        """ get json data from request body
+        """
+        return json.loads(self.request.body)
+
+    @property
+    def xmldata(self):
+        """ get xml data from request body
+        """
+        tags = get_xml_for_request(self.apiurl)
+        if tags:
+            xmldata = dict2xml(self.jsondata, tags)
+        else:
+            xmldata = tags
+        return xmldata
+
     def put(self):
         """ PUT request
         """
         if not self.auth_check():
             return self.redirect('/login')
-        entrytype = self.apiurl.split("/")[-1]
-        jsondata = json.loads(self.request.body)
-        headers = get_headers(self.username, self.password)
-        if self._testlogin():
+        if self._testlogin:
             self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps(jsondata))
+            self.response.out.write(json.dumps(self.jsondata))
         else:
-            tags = REQUEST2XML.get(entrytype, '')
-            if tags:
-                xmldata = dict2xml(jsondata, tags)
-            else:
-                xmldata = tags
-            result = self.fetch_request(self.fullurl, urlfetch.PUT, headers,
-                                        xmldata)
+            result = self.fetch_request(urlfetch.PUT, self.xmldata)
             if result.status_code != 200:
                 self.response.out.write(result.content)
                 return
             self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps(jsondata))
+            self.response.out.write(json.dumps(self.jsondata))
 
     def delete(self):
         """ DELETE request
         """
         if not self.auth_check():
             return self.redirect('/login')
-        headers = get_headers(self.username, self.password)
-        if not self._testlogin():
-            result = self.fetch_request(self.fullurl, urlfetch.DELETE, headers)
+        if not self._testlogin:
+            result = self.fetch_request(urlfetch.DELETE)
             if result.status_code != 200:
                 self.response.out.write(result.content)
                 return
@@ -515,20 +530,14 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
-        entrytype = self.apiurl.split("/")[-1]
-        tags = REQUEST2XML.get(entrytype, ("request"))
-        jsondata = json.loads(self.request.body)
-        xmldata = dict2xml(jsondata, tags)
-        headers = get_headers(self.username, self.password)
-        if self._testlogin():
+        if self._testlogin:
             self.response.headers['Content-Type'] = 'application/json'
             item = COLLECTION[0].copy()
-            item.update(jsondata)
+            item.update(self.jsondata)
             item.update({'id': 30})
             self.response.out.write(json.dumps(item))
         else:
-            result = self.fetch_request(self.fullurl, urlfetch.POST, headers,
-                                        xmldata)
+            result = self.fetch_request(urlfetch.POST, self.xmldata)
             if result.status_code != 201:
                 self.response.out.write(result.content)
                 return
@@ -539,6 +548,7 @@ class CrossDomain(BaseRequestHandler):
             else:
                 item_id = int(location[:location.find('.')])
             self.response.set_status(result.status_code)
+            jsondata = self.jsondata
             jsondata.update({'id': item_id})
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write(json.dumps(jsondata))
@@ -552,6 +562,7 @@ class CrossDomain(BaseRequestHandler):
         else:
             self.response.out.write(json.dumps(COLLECTION))
 
+    @property
     def _testlogin(self):
         """ chech test login
         """
@@ -566,19 +577,18 @@ class CrossDomain(BaseRequestHandler):
         """
         if not self.auth_check():
             return self.redirect('/login')
-        if self._testlogin():
+        if self._testlogin:
             self._testget()
             return
-        dev = self.dev()
+        dev = self.dev
         query = None
-        url = absolute_url(self.subdomain, self.request.path_qs[4:])
+        url = self.fullurl
         if dev:
             query = db.GqlQuery("SELECT * FROM CacheInfo WHERE url='%s'" % url)
         if dev and query and query.count():
             content = query[0].content
         else:
-            headers = get_headers(self.username, self.password)
-            result = self.fetch_request(url, urlfetch.GET, headers)
+            result = self.fetch_request(urlfetch.GET)
             if result.status_code != 200:
                 self.response.out.write(result.content)
                 return
