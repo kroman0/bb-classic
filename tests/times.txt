@@ -18,8 +18,7 @@ Test Teardown  Close All Browsers and Report Status
 User can edit, delete and sort time entries on time report page
     [Documentation]  User should edit, delete and sort time entries.
     [Tags]  times  crud
-    Given an bb-classic app
-    And click on "Time" link in navbar
+    Given an time report page
     When user edit time entry
     Then page should contain edited entry
     When user delete time entry
@@ -30,9 +29,7 @@ User can edit, delete and sort time entries on time report page
 User can add, edit, delete and sort time entries on project time page
     [Documentation]  User should add, edit, delete and sort time entries.
     [Tags]  times  crud  projects
-    Given an bb-classic app
-    And click link  Name of #0
-    And click on "Time" in projectnav
+    Given an project time page
     When user edit time entry
     Then page should contain edited entry
     When user delete time entry
@@ -44,6 +41,15 @@ User can add, edit, delete and sort time entries on project time page
 
 
 *** Keywords ***
+
+an time report page
+    Given an bb-classic app
+    And click on "Time" link in navbar
+
+an project time page
+    Given an bb-classic app
+    When click link  Name of #0
+    When click on "Time" in projectnav
 
 user add time entry
     [Documentation]  user can add time entry
