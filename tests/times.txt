@@ -1,6 +1,6 @@
 *** Settings ***
 
-Library  Selenium2Library  timeout=15  implicit_wait=0.1
+Library  Selenium2Library  timeout=15  implicit_wait=0.3
 
 Resource  keywords.txt
 
