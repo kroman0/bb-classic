@@ -1,6 +1,6 @@
 *** Settings ***
 
-Library  Selenium2Library  timeout=15  implicit_wait=0.3
+Library  Selenium2Library  timeout=15  implicit_wait=0.1
 
 Resource  keywords.txt
 
@@ -15,7 +15,7 @@ Test Teardown  Close All Browsers and Report Status
 
 *** Test Cases ***
 
-User can edit, delete and sort time entries on time report page
+User can edit delete and sort time entries on time report page
     [Documentation]  User should edit, delete and sort time entries.
     [Tags]  times  crud
     Given an time report page
@@ -26,7 +26,7 @@ User can edit, delete and sort time entries on time report page
     When user sort time entries
     Then page should contain sorted entries
 
-User can add, edit, delete and sort time entries on project time page
+User can add edit delete and sort time entries on project time page
     [Documentation]  User should add, edit, delete and sort time entries.
     [Tags]  times  crud  projects
     Given an project time page
