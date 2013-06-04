@@ -1,5 +1,5 @@
 /*jslint white: true*/
-/*global require*/
+/*global require,window*/
 
 // Require.js allows us to configure shortcut alias
 require.config({
@@ -50,19 +50,22 @@ require.config({
         }
     },
     paths: {
-        json2: 'json2',
-        jquery: 'jquery-1.7.2',
-        jquerydeserialize: 'jquery.deserialize',
-        backbonepageable: 'backbone-pageable',
-        backbonecache: 'backbone.fetch-cache',
-        backboneanalytics: 'backbone.analytics',
-        datepicker: 'bootstrap-datepicker',
-        bbgeneral: 'general',
-        bbmodels: 'models',
-        bbcollections: 'collections',
-        bbtemplates: 'templates',
-        bbviews: 'views',
-        bbmain: 'main',
+        json2: 'json2.min',
+        jquery: 'jquery-1.7.2.min',
+        jquerydeserialize: 'jquery.deserialize-min',
+        underscore: 'underscore-min',
+        backbone: 'backbone-min',
+        backbonepageable: 'backbone-pageable.min',
+        backbonecache: 'backbone.fetch-cache.min',
+        backboneanalytics: 'backbone.analytics-min',
+        bootstrap: 'bootstrap.min',
+        datepicker: 'bootstrap-datepicker.min',
+        bbgeneral: 'general.min',
+        bbmodels: 'models.min',
+        bbcollections: 'collections.min',
+        bbtemplates: 'templates.min',
+        bbviews: 'views.min',
+        bbmain: 'main.min'
     }
 });
 
@@ -71,6 +74,7 @@ require([
     'json2',
     'bootstrap',
     'datepicker'
-], function (BB) {
+], function(BB) {
     'use strict';
+    window.BB = BB;
 });

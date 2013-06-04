@@ -97,7 +97,7 @@ button#remove {
         </div>
     </div>
 {% if dev %}
-<script data-main="/static/js/deps" src="/static/js/require.js"></script>
+<script data-main="/static/js/dev" src="/static/js/require.js"></script>
 {% else %}
 <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -109,7 +109,7 @@ button#remove {
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
 </script>
-<script data-main="/static/js/deps.min" src="/static/js/require.min.js"></script>
+<script data-main="/static/js/deps" src="/static/js/require.min.js"></script>
 {% endif %}
 </body>
 </html>

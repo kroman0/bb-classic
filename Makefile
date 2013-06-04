@@ -2,7 +2,7 @@
 #
 
 BASE = app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
-SCRIPTS = $(BASE) app/static/js/deps.js app/static/js/deps.min.js
+SCRIPTS = $(BASE) app/static/js/deps.js app/static/js/dev.js
 MINIFY = $(BASE) app/static/js/json2.js app/static/js/jquery.deserialize.js app/static/js/bootstrap-datepicker.js app/static/js/backbone.analytics.js
 
 all: run
