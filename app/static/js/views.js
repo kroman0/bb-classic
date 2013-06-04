@@ -76,34 +76,6 @@
             }
         }),
         BBViewProto = BBView.prototype;
-    bbviews.TimeReportView = PagesBBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
-        },
-        pagerid: 'time-report',
-        events: {
-            'click .time-report.previous': 'previous',
-            'click .time-report.next': 'next',
-            'click #getreport': 'getreport'
-        },
-        getreport: function(e) {
-            e.preventDefault();
-            this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
-            this.collection.fetch({cache: true});
-        },
-        template: '#time-report-template',
-        itemtemplate: '#time-template',
-        name: function() {
-            return 'Time report';
-        },
-        render: function() {
-            BBViewProto.render.apply(this, arguments);
-            if (this.collection.filter_report) {
-                this.$el.find('form#makereport').deserialize(this.collection.filter_report);
-            }
-            return this;
-        }
-    });
     bbviews.AllPeopleView = BBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
@@ -261,6 +233,38 @@
             return item;
         },
         template: '#todo-time-template'
+    });
+    bbviews.TimeReportView = bbviews.TimeEntriesView.extend({
+        deps: function() {
+            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
+        },
+        pagerid: 'time-report',
+        events: {
+            'click .time-report.previous': 'previous',
+            'click .time-report.next': 'next',
+            'click #getreport': 'getreport',
+            'click .time-report #edit': 'edittime',
+            'click .time-report #remove': 'removetime',
+            'click .time-report #save': 'savetime',
+            'click .time-report #reset': 'resettime',
+            'click .time-report thead>tr>th': 'sorttime'
+        },
+        getreport: function(e) {
+            e.preventDefault();
+            this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
+            this.collection.fetch({cache: true});
+        },
+        template: '#time-report-template',
+        name: function() {
+            return 'Time report';
+        },
+        render: function() {
+            BBViewProto.render.apply(this, arguments);
+            if (this.collection.filter_report) {
+                this.$el.find('form#makereport').deserialize(this.collection.filter_report);
+            }
+            return this;
+        }
     });
     bbviews.PostCommentsView = TitleBBView.extend({
         deps: function() {
