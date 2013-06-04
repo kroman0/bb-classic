@@ -44,12 +44,14 @@ User can add edit delete and sort time entries on project time page
 
 an time report page
     Given an bb-classic app
-    And click on "Time" link in navbar
+    When click on "Time" link in navbar
+    Then wait for data loading
 
 an project time page
     Given an bb-classic app
     When click link  Name of #0
-    When click on "Time" in projectnav
+    And click on "Time" in projectnav
+    Then wait for data loading
 
 user add time entry
     [Documentation]  user can add time entry
