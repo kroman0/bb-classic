@@ -29,7 +29,7 @@
                 var fetched = this.fetched;
                 if (!fetched) {
                     this.fetched = true;
-                    this.fetch({cache: true});
+                    this.fetch({cache: true, reset: true});
                 }
                 return fetched;
             },
@@ -38,7 +38,6 @@
                     this[id] = this.clone();
                     this[id].parent_id = id;
                     this[id].on('reset', onReset);
-                    this[id].on('sync', onReset);
                 }
                 return this[id];
             }
