@@ -87,7 +87,11 @@ backbone-fetch-cache-update:
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.js -O app/static/js/backbone.fetch-cache.js
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.min.js -O app/static/js/backbone.fetch-cache.min.js
 
-update-all: bootstrap-update bootstrap-datepicker-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update
+moment-update:
+	wget -q https://raw.github.com/timrwood/moment/master/moment.js -O app/static/js/moment.js
+	wget -q https://raw.github.com/timrwood/moment/master/min/moment.min.js -O app/static/js/moment.min.js
+
+update-all: bootstrap-update bootstrap-datepicker-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update moment-update
 
 pylint:
 	pylint -f colorized --rcfile=.pylintrc -r n app/*.py tests/*.py
