@@ -2,7 +2,7 @@
 #
 
 BASE = app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
-SCRIPTS = $(BASE) app/static/js/deps.js app/static/js/dev.js
+SCRIPTS = $(BASE)
 MINIFY = $(BASE) app/static/js/json2.js app/static/js/jquery.deserialize.js app/static/js/bootstrap-datepicker.js app/static/js/backbone.analytics.js
 
 all: run
@@ -87,11 +87,15 @@ backbone-fetch-cache-update:
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.js -O app/static/js/backbone.fetch-cache.js
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.min.js -O app/static/js/backbone.fetch-cache.min.js
 
+moment-update:
+	wget -q https://raw.github.com/timrwood/moment/master/moment.js -O app/static/js/moment.js
+	wget -q https://raw.github.com/timrwood/moment/master/min/moment.min.js -O app/static/js/moment.min.js
+
 requirejs-update:
 	wget -q http://requirejs.org/docs/release/2.1.6/comments/require.js -O app/static/js/require.js
 	wget -q http://requirejs.org/docs/release/2.1.6/minified/require.js -O app/static/js/require.min.js
 
-update-all: bootstrap-update bootstrap-datepicker-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update requirejs-update
+update-all: bootstrap-update bootstrap-datepicker-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update moment-update requirejs-update
 
 pylint:
 	pylint -f colorized --rcfile=.pylintrc -r n app/*.py tests/*.py

@@ -446,7 +446,7 @@ if (tt.isEmpty()) { %>\n\
     </thead>\n\
     <tbody>\n\
         <tr class="addtime">\n\
-            <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></td>\n\
+            <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>\n\
             <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>\n\
             <td>\n\
                 <div>\n\
@@ -495,7 +495,7 @@ if (tt.isEmpty()) { %>\n\
     </thead>\n\
     <tbody>\n\
         <tr class="addtime">\n\
-            <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- new Date().toJSON().split("T")[0] %>"></td>\n\
+            <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>\n\
             <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>\n\
             <td>\n\
                 <div>\n\
@@ -540,7 +540,7 @@ templates['#post-template'] = '\n\
             <%- item.get("category-name") %>\n\
         </a>\n\
         <% } %>\n\
-        on: <%- new Date(item.get("posted-on")) %>\n\
+        on: <span title="<%- item.get("posted-on") %>"><%- moment(item.get("posted-on")).format("LLL") %></span>\n\
     </small>\n\
     <p><%= item.get("display-body") %></p>\n\
     <% if (item.get("attachments")) { %>\n\
@@ -626,7 +626,7 @@ if (ff.isEmpty()) { %>\n\
             </a>\n\
             <% } %>\n\
             on\n\
-            <%- new Date(item.get("created-on")) %>,\n\
+            <span title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></span>,\n\
             <%- item.get("byte-size") %>B\n\
         </small>\n\
         <br/>\n\
@@ -665,7 +665,7 @@ if (ff.isEmpty()) { %>\n\
             </a>\n\
             <% } %>\n\
             on\n\
-            <%- new Date(item.get("created-on")) %>,\n\
+            <span title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></span>,\n\
             <%- item.get("byte-size") %>B\n\
         </small>\n\
         <br/>\n\
@@ -692,20 +692,20 @@ templates['#calendar-template'] = '\n\
         <% } %>\n\
         Type: <%- item.get("type") %><br />\n\
         <% if (item.get("start-at")) { %>\n\
-        Start at <%- new Date(item.get("start-at")).toDateString() %><br />\n\
+        Start at <span title="<%- item.get("start-at") %>"><%- moment(item.get("start-at")).format("LL") %></span><br />\n\
         <% } %>\n\
         <% if (item.get("due-at")) { %>\n\
-        Due at <%- new Date(item.get("due-at")).toDateString() %><br />\n\
+        Due at <span title="<%- item.get("due-at") %>"><%- moment(item.get("due-at")).format("LLL") %></span><br />\n\
         <% } %>\n\
         <% if (item.get("deadline")) { %>\n\
-        Deadline at <%- new Date(item.get("deadline")).toDateString() %><br />\n\
+        Deadline at <span title="<%- item.get("deadline") %>"><%- moment(item.get("deadline")).format("LL") %></span><br />\n\
         <% } %>\n\
         Created by\n\
         <a href="#people/<%- item.get("creator-id") %>">\n\
             <i class="icon-user"></i><%- item.get("creator-name") %>\n\
         </a>\n\
         on\n\
-        <%- new Date(item.get("created-on")) %>\n\
+        <span title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></span>\n\
         <% if (item.get("completed")) { %>\n\
         <br />\n\
         Completed by\n\
@@ -713,7 +713,7 @@ templates['#calendar-template'] = '\n\
             <i class="icon-user"></i><%- item.get("completer-name") %>\n\
         </a>\n\
         at\n\
-        <%- new Date(item.get("completed-at")) %>\n\
+        <span title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></span>\n\
         <% } %>\n\
     </small>\n\
 </li>';
@@ -1012,7 +1012,7 @@ templates['#comments-template'] = '\n\
             <a href="#people/<%- item.get("author-id") %>">\n\
                 <i class="icon-user"></i><%- item.get("author-name") %>\n\
             </a>\n\
-            <%- new Date(item.get("created-at")) %>\n\
+            <span title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></span>\n\
         </small>\n\
         <p><%= item.get("body") %></p>\n\
         <% if (item.get("attachments")) { %>\n\

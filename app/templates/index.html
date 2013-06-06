@@ -7,7 +7,11 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Bootstrap -->
+{% if dev %}
     <link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+{% else %}
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+{% endif %}
     <link href="/static/css/datepicker.css" rel="stylesheet" media="screen">
     <style type="text/css">
 .prstatus {
@@ -81,7 +85,11 @@ button#remove {
     border: 1px solid;
 }
     </style>
+{% if dev %}
     <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+{% else %}
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet">
+{% endif %}
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
       <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -97,7 +105,27 @@ button#remove {
         </div>
     </div>
 {% if dev %}
-<script data-main="/static/js/dev" src="/static/js/require.js"></script>
+<script src="/static/js/require.js"></script>
+<script>
+require.config({
+    paths: {
+        moment: 'moment',
+        json2: 'json2',
+        jquery: 'jquery-1.7.2',
+        jquerydeserialize: 'jquery.deserialize',
+        backbonepageable: 'backbone-pageable',
+        backbonecache: 'backbone.fetch-cache',
+        backboneanalytics: 'backbone.analytics',
+        datepicker: 'bootstrap-datepicker',
+        bbgeneral: 'general',
+        bbmodels: 'models',
+        bbcollections: 'collections',
+        bbtemplates: 'templates',
+        bbviews: 'views',
+        bbmain: 'main'
+    }
+});
+</script>
 {% else %}
 <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -109,7 +137,33 @@ button#remove {
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
     })();
 </script>
-<script data-main="/static/js/deps" src="/static/js/require.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.5/require.min.js"></script>
+<script>
+require.config({
+    paths: {
+        moment: '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.0.0/moment.min',
+        json2: '//cdnjs.cloudflare.com/ajax/libs/json2/20121008/json2.min',
+        jquery: '//cdnjs.cloudflare.com/ajax/libs/jquery/1.7.2/jquery.min',
+        jquerydeserialize: 'jquery.deserialize.min',
+        underscore: '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min',
+        backbone: '//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min',
+        backbonepageable: '//cdnjs.cloudflare.com/ajax/libs/backbone-pageable/1.3.0/backbone-pageable.min',
+        backbonecache: 'backbone.fetch-cache.min',
+        backboneanalytics: 'backbone.analytics.min',
+        bootstrap: '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min',
+        datepicker: 'bootstrap-datepicker.min',
+        bbgeneral: 'general.min',
+        bbmodels: 'models.min',
+        bbcollections: 'collections.min',
+        bbtemplates: 'templates.min',
+        bbviews: 'views.min',
+        bbmain: 'main.min'
+    }
+});
+</script>
 {% endif %}
+<script>
+require.config({baseUrl:'/static/js/',shim:{underscore:{exports:'_'},jquerydeserialize:{deps:['jquery']},backbone:{deps:['json2','underscore','jquery'],exports:'Backbone'},bootstrap:{deps:['jquery']},datepicker:{deps:['jquery','bootstrap']},backbonecache:{deps:['backbone']},backboneanalytics:{deps:['backbone']},backbonepageable:{deps:['backbone']}}});require(['bbmain','json2','bootstrap','moment','datepicker'],function(e){'use strict';window.BB=e})
+</script>
 </body>
 </html>

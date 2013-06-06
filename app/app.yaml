@@ -12,14 +12,14 @@ handlers:
 - url: /favicon.ico
   static_files: static/favicon.ico
   upload: static/favicon.ico
-  
-- url: /.*
-  script: bb.APPLICATION
-  secure: always
 
 - url: /(genkeys|addkey)
   script: crypto.APPLICATION
   login: admin
+  secure: always
+
+- url: /.*
+  script: bb.APPLICATION
   secure: always
 
 libraries:

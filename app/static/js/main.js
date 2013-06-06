@@ -103,7 +103,6 @@
     for (i in collections) {
         if (collections.hasOwnProperty(i)) {
             collections[i].on('reset', onReset);
-            collections[i].on('sync', onReset);
         }
     }
     collections.project_people = new bbcollections.People();
