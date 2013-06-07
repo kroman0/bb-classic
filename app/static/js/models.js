@@ -61,11 +61,11 @@
         icon: function() {
             switch (this.get('status')) {
             case 'active':
-                return 'icon-play';
+                return 'glyphicon glyphicon-play';
             case 'archived':
-                return 'icon-stop';
+                return 'glyphicon glyphicon-stop';
             case 'on_hold':
-                return 'icon-pause';
+                return 'glyphicon glyphicon-pause';
             }
         }
     });

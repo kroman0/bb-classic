@@ -19,17 +19,17 @@
     text-transform: capitalize;
     text-align: center;
 }
-.icon-completed {
-  background-position: -288px 0;
+.glyphicon-completed:before {
+  content: "\e013";
 }
-.icon-completed:hover {
-  background-position: -120px -72px;
+.glyphicon-completed:hover:before {
+  content: "\e066";
 }
-.icon-uncompleted {
-  background-position: -264px -72px;
+.glyphicon-uncompleted:before {
+  content: "\e072";
 }
-.icon-uncompleted:hover {
-  background-position: -144px -72px;
+.glyphicon-uncompleted:hover:before {
+  content: "\e067";
 }
 #makereport .add-on {
     width: 60px;
@@ -69,10 +69,10 @@ div#time_report {
     padding-left: 18px;
     width: 94%;
 }
-.addtime .icon-user,
-.edittime .icon-user,
-.edittime .icon-file,
-.edittime .icon-folder-close {
+.addtime .glyphicon-user,
+.edittime .glyphicon-user,
+.edittime .glyphicon-file,
+.edittime .glyphicon-folder-close {
     position: absolute;
     margin-top: 2px;
 }
@@ -87,7 +87,7 @@ button.remove {
 }
     </style>
 {% if dev %}
-    <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet">
+<!--     <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet"> -->
 {% else %}
     <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet">
 {% endif %}
@@ -98,7 +98,7 @@ button.remove {
 </head>
 <body>
     <div class="navbar navbar-static-top"></div>
-    <div class="container">
+    <div class="container view">
         <div class="content">
             <div class="progress progress-striped active">
                 <div class="bar" style="width: 100%;"></div>

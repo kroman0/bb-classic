@@ -14,18 +14,18 @@ var templates = {};
 templates['#time'] = '<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> data-id="<%- item.id %>">' +
 '    <td><%- item.get("date") %></td>' +
 '    <td><%- item.get("hours") %></td>' +
-'    <td><a title="<%- item.get("person-name") %>" href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- item.get("person-name") %></a></td>' +
+'    <td><a title="<%- item.get("person-name") %>" href="#people/<%- item.get("person-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("person-name") %></a></td>' +
 '    <td>' +
 '        <% if (item.get("todo-item-id")) { %>' +
-'            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>' +
+'            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="glyphicon glyphicon-file"></i></a>' +
 '        <% } else { %>' +
-'            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>' +
+'            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="glyphicon glyphicon-folder-close"></i></a>' +
 '        <% } %>' +
 '        <%- item.get("description") %>' +
 '    </td>' +
 '    <td>' +
-'        <button class="edit" title="Edit"><i class="icon-edit"></i></button>' +
-'        <button class="remove" title="Remove"><i class="icon-trash"></i></button>' +
+'        <button class="edit" title="Edit"><i class="glyphicon glyphicon-edit"></i></button>' +
+'        <button class="remove" title="Remove"><i class="glyphicon glyphicon-trash"></i></button>' +
 '    </td>' +
 '</tr>';
 templates['#timeedit'] = '<tr class="edittime form" data-id="<%- item.id %>">' +
@@ -33,7 +33,7 @@ templates['#timeedit'] = '<tr class="edittime form" data-id="<%- item.id %>">' +
 '    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>' +
 '    <td>' +
 '        <div>' +
-'            <i class="icon-user"></i><select name="person-id">' +
+'            <i class="glyphicon glyphicon-user"></i><select name="person-id">' +
 '                <% view.options.collections.people.each(function (i) { %>' +
 '                    <option value="<%- i.id %>" <% if (i.id==item.get("person-id")) { %>selected="selected"<% } %>><%- i.name() %></option>' +
 '                <% }) %>' +
@@ -42,15 +42,15 @@ templates['#timeedit'] = '<tr class="edittime form" data-id="<%- item.id %>">' +
 '    </td>' +
 '    <td>' +
 '        <% if (item.get("todo-item-id")) { %>' +
-'            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>' +
+'            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="glyphicon glyphicon-file"></i></a>' +
 '        <% } else { %>' +
-'            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>' +
+'            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="glyphicon glyphicon-folder-close"></i></a>' +
 '        <% } %>' +
 '        <input type="text" class="input-small" name="description" value="<%- item.get("description") %>">' +
 '    </td>' +
 '    <td>' +
-'        <button class="save" title="Save"><i class="icon-ok"></i></button>' +
-'        <button class="reset" title="Cancel"><i class="icon-off"></i></button>' +
+'        <button class="save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
+'        <button class="reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '    </td>' +
 '</tr>';
 templates['#pager'] = '<% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>' +
@@ -92,7 +92,7 @@ templates['#attachment'] = '<li>' +
 '    <a href="<%- item["download-url"] %>"><%- item.name %></a>' +
 '    <small>' +
 '        <%- item["byte-size"] %>B' +
-'        <a href="#people/<%- item["person-id"] %>"><i class="icon-user"></i><%- item["author-name"] %></a>' +
+'        <a href="#people/<%- item["person-id"] %>"><i class="glyphicon glyphicon-user"></i><%- item["author-name"] %></a>' +
 '    </small>' +
 '</li>';
 templates['#attachments'] = '<% if (item.get("attachments")) { %>' +
@@ -104,7 +104,7 @@ templates['#attachments'] = '<% if (item.get("attachments")) { %>' +
 '    <% } %>';
 templates['#comment'] = '<li class="thumbnail">' +
 '    <small>' +
-'        <a href="#people/<%- item.get("author-id") %>"><i class="icon-user"></i><%- item.get("author-name") %></a>' +
+'        <a href="#people/<%- item.get("author-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("author-name") %></a>' +
 '        <abbr title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></abbr>' +
 '    </small>' +
 '    <p><%= item.get("body") %></p>' +
@@ -302,7 +302,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        <% } else { %>' +
 '        <ul class="unstyled">' +
 '        <% _.each(pp.filter(function(i){return i.get("company-id")==cid}), function (item) { %>' +
-'            <li><a href="#people/<%- item.id %>"><i class="icon-user"></i><%- item.name() %></a></li>' +
+'            <li><a href="#people/<%- item.id %>"><i class="glyphicon glyphicon-user"></i><%- item.name() %></a></li>' +
 '        <% }) %>' +
 '        </ul>' +
 '        <% } %>' +
@@ -452,7 +452,7 @@ templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view
 '    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>' +
 '    <td>' +
 '        <div>' +
-'            <i class="icon-user"></i><select name="person-id">' +
+'            <i class="glyphicon glyphicon-user"></i><select name="person-id">' +
 '                <% pp.each(function (i) { %>' +
 '                    <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
 '                <% }) %>' +
@@ -463,7 +463,7 @@ templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view
 '        <input type="text" class="input-small" name="description">' +
 '    </td>' +
 '    <td>' +
-'        <button class="add" title="Add"><i class="icon-plus"></i></button>' +
+'        <button class="add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '    </td>' +
 '</tr>';
 templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header") %>' +
@@ -486,12 +486,12 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 templates['#post'] = '<li class="thumbnail">' +
 '    <h3>' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>' +
-'        <% if (item.get("private")) { %><i class="icon-lock"></i><% } %>' +
-'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="icon-comment icon-white"></i><%- item.get("comments-count") %></a>' +
+'        <% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %>' +
+'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="glyphicon glyphicon-comment glyphicon glyphicon-white"></i><%- item.get("comments-count") %></a>' +
 '    </h3>' +
 '    <small>' +
 '        by' +
-'        <a href="#people/<%- item.get("author-id") %>"><i class="icon-user"></i><%- item.get("author-name") %></a>' +
+'        <a href="#people/<%- item.get("author-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("author-name") %></a>' +
 '        <% if (item.get("category-id")) { %>' +
 '        in' +
 '        <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.get("category-id") %>"><%- item.get("category-name") %></a>' +
@@ -506,7 +506,7 @@ templates['#post'] = '<li class="thumbnail">' +
 '            <a href="<%- a["download-url"] %>"><%- a.name %></a>' +
 '            <small>' +
 '                <%- a["byte-size"] %>B' +
-'                <a href="#people/<%- a["person-id"] %>"><i class="icon-user"></i><%- a["author-name"] %></a>' +
+'                <a href="#people/<%- a["person-id"] %>"><i class="glyphicon glyphicon-user"></i><%- a["author-name"] %></a>' +
 '            </small>' +
 '        </li>' +
 '        <% }) %>' +
@@ -548,11 +548,11 @@ templates['#file'] = '<% var prid=view.model.id; var pp=view.options.collections
 'var cc=view.options.collections.project_categories.get_or_create(prid); %>' +
 '<li class="media well well-small">' +
 '    <h3>' +
-'        <a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %></a>' +
+'        <a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %></a>' +
 '    </h3>' +
 '    <small>' +
 '        by' +
-'        <a href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- pp.get(item.get("person-id"))?pp.get(item.get("person-id")).name():item.get("person-id") %></a>' +
+'        <a href="#people/<%- item.get("person-id") %>"><i class="glyphicon glyphicon-user"></i><%- pp.get(item.get("person-id"))?pp.get(item.get("person-id")).name():item.get("person-id") %></a>' +
 '        <% if (_.isFinite(item.get("category-id"))) { %>' +
 '        in' +
 '        <a href="#projects/<%- prid %>/categories/<%- item.get("category-id") %>"><%- cc.get(item.get("category-id"))?cc.get(item.get("category-id")).get("name"):item.get("category-id") %></a>' +
@@ -600,14 +600,14 @@ templates['#project-file'] = '<%= view.block("#header") %>' +
 templates['#calendar'] = '<li class="thumbnail">' +
 '    <h3>' +
 '        <a <% if (item.get("type")=="Milestone" && item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
-'        <i class="badge badge-inverse"><i class="calendar icon-white icon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>"></i></i>' +
-'        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="icon-comment icon-white"></i><%- item.get("comments-count") %></a>' +
-'        <i class="icon-pencil" data-id="<%- item.id %>"></i>' +
-'        <% if (!_.isFinite(view.cur_item)) { %><i class="icon-trash" data-id="<%- item.id %>"></i><% } %>' +
+'        <i class="badge badge-inverse"><i class="calendar glyphicon glyphicon-white glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>"></i></i>' +
+'        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="glyphicon glyphicon-comment glyphicon glyphicon-white"></i><%- item.get("comments-count") %></a>' +
+'        <i class="glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
+'        <% if (!_.isFinite(view.cur_item)) { %><i class="glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    </h3>' +
 '    <small>' +
 '        <% if (item.get("type")=="Milestone" && item.get("responsible-party-id")) { %>' +
-'        <a href="#<%- item.get("responsible-party-type")=="Company"?"companies":"people" %>/<%- item.get("responsible-party-id") %>"><% if (item.get("responsible-party-type")=="Person") { %><i class="icon-user"></i><% } %><%- item.get("responsible-party-name") %></a><br />' +
+'        <a href="#<%- item.get("responsible-party-type")=="Company"?"companies":"people" %>/<%- item.get("responsible-party-id") %>"><% if (item.get("responsible-party-type")=="Person") { %><i class="glyphicon glyphicon-user"></i><% } %><%- item.get("responsible-party-name") %></a><br />' +
 '        <% } %>' +
 '        Type: <%- item.get("type") %><br />' +
 '        <% if (item.get("start-at")) { %>' +
@@ -620,13 +620,13 @@ templates['#calendar'] = '<li class="thumbnail">' +
 '        Deadline at <abbr title="<%- item.get("deadline") %>"><%- moment(item.get("deadline")).format("LL") %></abbr><br />' +
 '        <% } %>' +
 '        Created by' +
-'        <a href="#people/<%- item.get("creator-id") %>"><i class="icon-user"></i><%- item.get("creator-name") %></a>' +
+'        <a href="#people/<%- item.get("creator-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("creator-name") %></a>' +
 '        on' +
 '        <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>' +
 '        <% if (item.get("type")=="Milestone" && item.get("completed")) { %>' +
 '        <br />' +
 '        Completed by' +
-'        <a href="#people/<%- item.get("completer-id") %>"><i class="icon-user"></i><%- item.get("completer-name") %></a>' +
+'        <a href="#people/<%- item.get("completer-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("completer-name") %></a>' +
 '        at' +
 '        <abbr title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></abbr>' +
 '        <% } %>' +
@@ -640,8 +640,8 @@ templates['#calendaredit'] = '<li class="thumbnail editcalendar form" data-id="<
 '</select>' +
 '<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="start-at" placeholder="YYYY-MM-DD" value="<%- item.get("start-at") %>">' +
 '<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="deadline" placeholder="YYYY-MM-DD" value="<%- item.get("deadline") %>">' +
-'<button data-id="<%- item.id %>" class="save btn btn-default" title="Save"><i class="icon-ok"></i></button>' +
-'<button data-id="<%- item.id %>" class="reset btn btn-default" title="Cancel"><i class="icon-off"></i></button>' +
+'<button data-id="<%- item.id %>" class="save btn btn-default" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
+'<button data-id="<%- item.id %>" class="reset btn btn-default" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</li>';
 templates['#project-calendar'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
@@ -708,9 +708,9 @@ templates['#project-category'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#todolist'] = '<dt>' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
-'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %><% if (item.get("tracked")) { %><i class="icon-time"></i><% } %></a>' +
-'    <i class="todolist icon-pencil" data-id="<%- item.id %>"></i>' +
-'    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist icon-trash" data-id="<%- item.id %>"></i><% } %>' +
+'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %><% if (item.get("tracked")) { %><i class="glyphicon glyphicon-time"></i><% } %></a>' +
+'    <i class="todolist glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
+'    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    <small><%= item.get("description") %></small>' +
 '</dt>';
 templates['#todolistedit'] = '<dt><form class="edit_todolist form-horizontal form">' +
@@ -736,8 +736,8 @@ templates['#todolistedit'] = '<dt><form class="edit_todolist form-horizontal for
 '</div></div>' +
 '<div class="control-group">' +
 '<div class="controls">' +
-'<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="icon-ok"></i></button>' +
-'<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="icon-off"></i></button>' +
+'<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
+'<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</div></div>' +
 '</form></dt>';
 templates['#todolistadd'] = '<dt>' +
@@ -765,7 +765,7 @@ templates['#todolistadd'] = '<dt>' +
 '</div></div>' +
 '<div class="control-group">' +
 '<div class="controls">' +
-'<button class="btn btn-default add" title="Add"><i class="icon-plus"></i></button>' +
+'<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</div></div>' +
 '</form></div></dt>';
 templates['#todo-lists'] = '<%= view.block("#header") %>' +
@@ -800,16 +800,16 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '        <% _.each(list.get("todo-items"), function (item) { %>' +
 '        <dd>' +
 '            <% if(false){if (item.completed) { %>' +
-'            <i class="todo-lists icon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
+'            <i class="todo-lists glyphicon glyphicon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
 '            <% } else { %>' +
-'            <i class="todo-lists icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
+'            <i class="todo-lists glyphicon glyphicon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
 '            <% } %>' +
 '            <% if (list.get("tracked")) { %>' +
-'            <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
+'            <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="glyphicon glyphicon-time"></i></a>' +
 '            <% }} %>' +
 '            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.content %></a>' +
 '            <% if(false){ %>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><i class="icon-comment icon-white"></i><%- item.get("comments-count") %></a>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><i class="glyphicon glyphicon-comment glyphicon glyphicon-white"></i><%- item.get("comments-count") %></a>' +
 '            <% } %>' +
 '        </dd>' +
 '        <% }) %>' +
@@ -859,15 +859,15 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-id");' +
 'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(tdlid); %>' +
-'<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
+'<i class="todo glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
 '<% if (list&&list.get("tracked")) { %>' +
-'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
+'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="glyphicon glyphicon-time"></i></a>' +
 '<% } %>&nbsp;' +
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
-'<% if (_.isFinite(item.get("responsible-party-id"))) { %><i class="icon-user"></i><% } %>' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="icon-comment icon-white"></i><%- item.get("comments-count") %></a>' +
-'<i class="todo icon-pencil" data-id="<%- item.id %>"></i>' +
-'<% if (!_.isFinite(view.todo_item)) { %><i class="todo icon-trash" data-id="<%- item.id %>"></i><% } %>';
+'<% if (_.isFinite(item.get("responsible-party-id"))) { %><i class="glyphicon glyphicon-user"></i><% } %>' +
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="glyphicon glyphicon-comment glyphicon glyphicon-white"></i><%- item.get("comments-count") %></a>' +
+'<i class="todo glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
+'<% if (!_.isFinite(view.todo_item)) { %><i class="todo glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>';
 templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<div class="edit_todo_wrapper"><form class="edit_todo form-horizontal form">' +
 '<div class="control-group">' +
@@ -895,8 +895,8 @@ templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_
 '</div></div>' +
 '<div class="control-group">' +
 '<div class="controls">' +
-'<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="icon-ok"></i></button>' +
-'<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="icon-off"></i></button>' +
+'<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
+'<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</div></div>' +
 '</form></div>';
 templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
@@ -927,7 +927,7 @@ templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_o
 '</div></div>' +
 '<div class="control-group">' +
 '<div class="controls">' +
-'<button class="btn btn-default add" title="Add"><i class="icon-plus"></i></button>' +
+'<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</div></div>' +
 '</form></div></dd>';
 templates['#project-todo-list'] = '<%= view.block("#header") %>' +
@@ -961,7 +961,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '    <ul class="nav nav-list">' +
 '        <% _.each(tlgroup, function (l) { %>' +
 '        <li<% if (ci==l.id) { %> class="active"<% } %>>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- l.id %>"><%- l.get("name") %><% if (l.get("private")) { %><i class="icon-lock"></i><% } %></a>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- l.id %>"><%- l.get("name") %><% if (l.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %></a>' +
 '        </li>' +
 '        <% }) %>' +
 '    </ul>' +
@@ -1004,33 +1004,35 @@ templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 '</dl>' +
 '<% } %>' +
 '<%= view.block("#comments") %>';
-templates['#nav'] = '<div class="navbar-inner">' +
-'<button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar" type="button">' +
+templates['#nav'] = '<div class="container">' +
+'<a class="navbar-brand" href="#">BB</a>' +
+'<% if (_.isFinite(view.model.id)) { %>' +
+'<button data-target=".navbar-responsive-collapse" data-toggle="collapse" class="navbar-toggle" type="button">' +
 '    <span class="icon-bar"></span>' +
 '    <span class="icon-bar"></span>' +
 '    <span class="icon-bar"></span>' +
 '</button>' +
-'<a class="brand" href="#">BB</a>' +
-'<% if (_.isFinite(view.model.id)) { %>' +
-'<ul class="nav nav-collapse">' +
+'<div class="nav-collapse collapse navbar-responsive-collapse">' +
+'<ul class="nav navbar-nav">' +
 '<% _.each(view.navitems, function (title, link) { %>' +
 '    <li><a href="#<%- link %>"><%- title %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'<ul class="nav pull-right">' +
+'</div>' +
+'<ul class="nav navbar-nav pull-right">' +
 '    <li>' +
 '        <a href="#me" title="<%- view.model.get("user-name") %>" class="dropdown-toggle" data-toggle="dropdown"><%- view.model.name() %> <span class="caret"></span></a>' +
 '        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">' +
 '            <% _.each(view.dropdownitems, function (data, link) { %>' +
-'            <li><a href="#<%- link %>"><i class="icon-<%- data.icon %>"></i> <%- data.title %></a></li>' +
+'            <li><a href="#<%- link %>"><i class="glyphicon glyphicon-<%- data.icon %>"></i> <%- data.title %></a></li>' +
 '            <% }) %>' +
 '            <li class="divider"></li>' +
-'            <li><a href="/logout"><i class="icon-eject"></i> Logout</a></li>' +
+'            <li><a href="/logout"><i class="glyphicon glyphicon-eject"></i> Logout</a></li>' +
 '        </ul>' +
 '    </li>' +
 '</ul>' +
 '<% } else { %>' +
-'<ul class="nav pull-right">' +
+'<ul class="nav navbar-nav pull-right">' +
 '    <li>' +
 '        <a href="/login" title="Login">Login</a>' +
 '    </li>' +
