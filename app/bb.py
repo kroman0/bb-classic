@@ -70,6 +70,7 @@ COLLECTION = [{
     "body": "Body of #%s" % i,
     "byte-size": 100 * i,
     "category-id": i % 5,
+    "category-name": "Category name #%s" % (i % 5),
     "city": "City #%s" % i,
     "commented-at": "%d-%.2d-%.2d" % (i % 12 + 2001, i % 12 + 1, i % 30 + 1),
     "comments-count": i,
