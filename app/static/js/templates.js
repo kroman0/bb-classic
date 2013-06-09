@@ -525,8 +525,8 @@ templates['#post-template'] = '\n\
     <h3>\n\
         <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>\n\
         <% if (item.get("private")) { %><i class="icon-lock"></i><% } %>\n\
-        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %>">\n\
-            <i class="icon-comment"></i>\n\
+        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge">\n\
+            <%- item.get("comments-count") %><i class="icon-comment"></i>\n\
         </a>\n\
     </h3>\n\
     <small>\n\
@@ -679,8 +679,8 @@ templates['#calendar-template'] = '\n\
         <a <% if (item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>">\n\
             <%- item.get("title") %>\n\
         </a>\n\
-        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %>">\n\
-            <i class="icon-comment"></i>\n\
+        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge">\n\
+            <%- item.get("comments-count") %><i class="icon-comment"></i>\n\
         </a>\n\
     </h3>\n\
     <small>\n\
@@ -811,8 +811,8 @@ if (item.get("completed")) { %>\n\
 <a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>">\n\
     <%= item.get("content") %>\n\
 </a>\n\
-<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %>">\n\
-    <i class="icon-comment"></i>\n\
+<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge">\n\
+    <%- item.get("comments-count") %><i class="icon-comment"></i>\n\
 </a>';
 templates['#todolist-template'] = '\n\
 <dt>\n\
@@ -870,8 +870,8 @@ var mid=party==null?view.options.mydata.id:view.collection.responsible_party; %>
                 <%= item.content %>\n\
             </a>\n\
             <% if(false){ %>\n\
-            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %>">\n\
-                <i class="icon-comment"></i>\n\
+            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge">\n\
+                <%- item.get("comments-count") %><i class="icon-comment"></i>\n\
             </a>\n\
             <% } %>\n\
         </dd>\n\
