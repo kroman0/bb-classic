@@ -59,7 +59,11 @@ templates['#pager-template'] = '\n\
 templates['#header-template'] = '\n\
 <div class="page-header">\n\
     <h1><%- view.name() %></h1>\n\
+    <ul class="breadcrumb">\n\
+    <li class="active">\n\
     <% if (view.model && view.model.get("company")) { %><small><a href="#companies/<%- view.model.get("company").id %>"><%- view.model.get("company").name %></a></small><% } %>\n\
+    </li>\n\
+    </ul>\n\
 </div>';
 templates['#project-nav-template'] = '\n\
 <ul class="nav nav-tabs projectnav">\n\
