@@ -5,12 +5,12 @@ templates['#time-template'] = '\n\
 <tr <% if(item.get("hours")>2){ %>class="warning"<% } %> data-id="<%- item.id %>">\n\
     <td><%- item.get("date") %></td>\n\
     <td><%- item.get("hours") %></td>\n\
-    <td><a href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- item.get("person-name") %></a></td>\n\
+    <td><a title="<%- item.get("person-name") %>" href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- item.get("person-name") %></a></td>\n\
     <td>\n\
         <% if (item.get("todo-item-id")) { %>\n\
-            <a href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
+            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
         <% } else { %>\n\
-            <a href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
+            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
         <% } %>\n\
         <%- item.get("description") %>\n\
     </td>\n\
@@ -34,9 +34,9 @@ templates['#time-templateedit'] = '\n\
     </td>\n\
     <td>\n\
         <% if (item.get("todo-item-id")) { %>\n\
-            <a href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
+            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
         <% } else { %>\n\
-            <a href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
+            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
         <% } %>\n\
         <input type="text" class="input-small" name="description" value="<%- item.get("description") %>">\n\
     </td>\n\
@@ -63,14 +63,14 @@ templates['#header-template'] = '\n\
 </div>';
 templates['#project-nav-template'] = '\n\
 <ul class="nav nav-tabs projectnav">\n\
-    <li><a href="#projects/<%- view.model.id %>">Overview</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>\n\
-    <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>\n\
-    <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>\n\
+    <li><a title="<%- view.model.name() %> project overview" href="#projects/<%- view.model.id %>">Overview</a></li>\n\
+    <li><a title="<%- view.model.name() %> project messages" href="#projects/<%- view.model.id %>/posts">Messages</a></li>\n\
+    <li><a title="<%- view.model.name() %> project todos" href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>\n\
+    <li><a title="<%- view.model.name() %> project calendar" href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>\n\
+    <li><a title="<%- view.model.name() %> project time" href="#projects/<%- view.model.id %>/time_entries">Time</a></li>\n\
+    <li><a title="<%- view.model.name() %> project files" href="#projects/<%- view.model.id %>/files">Files</a></li>\n\
+    <li class="pull-right"><a title="<%- view.model.name() %> project people" href="#projects/<%- view.model.id %>/people">People</a></li>\n\
+    <li class="pull-right"><a title="<%- view.model.name() %> project categories" href="#projects/<%- view.model.id %>/categories">Categories</a></li>\n\
 </ul>';
 templates['#time-report-template'] = '\n\
 <%= view.renderheader() %>\n\
