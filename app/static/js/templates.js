@@ -545,7 +545,7 @@ templates['#post-template'] = '\n\
             <%- item.get("category-name") %>\n\
         </a>\n\
         <% } %>\n\
-        on: <span title="<%- item.get("posted-on") %>"><%- moment(item.get("posted-on")).format("LLL") %></span>\n\
+        on: <abbr title="<%- item.get("posted-on") %>"><%- moment(item.get("posted-on")).format("LLL") %></abbr>\n\
     </small>\n\
     <p><%= item.get("display-body") %></p>\n\
     <% if (item.get("attachments")) { %>\n\
@@ -631,7 +631,7 @@ if (ff.isEmpty()) { %>\n\
             </a>\n\
             <% } %>\n\
             on\n\
-            <span title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></span>,\n\
+            <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>,\n\
             <%- item.get("byte-size") %>B\n\
         </small>\n\
         <br/>\n\
@@ -670,7 +670,7 @@ if (ff.isEmpty()) { %>\n\
             </a>\n\
             <% } %>\n\
             on\n\
-            <span title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></span>,\n\
+            <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>,\n\
             <%- item.get("byte-size") %>B\n\
         </small>\n\
         <br/>\n\
@@ -697,20 +697,20 @@ templates['#calendar-template'] = '\n\
         <% } %>\n\
         Type: <%- item.get("type") %><br />\n\
         <% if (item.get("start-at")) { %>\n\
-        Start at <span title="<%- item.get("start-at") %>"><%- moment(item.get("start-at")).format("LL") %></span><br />\n\
+        Start at <abbr title="<%- item.get("start-at") %>"><%- moment(item.get("start-at")).format("LL") %></abbr><br />\n\
         <% } %>\n\
         <% if (item.get("due-at")) { %>\n\
-        Due at <span title="<%- item.get("due-at") %>"><%- moment(item.get("due-at")).format("LLL") %></span><br />\n\
+        Due at <abbr title="<%- item.get("due-at") %>"><%- moment(item.get("due-at")).format("LLL") %></abbr><br />\n\
         <% } %>\n\
         <% if (item.get("deadline")) { %>\n\
-        Deadline at <span title="<%- item.get("deadline") %>"><%- moment(item.get("deadline")).format("LL") %></span><br />\n\
+        Deadline at <abbr title="<%- item.get("deadline") %>"><%- moment(item.get("deadline")).format("LL") %></abbr><br />\n\
         <% } %>\n\
         Created by\n\
         <a href="#people/<%- item.get("creator-id") %>">\n\
             <i class="icon-user"></i><%- item.get("creator-name") %>\n\
         </a>\n\
         on\n\
-        <span title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></span>\n\
+        <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>\n\
         <% if (item.get("completed")) { %>\n\
         <br />\n\
         Completed by\n\
@@ -718,7 +718,7 @@ templates['#calendar-template'] = '\n\
             <i class="icon-user"></i><%- item.get("completer-name") %>\n\
         </a>\n\
         at\n\
-        <span title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></span>\n\
+        <abbr title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></abbr>\n\
         <% } %>\n\
     </small>\n\
 </li>';
@@ -1017,7 +1017,7 @@ templates['#comments-template'] = '\n\
             <a href="#people/<%- item.get("author-id") %>">\n\
                 <i class="icon-user"></i><%- item.get("author-name") %>\n\
             </a>\n\
-            <span title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></span>\n\
+            <abbr title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></abbr>\n\
         </small>\n\
         <p><%= item.get("body") %></p>\n\
         <% if (item.get("attachments")) { %>\n\
