@@ -118,7 +118,7 @@
                 return item && item.name();
             },
             nameParent: '',
-            path: function() {
+            basepath: function() {
                 return [
                     [
                         '#companies',
@@ -126,7 +126,7 @@
                     ],
                     [
                         '#companies/' + (this.model.get('company') && this.model.get('company').id),
-                        (this.model.get('company') && this.model.get('company').name)
+                        this.model.get('company') && this.model.get('company').name
                     ],
                     [
                         '#projects',
@@ -139,12 +139,23 @@
                     [
                         '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
                         this.nameParent
-                    ],
+                    ]
+                ];
+            },
+            extrapath: function() {
+                return [
                     [
                         '',
                         _.result(this, 'title')
                     ]
                 ];
+            },
+            path: function() {
+                var bpath = this.basepath(), epath = this.extrapath();
+                epath.forEach(function(i) {
+                    return bpath.push(i);
+                });
+                return bpath;
             }
         }),
         BBViewProto = BBView.prototype;
@@ -359,28 +370,8 @@
         },
         template: '#project-post-comments-template',
         itemtemplate: '#post-template',
-        path: function() {
+        extrapath: function() {
             return [
-                [
-                    '#companies',
-                    'Companies'
-                ],
-                [
-                    '#companies/' + (this.model.get('company') && this.model.get('company').id),
-                    this.model.get('company') && this.model.get('company').name
-                ],
-                [
-                    '#projects',
-                    'Projects'
-                ],
-                [
-                    '#projects/' + this.model.id,
-                    this.model.name()
-                ],
-                [
-                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
-                    this.nameParent
-                ],
                 [
                     '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
                     this.itemname()
@@ -554,28 +545,8 @@
         },
         template: '#project-todo-item-template',
         itemtemplate: '#todolist-template',
-        path: function() {
+        extrapath: function() {
             return [
-                [
-                    '#companies',
-                    'Companies'
-                ],
-                [
-                    '#companies/' + (this.model.get('company') && this.model.get('company').id),
-                    this.model.get('company') && this.model.get('company').name
-                ],
-                [
-                    '#projects',
-                    'Projects'
-                ],
-                [
-                    '#projects/' + this.model.id,
-                    this.model.name()
-                ],
-                [
-                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
-                    this.nameParent
-                ],
                 [
                     '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
                     _.result(this, 'itemtitle')
@@ -611,28 +582,8 @@
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-item-comments-template',
-        path: function() {
+        extrapath: function() {
             return [
-                [
-                    '#companies',
-                    'Companies'
-                ],
-                [
-                    '#companies/' + (this.model.get('company') && this.model.get('company').id),
-                    this.model.get('company') && this.model.get('company').name
-                ],
-                [
-                    '#projects',
-                    'Projects'
-                ],
-                [
-                    '#projects/' + this.model.id,
-                    this.model.name()
-                ],
-                [
-                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
-                    this.nameParent
-                ],
                 [
                     '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
                     _.result(this, 'itemtitle')
