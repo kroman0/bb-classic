@@ -31,6 +31,21 @@
             deps: function() {
                 return this.collection.fetchonce();
             },
+            title: function() {
+                return this.model.name();
+            },
+            name: function() {
+                return this.Path() ? _.pluck(_.result(this, 'path'), 1).reverse().join(' - ') : _.result(this, 'title');
+            },
+            Path: function() {
+                return _.result(this, 'path');
+            },
+            PageTitle: function() {
+                return _.result(this, 'name') + ' - BB';
+            },
+            PageHeader: function() {
+                return _.result(this, 'title') || _.result(this, 'name');
+            },
             render: function(template) {
                 this.$el.html(render(this.template, this, {variable: 'view'}));
                 return this;
@@ -51,7 +66,36 @@
                 return render('#project-nav-template', this, {variable: 'view'});
             }
         }),
-        PagesBBView = BBView.extend({
+        ProjectBBView = BBView.extend({
+            deps: function() {
+                return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
+            },
+            path: function() {
+                return [
+                    [
+                        '#companies',
+                        'Companies'
+                    ],
+                    [
+                        '#companies/' + (this.model.get('company') && this.model.get('company').id),
+                        this.model.get('company') && this.model.get('company').name
+                    ],
+                    [
+                        '#projects',
+                        'Projects'
+                    ],
+                    [
+                        '#projects/' + this.model.id,
+                        this.model.name()
+                    ],
+                    [
+                        '',
+                        _.result(this, 'title')
+                    ]
+                ];
+            }
+        }),
+        PagesBBView = ProjectBBView.extend({
             previous: function(e) {
                 e.preventDefault();
                 return this.collection.hasPrevious() && this.collection.getPreviousPage();
@@ -66,13 +110,41 @@
                 return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
             },
             cur_item: null,
-            Title: function() {
+            title: function() {
+                return _.result(this, 'itemtitle');
+            },
+            itemtitle: function() {
                 var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item;
                 return item && item.name();
             },
-            nameParent: null,
-            name: function() {
-                return this.model.name() + ' > ' + this.nameParent + ' > ' + this.Title();
+            nameParent: '',
+            path: function() {
+                return [
+                    [
+                        '#companies',
+                        'Companies'
+                    ],
+                    [
+                        '#companies/' + (this.model.get('company') && this.model.get('company').id),
+                        (this.model.get('company') && this.model.get('company').name)
+                    ],
+                    [
+                        '#projects',
+                        'Projects'
+                    ],
+                    [
+                        '#projects/' + this.model.id,
+                        this.model.name()
+                    ],
+                    [
+                        '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
+                        this.nameParent
+                    ],
+                    [
+                        '',
+                        _.result(this, 'title')
+                    ]
+                ];
             }
         }),
         BBViewProto = BBView.prototype;
@@ -82,49 +154,67 @@
         },
         template: '#people-template',
         itemtemplate: '#personitem-template',
-        name: function() {
-            return 'People';
-        }
+        title: 'People'
     });
     bbviews.ProjectsView = BBView.extend({
         template: '#projects-template',
-        name: function() {
-            return 'Projects';
-        }
+        title: 'Projects'
     });
     bbviews.ProjectView = BBView.extend({
         deps: function() {
             return this.options.collections.projects.fetchonce();
         },
-        template: '#project-template',
-        name: function() {
-            return this.model.name();
-        }
+        path: function() {
+            return [
+                [
+                    '#companies',
+                    'Companies'
+                ],
+                [
+                    '#companies/' + (this.model.get('company') && this.model.get('company').id),
+                    this.model.get('company') && this.model.get('company').name
+                ],
+                [
+                    '#projects',
+                    'Projects'
+                ],
+                [
+                    '',
+                    _.result(this, 'title')
+                ]
+            ];
+        },
+        template: '#project-template'
     });
     bbviews.CompaniesView = BBView.extend({
         template: '#companies-template',
-        name: function() {
-            return 'Companies';
-        }
+        title: 'Companies'
     });
     bbviews.CompanyView = BBView.extend({
         deps: function() {
             return this.options.collections.companies.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
-        template: '#company-template',
-        name: function() {
-            return this.model.name();
-        }
+        path: function() {
+            return [
+                [
+                    '#companies',
+                    'Companies'
+                ],
+                [
+                    '',
+                    this.model.name()
+                ]
+            ];
+        },
+        template: '#company-template'
     });
-    bbviews.PeopleView = BBView.extend({
+    bbviews.PeopleView = ProjectBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
         },
         template: '#project-people-template',
         itemtemplate: '#personitem-template',
-        name: function() {
-            return this.model.name() + ' > People';
-        }
+        title: 'People'
     });
     bbviews.TimeEntriesView = PagesBBView.extend({
         deps: function() {
@@ -210,9 +300,7 @@
         },
         itemtemplate: '#time-template',
         template: '#project-time-template',
-        name: function() {
-            return this.model.name() + ' > Time';
-        }
+        title: 'Time'
     });
     bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
         pagerid: 'todo-time',
@@ -252,12 +340,11 @@
         getreport: function(e) {
             e.preventDefault();
             this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
-            this.collection.fetch({cache: true});
+            this.collection.fetch({cache: true, reset: true});
         },
         template: '#time-report-template',
-        name: function() {
-            return 'Time report';
-        },
+        path: false,
+        title: 'Time report',
         render: function() {
             BBViewProto.render.apply(this, arguments);
             if (this.collection.filter_report) {
@@ -272,33 +359,63 @@
         },
         template: '#project-post-comments-template',
         itemtemplate: '#post-template',
-        name: function() {
-            var item = this.cur_item && this.options.collections.project_posts.get_or_create(this.model.id).get(this.cur_item),
+        path: function() {
+            return [
+                [
+                    '#companies',
+                    'Companies'
+                ],
+                [
+                    '#companies/' + (this.model.get('company') && this.model.get('company').id),
+                    this.model.get('company') && this.model.get('company').name
+                ],
+                [
+                    '#projects',
+                    'Projects'
+                ],
+                [
+                    '#projects/' + this.model.id,
+                    this.model.name()
+                ],
+                [
+                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
+                    this.nameParent
+                ],
+                [
+                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
+                    this.itemname()
+                ],
+                [
+                    '',
+                    _.result(this, 'title')
+                ]
+            ];
+        },
+        nameParent: 'Posts',
+        itemname: function() {
+            var item = _.isFinite(this.cur_item) && this.options.collections.project_posts.get_or_create(this.model.id).get(this.cur_item),
                 title = item && item.name();
-            return this.model.name() + ' > Posts > ' + title + ' > Comments';
-        }
+            return title;
+        },
+        title: 'Comments'
     });
-    bbviews.CalendarEntryCommentsView = TitleBBView.extend({
+    bbviews.CalendarEntryCommentsView = bbviews.PostCommentsView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
         },
         template: '#project-calendar-entry-comments-template',
         itemtemplate: '#calendar-template',
-        name: function() {
-            var item = this.cur_item && this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item),
+        nameParent: 'Calendar',
+        itemname: function() {
+            var item = _.isFinite(this.cur_item) && this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item),
                 title = item && item.name();
-            return this.model.name() + ' > Calendar > ' + title + ' > Comments';
+            return title;
         }
     });
-    bbviews.PostsView = BBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
+    bbviews.PostsView = ProjectBBView.extend({
         template: '#project-posts-template',
         itemtemplate: '#post-template',
-        name: function() {
-            return this.model.name() + ' > Posts';
-        }
+        title: 'Posts'
     });
     bbviews.PostView = TitleBBView.extend({
         template: '#project-post-template',
@@ -315,9 +432,7 @@
             'click .project-files.next': 'next'
         },
         template: '#project-files-template',
-        name: function() {
-            return this.model.name() + ' > Files';
-        }
+        title: 'Files'
     });
     bbviews.FileView = TitleBBView.extend({
         deps: function() {
@@ -326,15 +441,10 @@
         template: '#project-file-template',
         nameParent: 'Files'
     });
-    bbviews.CalendarView = BBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
+    bbviews.CalendarView = ProjectBBView.extend({
         template: '#project-calendar-template',
         itemtemplate: '#calendar-template',
-        name: function() {
-            return this.model.name() + ' > Calendar';
-        }
+        title: 'Calendar'
     });
     bbviews.CalendarEntryView = TitleBBView.extend({
         template: '#project-calendar-entry-template',
@@ -342,9 +452,6 @@
         nameParent: 'Calendar'
     });
     bbviews.CategoriesView = PagesBBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
         pagerid: 'project-categories',
         events: {
             'click .project-categories.previous': 'previous',
@@ -352,9 +459,7 @@
         },
         template: '#project-categories-template',
         itemtemplate: '#category-template',
-        name: function() {
-            return this.model.name() + ' > Categories';
-        }
+        title: 'Categories'
     });
     bbviews.CategoryView = TitleBBView.extend({
         template: '#project-category-template',
@@ -366,8 +471,17 @@
             return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
         template: '#person-template',
-        name: function() {
-            return this.model.name();
+        path: function() {
+            return [
+                [
+                    '#people',
+                    'People'
+                ],
+                [
+                    '',
+                    this.model.name()
+                ]
+            ];
         }
     });
     bbviews.TodosView = BBView.extend({
@@ -379,11 +493,11 @@
         },
         selectTarget: function(e) {
             this.collection.responsible_party = $(e.target).val();
-            this.collection.fetch({cache: true});
+            this.collection.fetch({cache: true, reset: true});
         },
         template: '#todo-lists-template',
         itemtemplate: '#todolist-template',
-        name: function() {
+        title: function() {
             if (this.collection.responsible_party) {
                 var person = this.options.collections.people && this.options.collections.people.get(this.collection.responsible_party);
                 return person ? person.name() + "'s to-dos" : this.collection.responsible_party + "'s to-dos";
@@ -410,18 +524,10 @@
             return 'All';
         }
     });
-    bbviews.TodoListsView = BBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-        },
+    bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists-template',
         itemtemplate: '#todolist-template',
-        name: function() {
-            if (_.isFinite(this.collection.parent_id)) {
-                return this.model.name() + ' > To-dos';
-            }
-            return 'To-dos';
-        }
+        title: 'To-dos'
     });
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
@@ -429,6 +535,7 @@
         },
         template: '#project-todo-list-template',
         itemtemplate: '#todolist-template',
+        idParent: 'todo_lists',
         nameParent: 'To-dos',
         render: function() {
             BBViewProto.render.apply(this, arguments);
@@ -447,10 +554,47 @@
         },
         template: '#project-todo-item-template',
         itemtemplate: '#todolist-template',
-        name: function() {
+        path: function() {
+            return [
+                [
+                    '#companies',
+                    'Companies'
+                ],
+                [
+                    '#companies/' + (this.model.get('company') && this.model.get('company').id),
+                    this.model.get('company') && this.model.get('company').name
+                ],
+                [
+                    '#projects',
+                    'Projects'
+                ],
+                [
+                    '#projects/' + this.model.id,
+                    this.model.name()
+                ],
+                [
+                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
+                    this.nameParent
+                ],
+                [
+                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
+                    _.result(this, 'itemtitle')
+                ],
+                [
+                    '',
+                    _.result(this, 'itemname')
+                ]
+            ];
+        },
+        idParent: 'todo_lists',
+        nameParent: 'To-dos',
+        title: function() {
+            return _.result(this, 'itemname');
+        },
+        itemname: function() {
             var item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
                 itemtitle = item && item.name();
-            return this.model.name() + ' > To-dos > ' + this.Title() + ' > ' + itemtitle;
+            return itemtitle;
         },
         render: function() {
             BBViewProto.render.apply(this, arguments);
@@ -467,12 +611,53 @@
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-item-comments-template',
-        name: function() {
-            var list = this.cur_item && this.todo_lists.get(this.cur_item),
-                title = list && list.name(),
-                item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
+        path: function() {
+            return [
+                [
+                    '#companies',
+                    'Companies'
+                ],
+                [
+                    '#companies/' + (this.model.get('company') && this.model.get('company').id),
+                    this.model.get('company') && this.model.get('company').name
+                ],
+                [
+                    '#projects',
+                    'Projects'
+                ],
+                [
+                    '#projects/' + this.model.id,
+                    this.model.name()
+                ],
+                [
+                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
+                    this.nameParent
+                ],
+                [
+                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
+                    _.result(this, 'itemtitle')
+                ],
+                [
+                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item + '/' + this.cur_item,
+                    _.result(this, 'itemname')
+                ],
+                [
+                    '',
+                    _.result(this, 'title')
+                ]
+            ];
+        },
+        idParent: 'todo_lists',
+        nameParent: 'To-dos',
+        itemname: function() {
+            var item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
                 itemtitle = item && item.name();
-            return this.model.name() + ' > To-dos > ' + title + ' > ' + itemtitle + ' > Comments';
+            return itemtitle;
+        },
+        itemtitle: function() {
+            var list = this.cur_item && this.todo_lists.get(this.cur_item),
+                title = list && list.name();
+            return title;
         },
         render: function() {
             BBViewProto.render.apply(this, arguments);
@@ -481,7 +666,8 @@
                 this.$el.find('.todoitemsholder').append(this.options.todo(this.model.id, item).render().el);
             }
             return this;
-        }
+        },
+        title: 'Comments'
     });
     bbviews.TodoView = BBView.extend({
         events: {
