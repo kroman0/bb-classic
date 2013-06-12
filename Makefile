@@ -46,6 +46,9 @@ gjslint:
 fixjsstyle:
 	fixjsstyle --disable 0011,0110,0130,0220 $(SCRIPTS)
 
+simian:
+	simian $(SCRIPTS)
+
 clean:
 	find . -name \*~ -exec rm {} \;
 	find . -name \*.pyc -exec rm {} \;
