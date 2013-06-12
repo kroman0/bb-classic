@@ -58,12 +58,18 @@ templates['#pager-template'] = '\n\
 <% } %>';
 templates['#header-template'] = '\n\
 <div class="page-header">\n\
-    <h1><%- view.name() %></h1>\n\
+    <h1><%- view.PageHeader() %></h1>\n\
 </div>\n\
-<% if (view.model && view.model.get("company")) { %>\n\
+<% var path = view.Path();\
+if (path) { %>\n\
 <ul class="breadcrumb">\n\
-    <li><a href="#companies/<%- view.model.get("company").id %>"><%- view.model.get("company").name %></a> <span class="divider">&gt;</span></li>\n\
-    <li class="active"><%- view.model.name() %></li>\n\
+<% _.each(path, function(i) { %>\n\
+    <li<% var url = i[0], title = i[1]; if (url) { %>>\n\
+    <a href="<%- url %>"><%- title %></a> <span class="divider">&gt;</span>\n\
+    <% } else { %> class="active">\n\
+    <%- title %>\n\
+    <% } %></li>\n\
+<% }) %>\n\
 </ul>\n\
 <% } %>';
 templates['#project-nav-template'] = '\n\
