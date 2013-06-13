@@ -53,14 +53,42 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/posts
     And heading should be "Posts"
     And title should be  Posts - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click link  Title #0
+    Then location should be  ${APP_URL}/#projects/0/posts/0
+    And heading should be "Title #0"
+    And title should be  Title #0 - Posts - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click element  css=.icon-comment
+    Then location should be  ${APP_URL}/#projects/0/posts/0/comments
+    And heading should be "Comments"
+    And title should be  Comments - Title #0 - Posts - Name of #0 - Projects - Company name #0 - Companies - BB
     When click on "To-Dos" in projectnav
     Then location should be  ${APP_URL}/#projects/0/todo_lists
     And heading should be "To-dos"
     And title should be  To-dos - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click link  css=a[href$='todo_lists/0']
+    Then location should be  ${APP_URL}/#projects/0/todo_lists/0
+    And heading should be "Name of #0"
+    And title should be  Name of #0 - To-dos - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click link  Todo content #0
+    Then location should be  ${APP_URL}/#projects/0/todo_lists/0/0
+    And heading should be "Todo content #0"
+    And title should be  Todo content #0 - Name of #0 - To-dos - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click element  css=.icon-comment
+    Then location should be  ${APP_URL}/#projects/0/todo_lists/0/0/comments
+    And heading should be "Comments"
+    And title should be  Comments - Todo content #0 - Name of #0 - To-dos - Name of #0 - Projects - Company name #0 - Companies - BB
     When click on "Calendar" in projectnav
     Then location should be  ${APP_URL}/#projects/0/calendar
     And heading should be "Calendar"
     And title should be  Calendar - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click link  Title #0
+    Then location should be  ${APP_URL}/#projects/0/calendar/0
+    And heading should be "Title #0"
+    And title should be  Title #0 - Calendar - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click element  css=.icon-comment
+    Then location should be  ${APP_URL}/#projects/0/calendar/0/comments
+    And heading should be "Comments"
+    And title should be  Comments - Title #0 - Calendar - Name of #0 - Projects - Company name #0 - Companies - BB
     When click on "Time" in projectnav
     Then location should be  ${APP_URL}/#projects/0/time_entries
     And heading should be "Time"
@@ -69,14 +97,26 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/files
     And heading should be "Files"
     And title should be  Files - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click link  css=a[href$='files/0']
+    Then location should be  ${APP_URL}/#projects/0/files/0
+    And heading should be "Name of #0"
+    And title should be  Name of #0 - Files - Name of #0 - Projects - Company name #0 - Companies - BB
     When click on "Categories" in projectnav
     Then location should be  ${APP_URL}/#projects/0/categories
     And heading should be "Categories"
     And title should be  Categories - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click link  css=a[href$='categories/0']
+    Then location should be  ${APP_URL}/#projects/0/categories/0
+    And heading should be "Name of #0"
+    And title should be  Name of #0 - Categories - Name of #0 - Projects - Company name #0 - Companies - BB
     When click on "People" in projectnav
     Then location should be  ${APP_URL}/#projects/0/people
     And heading should be "People"
     And title should be  People - Name of #0 - Projects - Company name #0 - Companies - BB
+    When click link  First#0 Last
+    Then location should be  ${APP_URL}/#people/0
+    And heading should be "First#0 Last"
+    And title should be  First#0 Last - People - BB
 
 
 *** Keywords ***
