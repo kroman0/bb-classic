@@ -32,7 +32,7 @@ deploy: clean minify
 	bin/appcfg update app --oauth2
 
 minify:
-	$(foreach JS,$(MINIFY),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"`;)
+	$(foreach JS,$(MINIFY),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -m;)
 
 jshint:
 	jshint $(SCRIPTS)
