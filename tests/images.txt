@@ -53,7 +53,7 @@ Generate screenshots
     Capture Page Screenshot  ${base_project_message_comments}
     Click on "To-Dos" in projectnav
     Capture Page Screenshot  ${base_project_todos}
-    Click link  Name of #0
+    Click link  css=a[href$='todo_lists/0']
     Wait for data loading
     Capture Page Screenshot  ${base_project_todolist}
     Click link  Todo content #0
@@ -74,12 +74,12 @@ Generate screenshots
     Capture Page Screenshot  ${base_project_time}
     Click on "Files" in projectnav
     Capture Page Screenshot  ${base_project_files}
-    Click link  Name of #0
+    Click link  css=a[href$='files/0']
     Wait for data loading
     Capture Page Screenshot  ${base_project_file}
     Click on "Categories" in projectnav
     Capture Page Screenshot  ${base_project_categories}
-    Click link  Name of #0
+    Click link  css=a[href$='categories/0']
     Wait for data loading
     Capture Page Screenshot  ${base_project_category}
     Click on "People" in projectnav
