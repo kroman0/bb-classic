@@ -5,12 +5,12 @@ templates['#time-template'] = '\n\
 <tr <% if(item.get("hours")>2){ %>class="warning"<% } %> data-id="<%- item.id %>">\n\
     <td><%- item.get("date") %></td>\n\
     <td><%- item.get("hours") %></td>\n\
-    <td><a href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- item.get("person-name") %></a></td>\n\
+    <td><a title="<%- item.get("person-name") %>" href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- item.get("person-name") %></a></td>\n\
     <td>\n\
         <% if (item.get("todo-item-id")) { %>\n\
-            <a href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
+            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
         <% } else { %>\n\
-            <a href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
+            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
         <% } %>\n\
         <%- item.get("description") %>\n\
     </td>\n\
@@ -34,9 +34,9 @@ templates['#time-templateedit'] = '\n\
     </td>\n\
     <td>\n\
         <% if (item.get("todo-item-id")) { %>\n\
-            <a href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
+            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="icon-file"></i></a>\n\
         <% } else { %>\n\
-            <a href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
+            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="icon-folder-close"></i></a>\n\
         <% } %>\n\
         <input type="text" class="input-small" name="description" value="<%- item.get("description") %>">\n\
     </td>\n\
@@ -58,19 +58,30 @@ templates['#pager-template'] = '\n\
 <% } %>';
 templates['#header-template'] = '\n\
 <div class="page-header">\n\
-    <h1><%- view.name() %></h1>\n\
-    <% if (view.model && view.model.get("company")) { %><small><a href="#companies/<%- view.model.get("company").id %>"><%- view.model.get("company").name %></a></small><% } %>\n\
-</div>';
+    <h1><%- view.PageHeader() %></h1>\n\
+</div>\n\
+<% var path = view.Path();\
+if (path) { %>\n\
+<ul class="breadcrumb">\n\
+<% _.each(path, function(i) { %>\n\
+    <li<% var url = i[0], title = i[1]; if (url) { %>>\n\
+    <a href="<%- url %>"><%- title %></a> <span class="divider">&gt;</span>\n\
+    <% } else { %> class="active">\n\
+    <%- title %>\n\
+    <% } %></li>\n\
+<% }) %>\n\
+</ul>\n\
+<% } %>';
 templates['#project-nav-template'] = '\n\
 <ul class="nav nav-tabs projectnav">\n\
-    <li><a href="#projects/<%- view.model.id %>">Overview</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/posts">Messages</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/time_entries">Time</a></li>\n\
-    <li><a href="#projects/<%- view.model.id %>/files">Files</a></li>\n\
-    <li class="pull-right"><a href="#projects/<%- view.model.id %>/people">People</a></li>\n\
-    <li class="pull-right"><a href="#projects/<%- view.model.id %>/categories">Categories</a></li>\n\
+    <li><a title="<%- view.model.name() %> project overview" href="#projects/<%- view.model.id %>">Overview</a></li>\n\
+    <li><a title="<%- view.model.name() %> project messages" href="#projects/<%- view.model.id %>/posts">Messages</a></li>\n\
+    <li><a title="<%- view.model.name() %> project todos" href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>\n\
+    <li><a title="<%- view.model.name() %> project calendar" href="#projects/<%- view.model.id %>/calendar">Calendar</a></li>\n\
+    <li><a title="<%- view.model.name() %> project time" href="#projects/<%- view.model.id %>/time_entries">Time</a></li>\n\
+    <li><a title="<%- view.model.name() %> project files" href="#projects/<%- view.model.id %>/files">Files</a></li>\n\
+    <li class="pull-right"><a title="<%- view.model.name() %> project people" href="#projects/<%- view.model.id %>/people">People</a></li>\n\
+    <li class="pull-right"><a title="<%- view.model.name() %> project categories" href="#projects/<%- view.model.id %>/categories">Categories</a></li>\n\
 </ul>';
 templates['#time-report-template'] = '\n\
 <%= view.renderheader() %>\n\
@@ -525,8 +536,8 @@ templates['#post-template'] = '\n\
     <h3>\n\
         <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>\n\
         <% if (item.get("private")) { %><i class="icon-lock"></i><% } %>\n\
-        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %>">\n\
-            <i class="icon-comment"></i>\n\
+        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse">\n\
+            <%- item.get("comments-count") %><i class="icon-comment icon-white"></i>\n\
         </a>\n\
     </h3>\n\
     <small>\n\
@@ -540,7 +551,7 @@ templates['#post-template'] = '\n\
             <%- item.get("category-name") %>\n\
         </a>\n\
         <% } %>\n\
-        on: <span title="<%- item.get("posted-on") %>"><%- moment(item.get("posted-on")).format("LLL") %></span>\n\
+        on: <abbr title="<%- item.get("posted-on") %>"><%- moment(item.get("posted-on")).format("LLL") %></abbr>\n\
     </small>\n\
     <p><%= item.get("display-body") %></p>\n\
     <% if (item.get("attachments")) { %>\n\
@@ -626,7 +637,7 @@ if (ff.isEmpty()) { %>\n\
             </a>\n\
             <% } %>\n\
             on\n\
-            <span title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></span>,\n\
+            <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>,\n\
             <%- item.get("byte-size") %>B\n\
         </small>\n\
         <br/>\n\
@@ -665,7 +676,7 @@ if (ff.isEmpty()) { %>\n\
             </a>\n\
             <% } %>\n\
             on\n\
-            <span title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></span>,\n\
+            <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>,\n\
             <%- item.get("byte-size") %>B\n\
         </small>\n\
         <br/>\n\
@@ -679,8 +690,8 @@ templates['#calendar-template'] = '\n\
         <a <% if (item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>">\n\
             <%- item.get("title") %>\n\
         </a>\n\
-        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %>">\n\
-            <i class="icon-comment"></i>\n\
+        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse">\n\
+            <%- item.get("comments-count") %><i class="icon-comment icon-white"></i>\n\
         </a>\n\
     </h3>\n\
     <small>\n\
@@ -692,20 +703,20 @@ templates['#calendar-template'] = '\n\
         <% } %>\n\
         Type: <%- item.get("type") %><br />\n\
         <% if (item.get("start-at")) { %>\n\
-        Start at <span title="<%- item.get("start-at") %>"><%- moment(item.get("start-at")).format("LL") %></span><br />\n\
+        Start at <abbr title="<%- item.get("start-at") %>"><%- moment(item.get("start-at")).format("LL") %></abbr><br />\n\
         <% } %>\n\
         <% if (item.get("due-at")) { %>\n\
-        Due at <span title="<%- item.get("due-at") %>"><%- moment(item.get("due-at")).format("LLL") %></span><br />\n\
+        Due at <abbr title="<%- item.get("due-at") %>"><%- moment(item.get("due-at")).format("LLL") %></abbr><br />\n\
         <% } %>\n\
         <% if (item.get("deadline")) { %>\n\
-        Deadline at <span title="<%- item.get("deadline") %>"><%- moment(item.get("deadline")).format("LL") %></span><br />\n\
+        Deadline at <abbr title="<%- item.get("deadline") %>"><%- moment(item.get("deadline")).format("LL") %></abbr><br />\n\
         <% } %>\n\
         Created by\n\
         <a href="#people/<%- item.get("creator-id") %>">\n\
             <i class="icon-user"></i><%- item.get("creator-name") %>\n\
         </a>\n\
         on\n\
-        <span title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></span>\n\
+        <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>\n\
         <% if (item.get("completed")) { %>\n\
         <br />\n\
         Completed by\n\
@@ -713,7 +724,7 @@ templates['#calendar-template'] = '\n\
             <i class="icon-user"></i><%- item.get("completer-name") %>\n\
         </a>\n\
         at\n\
-        <span title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></span>\n\
+        <abbr title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></abbr>\n\
         <% } %>\n\
     </small>\n\
 </li>';
@@ -811,8 +822,8 @@ if (item.get("completed")) { %>\n\
 <a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>">\n\
     <%= item.get("content") %>\n\
 </a>\n\
-<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %>">\n\
-    <i class="icon-comment"></i>\n\
+<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse">\n\
+    <%- item.get("comments-count") %><i class="icon-comment icon-white"></i>\n\
 </a>';
 templates['#todolist-template'] = '\n\
 <dt>\n\
@@ -870,8 +881,8 @@ var mid=party==null?view.options.mydata.id:view.collection.responsible_party; %>
                 <%= item.content %>\n\
             </a>\n\
             <% if(false){ %>\n\
-            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %>">\n\
-                <i class="icon-comment"></i>\n\
+            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse">\n\
+                <%- item.get("comments-count") %><i class="icon-comment icon-white"></i>\n\
             </a>\n\
             <% } %>\n\
         </dd>\n\
@@ -1012,7 +1023,7 @@ templates['#comments-template'] = '\n\
             <a href="#people/<%- item.get("author-id") %>">\n\
                 <i class="icon-user"></i><%- item.get("author-name") %>\n\
             </a>\n\
-            <span title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></span>\n\
+            <abbr title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></abbr>\n\
         </small>\n\
         <p><%= item.get("body") %></p>\n\
         <% if (item.get("attachments")) { %>\n\

@@ -32,7 +32,7 @@ deploy: clean minify
 	bin/appcfg update app --oauth2
 
 minify:
-	$(foreach JS,$(MINIFY),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"`;)
+	$(foreach JS,$(MINIFY),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -m;)
 
 jshint:
 	jshint $(SCRIPTS)
@@ -45,6 +45,9 @@ gjslint:
 
 fixjsstyle:
 	fixjsstyle --disable 0011,0110,0130,0220 $(SCRIPTS)
+
+simian:
+	simian $(SCRIPTS)
 
 clean:
 	find . -name \*~ -exec rm {} \;
