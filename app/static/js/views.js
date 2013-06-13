@@ -24,13 +24,17 @@
 }(this, function($, _, Backbone, bbtemplates) {
     'use strict';
     var bbviews = {},
+        cc = 'Companies',
+        hashcc = '#' + cc.toLowerCase(),
         cpath = [
-            '#companies',
-            'Companies'
+            hashcc,
+            cc
         ],
+        pp = 'Projects',
+        hashpp = '#' + pp.toLowerCase(),
         ppath = [
-            '#projects',
-            'Projects'
+            hashpp,
+            pp
         ],
         render = function(template, data, settings) {
             return _.template(bbtemplates[template], data, settings);
@@ -82,12 +86,12 @@
                 return [
                     cpath,
                     [
-                        '#companies/' + (this.model.get('company') && this.model.get('company').id),
+                        hashcc + '/' + (this.model.get('company') && this.model.get('company').id),
                         this.model.get('company') && this.model.get('company').name
                     ],
                     ppath,
                     [
-                        '#projects/' + this.model.id,
+                        hashpp + '/' + this.model.id,
                         this.model.name()
                     ],
                     ['', _.result(this, 'title')]
@@ -120,7 +124,7 @@
             basepath: function() {
                 var bpath = ProjectBBView.prototype.path.apply(this, arguments).slice(0, -1);
                 bpath.push([
-                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
+                    hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
                     this.nameParent
                 ]);
                 return bpath;
@@ -148,8 +152,8 @@
         title: 'People'
     });
     bbviews.ProjectsView = BBView.extend({
-        template: '#projects-template',
-        title: 'Projects'
+        template: hashpp + '-template',
+        title: pp
     });
     bbviews.ProjectView = BBView.extend({
         deps: function() {
@@ -163,8 +167,8 @@
         template: '#project-template'
     });
     bbviews.CompaniesView = BBView.extend({
-        template: '#companies-template',
-        title: 'Companies'
+        template: hashcc + '-template',
+        title: cc
     });
     bbviews.CompanyView = BBView.extend({
         deps: function() {
@@ -332,7 +336,7 @@
         extrapath: function() {
             return [
                 [
-                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
+                    hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
                     this.itemname()
                 ],
                 ['', _.result(this, 'title')]
@@ -501,7 +505,7 @@
         extrapath: function() {
             return [
                 [
-                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
+                    hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
                     _.result(this, 'itemtitle')
                 ],
                 ['', _.result(this, 'title')]
@@ -527,7 +531,6 @@
         }
     });
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
-        todo_item: null,
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
@@ -537,7 +540,7 @@
             return [
                 bpath.shift(),
                 [
-                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item + '/' + this.cur_item,
+                    hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item + '/' + this.todo_item,
                     _.result(this, 'itemname')
                 ],
                 ['', _.result(this, 'title')]
