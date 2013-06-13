@@ -24,6 +24,14 @@
 }(this, function($, _, Backbone, bbtemplates) {
     'use strict';
     var bbviews = {},
+        cpath = [
+            '#companies',
+            'Companies'
+        ],
+        ppath = [
+            '#projects',
+            'Projects'
+        ],
         render = function(template, data, settings) {
             return _.template(bbtemplates[template], data, settings);
         },
@@ -72,26 +80,17 @@
             },
             path: function() {
                 return [
-                    [
-                        '#companies',
-                        'Companies'
-                    ],
+                    cpath,
                     [
                         '#companies/' + (this.model.get('company') && this.model.get('company').id),
                         this.model.get('company') && this.model.get('company').name
                     ],
-                    [
-                        '#projects',
-                        'Projects'
-                    ],
+                    ppath,
                     [
                         '#projects/' + this.model.id,
                         this.model.name()
                     ],
-                    [
-                        '',
-                        _.result(this, 'title')
-                    ]
+                    ['', _.result(this, 'title')]
                 ];
             }
         }),
@@ -119,35 +118,16 @@
             },
             nameParent: '',
             basepath: function() {
-                return [
-                    [
-                        '#companies',
-                        'Companies'
-                    ],
-                    [
-                        '#companies/' + (this.model.get('company') && this.model.get('company').id),
-                        this.model.get('company') && this.model.get('company').name
-                    ],
-                    [
-                        '#projects',
-                        'Projects'
-                    ],
-                    [
-                        '#projects/' + this.model.id,
-                        this.model.name()
-                    ],
-                    [
-                        '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
-                        this.nameParent
-                    ]
-                ];
+                var bpath = ProjectBBView.prototype.path.apply(this, arguments).slice(0, -1);
+                bpath.push([
+                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
+                    this.nameParent
+                ]);
+                return bpath;
             },
             extrapath: function() {
                 return [
-                    [
-                        '',
-                        _.result(this, 'title')
-                    ]
+                    ['', _.result(this, 'title')]
                 ];
             },
             path: function() {
@@ -176,24 +156,9 @@
             return this.options.collections.projects.fetchonce();
         },
         path: function() {
-            return [
-                [
-                    '#companies',
-                    'Companies'
-                ],
-                [
-                    '#companies/' + (this.model.get('company') && this.model.get('company').id),
-                    this.model.get('company') && this.model.get('company').name
-                ],
-                [
-                    '#projects',
-                    'Projects'
-                ],
-                [
-                    '',
-                    _.result(this, 'title')
-                ]
-            ];
+            var bpath = ProjectBBView.prototype.path.apply(this, arguments).slice(0, -2);
+            bpath.push(['', _.result(this, 'title')]);
+            return bpath;
         },
         template: '#project-template'
     });
@@ -207,14 +172,8 @@
         },
         path: function() {
             return [
-                [
-                    '#companies',
-                    'Companies'
-                ],
-                [
-                    '',
-                    this.model.name()
-                ]
+                cpath,
+                ['', this.model.name()]
             ];
         },
         template: '#company-template'
@@ -376,10 +335,7 @@
                     '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
                     this.itemname()
                 ],
-                [
-                    '',
-                    _.result(this, 'title')
-                ]
+                ['', _.result(this, 'title')]
             ];
         },
         nameParent: 'Posts',
@@ -468,10 +424,7 @@
                     '#people',
                     'People'
                 ],
-                [
-                    '',
-                    this.model.name()
-                ]
+                ['', this.model.name()]
             ];
         }
     });
@@ -551,10 +504,7 @@
                     '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
                     _.result(this, 'itemtitle')
                 ],
-                [
-                    '',
-                    _.result(this, 'itemname')
-                ]
+                ['', _.result(this, 'title')]
             ];
         },
         idParent: 'todo_lists',
@@ -576,47 +526,27 @@
             return this;
         }
     });
-    bbviews.TodoItemCommentsView = TitleBBView.extend({
+    bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
         todo_item: null,
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-item-comments-template',
         extrapath: function() {
+            var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this, arguments);
             return [
-                [
-                    '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
-                    _.result(this, 'itemtitle')
-                ],
+                bpath.shift(),
                 [
                     '#projects/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item + '/' + this.cur_item,
                     _.result(this, 'itemname')
                 ],
-                [
-                    '',
-                    _.result(this, 'title')
-                ]
+                ['', _.result(this, 'title')]
             ];
-        },
-        idParent: 'todo_lists',
-        nameParent: 'To-dos',
-        itemname: function() {
-            var item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
-                itemtitle = item && item.name();
-            return itemtitle;
         },
         itemtitle: function() {
             var list = this.cur_item && this.todo_lists.get(this.cur_item),
                 title = list && list.name();
             return title;
-        },
-        render: function() {
-            BBViewProto.render.apply(this, arguments);
-            var item = this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
-            if (item) {
-                this.$el.find('.todoitemsholder').append(this.options.todo(this.model.id, item).render().el);
-            }
-            return this;
         },
         title: 'Comments'
     });
