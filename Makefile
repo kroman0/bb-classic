@@ -113,3 +113,6 @@ clonedigger:
 pytest: pep8 pyflakes flake8 pylint
 
 jstest: jshint jslint gjslint
+
+sphinx:
+	bin/sphinx-build && firefox docs/html/index.html
