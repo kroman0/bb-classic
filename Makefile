@@ -47,7 +47,10 @@ fixjsstyle:
 	fixjsstyle --disable 0011,0110,0130,0220 $(SCRIPTS)
 
 simian:
-	simian $(SCRIPTS)
+	simian $(SCRIPTS) -reportDuplicateText
+
+jssimian:
+	simian $(SCRIPTS) -threshold=3 -reportDuplicateText
 
 clean:
 	find . -name \*~ -exec rm {} \;
@@ -114,6 +117,12 @@ pyflakes:
 clonedigger:
 	clonedigger app tests && firefox output.html
 
+pysimian:
+	simian app/*.py tests/*.py -threshold=3 -reportDuplicateText
+
 pytest: pep8 pyflakes flake8 pylint
 
 jstest: jshint jslint gjslint
+
+sphinx:
+	bin/sphinx-build && firefox docs/html/index.html
