@@ -216,7 +216,7 @@
         }
         views.project_todo_item.cur_item = tlid;
         views.project_todo_item.todo_item = tiid;
-        views.project_todo_item.collection = collections.project_todo_lists.get_or_create(id);
+        views.project_todo_item.collection = views.project_todo_item.todo_lists = collections.project_todo_lists.get_or_create(id);
         views.current = views.project_todo_item.render();
     }).on('route:project_todo_item_comments', function(id, tlid, tiid) {
         if (collections.projects.get(id)) {

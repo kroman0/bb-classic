@@ -337,7 +337,7 @@
             return [
                 [
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
-                    this.itemname()
+                    _.result(this, 'itemname')
                 ],
                 ['', _.result(this, 'title')]
             ];
@@ -498,25 +498,22 @@
     bbviews.TodoItemView = TitleBBView.extend({
         todo_item: null,
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
+            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
         template: '#project-todo-item-template',
         itemtemplate: '#todolist-template',
-        extrapath: function() {
-            return [
-                [
-                    hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
-                    _.result(this, 'itemtitle')
-                ],
-                ['', _.result(this, 'title')]
-            ];
-        },
+        extrapath: bbviews.PostCommentsView.prototype.extrapath,
         idParent: 'todo_lists',
         nameParent: 'To-dos',
         title: function() {
-            return _.result(this, 'itemname');
+            return _.result(this, 'itemtitle');
         },
         itemname: function() {
+            var list = this.cur_item && this.todo_lists.get(this.cur_item),
+                title = list && list.name();
+            return title;
+        },
+        itemtitle: function() {
             var item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
                 itemtitle = item && item.name();
             return itemtitle;
@@ -531,9 +528,6 @@
         }
     });
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
-        },
         template: '#project-todo-item-comments-template',
         extrapath: function() {
             var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this, arguments);
@@ -541,15 +535,10 @@
                 bpath.shift(),
                 [
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item + '/' + this.todo_item,
-                    _.result(this, 'itemname')
+                    _.result(this, 'itemtitle')
                 ],
                 ['', _.result(this, 'title')]
             ];
-        },
-        itemtitle: function() {
-            var list = this.cur_item && this.todo_lists.get(this.cur_item),
-                title = list && list.name();
-            return title;
         },
         title: 'Comments'
     });
