@@ -47,10 +47,13 @@
                 return this.model.name();
             },
             name: function() {
-                return this.Path() ? _.pluck(_.result(this, 'path'), 1).reverse().join(' - ') : _.result(this, 'title');
+                var p = this.Path();
+                return p ? _.pluck(p, 1).reverse().join(' - ') : _.result(this, 'title');
             },
             Path: function() {
-                return _.result(this, 'path');
+                var p = _.result(this, 'path');
+                if (p) {p.push(['', _.result(this, 'title')]);}
+                return p;
             },
             PageTitle: function() {
                 return _.result(this, 'name') + ' - BB';
@@ -93,8 +96,7 @@
                     [
                         hashpp + '/' + this.model.id,
                         this.model.name()
-                    ],
-                    ['', _.result(this, 'title')]
+                    ]
                 ];
             }
         }),
@@ -119,7 +121,7 @@
             },
             nameParent: '',
             basepath: function() {
-                var bpath = ProjectBBView.prototype.path.apply(this, arguments).slice(0, -1);
+                var bpath = ProjectBBView.prototype.path.apply(this, arguments);
                 bpath.push([
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
                     this.nameParent
@@ -127,9 +129,7 @@
                 return bpath;
             },
             extrapath: function() {
-                return [
-                    ['', _.result(this, 'title')]
-                ];
+                return [];
             },
             path: function() {
                 var bpath = this.basepath(), epath = this.extrapath();
@@ -157,9 +157,7 @@
             return this.options.collections.projects.fetchonce();
         },
         path: function() {
-            var bpath = ProjectBBView.prototype.path.apply(this, arguments).slice(0, -2);
-            bpath.push(['', _.result(this, 'title')]);
-            return bpath;
+            return ProjectBBView.prototype.path.apply(this, arguments).slice(0, -1);
         },
         template: '#project-template'
     });
@@ -172,10 +170,7 @@
             return this.options.collections.companies.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
         },
         path: function() {
-            return [
-                cpath,
-                ['', _.result(this, 'title')]
-            ];
+            return [cpath];
         },
         template: '#company-template'
     });
@@ -335,8 +330,7 @@
                 [
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
                     _.result(this, 'itemname')
-                ],
-                ['', _.result(this, 'title')]
+                ]
             ];
         },
         nameParent: 'Posts',
@@ -424,8 +418,7 @@
                 [
                     '#people',
                     'People'
-                ],
-                ['', _.result(this, 'title')]
+                ]
             ];
         }
     });
@@ -533,8 +526,7 @@
                 [
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item + '/' + this.todo_item,
                     _.result(this, 'itemtitle')
-                ],
-                ['', _.result(this, 'title')]
+                ]
             ];
         },
         title: 'Comments'
