@@ -108,10 +108,7 @@
                 return this.collection.hasNext() && this.collection.getNextPage();
             }
         }),
-        TitleBBView = BBView.extend({
-            deps: function() {
-                return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
-            },
+        TitleBBView = ProjectBBView.extend({
             cur_item: null,
             title: function() {
                 return _.result(this, 'itemtitle');
@@ -177,7 +174,7 @@
         path: function() {
             return [
                 cpath,
-                ['', this.model.name()]
+                ['', _.result(this, 'title')]
             ];
         },
         template: '#company-template'
@@ -428,7 +425,7 @@
                     '#people',
                     'People'
                 ],
-                ['', this.model.name()]
+                ['', _.result(this, 'title')]
             ];
         }
     });
