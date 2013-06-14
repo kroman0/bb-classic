@@ -253,7 +253,7 @@
     }).on('route:me', function() {
         views.person_view.model = models.mydata;
         views.current = views.person_view.render();
-    }).on('route:defaultRoute', function(action) {
+    }).on('route:defaultRoute', function() {
         this.navigate('projects', {
             trigger: true
         });

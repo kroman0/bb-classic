@@ -58,7 +58,7 @@
             PageHeader: function() {
                 return _.result(this, 'title') || _.result(this, 'name');
             },
-            render: function(template) {
+            render: function() {
                 this.$el.html(render(this.template, this, {variable: 'view'}));
                 return this;
             },
@@ -228,10 +228,10 @@
         },
         addtime: function(e) {
             e.preventDefault();
-            var context = this,
-                item = this.collection.create(this.parseData('.addtime'), {
+            var context = this;
+            this.collection.create(this.parseData('.addtime'), {
                 wait: true,
-                success: function(model, resp, options) {
+                success: function(model) {
                     context.finishItem(model);
                     try {
                         context.collection.fullCollection.sort();
