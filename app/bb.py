@@ -256,6 +256,8 @@ def authenticated(func):
     """ decorator for check authentication
     """
     def wrapper(self):
+        """ wrapper for the function
+        """
         if not self.auth_check():
             return self.redirect('/login')
         return func(self)
@@ -302,15 +304,13 @@ class LoginPage(BaseRequestHandler):
         else:
             # check whether all needed data is given
             if not (subdomain and login and pwd):
-                self.error(401)
-                return
+                return self.error(401)
 
             # make a request to the Basecamp API
             try:
                 subject_id = get_subject_id(login, pwd, subdomain)
             except GetSubjectException:
-                self.error(401)
-                return
+                return self.error(401)
 
         # save login information in a cookie
         data = [login, pwd, subject_id, subdomain]
@@ -518,9 +518,9 @@ class CrossDomain(BaseRequestHandler):
             result = self.fetch_request(urlfetch.PUT, self.xmldata)
             if result.status_code != 200:
                 self.response.out.write(result.content)
-                return
-            self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps(self.jsondata))
+            else:
+                self.response.headers['Content-Type'] = 'application/json'
+                self.response.out.write(json.dumps(self.jsondata))
 
     @authenticated
     def delete(self):
@@ -530,7 +530,6 @@ class CrossDomain(BaseRequestHandler):
             result = self.fetch_request(urlfetch.DELETE)
             if result.status_code != 200:
                 self.response.out.write(result.content)
-                return
 
     @authenticated
     def post(self):
@@ -546,18 +545,18 @@ class CrossDomain(BaseRequestHandler):
             result = self.fetch_request(urlfetch.POST, self.xmldata)
             if result.status_code != 201:
                 self.response.out.write(result.content)
-                return
-            location = result.headers['Location']
-            location = location.split('/')[-1]
-            if location.find('.') == -1:
-                item_id = int(location)
             else:
-                item_id = int(location[:location.find('.')])
-            self.response.set_status(result.status_code)
-            jsondata = self.jsondata
-            jsondata.update({'id': item_id})
-            self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps(jsondata))
+                location = result.headers['Location']
+                location = location.split('/')[-1]
+                if location.find('.') == -1:
+                    item_id = int(location)
+                else:
+                    item_id = int(location[:location.find('.')])
+                self.response.set_status(result.status_code)
+                jsondata = self.jsondata
+                jsondata.update({'id': item_id})
+                self.response.headers['Content-Type'] = 'application/json'
+                self.response.out.write(json.dumps(jsondata))
 
     def _testget(self):
         """ test data
@@ -583,8 +582,7 @@ class CrossDomain(BaseRequestHandler):
         """ GET request
         """
         if self._testlogin:
-            self._testget()
-            return
+            return self._testget()
         dev = self.dev
         query = None
         url = self.fullurl
@@ -595,8 +593,7 @@ class CrossDomain(BaseRequestHandler):
         else:
             result = self.fetch_request(urlfetch.GET)
             if result.status_code != 200:
-                self.response.out.write(result.content)
-                return
+                return self.response.out.write(result.content)
             if dev:
                 save_request(url, result)
             content = result.content
