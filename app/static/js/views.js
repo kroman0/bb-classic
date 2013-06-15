@@ -133,7 +133,7 @@
             },
             path: function() {
                 var bpath = this.basepath(), epath = this.extrapath();
-                epath.forEach(function(i) {
+                _.each(epath, function(i) {
                     return bpath.push(i);
                 });
                 return bpath;
