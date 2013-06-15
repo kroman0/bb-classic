@@ -252,20 +252,28 @@ class BaseRequestHandler(webapp2.RequestHandler):
         return is_sessioned
 
 
+def authenticated(func):
+    """ decorator for check authentication
+    """
+    def wrapper(self):
+        if not self.auth_check():
+            return self.redirect('/login')
+        return func(self)
+    return wrapper
+
+
 class MainPage(BaseRequestHandler):
     """ Main Page Handler
 
     * :http:get:`/` - `MainPage GET <#bb.MainPage.get>`_
     """
+    @authenticated
     def get(self):
         """ GET request
         """
-        if self.auth_check():
-            self.response.out.write(template.render(
-                _('index.html'),
-                {'dev': self.dev}))
-        else:
-            return self.redirect('/login')
+        self.response.out.write(template.render(
+            _('index.html'),
+            {'dev': self.dev}))
 
 
 class LoginPage(BaseRequestHandler):
@@ -499,11 +507,10 @@ class CrossDomain(BaseRequestHandler):
             xmldata = tags
         return xmldata
 
+    @authenticated
     def put(self):
         """ PUT request
         """
-        if not self.auth_check():
-            return self.redirect('/login')
         if self._testlogin:
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write(json.dumps(self.jsondata))
@@ -515,22 +522,20 @@ class CrossDomain(BaseRequestHandler):
             self.response.headers['Content-Type'] = 'application/json'
             self.response.out.write(json.dumps(self.jsondata))
 
+    @authenticated
     def delete(self):
         """ DELETE request
         """
-        if not self.auth_check():
-            return self.redirect('/login')
         if not self._testlogin:
             result = self.fetch_request(urlfetch.DELETE)
             if result.status_code != 200:
                 self.response.out.write(result.content)
                 return
 
+    @authenticated
     def post(self):
         """ POST request
         """
-        if not self.auth_check():
-            return self.redirect('/login')
         if self._testlogin:
             self.response.headers['Content-Type'] = 'application/json'
             item = COLLECTION[0].copy()
@@ -573,11 +578,10 @@ class CrossDomain(BaseRequestHandler):
         else:
             return False
 
+    @authenticated
     def get(self):
         """ GET request
         """
-        if not self.auth_check():
-            return self.redirect('/login')
         if self._testlogin:
             self._testget()
             return
