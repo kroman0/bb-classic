@@ -273,7 +273,7 @@ class MainPage(BaseRequestHandler):
     def get(self):
         """ GET request
         """
-        self.response.out.write(template.render(
+        self.response.write(template.render(
             _('index.html'),
             {'dev': self.dev}))
 
@@ -287,7 +287,7 @@ class LoginPage(BaseRequestHandler):
     def get(self):
         """ GET request
         """
-        self.response.out.write(template.render(
+        self.response.write(template.render(
             _('login.html'),
             {'dev': self.dev}))
 
@@ -332,7 +332,7 @@ class LogoutPage(BaseRequestHandler):
         ssid = self.request.cookies.get('ssid', '')
         self.response.headers['Set-Cookie'] = str(
             'ssid=%s; expires=Fri, 31-Dec-2008 23:59:59 GMT;' % ssid)
-        self.response.out.write(template.render(
+        self.response.write(template.render(
             _('logout.html'),
             {'dev': self.dev}))
 
@@ -513,14 +513,14 @@ class CrossDomain(BaseRequestHandler):
         """
         if self._testlogin:
             self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps(self.jsondata))
+            self.response.write(json.dumps(self.jsondata))
         else:
             result = self.fetch_request(urlfetch.PUT, self.xmldata)
             if result.status_code != 200:
-                self.response.out.write(result.content)
+                self.response.write(result.content)
             else:
                 self.response.headers['Content-Type'] = 'application/json'
-                self.response.out.write(json.dumps(self.jsondata))
+                self.response.write(json.dumps(self.jsondata))
 
     @authenticated
     def delete(self):
@@ -529,7 +529,7 @@ class CrossDomain(BaseRequestHandler):
         if not self._testlogin:
             result = self.fetch_request(urlfetch.DELETE)
             if result.status_code != 200:
-                self.response.out.write(result.content)
+                self.response.write(result.content)
 
     @authenticated
     def post(self):
@@ -540,11 +540,11 @@ class CrossDomain(BaseRequestHandler):
             item = COLLECTION[0].copy()
             item.update(self.jsondata)
             item.update({'id': 30})
-            self.response.out.write(json.dumps(item))
+            self.response.write(json.dumps(item))
         else:
             result = self.fetch_request(urlfetch.POST, self.xmldata)
             if result.status_code != 201:
-                self.response.out.write(result.content)
+                self.response.write(result.content)
             else:
                 location = result.headers['Location']
                 location = location.split('/')[-1]
@@ -556,16 +556,16 @@ class CrossDomain(BaseRequestHandler):
                 jsondata = self.jsondata
                 jsondata.update({'id': item_id})
                 self.response.headers['Content-Type'] = 'application/json'
-                self.response.out.write(json.dumps(jsondata))
+                self.response.write(json.dumps(jsondata))
 
     def _testget(self):
         """ test data
         """
         self.response.headers['Content-Type'] = 'application/json'
         if self.request.path_qs == "/api/me.xml":
-            self.response.out.write(json.dumps(MEDATA))
+            self.response.write(json.dumps(MEDATA))
         else:
-            self.response.out.write(json.dumps(COLLECTION))
+            self.response.write(json.dumps(COLLECTION))
 
     @property
     def _testlogin(self):
@@ -593,7 +593,7 @@ class CrossDomain(BaseRequestHandler):
         else:
             result = self.fetch_request(urlfetch.GET)
             if result.status_code != 200:
-                return self.response.out.write(result.content)
+                return self.response.write(result.content)
             if dev:
                 save_request(url, result)
             content = result.content
@@ -602,7 +602,7 @@ class CrossDomain(BaseRequestHandler):
             parent = dom.childNodes[0]
             result = convert(parent)[1]
             self.response.headers['Content-Type'] = 'application/json'
-            self.response.out.write(json.dumps(result))
+            self.response.write(json.dumps(result))
 
 APPLICATION = webapp2.WSGIApplication([
     ('/', MainPage),
