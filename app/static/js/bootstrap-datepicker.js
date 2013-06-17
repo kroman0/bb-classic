@@ -18,7 +18,7 @@
  * limitations under the License.
  * ========================================================= */
 
-!function( $ ) {
+(function( $ ) {
 
 	function UTCDate(){
 		return new Date(Date.UTC.apply(Date, arguments));
@@ -36,7 +36,6 @@
 		this._process_options(options);
 
 		this.element = $(element);
-		this.format = DPGlobal.parseFormat(this.o.format);
 		this.isInline = false;
 		this.isInput = this.element.is('input');
 		this.component = this.element.is('.date') ? this.element.find('.add-on, .btn') : false;
@@ -138,11 +137,12 @@
 			o.weekStart %= 7;
 			o.weekEnd = ((o.weekStart + 6) % 7);
 
+			var format = DPGlobal.parseFormat(o.format)
 			if (o.startDate !== -Infinity) {
-				o.startDate = DPGlobal.parseDate(o.startDate, o.format, o.language);
+				o.startDate = DPGlobal.parseDate(o.startDate, format, o.language);
 			}
 			if (o.endDate !== Infinity) {
-				o.endDate = DPGlobal.parseDate(o.endDate, o.format, o.language);
+				o.endDate = DPGlobal.parseDate(o.endDate, format, o.language);
 			}
 
 			o.daysOfWeekDisabled = o.daysOfWeekDisabled||[];
@@ -246,10 +246,8 @@
 				type: event,
 				date: local_date,
 				format: $.proxy(function(altformat){
-					var format = this.format;
-					if (altformat)
-						format = DPGlobal.parseFormat(altformat);
-					return DPGlobal.formatDate(date, format, this.language);
+					var format = altformat || this.o.format;
+					return DPGlobal.formatDate(date, format, this.o.language);
 				}, this)
 			});
 		},
@@ -328,7 +326,7 @@
 
 		getFormattedDate: function(format) {
 			if (format === undefined)
-				format = this.format;
+				format = this.o.format;
 			return DPGlobal.formatDate(this.date, format, this.o.language);
 		},
 
@@ -377,7 +375,7 @@
 				delete this.element.data().date;
 			}
 
-			this.date = DPGlobal.parseDate(date, this.format, this.o.language);
+			this.date = DPGlobal.parseDate(date, this.o.format, this.o.language);
 
 			if(fromArgs) this.setValue();
 
@@ -635,10 +633,14 @@
 								this._setDate(date, which);
 								break;
 							case 'clear':
+								var element;
 								if (this.isInput)
-									this.element.val("");
-								else
-									this.element.find('input').val("");
+									element = this.element;
+								else if (this.component)
+									element = this.element.find('input');
+								if (element)
+									element.val("").change();
+								this._trigger('changeDate');
 								this.update();
 								if (this.o.autoclose)
 									this.hide();
@@ -1068,6 +1070,8 @@
 		},
 		parseDate: function(date, format, language) {
 			if (date instanceof Date) return date;
+			if (typeof format === 'string')
+				format = DPGlobal.parseFormat(format);
 			if (/^[\-+]\d+[dmwy]([\s,]+[\-+]\d+[dmwy])*$/.test(date)) {
 				var part_re = /([\-+]\d+)([dmwy])/,
 					parts = date.match(/([\-+]\d+)([dmwy])/g),
@@ -1158,6 +1162,8 @@
 			return date;
 		},
 		formatDate: function(date, format, language){
+			if (typeof format === 'string')
+				format = DPGlobal.parseFormat(format);
 			var val = {
 				d: date.getUTCDate(),
 				D: dates[language].daysShort[date.getUTCDay()],
@@ -1243,4 +1249,4 @@
 		$('[data-provide="datepicker-inline"]').datepicker();
 	});
 
-}( window.jQuery );
+}( window.jQuery ));

@@ -104,7 +104,6 @@
     for (i in collections) {
         if (collections.hasOwnProperty(i)) {
             collections[i].on('reset', onReset);
-            collections[i].on('sync', onReset);
         }
     }
     collections.project_people = new bbcollections.People();
@@ -171,7 +170,7 @@
             }
             views[route].collection = collections[route].get_or_create(id);
             views.current = views[route].render();
-        } else if (_.contains(['project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list'], route)) {
+        } else if (_.contains(['project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list', 'project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
             id = parseInt(params[0], 10);
             cur_item = parseInt(params[1], 10);
             if (collections.projects.get(id)) {
@@ -187,24 +186,18 @@
             case 'project_category':
                 views[route].collection = collections.project_categories.get_or_create(id);
                 break;
-            default:
+            case 'project_post':
+            case 'project_file':
+            case 'project_todo_list':
                 views[route].collection = collections[route + 's'].get_or_create(id);
+                break;
+            default:
+                views[route].collection = collections[route].get_or_create(cur_item);
             }
-            views.current = views[route].render();
-        } else if (_.contains(['project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
-            id = parseInt(params[0], 10);
-            cur_item = parseInt(params[1], 10);
-            if (collections.projects.get(id)) {
-                views[route].model = collections.projects.get(id);
-            } else {
-                views[route].model.id = id;
-            }
-            views[route].cur_item = cur_item;
-            views[route].collection = collections[route].get_or_create(cur_item);
             views.current = views[route].render();
         }
         if (views.current) {
-            document.title = views.current.name() + ' - BB';
+            document.title = views.current.PageTitle();
         }
 //         add_hash();
         if (views.current && views.current.deps) {
@@ -224,7 +217,7 @@
         }
         views.project_todo_item.cur_item = tlid;
         views.project_todo_item.todo_item = tiid;
-        views.project_todo_item.collection = collections.project_todo_lists.get_or_create(id);
+        views.project_todo_item.collection = views.project_todo_item.todo_lists = collections.project_todo_lists.get_or_create(id);
         views.current = views.project_todo_item.render();
     }).on('route:project_todo_item_comments', function(id, tlid, tiid) {
         if (collections.projects.get(id)) {
@@ -261,7 +254,7 @@
     }).on('route:me', function() {
         views.person_view.model = models.mydata;
         views.current = views.person_view.render();
-    }).on('route:defaultRoute', function(action) {
+    }).on('route:defaultRoute', function() {
         this.navigate('projects', {
             trigger: true
         });

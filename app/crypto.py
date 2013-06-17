@@ -56,40 +56,42 @@ def encode_data(values, delimiter='\n'):
     return base64.b64encode(encrypt(data, current[0]))
 
 
-class AddkeyPage(webapp.RequestHandler):
+class BaseHandler(webapp.RequestHandler):
+    """ Base crypto module handler
+
+    * :http:get:`/.*` - `BaseHandler GET <#crypto.BaseHandler.get>`_
+    * :http:post:`/.*` - `BaseHandler POST <#crypto.BaseHandler.post>`_
+    """
+
+    def get(self):
+        """ GET request
+        """
+        self.action()
+
+    def post(self):
+        """ POST request
+        """
+        self.action()
+
+
+class AddkeyPage(BaseHandler):
     """ Add key handler
 
-    * :http:get:`/addkey` - `AddkeyPage GET <#crypto.AddkeyPage.get>`_
-    * :http:post:`/addkey` - `AddkeyPage POST <#crypto.AddkeyPage.post>`_
+    * :http:get:`/addkey` - `AddkeyPage GET <#crypto.AddkeyPage.action>`_
+    * :http:post:`/addkey` - `AddkeyPage POST <#crypto.AddkeyPage.action>`_
     """
 
-    def get(self):
-        """ GET request
-        """
-        self.post()
-
-    def post(self):
-        """ POST request
-        """
-        keys.rotate()
+    action = keys.rotate  # GET/POST request action
 
 
-class GenkeysPage(webapp.RequestHandler):
+class GenkeysPage(BaseHandler):
     """ Generate keys handler
 
-    * :http:get:`/genkeys` - `GenkeysPage GET <#crypto.GenkeysPage.get>`_
-    * :http:post:`/genkeys` - `GenkeysPage POST <#crypto.GenkeysPage.post>`_
+    * :http:get:`/genkeys` - `GenkeysPage GET <#crypto.GenkeysPage.action>`_
+    * :http:post:`/genkeys` - `GenkeysPage POST <#crypto.GenkeysPage.action>`_
     """
 
-    def get(self):
-        """ GET request
-        """
-        self.post()
-
-    def post(self):
-        """ POST request
-        """
-        keys.refresh()
+    action = keys.refresh  # GET/POST request action
 
 
 APPLICATION = webapp.WSGIApplication([
