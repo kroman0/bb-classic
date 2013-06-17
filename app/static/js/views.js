@@ -36,6 +36,7 @@
             hashpp,
             pp
         ],
+        dtemplate = '-template',
         _result = _.result,
         render = function(template, data, settings) {
             return _.template(bbtemplates[template], data, settings);
@@ -70,16 +71,16 @@
                 return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, item, {variable: 'item'});
             },
             rendercomments: function(comments) {
-                return render('#comments-template', comments, {variable: 'comments'});
+                return render('#comments' + dtemplate, comments, {variable: 'comments'});
             },
             renderpager: function() {
-                return render('#pager-template', this, {variable: 'view'});
+                return render('#pager' + dtemplate, this, {variable: 'view'});
             },
             renderheader: function() {
-                return render('#header-template', this, {variable: 'view'});
+                return render('#header' + dtemplate, this, {variable: 'view'});
             },
             renderprojectnav: function() {
-                return render('#project-nav-template', this, {variable: 'view'});
+                return render('#project-nav' + dtemplate, this, {variable: 'view'});
             }
         }),
         ProjectBBView = BBView.extend({
@@ -145,12 +146,12 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
         },
-        template: '#people-template',
-        itemtemplate: '#personitem-template',
+        template: '#people' + dtemplate,
+        itemtemplate: '#personitem' + dtemplate,
         title: 'People'
     });
     bbviews.ProjectsView = BBView.extend({
-        template: hashpp + '-template',
+        template: hashpp + dtemplate,
         title: pp
     });
     bbviews.ProjectView = BBView.extend({
@@ -160,10 +161,10 @@
         path: function() {
             return ProjectBBView.prototype.path.apply(this, arguments).slice(0, -1);
         },
-        template: '#project-template'
+        template: '#project' + dtemplate
     });
     bbviews.CompaniesView = BBView.extend({
-        template: hashcc + '-template',
+        template: hashcc + dtemplate,
         title: cc
     });
     bbviews.CompanyView = BBView.extend({
@@ -173,14 +174,14 @@
         path: function() {
             return [cpath];
         },
-        template: '#company-template'
+        template: '#company' + dtemplate
     });
     bbviews.PeopleView = ProjectBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
         },
-        template: '#project-people-template',
-        itemtemplate: '#personitem-template',
+        template: '#project-people' + dtemplate,
+        itemtemplate: '#personitem' + dtemplate,
         title: 'People'
     });
     bbviews.TimeEntriesView = PagesBBView.extend({
@@ -259,8 +260,8 @@
             model.save(this.parseData('.edittime[data-id=' + model.id + ']'));
             this.render();
         },
-        itemtemplate: '#time-template',
-        template: '#project-time-template',
+        itemtemplate: '#time' + dtemplate,
+        template: '#project-time' + dtemplate,
         title: 'Time'
     });
     bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
@@ -281,7 +282,7 @@
             item.set('person-name', this.options.collections.people.get(item.get('person-id')).name(), {silent: true});
             return item;
         },
-        template: '#todo-time-template'
+        template: '#todo-time' + dtemplate
     });
     bbviews.TimeReportView = bbviews.TimeEntriesView.extend({
         deps: function() {
@@ -303,7 +304,7 @@
             this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
             this.collection.fetch({cache: true, reset: true});
         },
-        template: '#time-report-template',
+        template: '#time-report' + dtemplate,
         path: false,
         title: 'Time report',
         render: function() {
@@ -318,8 +319,8 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
         },
-        template: '#project-post-comments-template',
-        itemtemplate: '#post-template',
+        template: '#project-post-comments' + dtemplate,
+        itemtemplate: '#post' + dtemplate,
         extrapath: function() {
             return [
                 [
@@ -340,8 +341,8 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
         },
-        template: '#project-calendar-entry-comments-template',
-        itemtemplate: '#calendar-template',
+        template: '#project-calendar-entry-comments' + dtemplate,
+        itemtemplate: '#calendar' + dtemplate,
         nameParent: 'Calendar',
         itemname: function() {
             var item = _.isFinite(this.cur_item) && this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item),
@@ -350,13 +351,13 @@
         }
     });
     bbviews.PostsView = ProjectBBView.extend({
-        template: '#project-posts-template',
-        itemtemplate: '#post-template',
+        template: '#project-posts' + dtemplate,
+        itemtemplate: '#post' + dtemplate,
         title: 'Posts'
     });
     bbviews.PostView = TitleBBView.extend({
-        template: '#project-post-template',
-        itemtemplate: '#post-template',
+        template: '#project-post' + dtemplate,
+        itemtemplate: '#post' + dtemplate,
         nameParent: 'Posts'
     });
     bbviews.FilesView = PagesBBView.extend({
@@ -368,24 +369,24 @@
             'click .project-files.previous': 'previous',
             'click .project-files.next': 'next'
         },
-        template: '#project-files-template',
+        template: '#project-files' + dtemplate,
         title: 'Files'
     });
     bbviews.FileView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
         },
-        template: '#project-file-template',
+        template: '#project-file' + dtemplate,
         nameParent: 'Files'
     });
     bbviews.CalendarView = ProjectBBView.extend({
-        template: '#project-calendar-template',
-        itemtemplate: '#calendar-template',
+        template: '#project-calendar' + dtemplate,
+        itemtemplate: '#calendar' + dtemplate,
         title: 'Calendar'
     });
     bbviews.CalendarEntryView = TitleBBView.extend({
-        template: '#project-calendar-entry-template',
-        itemtemplate: '#calendar-template',
+        template: '#project-calendar-entry' + dtemplate,
+        itemtemplate: '#calendar' + dtemplate,
         nameParent: 'Calendar'
     });
     bbviews.CategoriesView = PagesBBView.extend({
@@ -394,20 +395,20 @@
             'click .project-categories.previous': 'previous',
             'click .project-categories.next': 'next'
         },
-        template: '#project-categories-template',
-        itemtemplate: '#category-template',
+        template: '#project-categories' + dtemplate,
+        itemtemplate: '#category' + dtemplate,
         title: 'Categories'
     });
     bbviews.CategoryView = TitleBBView.extend({
-        template: '#project-category-template',
-        itemtemplate: '#category-template',
+        template: '#project-category' + dtemplate,
+        itemtemplate: '#category' + dtemplate,
         nameParent: 'Categories'
     });
     bbviews.PersonView = BBView.extend({
         deps: function() {
             return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
-        template: '#person-template',
+        template: '#person' + dtemplate,
         path: function() {
             return [
                 [
@@ -428,8 +429,8 @@
             this.collection.responsible_party = $(e.target).val();
             this.collection.fetch({cache: true, reset: true});
         },
-        template: '#todo-lists-template',
-        itemtemplate: '#todolist-template',
+        template: '#todo-lists' + dtemplate,
+        itemtemplate: '#todolist' + dtemplate,
         title: function() {
             if (this.collection.responsible_party) {
                 var person = this.options.collections.people && this.options.collections.people.get(this.collection.responsible_party);
@@ -458,16 +459,16 @@
         }
     });
     bbviews.TodoListsView = ProjectBBView.extend({
-        template: '#project-todo-lists-template',
-        itemtemplate: '#todolist-template',
+        template: '#project-todo-lists' + dtemplate,
+        itemtemplate: '#todolist' + dtemplate,
         title: 'To-dos'
     });
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
-        template: '#project-todo-list-template',
-        itemtemplate: '#todolist-template',
+        template: '#project-todo-list' + dtemplate,
+        itemtemplate: '#todolist' + dtemplate,
         idParent: 'todo_lists',
         nameParent: 'To-dos',
         render: function() {
@@ -485,8 +486,8 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
-        template: '#project-todo-item-template',
-        itemtemplate: '#todolist-template',
+        template: '#project-todo-item' + dtemplate,
+        itemtemplate: '#todolist' + dtemplate,
         extrapath: bbviews.PostCommentsView.prototype.extrapath,
         idParent: 'todo_lists',
         nameParent: 'To-dos',
@@ -510,7 +511,7 @@
         }
     });
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
-        template: '#project-todo-item-comments-template',
+        template: '#project-todo-item-comments' + dtemplate,
         extrapath: function() {
             var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this, arguments);
             return [
@@ -535,7 +536,7 @@
             this.model.uncomplete();
         },
         tagName: 'dd',
-        template: '#todo-template',
+        template: '#todo' + dtemplate,
         render: function() {
             BBViewProto.render.apply(this, arguments);
             this.delegateEvents();
@@ -543,7 +544,7 @@
         }
     });
     bbviews.NavView = BBView.extend({
-        template: '#nav-template',
+        template: '#nav' + dtemplate,
         initialize: function() {
             this.model.bind('change', this.render, this);
         }
