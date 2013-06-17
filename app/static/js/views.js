@@ -126,7 +126,7 @@
             },
             nameParent: '',
             basepath: function() {
-                var bpath = ProjectBBView.prototype.path.apply(this, arguments);
+                var bpath = ProjectBBView.prototype.path.apply(this);
                 bpath.push([
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
                     this.nameParent
@@ -162,7 +162,7 @@
             return this.options.collections.projects.fetchonce();
         },
         path: function() {
-            return ProjectBBView.prototype.path.apply(this, arguments).slice(0, -1);
+            return ProjectBBView.prototype.path.apply(this).slice(0, -1);
         },
         template: '#project' + dtemplate
     });
@@ -311,7 +311,7 @@
         path: false,
         title: 'Time report',
         render: function() {
-            BBViewProto.render.apply(this, arguments);
+            BBViewProto.render.apply(this);
             if (this.collection.filter_report) {
                 this.$el.find('form#makereport').deserialize(this.collection.filter_report);
             }
@@ -475,7 +475,7 @@
         idParent: 'todo_lists',
         nameParent: 'To-dos',
         render: function() {
-            BBViewProto.render.apply(this, arguments);
+            BBViewProto.render.apply(this);
             if (_.isFinite(this.cur_item)) {
                 this.options.collections.todo_items.get_or_create(this.cur_item).each(function(item) {
                     this.$el.find('.todoitemsholder').append(this.options.todo(this.model.id, item).render().el);
@@ -505,7 +505,7 @@
             return itemtitle;
         },
         render: function() {
-            BBViewProto.render.apply(this, arguments);
+            BBViewProto.render.apply(this);
             var item = this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
             if (item) {
                 this.$el.find('.todoitemsholder').append(this.options.todo(this.model.id, item).render().el);
@@ -516,7 +516,7 @@
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
         template: '#project-todo-item-comments' + dtemplate,
         extrapath: function() {
-            var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this, arguments);
+            var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this);
             return [
                 bpath.shift(),
                 [
@@ -541,7 +541,7 @@
         tagName: 'dd',
         template: '#todo' + dtemplate,
         render: function() {
-            BBViewProto.render.apply(this, arguments);
+            BBViewProto.render.apply(this);
             this.delegateEvents();
             return this;
         }
