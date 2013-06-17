@@ -36,6 +36,7 @@
             hashpp,
             pp
         ],
+        _result = _.result,
         render = function(template, data, settings) {
             return _.template(bbtemplates[template], data, settings);
         },
@@ -48,18 +49,18 @@
             },
             name: function() {
                 var p = this.Path();
-                return p ? _.pluck(p, 1).reverse().join(' - ') : _.result(this, 'title');
+                return p ? _.pluck(p, 1).reverse().join(' - ') : _result(this, 'title');
             },
             Path: function() {
-                var p = _.result(this, 'path');
-                if (p) {p.push(['', _.result(this, 'title')]);}
+                var p = _result(this, 'path');
+                if (p) {p.push(['', _result(this, 'title')]);}
                 return p;
             },
             PageTitle: function() {
-                return _.result(this, 'name') + ' - BB';
+                return _result(this, 'name') + ' - BB';
             },
             PageHeader: function() {
-                return _.result(this, 'title') || _.result(this, 'name');
+                return _result(this, 'title') || _result(this, 'name');
             },
             render: function() {
                 this.$el.html(render(this.template, this, {variable: 'view'}));
@@ -113,7 +114,7 @@
         TitleBBView = ProjectBBView.extend({
             cur_item: null,
             title: function() {
-                return _.result(this, 'itemtitle');
+                return _result(this, 'itemtitle');
             },
             itemtitle: function() {
                 var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item;
@@ -235,33 +236,29 @@
                 }});
             this.render();
         },
+        currentTarget: function(e) {
+            return this.collection.get($(e.currentTarget).parents('tr').data('id'));
+        },
         edittime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.edit = true;
+            this.currentTarget(e).edit = true;
             this.render();
         },
         resettime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.edit = false;
+            this.currentTarget(e).edit = false;
             this.render();
         },
         removetime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.destroy();
+            this.currentTarget(e).destroy();
             this.render();
         },
         savetime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
+            var model = this.currentTarget(e);
             model.edit = false;
-            model.save(this.parseData('.edittime[data-id=' + id + ']'));
+            model.save(this.parseData('.edittime[data-id=' + model.id + ']'));
             this.render();
         },
         itemtemplate: '#time-template',
@@ -329,7 +326,7 @@
             return [
                 [
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
-                    _.result(this, 'itemname')
+                    _result(this, 'itemname')
                 ]
             ];
         },
@@ -495,9 +492,6 @@
         extrapath: bbviews.PostCommentsView.prototype.extrapath,
         idParent: 'todo_lists',
         nameParent: 'To-dos',
-        title: function() {
-            return _.result(this, 'itemtitle');
-        },
         itemname: function() {
             var list = this.cur_item && this.todo_lists.get(this.cur_item),
                 title = list && list.name();
@@ -525,7 +519,7 @@
                 bpath.shift(),
                 [
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item + '/' + this.todo_item,
-                    _.result(this, 'itemtitle')
+                    _result(this, 'itemtitle')
                 ]
             ];
         },
