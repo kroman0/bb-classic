@@ -36,6 +36,9 @@
             hashpp,
             pp
         ],
+        templateoptions = {
+            variable: 'view'
+        },
         dtemplate = '-template',
         _result = _.result,
         render = function(template, data, settings) {
@@ -64,7 +67,7 @@
                 return _result(this, 'title') || _result(this, 'name');
             },
             render: function() {
-                this.$el.html(render(this.template, this, {variable: 'view'}));
+                this.$el.html(render(this.template, this, templateoptions));
                 return this;
             },
             renderitem: function(item) {
@@ -74,13 +77,13 @@
                 return render('#comments' + dtemplate, comments, {variable: 'comments'});
             },
             renderpager: function() {
-                return render('#pager' + dtemplate, this, {variable: 'view'});
+                return render('#pager' + dtemplate, this, templateoptions);
             },
             renderheader: function() {
-                return render('#header' + dtemplate, this, {variable: 'view'});
+                return render('#header' + dtemplate, this, templateoptions);
             },
             renderprojectnav: function() {
-                return render('#project-nav' + dtemplate, this, {variable: 'view'});
+                return render('#project-nav' + dtemplate, this, templateoptions);
             }
         }),
         ProjectBBView = BBView.extend({
