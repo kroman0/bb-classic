@@ -74,6 +74,14 @@
                 '*actions': 'defaultRoute'
             }
         }),
+        set_model = function(id, collection, view) {
+            if (collection.get(id)) {
+                view.model = collection.get(id);
+            } else {
+                view.model.id = id;
+            }
+            return view.model;
+        },
         workspace = new Workspace();
     models.mydata = new bbmodels.MyModel();
     models.project = new bbmodels.Project();
@@ -163,21 +171,13 @@
             views.current = views[route].render();
         } else if (_.contains(['project_people', 'project_categories', 'project_time_entries', 'project_posts', 'project_files', 'project_calendar', 'project_todo_lists'], route)) {
             id = parseInt(params[0], 10);
-            if (collections.projects.get(id)) {
-                views[route].model = collections.projects.get(id);
-            } else {
-                views[route].model.id = id;
-            }
+            set_model(id, collections.projects, views[route]);
             views[route].collection = collections[route].get_or_create(id);
             views.current = views[route].render();
         } else if (_.contains(['project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list', 'project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
             id = parseInt(params[0], 10);
             cur_item = parseInt(params[1], 10);
-            if (collections.projects.get(id)) {
-                views[route].model = collections.projects.get(id);
-            } else {
-                views[route].model.id = id;
-            }
+            set_model(id, collections.projects, views[route]);
             views[route].cur_item = cur_item;
             switch (route) {
             case 'project_calendar_entry':
@@ -210,46 +210,26 @@
             return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
         })).filter(':last').addClass('active');
     }).on('route:project_todo_item', function(id, tlid, tiid) {
-        if (collections.projects.get(id)) {
-            views.project_todo_item.model = collections.projects.get(id);
-        } else {
-            views.project_todo_item.model.id = id;
-        }
+        set_model(id, collections.projects, views.project_todo_item);
         views.project_todo_item.cur_item = tlid;
         views.project_todo_item.todo_item = tiid;
         views.project_todo_item.collection = views.project_todo_item.todo_lists = collections.project_todo_lists.get_or_create(id);
         views.current = views.project_todo_item.render();
     }).on('route:project_todo_item_comments', function(id, tlid, tiid) {
-        if (collections.projects.get(id)) {
-            views.project_todo_item_comments.model = collections.projects.get(id);
-        } else {
-            views.project_todo_item_comments.model.id = id;
-        }
+        set_model(id, collections.projects, views.project_todo_item_comments);
         views.project_todo_item_comments.cur_item = tlid;
         views.project_todo_item_comments.todo_item = tiid;
         views.project_todo_item_comments.todo_lists = collections.project_todo_lists.get_or_create(id);
         views.project_todo_item_comments.collection = collections.project_todo_item_comments.get_or_create(tiid);
         views.current = views.project_todo_item_comments.render();
     }).on('route:project', function(id) {
-        if (collections.projects.get(id)) {
-            views.project_view.model = collections.projects.get(id);
-        } else {
-            views.project_view.model.id = id;
-        }
+        set_model(id, collections.projects, views.project_view);
         views.current = views.project_view.render();
     }).on('route:company', function(id) {
-        if (collections.companies.get(id)) {
-            views.company_view.model = collections.companies.get(id);
-        } else {
-            views.company_view.model.id = id;
-        }
+        set_model(id, collections.companies, views.company_view);
         views.current = views.company_view.render();
     }).on('route:person', function(id) {
-        if (collections.people.get(id)) {
-            views.person_view.model = collections.people.get(id);
-        } else {
-            views.person_view.model.id = id;
-        }
+        set_model(id, collections.people, views.person_view);
         views.current = views.person_view.render();
     }).on('route:me', function() {
         views.person_view.model = models.mydata;
