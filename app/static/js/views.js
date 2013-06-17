@@ -208,14 +208,13 @@
             data.description = this.$(selector + ' [name=description]').val();
             data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
             data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
-//             data['project-id'] = this.model.id;
-//             data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
             return data;
         },
         finishItem: function(item) {
-            item.set('project-id', this.model.id, {silent: true});
-            item.set('person-name', this.options.collections.people.get(item.get('person-id')).name(), {silent: true});
-            return item;
+            return item.set({
+                'project-id': this.model.id,
+                'person-name': this.options.collections.people.get(item.get('person-id')).name()
+            }, {silent: true});
         },
         sorttime: function(e) {
             e.preventDefault();
@@ -280,10 +279,11 @@
             'click .todo-time thead>tr>th': 'sorttime'
         },
         finishItem: function(item) {
-            item.set('project-id', this.model.id, {silent: true});
-            item.set('todo-item-id', this.cur_item, {silent: true});
-            item.set('person-name', this.options.collections.people.get(item.get('person-id')).name(), {silent: true});
-            return item;
+            return item.set({
+                'project-id': this.model.id,
+                'todo-item-id': this.cur_item,
+                'person-name': this.options.collections.people.get(item.get('person-id')).name()
+            }, {silent: true});
         },
         template: '#todo-time' + dtemplate
     });
