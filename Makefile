@@ -2,8 +2,9 @@
 #
 
 BASE = app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+MIN = app/static/js/jquery.deserialize.js app/static/js/bootstrap-datepicker.js app/static/js/backbone.analytics.js
 SCRIPTS = $(BASE)
-MINIFY = $(BASE) app/static/js/jquery.deserialize.js app/static/js/bootstrap-datepicker.js app/static/js/backbone.analytics.js
+MINIFY = $(BASE) $(MIN)
 
 all: run
 
@@ -32,7 +33,9 @@ deploy: clean minify
 	bin/appcfg update app --oauth2
 
 minify:
-	$(foreach JS,$(MINIFY),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -m;)
+# 	$(foreach JS,$(MINIFY),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -cm --lint;)
+	$(foreach JS,$(MIN),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -m;)
+	$(foreach JS,$(BASE),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -m --lint;)
 
 jshint:
 	jshint $(SCRIPTS)
