@@ -36,6 +36,11 @@
             hashpp,
             pp
         ],
+        templateoptions = {
+            variable: 'view'
+        },
+        dtemplate = '-template',
+        _result = _.result,
         render = function(template, data, settings) {
             return _.template(bbtemplates[template], data, settings);
         },
@@ -48,37 +53,37 @@
             },
             name: function() {
                 var p = this.Path();
-                return p ? _.pluck(p, 1).reverse().join(' - ') : _.result(this, 'title');
+                return p ? _.pluck(p, 1).reverse().join(' - ') : _result(this, 'title');
             },
             Path: function() {
-                var p = _.result(this, 'path');
-                if (p) {p.push(['', _.result(this, 'title')]);}
+                var p = _result(this, 'path');
+                if (p) {p.push(['', _result(this, 'title')]);}
                 return p;
             },
             PageTitle: function() {
-                return _.result(this, 'name') + ' - BB';
+                return _result(this, 'name') + ' - BB';
             },
             PageHeader: function() {
-                return _.result(this, 'title') || _.result(this, 'name');
+                return _result(this, 'title') || _result(this, 'name');
             },
             render: function() {
-                this.$el.html(render(this.template, this, {variable: 'view'}));
+                this.$el.html(render(this.template, this, templateoptions));
                 return this;
             },
             renderitem: function(item) {
                 return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, item, {variable: 'item'});
             },
             rendercomments: function(comments) {
-                return render('#comments-template', comments, {variable: 'comments'});
+                return render('#comments' + dtemplate, comments, {variable: 'comments'});
             },
             renderpager: function() {
-                return render('#pager-template', this, {variable: 'view'});
+                return render('#pager' + dtemplate, this, templateoptions);
             },
             renderheader: function() {
-                return render('#header-template', this, {variable: 'view'});
+                return render('#header' + dtemplate, this, templateoptions);
             },
             renderprojectnav: function() {
-                return render('#project-nav-template', this, {variable: 'view'});
+                return render('#project-nav' + dtemplate, this, templateoptions);
             }
         }),
         ProjectBBView = BBView.extend({
@@ -113,7 +118,7 @@
         TitleBBView = ProjectBBView.extend({
             cur_item: null,
             title: function() {
-                return _.result(this, 'itemtitle');
+                return _result(this, 'itemtitle');
             },
             itemtitle: function() {
                 var item = _.isFinite(this.cur_item) ? this.collection.get(this.cur_item) : this.cur_item;
@@ -121,7 +126,7 @@
             },
             nameParent: '',
             basepath: function() {
-                var bpath = ProjectBBView.prototype.path.apply(this, arguments);
+                var bpath = ProjectBBView.prototype.path.apply(this);
                 bpath.push([
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()),
                     this.nameParent
@@ -144,12 +149,12 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
         },
-        template: '#people-template',
-        itemtemplate: '#personitem-template',
+        template: '#people' + dtemplate,
+        itemtemplate: '#personitem' + dtemplate,
         title: 'People'
     });
     bbviews.ProjectsView = BBView.extend({
-        template: hashpp + '-template',
+        template: hashpp + dtemplate,
         title: pp
     });
     bbviews.ProjectView = BBView.extend({
@@ -157,12 +162,12 @@
             return this.options.collections.projects.fetchonce();
         },
         path: function() {
-            return ProjectBBView.prototype.path.apply(this, arguments).slice(0, -1);
+            return ProjectBBView.prototype.path.apply(this).slice(0, -1);
         },
-        template: '#project-template'
+        template: '#project' + dtemplate
     });
     bbviews.CompaniesView = BBView.extend({
-        template: hashcc + '-template',
+        template: hashcc + dtemplate,
         title: cc
     });
     bbviews.CompanyView = BBView.extend({
@@ -172,14 +177,14 @@
         path: function() {
             return [cpath];
         },
-        template: '#company-template'
+        template: '#company' + dtemplate
     });
     bbviews.PeopleView = ProjectBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
         },
-        template: '#project-people-template',
-        itemtemplate: '#personitem-template',
+        template: '#project-people' + dtemplate,
+        itemtemplate: '#personitem' + dtemplate,
         title: 'People'
     });
     bbviews.TimeEntriesView = PagesBBView.extend({
@@ -203,14 +208,13 @@
             data.description = this.$(selector + ' [name=description]').val();
             data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
             data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
-//             data['project-id'] = this.model.id;
-//             data['person-name'] = this.$(selector + ' [name=person-id]').find(':selected').text();
             return data;
         },
         finishItem: function(item) {
-            item.set('project-id', this.model.id, {silent: true});
-            item.set('person-name', this.options.collections.people.get(item.get('person-id')).name(), {silent: true});
-            return item;
+            return item.set({
+                'project-id': this.model.id,
+                'person-name': this.options.collections.people.get(item.get('person-id')).name()
+            }, {silent: true});
         },
         sorttime: function(e) {
             e.preventDefault();
@@ -225,47 +229,41 @@
                 wait: true,
                 success: function(model) {
                     context.finishItem(model);
-                    try {
-                        context.collection.fullCollection.sort();
-                    } catch (err) {
+                    if (!context.collection.fullCollection.comparator) {
                         context.collection.setSorting('id', 1);
-                        context.collection.fullCollection.sort();
                     }
+                    context.collection.fullCollection.sort();
                     return true;
                 }});
             this.render();
         },
+        currentTarget: function(e) {
+            return this.collection.get($(e.currentTarget).parents('tr').data('id'));
+        },
         edittime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.edit = true;
+            this.currentTarget(e).edit = true;
             this.render();
         },
         resettime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.edit = false;
+            this.currentTarget(e).edit = false;
             this.render();
         },
         removetime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
-            model.destroy();
+            this.currentTarget(e).destroy();
             this.render();
         },
         savetime: function(e) {
             e.preventDefault();
-            var id = $(e.currentTarget).parents('tr').data('id'),
-                model = this.collection.get(id);
+            var model = this.currentTarget(e);
             model.edit = false;
-            model.save(this.parseData('.edittime[data-id=' + id + ']'));
+            model.save(this.parseData('.edittime[data-id=' + model.id + ']'));
             this.render();
         },
-        itemtemplate: '#time-template',
-        template: '#project-time-template',
+        itemtemplate: '#time' + dtemplate,
+        template: '#project-time' + dtemplate,
         title: 'Time'
     });
     bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
@@ -281,12 +279,13 @@
             'click .todo-time thead>tr>th': 'sorttime'
         },
         finishItem: function(item) {
-            item.set('project-id', this.model.id, {silent: true});
-            item.set('todo-item-id', this.cur_item, {silent: true});
-            item.set('person-name', this.options.collections.people.get(item.get('person-id')).name(), {silent: true});
-            return item;
+            return item.set({
+                'project-id': this.model.id,
+                'todo-item-id': this.cur_item,
+                'person-name': this.options.collections.people.get(item.get('person-id')).name()
+            }, {silent: true});
         },
-        template: '#todo-time-template'
+        template: '#todo-time' + dtemplate
     });
     bbviews.TimeReportView = bbviews.TimeEntriesView.extend({
         deps: function() {
@@ -308,11 +307,11 @@
             this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
             this.collection.fetch({cache: true, reset: true});
         },
-        template: '#time-report-template',
+        template: '#time-report' + dtemplate,
         path: false,
         title: 'Time report',
         render: function() {
-            BBViewProto.render.apply(this, arguments);
+            BBViewProto.render.apply(this);
             if (this.collection.filter_report) {
                 this.$el.find('form#makereport').deserialize(this.collection.filter_report);
             }
@@ -323,13 +322,13 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
         },
-        template: '#project-post-comments-template',
-        itemtemplate: '#post-template',
+        template: '#project-post-comments' + dtemplate,
+        itemtemplate: '#post' + dtemplate,
         extrapath: function() {
             return [
                 [
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item,
-                    _.result(this, 'itemname')
+                    _result(this, 'itemname')
                 ]
             ];
         },
@@ -345,8 +344,8 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
         },
-        template: '#project-calendar-entry-comments-template',
-        itemtemplate: '#calendar-template',
+        template: '#project-calendar-entry-comments' + dtemplate,
+        itemtemplate: '#calendar' + dtemplate,
         nameParent: 'Calendar',
         itemname: function() {
             var item = _.isFinite(this.cur_item) && this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item),
@@ -355,13 +354,13 @@
         }
     });
     bbviews.PostsView = ProjectBBView.extend({
-        template: '#project-posts-template',
-        itemtemplate: '#post-template',
+        template: '#project-posts' + dtemplate,
+        itemtemplate: '#post' + dtemplate,
         title: 'Posts'
     });
     bbviews.PostView = TitleBBView.extend({
-        template: '#project-post-template',
-        itemtemplate: '#post-template',
+        template: '#project-post' + dtemplate,
+        itemtemplate: '#post' + dtemplate,
         nameParent: 'Posts'
     });
     bbviews.FilesView = PagesBBView.extend({
@@ -373,24 +372,22 @@
             'click .project-files.previous': 'previous',
             'click .project-files.next': 'next'
         },
-        template: '#project-files-template',
+        template: '#project-files' + dtemplate,
         title: 'Files'
     });
     bbviews.FileView = TitleBBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
-        },
-        template: '#project-file-template',
+        deps: bbviews.FilesView.prototype.deps,
+        template: '#project-file' + dtemplate,
         nameParent: 'Files'
     });
     bbviews.CalendarView = ProjectBBView.extend({
-        template: '#project-calendar-template',
-        itemtemplate: '#calendar-template',
+        template: '#project-calendar' + dtemplate,
+        itemtemplate: '#calendar' + dtemplate,
         title: 'Calendar'
     });
     bbviews.CalendarEntryView = TitleBBView.extend({
-        template: '#project-calendar-entry-template',
-        itemtemplate: '#calendar-template',
+        template: '#project-calendar-entry' + dtemplate,
+        itemtemplate: '#calendar' + dtemplate,
         nameParent: 'Calendar'
     });
     bbviews.CategoriesView = PagesBBView.extend({
@@ -399,20 +396,20 @@
             'click .project-categories.previous': 'previous',
             'click .project-categories.next': 'next'
         },
-        template: '#project-categories-template',
-        itemtemplate: '#category-template',
+        template: '#project-categories' + dtemplate,
+        itemtemplate: '#category' + dtemplate,
         title: 'Categories'
     });
     bbviews.CategoryView = TitleBBView.extend({
-        template: '#project-category-template',
-        itemtemplate: '#category-template',
+        template: '#project-category' + dtemplate,
+        itemtemplate: '#category' + dtemplate,
         nameParent: 'Categories'
     });
     bbviews.PersonView = BBView.extend({
         deps: function() {
             return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
-        template: '#person-template',
+        template: '#person' + dtemplate,
         path: function() {
             return [
                 [
@@ -423,9 +420,7 @@
         }
     });
     bbviews.TodosView = BBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
-        },
+        deps: bbviews.TimeEntriesView.prototype.deps,
         events: {
             "change select[name='target']": 'selectTarget'
         },
@@ -433,8 +428,8 @@
             this.collection.responsible_party = $(e.target).val();
             this.collection.fetch({cache: true, reset: true});
         },
-        template: '#todo-lists-template',
-        itemtemplate: '#todolist-template',
+        template: '#todo-lists' + dtemplate,
+        itemtemplate: '#todolist' + dtemplate,
         title: function() {
             if (this.collection.responsible_party) {
                 var person = this.options.collections.people && this.options.collections.people.get(this.collection.responsible_party);
@@ -463,20 +458,20 @@
         }
     });
     bbviews.TodoListsView = ProjectBBView.extend({
-        template: '#project-todo-lists-template',
-        itemtemplate: '#todolist-template',
+        template: '#project-todo-lists' + dtemplate,
+        itemtemplate: '#todolist' + dtemplate,
         title: 'To-dos'
     });
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
-        template: '#project-todo-list-template',
-        itemtemplate: '#todolist-template',
+        template: '#project-todo-list' + dtemplate,
+        itemtemplate: '#todolist' + dtemplate,
         idParent: 'todo_lists',
         nameParent: 'To-dos',
         render: function() {
-            BBViewProto.render.apply(this, arguments);
+            BBViewProto.render.apply(this);
             if (_.isFinite(this.cur_item)) {
                 this.options.collections.todo_items.get_or_create(this.cur_item).each(function(item) {
                     this.$el.find('.todoitemsholder').append(this.options.todo(this.model.id, item).render().el);
@@ -490,14 +485,11 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
-        template: '#project-todo-item-template',
-        itemtemplate: '#todolist-template',
+        template: '#project-todo-item' + dtemplate,
+        itemtemplate: '#todolist' + dtemplate,
         extrapath: bbviews.PostCommentsView.prototype.extrapath,
         idParent: 'todo_lists',
         nameParent: 'To-dos',
-        title: function() {
-            return _.result(this, 'itemtitle');
-        },
         itemname: function() {
             var list = this.cur_item && this.todo_lists.get(this.cur_item),
                 title = list && list.name();
@@ -509,7 +501,7 @@
             return itemtitle;
         },
         render: function() {
-            BBViewProto.render.apply(this, arguments);
+            BBViewProto.render.apply(this);
             var item = this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
             if (item) {
                 this.$el.find('.todoitemsholder').append(this.options.todo(this.model.id, item).render().el);
@@ -518,14 +510,14 @@
         }
     });
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
-        template: '#project-todo-item-comments-template',
+        template: '#project-todo-item-comments' + dtemplate,
         extrapath: function() {
-            var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this, arguments);
+            var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this);
             return [
                 bpath.shift(),
                 [
                     hashpp + '/' + this.model.id + '/' + (this.idParent || this.nameParent.toLowerCase()) + '/' + this.cur_item + '/' + this.todo_item,
-                    _.result(this, 'itemtitle')
+                    _result(this, 'itemtitle')
                 ]
             ];
         },
@@ -543,15 +535,15 @@
             this.model.uncomplete();
         },
         tagName: 'dd',
-        template: '#todo-template',
+        template: '#todo' + dtemplate,
         render: function() {
-            BBViewProto.render.apply(this, arguments);
+            BBViewProto.render.apply(this);
             this.delegateEvents();
             return this;
         }
     });
     bbviews.NavView = BBView.extend({
-        template: '#nav-template',
+        template: '#nav' + dtemplate,
         initialize: function() {
             this.model.bind('change', this.render, this);
         }
