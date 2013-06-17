@@ -226,12 +226,10 @@
                 wait: true,
                 success: function(model) {
                     context.finishItem(model);
-                    try {
-                        context.collection.fullCollection.sort();
-                    } catch (err) {
+                    if (!context.collection.fullCollection.comparator) {
                         context.collection.setSorting('id', 1);
-                        context.collection.fullCollection.sort();
                     }
+                    context.collection.fullCollection.sort();
                     return true;
                 }});
             this.render();
