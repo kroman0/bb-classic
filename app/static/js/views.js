@@ -376,9 +376,7 @@
         title: 'Files'
     });
     bbviews.FileView = TitleBBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
-        },
+        deps: bbviews.FilesView.prototype.deps,
         template: '#project-file' + dtemplate,
         nameParent: 'Files'
     });
@@ -422,9 +420,7 @@
         }
     });
     bbviews.TodosView = BBView.extend({
-        deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
-        },
+        deps: bbviews.TimeEntriesView.prototype.deps,
         events: {
             "change select[name='target']": 'selectTarget'
         },
