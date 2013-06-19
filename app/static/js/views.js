@@ -187,6 +187,11 @@
         itemtemplate: '#personitem' + dtemplate,
         title: 'People'
     });
+    bbviews.PersonView = TitleBBView.extend({
+        template: '#project-person' + dtemplate,
+        itemtemplate: '#personitem' + dtemplate,
+        nameParent: 'People'
+    });
     bbviews.TimeEntriesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
@@ -405,7 +410,7 @@
         itemtemplate: '#category' + dtemplate,
         nameParent: 'Categories'
     });
-    bbviews.PersonView = BBView.extend({
+    bbviews.AllPersonView = BBView.extend({
         deps: function() {
             return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
