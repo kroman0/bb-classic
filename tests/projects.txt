@@ -114,9 +114,9 @@ Project navigation should work correctly
     And heading should be "People"
     And title should be  People - Name of #0 - Projects - Company name #0 - Companies - BB
     When click link  First#0 Last
-    Then location should be  ${APP_URL}/#people/0
+    Then location should be  ${APP_URL}/#projects/0/people/0
     And heading should be "First#0 Last"
-    And title should be  First#0 Last - People - BB
+    And title should be  First#0 Last - People - Name of #0 - Projects - Company name #0 - Companies - BB
 
 
 *** Keywords ***
