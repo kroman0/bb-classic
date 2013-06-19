@@ -327,7 +327,7 @@ templates['#person-template'] = '\n\
 <% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><br /><% } %>\n\
 <% if (view.model.get("time-zone-name")) { %>Time zone: <%- view.model.get("time-zone-name") %><% } %>';
 templates['#personitem-template'] = '\n\
-<% var in_project=item.collection.url().contains("projects") %>\n\
+<% var in_project=item.collection.url().indexOf("projects")!==-1 %>\n\
 <li class="media well well-small">\n\
     <a class="pull-right" href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>">\n\
         <img class="media-object img-polaroid" src="<%- item.get("avatar-url") %>" alt="<%- item.name() %>">\n\
