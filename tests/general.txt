@@ -17,14 +17,12 @@ Test Teardown  Close All Browsers and Report Status
 
 Login page should have inputs and validate submit
     [Documentation]  Login page should have input[name=subdomain], input[name=username], input[name=password] and should validate inputs on submit.
-    [Tags]  login  compare  general
+    [Tags]  login  general
     Given an bb-classic app login page
     Then page should contain  Please enter you credentials
     And page should contain element  name=subdomain
     And page should contain element  name=username
     And page should contain element  name=password
-#    Capture Page Screenshot  login.png
-#    Compare screenshot to base  ${base_login}
     When enter subdomain field
     And click button  Log in
     Then page should contain  Please enter all fields!
@@ -37,40 +35,34 @@ Login page should have inputs and validate submit
 
 Navigation menu should work correctly
     [Documentation]  Navigation menu should change location and heading correctly.
-    [Tags]  navigation  compare  general
+    [Tags]  navigation  general
     Given an bb-classic app
     When click on "Projects" link in navbar
     Then location should be  ${APP_URL}/#projects
     And heading should be "Projects"
     And title should be  Projects - BB
-#    Wait for data loading
-#    Capture Page Screenshot  projects.png
-#    Compare screenshot to base  ${base_projects}
     When click on "Companies" link in navbar
     Then location should be  ${APP_URL}/#companies
     And heading should be "Companies"
     And title should be  Companies - BB
-#    Wait for data loading
-#    Capture Page Screenshot  companies.png
-#    Compare screenshot to base  ${base_companies}
+    And wait for data loading
+    When click link  Name of #0
+    Then location should be  ${APP_URL}/#companies/0
+    And heading should be "Name of #0"
+    And title should be  Name of #0 - Companies - BB
     When click on "To-Dos" link in navbar
     Then location should be  ${APP_URL}/#todos
     And heading should be "My to-dos"
     And title should be  My to-dos - BB
-#    Wait for data loading
-#    Capture Page Screenshot  todos.png
-#    Compare screenshot to base  ${base_todos}
     When click on "Time" link in navbar
     Then location should be  ${APP_URL}/#time_report
     And heading should be "Time report"
     And title should be  Time report - BB
-#    Wait for data loading
-#    Capture Page Screenshot  time_report.png
-#    Compare screenshot to base  ${base_time_report}
     When click on "People" link in navbar
     Then location should be  ${APP_URL}/#people
     And heading should be "People"
     And title should be  People - BB
-#    Wait for data loading
-#    Capture Page Screenshot  people.png
-#    Compare screenshot to base  ${base_people}
+    When click link  First#0 Last
+    Then location should be  ${APP_URL}/#people/0
+    And heading should be "First#0 Last"
+    And title should be  First#0 Last - People - BB

@@ -37,6 +37,9 @@ Generate screenshots
     Click link  People
     Wait for data loading
     Capture Page Screenshot  ${base_people}
+    Click link  First#0 Last
+    Wait for data loading
+    Capture Page Screenshot  ${base_person}
     Click link  First Last
     Click link  My profile
     Capture Page Screenshot  ${base_mypage}

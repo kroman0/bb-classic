@@ -327,13 +327,14 @@ templates['#person-template'] = '\n\
 <% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><br /><% } %>\n\
 <% if (view.model.get("time-zone-name")) { %>Time zone: <%- view.model.get("time-zone-name") %><% } %>';
 templates['#personitem-template'] = '\n\
+<% var in_project=item.collection.url().indexOf("projects")!==-1 %>\n\
 <li class="media well well-small">\n\
-    <a class="pull-right" href="#people/<%- item.id %>" title="<%- item.name() %>">\n\
+    <a class="pull-right" href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>">\n\
         <img class="media-object img-polaroid" src="<%- item.get("avatar-url") %>" alt="<%- item.name() %>">\n\
     </a>\n\
     <div class="media-body">\n\
         <h4 class="media-heading">\n\
-            <a href="#people/<%- item.id %>" title="<%- item.name() %>">\n\
+            <a href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>">\n\
                 <%- item.name() %>\n\
             </a>\n\
             <% if (item.get("title")) { %>\n\
@@ -433,6 +434,19 @@ _.each(pc, function (id) { %>\n\
 </div>\n\
 </div>\n\
 <% }} %>';
+templates['#project-person-template'] = '\n\
+<%= view.renderheader() %>\n\
+<%= view.renderprojectnav() %>\n\
+<% var pp=view.collection; var item=pp.get(view.cur_item);\n\
+if (pp.isEmpty()) { %>\n\
+<div class="alert alert-info">\n\
+    No people...\n\
+</div>\n\
+<% } else { %>\n\
+<ul class="media-list">\n\
+    <%= view.renderitem(item) %>\n\
+</ul>\n\
+<% } %>';
 templates['#project-time-template'] = '\n\
 <%= view.renderheader() %>\n\
 <%= view.renderprojectnav() %>\n\

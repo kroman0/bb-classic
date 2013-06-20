@@ -52,6 +52,7 @@
                 'projects/:id/time_entries/todo_items/:tiid': 'todo_time_entries',
                 'projects/:id/time_entries': 'project_time_entries',
                 'projects/:id/people': 'project_people',
+                'projects/:id/people/:pid': 'project_person',
                 'projects/:id/posts': 'project_posts',
                 'projects/:id/posts/:pid': 'project_post',
                 'projects/:id/posts/:pid/comments': 'project_post_comments',
@@ -128,7 +129,7 @@
     views.company_view = new bbviews.CompanyView(_.extend({
         model: models.company
     }, viewdata));
-    views.person_view = new bbviews.PersonView(_.extend({
+    views.person_view = new bbviews.AllPersonView(_.extend({
         model: models.person
     }, viewdata));
     oproject = _.extend({
@@ -136,6 +137,7 @@
     }, viewdata);
     views.project_view = new bbviews.ProjectView(oproject);
     views.project_people = new bbviews.PeopleView(oproject);
+    views.project_person = new bbviews.PersonView(oproject);
     views.project_categories = new bbviews.CategoriesView(oproject);
     views.project_category = new bbviews.CategoryView(oproject);
     views.project_posts = new bbviews.PostsView(oproject);
@@ -173,12 +175,15 @@
             set_model(id, collections.projects, views[route]);
             views[route].collection = collections[route].get_or_create(id);
             views.current = views[route].render();
-        } else if (_.contains(['project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list', 'project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
+        } else if (_.contains(['project_person', 'project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list', 'project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
             id = parseInt(params[0], 10);
             cur_item = parseInt(params[1], 10);
             set_model(id, collections.projects, views[route]);
             views[route].cur_item = cur_item;
             switch (route) {
+            case 'project_person':
+                views[route].collection = collections.project_people.get_or_create(id);
+                break;
             case 'project_calendar_entry':
                 views[route].collection = collections.project_calendar.get_or_create(id);
                 break;
