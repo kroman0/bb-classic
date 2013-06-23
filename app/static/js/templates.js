@@ -142,11 +142,7 @@ templates['#time-report-template'] = '<%= view.renderheader() %>' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
 '    <thead>' +
 '        <tr>' +
-'            <th>date</th>' +
-'            <th>hours</th>' +
-'            <th data-sort="person-id">person</th>' +
-'            <th>description</th>' +
-'            <th data-sort="id">&nbsp;</th>' +
+'            <th>date</th><th>hours</th><th data-sort="person-id">person</th><th>description</th><th data-sort="id">&nbsp;</th>' +
 '        </tr>' +
 '    </thead>' +
 '    <tbody>' +
@@ -445,11 +441,7 @@ templates['#project-time-template'] = templates['#todo-time-template'] = '<%= vi
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
 '    <thead>' +
 '        <tr>' +
-'            <th>date</th>' +
-'            <th>hours</th>' +
-'            <th data-sort="person-id">person</th>' +
-'            <th>description</th>' +
-'            <th data-sort="id">&nbsp;</th>' +
+'            <th>date</th><th>hours</th><th data-sort="person-id">person</th><th>description</th><th data-sort="id">&nbsp;</th>' +
 '        </tr>' +
 '    </thead>' +
 '    <tbody>' +
@@ -550,10 +542,35 @@ templates['#project-post-comments-template'] = '<%= view.renderheader() %>' +
 '</ul>' +
 '<% } %>' +
 '<%= view.rendercomments(view.collection) %>';
+templates['#file-template'] = '<% var prid=item.get("project-id"); var pp=BB.collections.people;' +
+'var cc=BB.collections.project_categories.get_or_create(prid); %>' +
+'<li class="media well well-small">' +
+'    <h3>' +
+'        <a href="#projects/<%- prid %>/files/<%- item.id %>">' +
+'            <%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %>' +
+'        </a>' +
+'    </h3>' +
+'    <small>' +
+'        by' +
+'        <a href="#people/<%- item.get("person-id") %>">' +
+'            <i class="icon-user"></i><%- pp.get(item.get("person-id"))?pp.get(item.get("person-id")).name():item.get("person-id") %>' +
+'        </a>' +
+'        <% if (item.get("category-id")) { %>' +
+'        in' +
+'        <a href="#projects/<%- prid %>/categories/<%- item.get("category-id") %>">' +
+'            <%- cc.get(item.get("category-id"))?cc.get(item.get("category-id")).get("name"):item.get("category-id") %>' +
+'        </a>' +
+'        <% } %>' +
+'        on' +
+'        <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>,' +
+'        <%- item.get("byte-size") %>B' +
+'    </small>' +
+'    <br/>' +
+'    <a class="btn btn-success" href="<%- item.get("download-url") %>">Download</a>' +
+'</li>';
 templates['#project-files-template'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
-'<% var ff=view.collection; var prid=view.model.id; var pp=view.options.collections.people;' +
-'var cc=view.options.collections.project_categories.get_or_create(view.model.id);' +
+'<% var ff=view.collection;' +
 'if (ff.isEmpty()) { %>' +
 '<div class="alert alert-info">' +
 '    No files...' +
@@ -562,68 +579,21 @@ templates['#project-files-template'] = '<%= view.renderheader() %>' +
 '<%= view.renderpager() %>' +
 '<ul class="media-list">' +
 '<% ff.each(function (item) { %>' +
-'    <li class="media well well-small">' +
-'        <h3>' +
-'            <a href="#projects/<%- prid %>/files/<%- item.id %>">' +
-'                <%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %>' +
-'            </a>' +
-'        </h3>' +
-'        <small>' +
-'            by' +
-'            <a href="#people/<%- item.get("person-id") %>">' +
-'                <i class="icon-user"></i><%- pp.get(item.get("person-id"))?pp.get(item.get("person-id")).name():item.get("person-id") %>' +
-'            </a>' +
-'            <% if (item.get("category-id")) { %>' +
-'            in' +
-'            <a href="#projects/<%- prid %>/categories/<%- item.get("category-id") %>">' +
-'                <%- cc.get(item.get("category-id"))?cc.get(item.get("category-id")).get("name"):item.get("category-id") %>' +
-'            </a>' +
-'            <% } %>' +
-'            on' +
-'            <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>,' +
-'            <%- item.get("byte-size") %>B' +
-'        </small>' +
-'        <br/>' +
-'        <a class="btn btn-success" href="<%- item.get("download-url") %>">Download</a>' +
-'    </li>' +
+'    <%= view.renderitem(item) %>' +
 '<% }) %>' +
 '</ul>' +
 '<%= view.renderpager() %>' +
 '<% } %>';
 templates['#project-file-template'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
-'<% var ff=view.collection; var prid=view.model.id; var pp=view.options.collections.people;' +
-'var cc=view.options.collections.project_categories.get_or_create(view.model.id); var item=ff.get(view.cur_item);' +
+'<% var ff=view.collection; var item=ff.get(view.cur_item);' +
 'if (ff.isEmpty()) { %>' +
 '<div class="alert alert-info">' +
 '    No files...' +
 '</div>' +
 '<% } else { %>' +
 '<ul class="media-list">' +
-'    <li class="media well well-small">' +
-'        <h3>' +
-'            <a href="#projects/<%- prid %>/files/<%- item.id %>">' +
-'                <%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %>' +
-'            </a>' +
-'        </h3>' +
-'        <small>' +
-'            by' +
-'            <a href="#people/<%- item.get("person-id") %>">' +
-'                <i class="icon-user"></i><%- pp.get(item.get("person-id"))?pp.get(item.get("person-id")).name():item.get("person-id") %>' +
-'            </a>' +
-'            <% if (item.get("category-id")) { %>' +
-'            in' +
-'            <a href="#projects/<%- prid %>/categories/<%- item.get("category-id") %>">' +
-'                <%- cc.get(item.get("category-id"))?cc.get(item.get("category-id")).get("name"):item.get("category-id") %>' +
-'            </a>' +
-'            <% } %>' +
-'            on' +
-'            <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>,' +
-'            <%- item.get("byte-size") %>B' +
-'        </small>' +
-'        <br/>' +
-'        <a class="btn btn-success" href="<%- item.get("download-url") %>">Download</a>' +
-'    </li>' +
+'    <%= view.renderitem(item) %>' +
 '</ul>' +
 '<% } %>';
 templates['#calendar-template'] = '<li class="thumbnail">' +

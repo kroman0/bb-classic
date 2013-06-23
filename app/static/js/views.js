@@ -377,11 +377,13 @@
             'click .project-files.previous': 'previous',
             'click .project-files.next': 'next'
         },
+        itemtemplate: '#file' + dtemplate,
         template: '#project-files' + dtemplate,
         title: 'Files'
     });
     bbviews.FileView = TitleBBView.extend({
         deps: bbviews.FilesView.prototype.deps,
+        itemtemplate: '#file' + dtemplate,
         template: '#project-file' + dtemplate,
         nameParent: 'Files'
     });
