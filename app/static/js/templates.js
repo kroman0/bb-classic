@@ -431,55 +431,7 @@ templates['#project-person-template'] = '<%= view.renderheader() %>' +
 '    <%= view.renderitem(item) %>' +
 '</ul>' +
 '<% } %>';
-templates['#project-time-template'] = '<%= view.renderheader() %>' +
-'<%= view.renderprojectnav() %>' +
-'<% var tt=view.collection; var prid=view.model.id;' +
-'var pp=view.options.collections.people;' +
-'var mid=view.options.mydata?view.options.mydata.id:0;' +
-'if (tt.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No time entries...' +
-'</div>' +
-'<% } else { %>' +
-'<%= view.renderpager() %>' +
-'<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
-'    <thead>' +
-'        <tr>' +
-'            <th>date</th>' +
-'            <th>hours</th>' +
-'            <th data-sort="person-id">person</th>' +
-'            <th>description</th>' +
-'            <th data-sort="id">&nbsp;</th>' +
-'        </tr>' +
-'    </thead>' +
-'    <tbody>' +
-'        <tr class="addtime">' +
-'            <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
-'            <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>' +
-'            <td>' +
-'                <div>' +
-'                    <i class="icon-user"></i><select name="person-id">' +
-'                        <% pp.each(function (i) { %>' +
-'                            <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
-'                        <% }) %>' +
-'                    </select>' +
-'                </div>' +
-'            </td>' +
-'            <td>' +
-'                <input type="text" class="input-small" name="description">' +
-'            </td>' +
-'            <td>' +
-'                <button id="add" title="Add"><i class="icon-plus"></i></button>' +
-'            </td>' +
-'        </tr>' +
-'        <% tt.each(function (item) { %>' +
-'            <%= view.renderitem(item) %>' +
-'        <% }) %>' +
-'    </tbody>' +
-'</table>' +
-'<%= view.renderpager() %>' +
-'<% } %>';
-templates['#todo-time-template'] = '<%= view.renderheader() %>' +
+templates['#project-time-template'] = templates['#todo-time-template'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var tt=view.collection; var prid=view.model.id;' +
 'var pp=view.options.collections.people;' +
