@@ -3,6 +3,7 @@
 
 BASE = app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
 MIN = app/static/js/jquery.deserialize.js app/static/js/bootstrap-datepicker.js app/static/js/backbone.analytics.js
+PYSCRIPTS = app/bb.py app/crypto.py app/keys.py tests/keywords.py
 SCRIPTS = $(BASE)
 MINIFY = $(BASE) $(MIN)
 
@@ -33,9 +34,8 @@ deploy: clean minify
 	bin/appcfg update app --oauth2
 
 minify:
-# 	$(foreach JS,$(MINIFY),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -cm --lint;)
 	$(foreach JS,$(MIN),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -m;)
-	$(foreach JS,$(BASE),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -m --lint;)
+	$(foreach JS,$(BASE),uglifyjs $(JS) -o `echo $(JS)|sed "s/\.js/.min.js/"` -cm --lint;)
 
 jshint:
 	jshint $(SCRIPTS)
@@ -103,10 +103,10 @@ requirejs-update:
 update-all: bootstrap-update bootstrap-datepicker-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update moment-update requirejs-update
 
 pylint:
-	pylint -f colorized --rcfile=.pylintrc -r n app/*.py tests/*.py
+	pylint -f colorized --rcfile=.pylintrc -r n $(PYSCRIPTS)
 
 pylint-html:
-	pylint -f html --rcfile=.pylintrc app/*.py tests/*.py >/tmp/pylint.html; firefox /tmp/pylint.html
+	pylint -f html --rcfile=.pylintrc $(PYSCRIPTS) >/tmp/pylint.html; firefox /tmp/pylint.html
 
 pep8:
 	pep8 app/ tests/
@@ -115,13 +115,13 @@ flake8:
 	flake8 --max-complexity=10 app/ tests/
 
 pyflakes:
-	pyflakes app/*.py tests/*.py
+	pyflakes $(PYSCRIPTS)
 
 clonedigger:
 	clonedigger app tests && firefox output.html
 
 pysimian:
-	simian app/*.py tests/*.py -threshold=3 -reportDuplicateText
+	simian $(PYSCRIPTS) -threshold=3 -reportDuplicateText
 
 pytest: pep8 pyflakes flake8 pylint
 
