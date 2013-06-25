@@ -912,7 +912,7 @@ templates['#nav-template'] = '<div class="navbar-inner">' +
 '</ul>' +
 '<ul class="nav pull-right">' +
 '    <li>' +
-'        <a href="#me" title="<%- view.model.get("user-name") %>" class="dropdown-toggle" data-toggle="dropdown"><%- view.model.name() %>&nbsp;<span class="caret"></span></a>' +
+'        <a href="#me" title="<%- view.model.get("user-name") %>" class="dropdown-toggle" data-toggle="dropdown"><%- view.model.name() %> <span class="caret"></span></a>' +
 '        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">' +
 '            <li><a href="#me"><i class="icon-user"></i> My profile</a></li>' +
 '            <li><a href="#todos"><i class="icon-tasks"></i> My todos</a></li>' +
