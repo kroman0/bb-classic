@@ -507,8 +507,8 @@
         },
         addtodo: function(e) {
             e.preventDefault();
-            var data = $('form').serializeArray(),
-                data = _.object(_.pluck(data, 'name'), _.pluck(data, 'value')),
+            var fdata = $('form').serializeArray(),
+                data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value')),
                 context = this;
             this.options.collections.todo_items.get_or_create(this.cur_item).create(data, {
                 wait: true,
