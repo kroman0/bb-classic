@@ -848,6 +848,16 @@ templates['#project-todo-list-template'] = '<%= view.renderheader() %>' +
 '<div class="row-fluid">' +
 '<dl class="todoitemsholder span8">' +
 '    <%= view.renderitem(list) %>' +
+'    <dd>' +
+'        <button type="button" class="btn" data-toggle="collapse" data-target="#add_todo">Add todo</button>' +
+'        <form id="add_todo" class="collapse">' +
+'<textarea name="content"></textarea><br />' +
+'<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value=""><br />' +
+'<input type="text" class="input-small" name="responsible-party" value=""><br />' +
+'<input type="checkbox" name="notify" value="true"><br />' +
+'<button id="add" title="Add"><i class="icon-plus"></i></button>' +
+'</form>' +
+'    </dd>' +
 '</dl>' +
 '<div class="tabbable span4 pull-right">' +
 '<ul class="nav nav-pills">' +

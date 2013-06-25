@@ -495,6 +495,29 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
+        events: {
+            'click #add_todo #add': 'addtodo'
+        },
+        finishItem: function(item) {
+            return item.set({
+                'completed': false,
+                'todo-list-id': this.cur_item,
+                'comments-count': 0
+            }, {silent: true});
+        },
+        addtodo: function(e) {
+            e.preventDefault();
+            var data = $('form').serializeArray(),
+                data = _.object(_.pluck(data, 'name'), _.pluck(data, 'value')),
+                context = this;
+            this.options.collections.todo_items.get_or_create(this.cur_item).create(data, {
+                wait: true,
+                success: function(model) {
+                    context.finishItem(model);
+                    context.render();
+                    return true;
+                }});
+        },
         template: '#project-todo-list' + dtemplate,
         itemtemplate: '#todolist' + dtemplate,
         idParent: 'todo_lists',
