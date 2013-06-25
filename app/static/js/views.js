@@ -133,11 +133,9 @@
                 ]);
                 return bpath;
             },
-            extrapath: function() {
-                return [];
-            },
+            extrapath: [],
             path: function() {
-                var bpath = this.basepath(), epath = this.extrapath();
+                var bpath = _result(this, 'basepath'), epath = _result(this, 'extrapath');
                 _.each(epath, function(i) {
                     return bpath.push(i);
                 });
