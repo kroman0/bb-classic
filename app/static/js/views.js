@@ -143,6 +143,7 @@
             }
         }),
         BBViewProto = BBView.prototype;
+    // All People View - people
     bbviews.AllPeopleView = BBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
@@ -151,10 +152,12 @@
         itemtemplate: '#personitem' + dtemplate,
         title: 'People'
     });
+    // Projects View - projects
     bbviews.ProjectsView = BBView.extend({
         template: hashpp + dtemplate,
         title: pp
     });
+    // Project View - projects/:id
     bbviews.ProjectView = BBView.extend({
         deps: function() {
             return this.options.collections.projects.fetchonce();
@@ -164,10 +167,12 @@
         },
         template: '#project' + dtemplate
     });
+    // Companies View - companies
     bbviews.CompaniesView = BBView.extend({
         template: hashcc + dtemplate,
         title: cc
     });
+    // Company View - companies/:id
     bbviews.CompanyView = BBView.extend({
         deps: function() {
             return this.options.collections.companies.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
@@ -177,6 +182,7 @@
         },
         template: '#company' + dtemplate
     });
+    // People View - projects/:id/people
     bbviews.PeopleView = ProjectBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
@@ -185,11 +191,13 @@
         itemtemplate: '#personitem' + dtemplate,
         title: 'People'
     });
+    // Person View - projects/:id/people/:pid
     bbviews.PersonView = TitleBBView.extend({
         template: '#project-person' + dtemplate,
         itemtemplate: '#personitem' + dtemplate,
         nameParent: 'People'
     });
+    // Time Entries View - projects/:id/time_entries
     bbviews.TimeEntriesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
@@ -269,6 +277,7 @@
         template: '#project-time' + dtemplate,
         title: 'Time'
     });
+    // Todo Time Entries View - projects/:id/time_entries/todo_items/:tiid
     bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
         pagerid: 'todo-time',
         events: {
@@ -290,6 +299,7 @@
         },
         template: '#todo-time' + dtemplate
     });
+    // Time Report View - time_report
     bbviews.TimeReportView = bbviews.TimeEntriesView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
@@ -321,6 +331,7 @@
             return this;
         }
     });
+    // Post Comments View - projects/:id/posts/:pid/comments
     bbviews.PostCommentsView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
@@ -343,6 +354,7 @@
         },
         title: 'Comments'
     });
+    // Calendar Entry Comments View - projects/:id/calendar/:cid/comments
     bbviews.CalendarEntryCommentsView = bbviews.PostCommentsView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
@@ -356,16 +368,19 @@
             return title;
         }
     });
+    // Posts View - projects/:id/posts
     bbviews.PostsView = ProjectBBView.extend({
         template: '#project-posts' + dtemplate,
         itemtemplate: '#post' + dtemplate,
         title: 'Posts'
     });
+    // Post View - projects/:id/posts/:pid
     bbviews.PostView = TitleBBView.extend({
         template: '#project-post' + dtemplate,
         itemtemplate: '#post' + dtemplate,
         nameParent: 'Posts'
     });
+    // Files View - projects/:id/files
     bbviews.FilesView = PagesBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
@@ -379,22 +394,26 @@
         template: '#project-files' + dtemplate,
         title: 'Files'
     });
+    // File View - projects/:id/files/:fid
     bbviews.FileView = TitleBBView.extend({
         deps: bbviews.FilesView.prototype.deps,
         itemtemplate: '#file' + dtemplate,
         template: '#project-file' + dtemplate,
         nameParent: 'Files'
     });
+    // Calendar View - projects/:id/calendar
     bbviews.CalendarView = ProjectBBView.extend({
         template: '#project-calendar' + dtemplate,
         itemtemplate: '#calendar' + dtemplate,
         title: 'Calendar'
     });
+    // Calendar Entry View - projects/:id/calendar/:cid
     bbviews.CalendarEntryView = TitleBBView.extend({
         template: '#project-calendar-entry' + dtemplate,
         itemtemplate: '#calendar' + dtemplate,
         nameParent: 'Calendar'
     });
+    // Categories View - projects/:id/categories
     bbviews.CategoriesView = PagesBBView.extend({
         pagerid: 'project-categories',
         events: {
@@ -405,11 +424,13 @@
         itemtemplate: '#category' + dtemplate,
         title: 'Categories'
     });
+    // Category View - projects/:id/categories/:cid
     bbviews.CategoryView = TitleBBView.extend({
         template: '#project-category' + dtemplate,
         itemtemplate: '#category' + dtemplate,
         nameParent: 'Categories'
     });
+    // All Person View - people/:id
     bbviews.AllPersonView = BBView.extend({
         deps: function() {
             return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
@@ -424,6 +445,7 @@
             ];
         }
     });
+    // Todos View - todos
     bbviews.TodosView = BBView.extend({
         deps: bbviews.TimeEntriesView.prototype.deps,
         events: {
@@ -462,11 +484,13 @@
             return 'All';
         }
     });
+    // Todo Lists View - projects/:id/todo_lists
     bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists' + dtemplate,
         itemtemplate: '#todolist' + dtemplate,
         title: 'To-dos'
     });
+    // Todo List View - projects/:id/todo_lists/:tlid
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
@@ -485,6 +509,7 @@
             return this;
         }
     });
+    // Todo Item View - projects/:id/todo_lists/:tlid/:tiid
     bbviews.TodoItemView = TitleBBView.extend({
         todo_item: null,
         deps: function() {
@@ -514,6 +539,7 @@
             return this;
         }
     });
+    // Todo Item Comments View - projects/:id/todo_lists/:tlid/:tiid/comments
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
         template: '#project-todo-item-comments' + dtemplate,
         extrapath: function() {
@@ -528,6 +554,7 @@
         },
         title: 'Comments'
     });
+    // Todo View - no url
     bbviews.TodoView = BBView.extend({
         events: {
             'click .todo.icon-completed': 'uncomplete',
@@ -547,6 +574,7 @@
             return this;
         }
     });
+    // Nav View - no url
     bbviews.NavView = BBView.extend({
         template: '#nav' + dtemplate,
         initialize: function() {
