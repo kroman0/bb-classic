@@ -150,9 +150,7 @@ templates['#time-report-template'] = '<%= view.renderheader() %>' +
 '        _.each(_.uniq(tt.pluck("project-id")), function (prid) { %>' +
 '        <tr class="info">' +
 '            <td>' +
-'                <a href="#projects/<%- prid %>/time_entries">' +
-'                    <%- prs.get(prid)?prs.get(prid).get("name"):prid %>' +
-'                </a>' +
+'                <a href="#projects/<%- prid %>/time_entries"><%- prs.get(prid)?prs.get(prid).get("name"):prid %></a>' +
 '            </td>' +
 '            <td>' +
 '                <%- _.reduce(_.map(tt.where({"project-id":prid}),function(i){return i.get("hours");}),function(memo, num) { return memo + num; }, 0) %>' +
@@ -312,14 +310,10 @@ templates['#person-template'] = '<%= view.renderheader() %>' +
 '<% if (view.model.get("time-zone-name")) { %>Time zone: <%- view.model.get("time-zone-name") %><% } %>';
 templates['#personitem-template'] = '<% var in_project=item.collection.url().indexOf("projects")!==-1 %>' +
 '<li class="media well well-small">' +
-'    <a class="pull-right" href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>">' +
-'        <img class="media-object img-polaroid" src="<%- item.get("avatar-url") %>" alt="<%- item.name() %>">' +
-'    </a>' +
+'    <a class="pull-right" href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>"><img class="media-object img-polaroid" src="<%- item.get("avatar-url") %>" alt="<%- item.name() %>"></a>' +
 '    <div class="media-body">' +
 '        <h4 class="media-heading">' +
-'            <a href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>">' +
-'                <%- item.name() %>' +
-'            </a>' +
+'            <a href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>"><%- item.name() %></a>' +
 '            <% if (item.get("title")) { %>' +
 '            <small><%- item.get("title") %></small>' +
 '            <% } %>' +
@@ -475,20 +469,14 @@ templates['#post-template'] = '<li class="thumbnail">' +
 '    <h3>' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <% if (item.get("private")) { %><i class="icon-lock"></i><% } %>' +
-'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse">' +
-'            <%- item.get("comments-count") %><i class="icon-comment icon-white"></i>' +
-'        </a>' +
+'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>' +
 '    </h3>' +
 '    <small>' +
 '        by' +
-'        <a href="#people/<%- item.get("author-id") %>">' +
-'            <i class="icon-user"></i><%- item.get("author-name") %>' +
-'        </a>' +
+'        <a href="#people/<%- item.get("author-id") %>"><i class="icon-user"></i><%- item.get("author-name") %></a>' +
 '        <% if (item.get("category-id")) { %>' +
 '        in' +
-'        <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.get("category-id") %>">' +
-'            <%- item.get("category-name") %>' +
-'        </a>' +
+'        <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.get("category-id") %>"><%- item.get("category-name") %></a>' +
 '        <% } %>' +
 '        on: <abbr title="<%- item.get("posted-on") %>"><%- moment(item.get("posted-on")).format("LLL") %></abbr>' +
 '    </small>' +
@@ -546,20 +534,14 @@ templates['#file-template'] = '<% var prid=item.get("project-id"); var pp=BB.col
 'var cc=BB.collections.project_categories.get_or_create(prid); %>' +
 '<li class="media well well-small">' +
 '    <h3>' +
-'        <a href="#projects/<%- prid %>/files/<%- item.id %>">' +
-'            <%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %>' +
-'        </a>' +
+'        <a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %></a>' +
 '    </h3>' +
 '    <small>' +
 '        by' +
-'        <a href="#people/<%- item.get("person-id") %>">' +
-'            <i class="icon-user"></i><%- pp.get(item.get("person-id"))?pp.get(item.get("person-id")).name():item.get("person-id") %>' +
-'        </a>' +
+'        <a href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- pp.get(item.get("person-id"))?pp.get(item.get("person-id")).name():item.get("person-id") %></a>' +
 '        <% if (item.get("category-id")) { %>' +
 '        in' +
-'        <a href="#projects/<%- prid %>/categories/<%- item.get("category-id") %>">' +
-'            <%- cc.get(item.get("category-id"))?cc.get(item.get("category-id")).get("name"):item.get("category-id") %>' +
-'        </a>' +
+'        <a href="#projects/<%- prid %>/categories/<%- item.get("category-id") %>"><%- cc.get(item.get("category-id"))?cc.get(item.get("category-id")).get("name"):item.get("category-id") %></a>' +
 '        <% } %>' +
 '        on' +
 '        <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>,' +
@@ -598,19 +580,12 @@ templates['#project-file-template'] = '<%= view.renderheader() %>' +
 '<% } %>';
 templates['#calendar-template'] = '<li class="thumbnail">' +
 '    <h3>' +
-'        <a <% if (item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>">' +
-'            <%- item.get("title") %>' +
-'        </a>' +
-'        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse">' +
-'            <%- item.get("comments-count") %><i class="icon-comment icon-white"></i>' +
-'        </a>' +
+'        <a <% if (item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
+'        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>' +
 '    </h3>' +
 '    <small>' +
 '        <% if (item.get("responsible-party-id")) { %>' +
-'        <a href="#<%- item.get("responsible-party-type")=="Company"?"companies":"people" %>/<%- item.get("responsible-party-id") %>">' +
-'            <% if (item.get("responsible-party-type")=="Person") { %><i class="icon-user"></i><% } %>' +
-'            <%- item.get("responsible-party-name") %>' +
-'        </a><br />' +
+'        <a href="#<%- item.get("responsible-party-type")=="Company"?"companies":"people" %>/<%- item.get("responsible-party-id") %>"><% if (item.get("responsible-party-type")=="Person") { %><i class="icon-user"></i><% } %><%- item.get("responsible-party-name") %></a><br />' +
 '        <% } %>' +
 '        Type: <%- item.get("type") %><br />' +
 '        <% if (item.get("start-at")) { %>' +
@@ -623,17 +598,13 @@ templates['#calendar-template'] = '<li class="thumbnail">' +
 '        Deadline at <abbr title="<%- item.get("deadline") %>"><%- moment(item.get("deadline")).format("LL") %></abbr><br />' +
 '        <% } %>' +
 '        Created by' +
-'        <a href="#people/<%- item.get("creator-id") %>">' +
-'            <i class="icon-user"></i><%- item.get("creator-name") %>' +
-'        </a>' +
+'        <a href="#people/<%- item.get("creator-id") %>"><i class="icon-user"></i><%- item.get("creator-name") %></a>' +
 '        on' +
 '        <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>' +
 '        <% if (item.get("completed")) { %>' +
 '        <br />' +
 '        Completed by' +
-'        <a href="#people/<%- item.get("completer-id") %>">' +
-'            <i class="icon-user"></i><%- item.get("completer-name") %>' +
-'        </a>' +
+'        <a href="#people/<%- item.get("completer-id") %>"><i class="icon-user"></i><%- item.get("completer-name") %></a>' +
 '        at' +
 '        <abbr title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></abbr>' +
 '        <% } %>' +
@@ -713,17 +684,15 @@ templates['#project-category-template'] = '<%= view.renderheader() %>' +
 templates['#todo-template'] = '<% var item=view.model;' +
 'var prid=view.options.project_id;' +
 'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(item.get("todo-list-id")); %>' +
-'<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>&nbsp;' +
+'<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
 '<% if (list&&list.get("tracked")) { %>' +
-'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>&nbsp;' +
-'<% } %>' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>&nbsp;' +
+'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
+'<% } %>&nbsp;' +
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>';
 templates['#todolist-template'] = '<dt>' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
-'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>">' +
-'        <%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %>' +
-'    </a>' +
+'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %></a>' +
 '    <small><%= item.get("description") %></small>' +
 '</dt>';
 templates['#todo-lists-template'] = '<%= view.renderheader() %>' +
@@ -765,17 +734,11 @@ templates['#todo-lists-template'] = '<%= view.renderheader() %>' +
 '            <i class="todo-lists icon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
 '            <% } %>' +
 '            <% if (list.get("tracked")) { %>' +
-'            <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">' +
-'                <i class="icon-time"></i>' +
-'            </a>' +
+'            <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
 '            <% }} %>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>">' +
-'                <%= item.content %>' +
-'            </a>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.content %></a>' +
 '            <% if(false){ %>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse">' +
-'                <%- item.get("comments-count") %><i class="icon-comment icon-white"></i>' +
-'            </a>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>' +
 '            <% } %>' +
 '        </dd>' +
 '        <% }) %>' +
@@ -800,9 +763,7 @@ templates['#project-todo-lists-template'] = '<%= view.renderheader() %>' +
 '<% var ftdst=_.first(td.pluck("completed"));' +
 '   _.each(_.uniq(td.pluck("completed")), function (status) { %>' +
 '    <li<% if (ftdst==status) { %> class="active"<% } %>>' +
-'        <a href="#todolists_<%- status %>" data-toggle="tab">' +
-'            <% if (status==true) { %>Finished<% } else { %>Pending<% } %>' +
-'        </a>' +
+'        <a href="#todolists_<%- status %>" data-toggle="tab"><% if (status==true) { %>Finished<% } else { %>Pending<% } %></a>' +
 '    </li>' +
 '<% }) %>' +
 '</ul>' +
@@ -853,9 +814,7 @@ templates['#project-todo-list-template'] = '<%= view.renderheader() %>' +
 '<ul class="nav nav-pills">' +
 '<% _.each(_.uniq(td.pluck("completed")), function (status) { %>' +
 '    <li<% if (ftdst==status) { %> class="active"<% } %>>' +
-'        <a href="#todolists_<%- status %>" data-toggle="tab">' +
-'            <% if (status==true) { %>Finished<% } else { %>Pending<% } %>' +
-'        </a>' +
+'        <a href="#todolists_<%- status %>" data-toggle="tab"><% if (status==true) { %>Finished<% } else { %>Pending<% } %></a>' +
 '    </li>' +
 '<% }) %>' +
 '</ul>' +
@@ -865,9 +824,7 @@ templates['#project-todo-list-template'] = '<%= view.renderheader() %>' +
 '    <ul class="nav nav-list">' +
 '        <% _.each(tlgroup, function (l) { %>' +
 '        <li<% if (ci==l.id) { %> class="active"<% } %>>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- l.id %>">' +
-'                <%- l.get("name") %><% if (l.get("private")) { %><i class="icon-lock"></i><% } %>' +
-'            </a>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- l.id %>"><%- l.get("name") %><% if (l.get("private")) { %><i class="icon-lock"></i><% } %></a>' +
 '        </li>' +
 '        <% }) %>' +
 '    </ul>' +
@@ -917,9 +874,7 @@ templates['#comments-template'] = '<% if (comments.isEmpty()) { %>' +
 '    <% comments.each(function (item) { %>' +
 '    <li class="thumbnail">' +
 '        <small>' +
-'            <a href="#people/<%- item.get("author-id") %>">' +
-'                <i class="icon-user"></i><%- item.get("author-name") %>' +
-'            </a>' +
+'            <a href="#people/<%- item.get("author-id") %>"><i class="icon-user"></i><%- item.get("author-name") %></a>' +
 '            <abbr title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></abbr>' +
 '        </small>' +
 '        <p><%= item.get("body") %></p>' +
@@ -930,9 +885,7 @@ templates['#comments-template'] = '<% if (comments.isEmpty()) { %>' +
 '                <a href="<%- a["download-url"] %>"><%- a.name %></a>' +
 '                <small>' +
 '                    <%- a["byte-size"] %>B' +
-'                    <a href="#people/<%- a["person-id"] %>">' +
-'                        <i class="icon-user"></i><%- a["author-name"] %>' +
-'                    </a>' +
+'                    <a href="#people/<%- a["person-id"] %>"><i class="icon-user"></i><%- a["author-name"] %></a>' +
 '                </small>' +
 '            </li>' +
 '            <% }) %>' +
@@ -959,9 +912,7 @@ templates['#nav-template'] = '<div class="navbar-inner">' +
 '</ul>' +
 '<ul class="nav pull-right">' +
 '    <li>' +
-'        <a href="#me" title="<%- view.model.get("user-name") %>" class="dropdown-toggle" data-toggle="dropdown">' +
-'            <%- view.model.name() %> <span class="caret"></span>' +
-'        </a>' +
+'        <a href="#me" title="<%- view.model.get("user-name") %>" class="dropdown-toggle" data-toggle="dropdown"><%- view.model.name() %>&nbsp;<span class="caret"></span></a>' +
 '        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">' +
 '            <li><a href="#me"><i class="icon-user"></i> My profile</a></li>' +
 '            <li><a href="#todos"><i class="icon-tasks"></i> My todos</a></li>' +
