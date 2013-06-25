@@ -585,9 +585,11 @@
         },
         complete: function() {
             this.model.complete();
+            this.render();
         },
         uncomplete: function() {
             this.model.uncomplete();
+            this.render();
         },
         tagName: 'dd',
         template: '#todo' + dtemplate,

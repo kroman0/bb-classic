@@ -712,23 +712,13 @@ templates['#project-category-template'] = '<%= view.renderheader() %>' +
 '<% } %>';
 templates['#todo-template'] = '<% var item=view.model;' +
 'var prid=view.options.project_id;' +
-'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(item.get("todo-list-id"));' +
-'if (item.get("completed")) { %>' +
-'<i class="todo icon-completed" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
-'<% } else { %>' +
-'<i class="todo icon-uncompleted" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
-'<% } %>' +
+'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(item.get("todo-list-id")); %>' +
+'<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>&nbsp;' +
 '<% if (list&&list.get("tracked")) { %>' +
-'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>">' +
-'    <i class="icon-time"></i>' +
-'</a>' +
+'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>&nbsp;' +
 '<% } %>' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>">' +
-'    <%= item.get("content") %>' +
-'</a>' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse">' +
-'    <%- item.get("comments-count") %><i class="icon-comment icon-white"></i>' +
-'</a>';
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>&nbsp;' +
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>';
 templates['#todolist-template'] = '<dt>' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
 '       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>">' +
@@ -849,14 +839,14 @@ templates['#project-todo-list-template'] = '<%= view.renderheader() %>' +
 '<dl class="todoitemsholder span8">' +
 '    <%= view.renderitem(list) %>' +
 '    <dd>' +
-'        <button type="button" class="btn" data-toggle="collapse" data-target="#add_todo">Add todo</button>' +
-'        <form id="add_todo" class="collapse">' +
+'        <button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add todo</button>' +
+'        <div id="add_todo_wrapper" class="collapse"><form id="add_todo">' +
 '<textarea name="content"></textarea><br />' +
 '<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value=""><br />' +
 '<input type="text" class="input-small" name="responsible-party" value=""><br />' +
 '<input type="checkbox" name="notify" value="true"><br />' +
 '<button id="add" title="Add"><i class="icon-plus"></i></button>' +
-'</form>' +
+'</form></div>' +
 '    </dd>' +
 '</dl>' +
 '<div class="tabbable span4 pull-right">' +
