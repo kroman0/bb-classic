@@ -790,6 +790,7 @@ templates['#project-todo-lists-template'] = '<%= view.renderheader() %>' +
 templates['#project-todo-list-template'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
+'var pp=view.options.collections.project_people.get_or_create(view.model.id);' +
 'var ci=view.cur_item; var list=td.get(ci); var ftdst=list&&list.get("completed");' +
 'if (td.isEmpty()) { %>' +
 '<div class="alert alert-info">' +
@@ -802,11 +803,18 @@ templates['#project-todo-list-template'] = '<%= view.renderheader() %>' +
 '    <dd>' +
 '        <button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add todo</button>' +
 '        <div id="add_todo_wrapper" class="collapse"><form id="add_todo">' +
-'<textarea name="content"></textarea><br />' +
-'<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value=""><br />' +
-'<input type="text" class="input-small" name="responsible-party" value=""><br />' +
-'<input type="checkbox" name="notify" value="true"><br />' +
-'<button id="add" title="Add"><i class="icon-plus"></i></button>' +
+'<legend>Add todo</legend>' +
+'<label for="todoContent">Todo content</label>' +
+'<textarea id="todoContent" name="content" required></textarea>' +
+'<label for="todoDueAt">Due date</label>' +
+'<input id="todoDueAt" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value=""><br />' +
+'<label for="responsiblePerson">Responsible person</label>' +
+'<select  id="responsiblePerson" name="responsible-party">' +
+'<option value="">Nobody</option>' +
+'<% pp.each(function (i) { %><option value="<%- i.id %>"><%- i.name() %></option><% }) %>' +
+'</select>' +
+'<div class="checkbox"><label><input type="checkbox" name="notify" value="true"> Notify responsible person</label></div>' +
+'<button id="add" class="btn btn-default" title="Add"><i class="icon-plus"></i></button>' +
 '</form></div>' +
 '    </dd>' +
 '</dl>' +

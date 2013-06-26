@@ -493,7 +493,7 @@
     // Todo List View - projects/:id/todo_lists/:tlid
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
+            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce() && this.options.collections.project_people.get_or_create(this.model.id).fetchonce();
         },
         events: {
             'click #add_todo #add': 'addtodo'
