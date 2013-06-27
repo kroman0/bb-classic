@@ -71,18 +71,6 @@
             },
             renderitem: function(item) {
                 return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, item, {variable: 'item'});
-            },
-            rendercomments: function(comments) {
-                return render('#comments', comments, {variable: 'comments'});
-            },
-            renderpager: function() {
-                return render('#pager', this, templateoptions);
-            },
-            renderheader: function() {
-                return render('#header', this, templateoptions);
-            },
-            renderprojectnav: function() {
-                return render('#project-nav', this, templateoptions);
             }
         }),
         ProjectBBView = BBView.extend({
