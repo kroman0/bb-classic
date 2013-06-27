@@ -1,4 +1,15 @@
 /*jslint white: true*/
+(function(root, factory) {
+    'use strict';
+    if (typeof root.define === 'function' && root.define.amd) {
+        // AMD. Register as the bbtemplates module.
+        root.define('bbtemplates', [], factory);
+    } else {
+        // Browser globals
+        root.bbtemplates = factory();
+    }
+}(this, function() {
+'use strict';
 var templates = {};
 templates['#time-template'] = '<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> data-id="<%- item.id %>">' +
 '    <td><%- item.get("date") %></td>' +
@@ -938,16 +949,5 @@ templates['#nav-template'] = '<div class="navbar-inner">' +
 '</ul>' +
 '<% } %>' +
 '</div>';
-(function(root, factory) {
-    'use strict';
-    if (typeof root.define === 'function' && root.define.amd) {
-        // AMD. Register as the bbtemplates module.
-        root.define('bbtemplates', [], factory);
-    } else {
-        // Browser globals
-        root.bbtemplates = factory();
-    }
-}(this, function() {
-    'use strict';
-    return templates;
+return templates;
 }));
