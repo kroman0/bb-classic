@@ -11,7 +11,7 @@
 }(this, function() {
 'use strict';
 var templates = {};
-templates['#time-template'] = '<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> data-id="<%- item.id %>">' +
+templates['#time'] = '<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> data-id="<%- item.id %>">' +
 '    <td><%- item.get("date") %></td>' +
 '    <td><%- item.get("hours") %></td>' +
 '    <td><a title="<%- item.get("person-name") %>" href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- item.get("person-name") %></a></td>' +
@@ -28,7 +28,7 @@ templates['#time-template'] = '<tr <% if(item.get("hours")>2){ %>class="warning"
 '        <button id="remove" title="Remove"><i class="icon-trash"></i></button>' +
 '    </td>' +
 '</tr>';
-templates['#time-templateedit'] = '<tr class="edittime" data-id="<%- item.id %>">' +
+templates['#timeedit'] = '<tr class="edittime" data-id="<%- item.id %>">' +
 '    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>' +
 '    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>' +
 '    <td>' +
@@ -53,7 +53,7 @@ templates['#time-templateedit'] = '<tr class="edittime" data-id="<%- item.id %>"
 '        <button id="reset" title="Cancel"><i class="icon-off"></i></button>' +
 '    </td>' +
 '</tr>';
-templates['#pager-template'] = '<% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>' +
+templates['#pager'] = '<% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>' +
 '<ul class="pager">' +
 '    <li class="<%- view.pagerid %> previous<% if(!view.collection.hasPrevious()){ %> disabled<% } %>">' +
 '        <a href="#">&larr; Previous Page</a>' +
@@ -63,7 +63,7 @@ templates['#pager-template'] = '<% if(view.collection.hasPrevious() || view.coll
 '    </li>' +
 '</ul>' +
 '<% } %>';
-templates['#header-template'] = '<div class="page-header">' +
+templates['#header'] = '<div class="page-header">' +
 '    <h1><%- view.PageHeader() %></h1>' +
 '</div>' +
 '<% var path = view.Path();' +
@@ -78,7 +78,7 @@ templates['#header-template'] = '<div class="page-header">' +
 '<% }) %>' +
 '</ul>' +
 '<% } %>';
-templates['#project-nav-template'] = '<ul class="nav nav-tabs projectnav">' +
+templates['#project-nav'] = '<ul class="nav nav-tabs projectnav">' +
 '    <li><a title="<%- view.model.name() %> project overview" href="#projects/<%- view.model.id %>">Overview</a></li>' +
 '    <li><a title="<%- view.model.name() %> project messages" href="#projects/<%- view.model.id %>/posts">Messages</a></li>' +
 '    <li><a title="<%- view.model.name() %> project todos" href="#projects/<%- view.model.id %>/todo_lists">To-Dos</a></li>' +
@@ -88,7 +88,7 @@ templates['#project-nav-template'] = '<ul class="nav nav-tabs projectnav">' +
 '    <li class="pull-right"><a title="<%- view.model.name() %> project people" href="#projects/<%- view.model.id %>/people">People</a></li>' +
 '    <li class="pull-right"><a title="<%- view.model.name() %> project categories" href="#projects/<%- view.model.id %>/categories">Categories</a></li>' +
 '</ul>';
-templates['#time-report-template'] = '<%= view.renderheader() %>' +
+templates['#time-report'] = '<%= view.renderheader() %>' +
 '<div id="time_report" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="makereportlabel" aria-hidden="true">' +
 '<div class="modal-header">' +
 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
@@ -176,7 +176,7 @@ templates['#time-report-template'] = '<%= view.renderheader() %>' +
 '</table>' +
 '<%= view.renderpager() %>' +
 '<% } %>';
-templates['#projects-template'] = '<%= view.renderheader() %>' +
+templates['#projects'] = '<%= view.renderheader() %>' +
 '<% var pp=view.collection; if (pp.isEmpty()) { %>' +
 '<div class="alert alert-info">' +
 '    No projects...' +
@@ -222,10 +222,10 @@ templates['#projects-template'] = '<%= view.renderheader() %>' +
 '</div>' +
 '</div>' +
 '<% } %>';
-templates['#project-template'] = '<%= view.renderheader() %>' +
+templates['#project'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% if (view.model.get("announcement")) { %><p><%= view.model.get("announcement") %></p><% } %>';
-templates['#companies-template'] = '<%= view.renderheader() %>' +
+templates['#companies'] = '<%= view.renderheader() %>' +
 '<% cc=view.collection; if (cc.isEmpty()) { %>' +
 '<div class="alert alert-info">' +
 '    No companies...' +
@@ -255,7 +255,7 @@ templates['#companies-template'] = '<%= view.renderheader() %>' +
 '<% }) %>' +
 '</dl>' +
 '<% } %>';
-templates['#company-template'] = '<%= view.renderheader() %>' +
+templates['#company'] = '<%= view.renderheader() %>' +
 '<div class="row">' +
 '    <div class="span4">' +
 '        <h2>Projects</h2>' +
@@ -301,7 +301,7 @@ templates['#company-template'] = '<%= view.renderheader() %>' +
 '        <% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><br /><% } %>' +
 '    </div>' +
 '</div>';
-templates['#person-template'] = '<%= view.renderheader() %>' +
+templates['#person'] = '<%= view.renderheader() %>' +
 '<img class="pull-right img-polaroid" width="55" height="55"' +
 '     src="<%- view.model.get("avatar-url") %>"' +
 '     alt="<%- view.model.name() %>">' +
@@ -319,7 +319,7 @@ templates['#person-template'] = '<%= view.renderheader() %>' +
 '<% if (view.model.get("phone-number-home")) { %>Home phone: <%- view.model.get("phone-number-home") %><br /><% } %>' +
 '<% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><br /><% } %>' +
 '<% if (view.model.get("time-zone-name")) { %>Time zone: <%- view.model.get("time-zone-name") %><% } %>';
-templates['#personitem-template'] = '<% var in_project=item.collection.url().indexOf("projects")!==-1 %>' +
+templates['#personitem'] = '<% var in_project=item.collection.url().indexOf("projects")!==-1 %>' +
 '<li class="media well well-small">' +
 '    <a class="pull-right" href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>"><img class="media-object img-polaroid" src="<%- item.get("avatar-url") %>" alt="<%- item.name() %>"></a>' +
 '    <div class="media-body">' +
@@ -345,7 +345,7 @@ templates['#personitem-template'] = '<% var in_project=item.collection.url().ind
 '        <% if (item.get("time-zone-name")) { %>Time zone: <%- item.get("time-zone-name") %><% } %>' +
 '    </div>' +
 '</li>';
-templates['#people-template'] = '<%= view.renderheader() %>' +
+templates['#people'] = '<%= view.renderheader() %>' +
 '<% var pp=view.collection; var co=view.options.collections.companies;' +
 'if (pp.isEmpty()) { %>' +
 '<div class="alert alert-info">' +
@@ -385,7 +385,7 @@ templates['#people-template'] = '<%= view.renderheader() %>' +
 '</div>' +
 '</div>' +
 '<% }} %>';
-templates['#project-people-template'] = '<%= view.renderheader() %>' +
+templates['#project-people'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var pp=view.collection;  var cc=view.options.collections.companies;' +
 'if (pp.isEmpty()) { %>' +
@@ -420,7 +420,7 @@ templates['#project-people-template'] = '<%= view.renderheader() %>' +
 '</div>' +
 '</div>' +
 '<% }} %>';
-templates['#project-person-template'] = '<%= view.renderheader() %>' +
+templates['#project-person'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var pp=view.collection; var item=pp.get(view.cur_item);' +
 'if (pp.isEmpty()) { %>' +
@@ -432,7 +432,7 @@ templates['#project-person-template'] = '<%= view.renderheader() %>' +
 '    <%= view.renderitem(item) %>' +
 '</ul>' +
 '<% } %>';
-templates['#project-time-template'] = templates['#todo-time-template'] = '<%= view.renderheader() %>' +
+templates['#project-time'] = templates['#todo-time'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var tt=view.collection; var prid=view.model.id;' +
 'var pp=view.options.collections.people;' +
@@ -476,7 +476,7 @@ templates['#project-time-template'] = templates['#todo-time-template'] = '<%= vi
 '</table>' +
 '<%= view.renderpager() %>' +
 '<% } %>';
-templates['#post-template'] = '<li class="thumbnail">' +
+templates['#post'] = '<li class="thumbnail">' +
 '    <h3>' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <% if (item.get("private")) { %><i class="icon-lock"></i><% } %>' +
@@ -506,7 +506,7 @@ templates['#post-template'] = '<li class="thumbnail">' +
 '    </ul>' +
 '    <% } %>' +
 '</li>';
-templates['#project-posts-template'] = '<%= view.renderheader() %>' +
+templates['#project-posts'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var pp=view.collection; var prid=view.model.id;' +
 'if (pp.isEmpty()) { %>' +
@@ -520,7 +520,7 @@ templates['#project-posts-template'] = '<%= view.renderheader() %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } %>';
-templates['#project-post-template'] = '<%= view.renderheader() %>' +
+templates['#project-post'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var pp=view.collection; var prid=view.model.id; var item=pp.get(view.cur_item);' +
 'if (pp.isEmpty()) { %>' +
@@ -532,7 +532,7 @@ templates['#project-post-template'] = '<%= view.renderheader() %>' +
 '    <%= view.renderitem(item) %>' +
 '</ul>' +
 '<% } %>';
-templates['#project-post-comments-template'] = '<%= view.renderheader() %>' +
+templates['#project-post-comments'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var item=view.options.collections.project_posts.get_or_create(view.model.id).get(view.cur_item);' +
 'if (item) { %>' +
@@ -541,7 +541,7 @@ templates['#project-post-comments-template'] = '<%= view.renderheader() %>' +
 '</ul>' +
 '<% } %>' +
 '<%= view.rendercomments(view.collection) %>';
-templates['#file-template'] = '<% var prid=item.get("project-id"); var pp=BB.collections.people;' +
+templates['#file'] = '<% var prid=item.get("project-id"); var pp=BB.collections.people;' +
 'var cc=BB.collections.project_categories.get_or_create(prid); %>' +
 '<li class="media well well-small">' +
 '    <h3>' +
@@ -561,7 +561,7 @@ templates['#file-template'] = '<% var prid=item.get("project-id"); var pp=BB.col
 '    <br/>' +
 '    <a class="btn btn-success" href="<%- item.get("download-url") %>">Download</a>' +
 '</li>';
-templates['#project-files-template'] = '<%= view.renderheader() %>' +
+templates['#project-files'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var ff=view.collection;' +
 'if (ff.isEmpty()) { %>' +
@@ -577,7 +577,7 @@ templates['#project-files-template'] = '<%= view.renderheader() %>' +
 '</ul>' +
 '<%= view.renderpager() %>' +
 '<% } %>';
-templates['#project-file-template'] = '<%= view.renderheader() %>' +
+templates['#project-file'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var ff=view.collection; var item=ff.get(view.cur_item);' +
 'if (ff.isEmpty()) { %>' +
@@ -589,7 +589,7 @@ templates['#project-file-template'] = '<%= view.renderheader() %>' +
 '    <%= view.renderitem(item) %>' +
 '</ul>' +
 '<% } %>';
-templates['#calendar-template'] = '<li class="thumbnail">' +
+templates['#calendar'] = '<li class="thumbnail">' +
 '    <h3>' +
 '        <a <% if (item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>' +
@@ -621,7 +621,7 @@ templates['#calendar-template'] = '<li class="thumbnail">' +
 '        <% } %>' +
 '    </small>' +
 '</li>';
-templates['#project-calendar-template'] = '<%= view.renderheader() %>' +
+templates['#project-calendar'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var cc=view.collection; var prid=view.model.id;' +
 'if (cc.isEmpty()) { %>' +
@@ -635,7 +635,7 @@ templates['#project-calendar-template'] = '<%= view.renderheader() %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } %>';
-templates['#project-calendar-entry-template'] = '<%= view.renderheader() %>' +
+templates['#project-calendar-entry'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);' +
 'if (cc.isEmpty()) { %>' +
@@ -647,7 +647,7 @@ templates['#project-calendar-entry-template'] = '<%= view.renderheader() %>' +
 '    <%= view.renderitem(item) %>' +
 '</ul>' +
 '<% } %>';
-templates['#project-calendar-entry-comments-template'] = '<%= view.renderheader() %>' +
+templates['#project-calendar-entry-comments'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var item=view.options.collections.project_calendar.get_or_create(view.model.id).get(view.cur_item);' +
 'if (item) { %>' +
@@ -656,7 +656,7 @@ templates['#project-calendar-entry-comments-template'] = '<%= view.renderheader(
 '</ul>' +
 '<% } %>' +
 '<%= view.rendercomments(view.collection) %>';
-templates['#category-template'] = '<dt>' +
+templates['#category'] = '<dt>' +
 '    <h3>' +
 '        <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.id %>"><%- item.get("name") %></a>' +
 '    </h3>' +
@@ -664,7 +664,7 @@ templates['#category-template'] = '<dt>' +
 '<dd>' +
 '    <%- item.get("type") %><br />Elements: <%- item.get("elements-count") %>' +
 '</dd>';
-templates['#project-categories-template'] = '<%= view.renderheader() %>' +
+templates['#project-categories'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var cc=view.collection; var prid=view.model.id;' +
 'if (cc.isEmpty()) { %>' +
@@ -680,7 +680,7 @@ templates['#project-categories-template'] = '<%= view.renderheader() %>' +
 '</dl>' +
 '<%= view.renderpager() %>' +
 '<% } %>';
-templates['#project-category-template'] = '<%= view.renderheader() %>' +
+templates['#project-category'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);' +
 'if (cc.isEmpty()) { %>' +
@@ -692,7 +692,7 @@ templates['#project-category-template'] = '<%= view.renderheader() %>' +
 '    <%= view.renderitem(item) %>' +
 '</dl>' +
 '<% } %>';
-templates['#todo-template'] = '<% var item=view.model;' +
+templates['#todo'] = '<% var item=view.model;' +
 'var prid=view.options.project_id;' +
 'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(item.get("todo-list-id")); %>' +
 '<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
@@ -701,12 +701,12 @@ templates['#todo-template'] = '<% var item=view.model;' +
 '<% } %>&nbsp;' +
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>';
-templates['#todolist-template'] = '<dt>' +
+templates['#todolist'] = '<dt>' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
 '       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %></a>' +
 '    <small><%= item.get("description") %></small>' +
 '</dt>';
-templates['#todo-lists-template'] = '<%= view.renderheader() %>' +
+templates['#todo-lists'] = '<%= view.renderheader() %>' +
 '<% var td=view.collection;' +
 'var pp=view.options.collections.people;' +
 'var prs=view.options.collections.projects;' +
@@ -761,7 +761,7 @@ templates['#todo-lists-template'] = '<%= view.renderheader() %>' +
 '<% }) %>' +
 '</dl>' +
 '<% } %>';
-templates['#project-todo-lists-template'] = '<%= view.renderheader() %>' +
+templates['#project-todo-lists'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
 'if (td.isEmpty()) { %>' +
@@ -798,7 +798,7 @@ templates['#project-todo-lists-template'] = '<%= view.renderheader() %>' +
 '</div>' +
 '</div>' +
 '<% } %>';
-templates['#project-todo-list-template'] = '<%= view.renderheader() %>' +
+templates['#project-todo-list'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
 'var pp=view.options.collections.project_people.get_or_create(view.model.id);' +
@@ -853,7 +853,7 @@ templates['#project-todo-list-template'] = '<%= view.renderheader() %>' +
 '</div>' +
 '</div>' +
 '<% } %>';
-templates['#project-todo-item-template'] = '<%= view.renderheader() %>' +
+templates['#project-todo-item'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var td=view.collection; var todo_items=view.options.collections.todo_items;' +
 'var prid=view.model.id; var list_id=view.cur_item; var item_id=view.todo_item;' +
@@ -868,7 +868,7 @@ templates['#project-todo-item-template'] = '<%= view.renderheader() %>' +
 '    <%= view.renderitem(list) %>' +
 '</dl>' +
 '<% } %>';
-templates['#project-todo-item-comments-template'] = '<%= view.renderheader() %>' +
+templates['#project-todo-item-comments'] = '<%= view.renderheader() %>' +
 '<%= view.renderprojectnav() %>' +
 '<% var td=view.todo_lists; var todo_items=view.options.collections.todo_items;' +
 'var prid=view.model.id; var list_id=view.cur_item; var item_id=view.todo_item;' +
@@ -884,7 +884,7 @@ templates['#project-todo-item-comments-template'] = '<%= view.renderheader() %>'
 '</dl>' +
 '<% } %>' +
 '<%= view.rendercomments(ccc) %>';
-templates['#comments-template'] = '<% if (comments.isEmpty()) { %>' +
+templates['#comments'] = '<% if (comments.isEmpty()) { %>' +
 '<div class="alert alert-info">' +
 '    No comments...' +
 '</div>' +
@@ -914,7 +914,7 @@ templates['#comments-template'] = '<% if (comments.isEmpty()) { %>' +
 '    <% }) %>' +
 '</ul>' +
 '<% } %>';
-templates['#nav-template'] = '<div class="navbar-inner">' +
+templates['#nav'] = '<div class="navbar-inner">' +
 '<button data-target=".nav-collapse" data-toggle="collapse" class="btn btn-navbar" type="button">' +
 '    <span class="icon-bar"></span>' +
 '    <span class="icon-bar"></span>' +

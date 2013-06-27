@@ -39,7 +39,6 @@
         templateoptions = {
             variable: 'view'
         },
-        dtemplate = '-template',
         _result = _.result,
         render = function(template, data, settings) {
             return _.template(bbtemplates[template], data, settings);
@@ -74,16 +73,16 @@
                 return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, item, {variable: 'item'});
             },
             rendercomments: function(comments) {
-                return render('#comments' + dtemplate, comments, {variable: 'comments'});
+                return render('#comments', comments, {variable: 'comments'});
             },
             renderpager: function() {
-                return render('#pager' + dtemplate, this, templateoptions);
+                return render('#pager', this, templateoptions);
             },
             renderheader: function() {
-                return render('#header' + dtemplate, this, templateoptions);
+                return render('#header', this, templateoptions);
             },
             renderprojectnav: function() {
-                return render('#project-nav' + dtemplate, this, templateoptions);
+                return render('#project-nav', this, templateoptions);
             }
         }),
         ProjectBBView = BBView.extend({
@@ -148,13 +147,13 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
         },
-        template: '#people' + dtemplate,
-        itemtemplate: '#personitem' + dtemplate,
+        template: '#people',
+        itemtemplate: '#personitem',
         title: 'People'
     });
     // Projects View - projects
     bbviews.ProjectsView = BBView.extend({
-        template: hashpp + dtemplate,
+        template: hashpp,
         title: pp
     });
     // Project View - projects/:id
@@ -165,11 +164,11 @@
         path: function() {
             return ProjectBBView.prototype.path.apply(this).slice(0, -1);
         },
-        template: '#project' + dtemplate
+        template: '#project'
     });
     // Companies View - companies
     bbviews.CompaniesView = BBView.extend({
-        template: hashcc + dtemplate,
+        template: hashcc,
         title: cc
     });
     // Company View - companies/:id
@@ -180,21 +179,21 @@
         path: function() {
             return [cpath];
         },
-        template: '#company' + dtemplate
+        template: '#company'
     });
     // People View - projects/:id/people
     bbviews.PeopleView = ProjectBBView.extend({
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
         },
-        template: '#project-people' + dtemplate,
-        itemtemplate: '#personitem' + dtemplate,
+        template: '#project-people',
+        itemtemplate: '#personitem',
         title: 'People'
     });
     // Person View - projects/:id/people/:pid
     bbviews.PersonView = TitleBBView.extend({
-        template: '#project-person' + dtemplate,
-        itemtemplate: '#personitem' + dtemplate,
+        template: '#project-person',
+        itemtemplate: '#personitem',
         nameParent: 'People'
     });
     // Time Entries View - projects/:id/time_entries
@@ -273,8 +272,8 @@
             model.save(this.parseData('.edittime[data-id=' + model.id + ']'));
             this.render();
         },
-        itemtemplate: '#time' + dtemplate,
-        template: '#project-time' + dtemplate,
+        itemtemplate: '#time',
+        template: '#project-time',
         title: 'Time'
     });
     // Todo Time Entries View - projects/:id/time_entries/todo_items/:tiid
@@ -297,7 +296,7 @@
                 'person-name': this.options.collections.people.get(item.get('person-id')).name()
             }, {silent: true});
         },
-        template: '#todo-time' + dtemplate
+        template: '#todo-time'
     });
     // Time Report View - time_report
     bbviews.TimeReportView = bbviews.TimeEntriesView.extend({
@@ -320,7 +319,7 @@
             this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
             this.collection.fetch({cache: true, reset: true});
         },
-        template: '#time-report' + dtemplate,
+        template: '#time-report',
         path: false,
         title: 'Time report',
         render: function() {
@@ -336,8 +335,8 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
         },
-        template: '#project-post-comments' + dtemplate,
-        itemtemplate: '#post' + dtemplate,
+        template: '#project-post-comments',
+        itemtemplate: '#post',
         extrapath: function() {
             return [
                 [
@@ -359,8 +358,8 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
         },
-        template: '#project-calendar-entry-comments' + dtemplate,
-        itemtemplate: '#calendar' + dtemplate,
+        template: '#project-calendar-entry-comments',
+        itemtemplate: '#calendar',
         nameParent: 'Calendar',
         itemname: function() {
             var item = _.isFinite(this.cur_item) && this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item),
@@ -370,14 +369,14 @@
     });
     // Posts View - projects/:id/posts
     bbviews.PostsView = ProjectBBView.extend({
-        template: '#project-posts' + dtemplate,
-        itemtemplate: '#post' + dtemplate,
+        template: '#project-posts',
+        itemtemplate: '#post',
         title: 'Posts'
     });
     // Post View - projects/:id/posts/:pid
     bbviews.PostView = TitleBBView.extend({
-        template: '#project-post' + dtemplate,
-        itemtemplate: '#post' + dtemplate,
+        template: '#project-post',
+        itemtemplate: '#post',
         nameParent: 'Posts'
     });
     // Files View - projects/:id/files
@@ -390,27 +389,27 @@
             'click .project-files.previous': 'previous',
             'click .project-files.next': 'next'
         },
-        itemtemplate: '#file' + dtemplate,
-        template: '#project-files' + dtemplate,
+        itemtemplate: '#file',
+        template: '#project-files',
         title: 'Files'
     });
     // File View - projects/:id/files/:fid
     bbviews.FileView = TitleBBView.extend({
         deps: bbviews.FilesView.prototype.deps,
-        itemtemplate: '#file' + dtemplate,
-        template: '#project-file' + dtemplate,
+        itemtemplate: '#file',
+        template: '#project-file',
         nameParent: 'Files'
     });
     // Calendar View - projects/:id/calendar
     bbviews.CalendarView = ProjectBBView.extend({
-        template: '#project-calendar' + dtemplate,
-        itemtemplate: '#calendar' + dtemplate,
+        template: '#project-calendar',
+        itemtemplate: '#calendar',
         title: 'Calendar'
     });
     // Calendar Entry View - projects/:id/calendar/:cid
     bbviews.CalendarEntryView = TitleBBView.extend({
-        template: '#project-calendar-entry' + dtemplate,
-        itemtemplate: '#calendar' + dtemplate,
+        template: '#project-calendar-entry',
+        itemtemplate: '#calendar',
         nameParent: 'Calendar'
     });
     // Categories View - projects/:id/categories
@@ -420,14 +419,14 @@
             'click .project-categories.previous': 'previous',
             'click .project-categories.next': 'next'
         },
-        template: '#project-categories' + dtemplate,
-        itemtemplate: '#category' + dtemplate,
+        template: '#project-categories',
+        itemtemplate: '#category',
         title: 'Categories'
     });
     // Category View - projects/:id/categories/:cid
     bbviews.CategoryView = TitleBBView.extend({
-        template: '#project-category' + dtemplate,
-        itemtemplate: '#category' + dtemplate,
+        template: '#project-category',
+        itemtemplate: '#category',
         nameParent: 'Categories'
     });
     // All Person View - people/:id
@@ -435,7 +434,7 @@
         deps: function() {
             return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
         },
-        template: '#person' + dtemplate,
+        template: '#person',
         path: function() {
             return [
                 [
@@ -455,8 +454,8 @@
             this.collection.responsible_party = $(e.target).val();
             this.collection.fetch({cache: true, reset: true});
         },
-        template: '#todo-lists' + dtemplate,
-        itemtemplate: '#todolist' + dtemplate,
+        template: '#todo-lists',
+        itemtemplate: '#todolist',
         title: function() {
             if (this.collection.responsible_party) {
                 var person = this.options.collections.people && this.options.collections.people.get(this.collection.responsible_party);
@@ -486,8 +485,8 @@
     });
     // Todo Lists View - projects/:id/todo_lists
     bbviews.TodoListsView = ProjectBBView.extend({
-        template: '#project-todo-lists' + dtemplate,
-        itemtemplate: '#todolist' + dtemplate,
+        template: '#project-todo-lists',
+        itemtemplate: '#todolist',
         title: 'To-dos'
     });
     // Todo List View - projects/:id/todo_lists/:tlid
@@ -518,8 +517,8 @@
                     return true;
                 }});
         },
-        template: '#project-todo-list' + dtemplate,
-        itemtemplate: '#todolist' + dtemplate,
+        template: '#project-todo-list',
+        itemtemplate: '#todolist',
         idParent: 'todo_lists',
         nameParent: 'To-dos',
         render: function() {
@@ -538,8 +537,8 @@
         deps: function() {
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
         },
-        template: '#project-todo-item' + dtemplate,
-        itemtemplate: '#todolist' + dtemplate,
+        template: '#project-todo-item',
+        itemtemplate: '#todolist',
         extrapath: bbviews.PostCommentsView.prototype.extrapath,
         idParent: 'todo_lists',
         nameParent: 'To-dos',
@@ -564,7 +563,7 @@
     });
     // Todo Item Comments View - projects/:id/todo_lists/:tlid/:tiid/comments
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
-        template: '#project-todo-item-comments' + dtemplate,
+        template: '#project-todo-item-comments',
         extrapath: function() {
             var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this);
             return [
@@ -592,7 +591,7 @@
             this.render();
         },
         tagName: 'dd',
-        template: '#todo' + dtemplate,
+        template: '#todo',
         render: function() {
             BBViewProto.render.apply(this);
             this.delegateEvents();
@@ -601,7 +600,7 @@
     });
     // Nav View - no url
     bbviews.NavView = BBView.extend({
-        template: '#nav' + dtemplate,
+        template: '#nav',
         initialize: function() {
             this.model.bind('change', this.render, this);
         }
