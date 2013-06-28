@@ -236,8 +236,9 @@ class BaseRequestHandler(webapp2.RequestHandler):
         """ Check develompent environment
         """
         req_dev = self.request.get('dev', False)
+        prod_dev = not os.environ['AUTH_DOMAIN'].startswith('Production')
         soft_dev = os.environ['SERVER_SOFTWARE'].startswith('Development')
-        return req_dev or soft_dev
+        return (req_dev or soft_dev) and prod_dev
 
     def auth_check(self):
         """ Check session
