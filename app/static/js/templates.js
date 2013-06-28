@@ -34,7 +34,7 @@ templates['#timeedit'] = '<tr class="edittime" data-id="<%- item.id %>">' +
 '    <td>' +
 '        <div>' +
 '            <i class="icon-user"></i><select name="person-id">' +
-'                <% BB.collections.people.each(function (i) { %>' +
+'                <% view.options.collections.people.each(function (i) { %>' +
 '                    <option value="<%- i.id %>" <% if (i.id==item.get("person-id")) { %>selected="selected"<% } %>><%- i.name() %></option>' +
 '                <% }) %>' +
 '            </select>' +
@@ -571,8 +571,8 @@ templates['#project-nav'] +
 '</ul>' +
 '<% } %>' +
 templates['#comments'];
-templates['#file'] = '<% var prid=item.get("project-id"); var pp=BB.collections.people;' +
-'var cc=BB.collections.project_categories.get_or_create(prid); %>' +
+templates['#file'] = '<% var prid=view.model.id; var pp=view.options.collections.people;' +
+'var cc=view.options.collections.project_categories.get_or_create(prid); %>' +
 '<li class="media well well-small">' +
 '    <h3>' +
 '        <a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %></a>' +

@@ -36,9 +36,6 @@
             hashpp,
             pp
         ],
-        templateoptions = {
-            variable: 'view'
-        },
         _result = _.result,
         render = function(template, data, settings) {
             return _.template(bbtemplates[template], data, settings);
@@ -66,11 +63,11 @@
                 return _result(this, 'title') || _result(this, 'name');
             },
             render: function() {
-                this.$el.html(render(this.template, this, templateoptions));
+                this.$el.html(render(this.template, {'view': this}));
                 return this;
             },
             renderitem: function(item) {
-                return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, item, {variable: 'item'});
+                return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, {'item': item, 'view': this});
             }
         }),
         ProjectBBView = BBView.extend({
