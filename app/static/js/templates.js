@@ -580,13 +580,20 @@ templates['#file'] = '<% var prid=item.get("project-id"); var pp=BB.collections.
 '    <small>' +
 '        by' +
 '        <a href="#people/<%- item.get("person-id") %>"><i class="icon-user"></i><%- pp.get(item.get("person-id"))?pp.get(item.get("person-id")).name():item.get("person-id") %></a>' +
-'        <% if (item.get("category-id")) { %>' +
+'        <% if (_.isFinite(item.get("category-id"))) { %>' +
 '        in' +
 '        <a href="#projects/<%- prid %>/categories/<%- item.get("category-id") %>"><%- cc.get(item.get("category-id"))?cc.get(item.get("category-id")).get("name"):item.get("category-id") %></a>' +
 '        <% } %>' +
 '        on' +
 '        <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>,' +
-'        <%- item.get("byte-size") %>B' +
+'        <%- item.get("byte-size") %>B<br />' +
+'        <% if (_.isFinite(item.get("owner-id"))) { %>' +
+'        for <%- item.get("owner-type") %> #<%- item.get("owner-id") %><br />' +
+'        <% } %>' +
+'        version #<%- item.get("version") %>' +
+'        <% if (item.get("current")) { %>' +
+'        - <a href="#projects/<%- prid %>/files/<%- item.get("collection") %>">parent version</a>' +
+'        <% } %>' +
 '    </small>' +
 '    <br/>' +
 '    <a class="btn btn-success" href="<%- item.get("download-url") %>">Download</a>' +
