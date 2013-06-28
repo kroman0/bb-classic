@@ -109,8 +109,7 @@ COLLECTION = [{
     "locale": ["en", "ru", "ua"][i % 3],
     "name": "Name of #%s" % i,
     "owner-id": [None, i % 5][i % 2],
-    # TODO update owner types
-    "owner-type": "Comment",
+    "owner-type": ["Comment", "Post", "Comment"][i % 3],
     "person-id": i % 5,
     "person-name": "Pesson #%s" % i,
     "phone-number-fax": "Fax of #%s" % i,
