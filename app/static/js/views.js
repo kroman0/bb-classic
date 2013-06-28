@@ -66,6 +66,12 @@
                 this.$el.html(render(this.template, {'view': this}));
                 return this;
             },
+            itemblock: function(item, template) {
+                return render(item.edit ? template + 'edit' : template, {'item': item, 'view': this});
+            },
+            block: function(template) {
+                return render(template, {'view': this});
+            },
             renderitem: function(item) {
                 return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, {'item': item, 'view': this});
             }
