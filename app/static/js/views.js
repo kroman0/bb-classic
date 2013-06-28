@@ -574,28 +574,6 @@
         },
         title: 'Comments'
     });
-    // Todo View - no url
-    bbviews.TodoView = BBView.extend({
-        events: {
-            'click .todo.icon-completed': 'uncomplete',
-            'click .todo.icon-uncompleted': 'complete'
-        },
-        complete: function() {
-            this.model.complete();
-            this.render();
-        },
-        uncomplete: function() {
-            this.model.uncomplete();
-            this.render();
-        },
-        tagName: 'dd',
-        template: '#todo',
-        render: function() {
-            BBViewProto.render.apply(this);
-            this.delegateEvents();
-            return this;
-        }
-    });
     // Nav View - no url
     bbviews.NavView = BBView.extend({
         template: '#nav',

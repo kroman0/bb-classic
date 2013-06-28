@@ -38,7 +38,6 @@
             collections: collections
         },
         oproject,
-        otodo,
         otime,
         Workspace = Backbone.Router.extend({
             routes: {
@@ -153,19 +152,10 @@
     views.todo_time_entries = new bbviews.TodoTimeEntriesView(otime);
     views.project_post_comments = new bbviews.PostCommentsView(oproject);
     views.project_calendar_entry_comments = new bbviews.CalendarEntryCommentsView(oproject);
-    views.todo = function(prid, item) {
-        if (!views.todo[item.id]) {
-            views.todo[item.id] = new bbviews.TodoView({model: item, collections: collections, project_id: prid});
-        }
-        return views.todo[item.id];
-    };
-    otodo = _.extend({
-        todo: views.todo
-    }, oproject);
-    views.project_todo_lists = new bbviews.TodoListsView(otodo);
-    views.project_todo_list = new bbviews.TodoListView(otodo);
-    views.project_todo_item = new bbviews.TodoItemView(otodo);
-    views.project_todo_item_comments = new bbviews.TodoItemCommentsView(otodo);
+    views.project_todo_lists = new bbviews.TodoListsView(oproject);
+    views.project_todo_list = new bbviews.TodoListView(oproject);
+    views.project_todo_item = new bbviews.TodoItemView(oproject);
+    views.project_todo_item_comments = new bbviews.TodoItemCommentsView(oproject);
     workspace.on('route', function(route, params) {
         var id, cur_item;
         if (_.contains(['projects', 'companies', 'people', 'time_report', 'todos'], route)) {
