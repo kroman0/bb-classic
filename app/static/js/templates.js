@@ -593,6 +593,8 @@ templates['#file'] = '<% var prid=view.model.id; var pp=view.options.collections
 '        version #<%- item.get("version") %>' +
 '        <% if (item.get("current")) { %>' +
 '        - <a href="#projects/<%- prid %>/files/<%- item.get("collection") %>">parent version</a>' +
+'        <% } else { var current=view.collection.where({"current":true,"collection":item.id}); %>' +
+'        - <a href="#projects/<%- prid %>/files/<%- current && current[0] && current[0].id %>">current version</a>' +
 '        <% } %>' +
 '    </small>' +
 '    <br/>' +
