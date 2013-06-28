@@ -24,10 +24,28 @@ xtest:	clean
 pxtest:	clean
 	PRO_TEST=True xvfb-run bin/pybot -e screenshots tests
 
+test_chrome:	clean
+	ROBOT_BROWSER=chrome bin/pybot -e screenshots tests
+
+ptest_chrome:	clean
+	ROBOT_BROWSER=chrome PRO_TEST=True bin/pybot -e screenshots tests
+
+xtest_chrome:	clean
+	ROBOT_BROWSER=chrome xvfb-run bin/pybot -e screenshots tests
+
+pxtest_chrome:	clean
+	ROBOT_BROWSER=chrome PRO_TEST=True xvfb-run bin/pybot -e screenshots tests
+
 screenshots:
 	bin/pybot -i screenshots tests/
 
 xscreenshots:
+	xvfb-run bin/pybot -i screenshots tests/
+
+screenshots_chrome:
+	bin/pybot -i screenshots tests/
+
+xscreenshots_chrome:
 	xvfb-run bin/pybot -i screenshots tests/
 
 backup:

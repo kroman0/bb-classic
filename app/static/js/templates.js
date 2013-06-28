@@ -621,28 +621,28 @@ templates['#project-nav'] +
 '<% } %>';
 templates['#calendar'] = '<li class="thumbnail">' +
 '    <h3>' +
-'        <a <% if (item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
+'        <a <% if (item.get("type")=="Milestone" && item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>' +
 '    </h3>' +
 '    <small>' +
-'        <% if (item.get("responsible-party-id")) { %>' +
+'        <% if (item.get("type")=="Milestone" && item.get("responsible-party-id")) { %>' +
 '        <a href="#<%- item.get("responsible-party-type")=="Company"?"companies":"people" %>/<%- item.get("responsible-party-id") %>"><% if (item.get("responsible-party-type")=="Person") { %><i class="icon-user"></i><% } %><%- item.get("responsible-party-name") %></a><br />' +
 '        <% } %>' +
 '        Type: <%- item.get("type") %><br />' +
 '        <% if (item.get("start-at")) { %>' +
 '        Start at <abbr title="<%- item.get("start-at") %>"><%- moment(item.get("start-at")).format("LL") %></abbr><br />' +
 '        <% } %>' +
-'        <% if (item.get("due-at")) { %>' +
+'        <% if (item.get("type")=="CalendarEvent" && item.get("due-at")) { %>' +
 '        Due at <abbr title="<%- item.get("due-at") %>"><%- moment(item.get("due-at")).format("LLL") %></abbr><br />' +
 '        <% } %>' +
-'        <% if (item.get("deadline")) { %>' +
+'        <% if (item.get("type")=="Milestone" && item.get("deadline")) { %>' +
 '        Deadline at <abbr title="<%- item.get("deadline") %>"><%- moment(item.get("deadline")).format("LL") %></abbr><br />' +
 '        <% } %>' +
 '        Created by' +
 '        <a href="#people/<%- item.get("creator-id") %>"><i class="icon-user"></i><%- item.get("creator-name") %></a>' +
 '        on' +
 '        <abbr title="<%- item.get("created-on") %>"><%- moment(item.get("created-on")).format("LLL") %></abbr>' +
-'        <% if (item.get("completed")) { %>' +
+'        <% if (item.get("type")=="Milestone" && item.get("completed")) { %>' +
 '        <br />' +
 '        Completed by' +
 '        <a href="#people/<%- item.get("completer-id") %>"><i class="icon-user"></i><%- item.get("completer-name") %></a>' +
