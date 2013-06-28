@@ -108,7 +108,8 @@ COLLECTION = [{
     "last-name": "Last",
     "locale": ["en", "ru", "ua"][i % 3],
     "name": "Name of #%s" % i,
-    "owner-id": i % 5,
+    "owner-id": [None, i % 5][i % 2],
+    # TODO update owner types
     "owner-type": "Comment",
     "person-id": i % 5,
     "person-name": "Pesson #%s" % i,
