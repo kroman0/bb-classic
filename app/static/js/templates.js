@@ -828,6 +828,14 @@ templates['#project-nav'] +
 '</div>' +
 '</div>' +
 '<% } %>';
+templates['#tododo'] = '<% var list=view.options.collections.project_todo_lists.get_or_create(prid).get(item.get("todo-list-id")); %>' +
+'<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
+'<% if (list&&list.get("tracked")) { %>' +
+'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
+'<% } %>&nbsp;' +
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>';
+
 templates['#project-todo-list'] = templates['#header'] +
 templates['#project-nav'] +
 '<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
@@ -839,7 +847,7 @@ templates['#project-nav'] +
 '</div>' +
 '<% } else { %>' +
 '<div class="row-fluid">' +
-'<dl class="todoitemsholder span8">' +
+'<dl class="todoitemsholder span8 project-todo-list">' +
 '    <%= view.renderitem(list) %>' +
 '    <dd>' +
 '        <button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add todo</button>' +
@@ -858,6 +866,11 @@ templates['#project-nav'] +
 '<button id="add" class="btn btn-default" title="Add"><i class="icon-plus"></i></button>' +
 '</form></div>' +
 '    </dd>' +
+'<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
+'    <dd>' +
+templates['#tododo'] +
+'    </dd>' +
+'<% }) %>' +
 '</dl>' +
 '<div class="tabbable span4 pull-right">' +
 '<ul class="nav nav-pills">' +
@@ -894,8 +907,11 @@ templates['#project-nav'] +
 '    No todo items...' +
 '</div>' +
 '<% } else { %>' +
-'<dl class="todoitemsholder">' +
+'<dl class="todoitemsholder project-todo-item">' +
 '    <%= view.renderitem(list) %>' +
+'    <dd>' +
+templates['#tododo'] +
+'    </dd>' +
 '</dl>' +
 '<% } %>';
 templates['#project-todo-item-comments'] = templates['#header'] +
@@ -910,7 +926,10 @@ templates['#project-nav'] +
 '    No todo items...' +
 '</div>' +
 '<% } else { %>' +
-'<dl class="todoitemsholder">' +
+'<dl class="todoitemsholder project-todo-item-comments">' +
+'    <dd>' +
+templates['#tododo'] +
+'    </dd>' +
 '</dl>' +
 '<% } %>' +
 templates['#comments'];

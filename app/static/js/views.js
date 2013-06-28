@@ -480,10 +480,28 @@
     // Todo List View - projects/:id/todo_lists/:tlid
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce() && this.options.collections.project_people.get_or_create(this.model.id).fetchonce();
+            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todos().fetchonce() && this.options.collections.project_people.get_or_create(this.model.id).fetchonce();
         },
         events: {
+            'click .project-todo-list .todo.icon-completed': 'uncomplete',
+            'click .project-todo-list .todo.icon-uncompleted': 'complete',
             'click #add_todo #add': 'addtodo'
+        },
+        todos: function() {
+            return this.options.collections.todo_items.get_or_create(this.cur_item);
+        },
+        currentTarget: function(e) {
+            return this.todos().get($(e.currentTarget).data('id'));
+        },
+        complete: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).complete();
+            this.render();
+        },
+        uncomplete: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).uncomplete();
+            this.render();
         },
         finishItem: function(item) {
             return item.set({
@@ -497,7 +515,7 @@
             var fdata = $('form').serializeArray(),
                 data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value')),
                 context = this;
-            this.options.collections.todo_items.get_or_create(this.cur_item).create(data, {
+            this.todos().create(data, {
                 wait: true,
                 success: function(model) {
                     context.finishItem(model);
@@ -508,50 +526,42 @@
         template: '#project-todo-list',
         itemtemplate: '#todolist',
         idParent: 'todo_lists',
-        nameParent: 'To-dos',
-        render: function() {
-            BBViewProto.render.apply(this);
-            if (_.isFinite(this.cur_item)) {
-                this.options.collections.todo_items.get_or_create(this.cur_item).each(function(item) {
-                    this.$el.find('.todoitemsholder').append(this.options.todo(this.model.id, item).render().el);
-                }, this);
-            }
-            return this;
-        }
+        nameParent: 'To-dos'
     });
     // Todo Item View - projects/:id/todo_lists/:tlid/:tiid
-    bbviews.TodoItemView = TitleBBView.extend({
+    bbviews.TodoItemView = bbviews.TodoListView.extend({
         todo_item: null,
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.options.collections.todo_items.get_or_create(this.cur_item).fetchonce();
+            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.todos().fetchonce();
+        },
+        events: {
+            'click .project-todo-item .todo.icon-completed': 'uncomplete',
+            'click .project-todo-item .todo.icon-uncompleted': 'complete'
+        },
+        currentTarget: function() {
+            return this.todos().get(this.todo_item);
         },
         template: '#project-todo-item',
         itemtemplate: '#todolist',
         extrapath: bbviews.PostCommentsView.prototype.extrapath,
-        idParent: 'todo_lists',
-        nameParent: 'To-dos',
         itemname: function() {
             var list = this.cur_item && this.todo_lists.get(this.cur_item),
                 title = list && list.name();
             return title;
         },
         itemtitle: function() {
-            var item = _.isFinite(this.todo_item) ? this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item) : this.todo_item,
+            var item = _.isFinite(this.todo_item) ? this.todos().get(this.todo_item) : this.todo_item,
                 itemtitle = item && item.name();
             return itemtitle;
-        },
-        render: function() {
-            BBViewProto.render.apply(this);
-            var item = this.options.collections.todo_items.get_or_create(this.cur_item).get(this.todo_item);
-            if (item) {
-                this.$el.find('.todoitemsholder').append(this.options.todo(this.model.id, item).render().el);
-            }
-            return this;
         }
     });
     // Todo Item Comments View - projects/:id/todo_lists/:tlid/:tiid/comments
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
         template: '#project-todo-item-comments',
+        events: {
+            'click .project-todo-item-comments .todo.icon-completed': 'uncomplete',
+            'click .project-todo-item-comments .todo.icon-uncompleted': 'complete'
+        },
         extrapath: function() {
             var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this);
             return [
