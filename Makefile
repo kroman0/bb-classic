@@ -15,8 +15,14 @@ run:
 test:	clean
 	bin/pybot -e screenshots tests
 
+ptest:	clean
+	PRO_TEST=True bin/pybot -e screenshots tests
+
 xtest:	clean
 	xvfb-run bin/pybot -e screenshots tests
+
+pxtest:	clean
+	PRO_TEST=True xvfb-run bin/pybot -e screenshots tests
 
 screenshots:
 	bin/pybot -i screenshots tests/
