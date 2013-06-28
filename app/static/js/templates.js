@@ -88,6 +88,26 @@ templates['#project-nav'] = '<ul class="nav nav-tabs projectnav">' +
 '    <li class="pull-right"><a title="<%- view.model.name() %> project people" href="#projects/<%- view.model.id %>/people">People</a></li>' +
 '    <li class="pull-right"><a title="<%- view.model.name() %> project categories" href="#projects/<%- view.model.id %>/categories">Categories</a></li>' +
 '</ul>';
+templates['#comment'] = '<li class="thumbnail">' +
+'    <small>' +
+'        <a href="#people/<%- item.get("author-id") %>"><i class="icon-user"></i><%- item.get("author-name") %></a>' +
+'        <abbr title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></abbr>' +
+'    </small>' +
+'    <p><%= item.get("body") %></p>' +
+'    <% if (item.get("attachments")) { %>' +
+'    <ul>' +
+'        <% _.each(item.get("attachments"),function (a) { %>' +
+'        <li>' +
+'            <a href="<%- a["download-url"] %>"><%- a.name %></a>' +
+'            <small>' +
+'                <%- a["byte-size"] %>B' +
+'                <a href="#people/<%- a["person-id"] %>"><i class="icon-user"></i><%- a["author-name"] %></a>' +
+'            </small>' +
+'        </li>' +
+'        <% }) %>' +
+'    </ul>' +
+'    <% } %>' +
+'</li>';
 templates['#comments'] = '<% if (view.collection.isEmpty()) { %>' +
 '<div class="alert alert-info">' +
 '    No comments...' +
@@ -95,26 +115,7 @@ templates['#comments'] = '<% if (view.collection.isEmpty()) { %>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
 '    <% view.collection.each(function (item) { %>' +
-'    <li class="thumbnail">' +
-'        <small>' +
-'            <a href="#people/<%- item.get("author-id") %>"><i class="icon-user"></i><%- item.get("author-name") %></a>' +
-'            <abbr title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></abbr>' +
-'        </small>' +
-'        <p><%= item.get("body") %></p>' +
-'        <% if (item.get("attachments")) { %>' +
-'        <ul>' +
-'            <% _.each(item.get("attachments"),function (a) { %>' +
-'            <li>' +
-'                <a href="<%- a["download-url"] %>"><%- a.name %></a>' +
-'                <small>' +
-'                    <%- a["byte-size"] %>B' +
-'                    <a href="#people/<%- a["person-id"] %>"><i class="icon-user"></i><%- a["author-name"] %></a>' +
-'                </small>' +
-'            </li>' +
-'            <% }) %>' +
-'        </ul>' +
-'        <% } %>' +
-'    </li>' +
+templates['#comment'] +
 '    <% }) %>' +
 '</ul>' +
 '<% } %>';
