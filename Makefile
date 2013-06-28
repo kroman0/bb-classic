@@ -12,6 +12,9 @@ all: run
 run:
 	bin/dev_appserver app --skip_sdk_update_check --datastore_path=app.ds
 
+prun:
+	bin/dev_appserver app --skip_sdk_update_check --datastore_path=app.ds --auth_domain=Production
+
 test:	clean
 	bin/pybot -e screenshots tests
 
