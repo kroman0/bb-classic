@@ -857,6 +857,11 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<div class="row-fluid">' +
 '<dl class="todoitemsholder span8 project-todo-list">' +
 '    <%= view.renderitem(list) %>' +
+'<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
+'    <dd>' +
+templates['#tododo'] +
+'    </dd>' +
+'<% }) %>' +
 '    <dd>' +
 '        <button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add todo</button>' +
 '        <div id="add_todo_wrapper" class="collapse"><form id="add_todo">' +
@@ -874,11 +879,6 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<button id="add" class="btn btn-default" title="Add"><i class="icon-plus"></i></button>' +
 '</form></div>' +
 '    </dd>' +
-'<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
-'    <dd>' +
-templates['#tododo'] +
-'    </dd>' +
-'<% }) %>' +
 '</dl>' +
 '<div class="tabbable span4 pull-right">' +
 '<ul class="nav nav-pills">' +
