@@ -3,16 +3,44 @@ Keywords for tests
 ==================
 
 """
-from PIL import Image
-from PIL import ImageChops
-import math
-import operator
-from robot.libraries.BuiltIn import BuiltIn
+from PIL.Image import open as Iopen
+from PIL.ImageChops import difference
+from base64 import encodestring
+from httplib import HTTPConnection
+from itertools import imap
+from json import dumps
+from math import sqrt
+from operator import add
+from os import environ
 from robot.api import logger
-import base64
-import httplib
-import os
-import json
+from robot.libraries.BuiltIn import BuiltIn
+
+
+def _get_driver():
+    """Get Selenium2Library driver
+
+    :returns: Selenium2Library driver
+    :rtype: instance
+    """
+    return BuiltIn().get_library_instance('Selenium2Library')
+
+
+def _get_browser():
+    """Get current browser
+
+    :returns: current browser
+    :rtype: instance
+    """
+    return getattr(_get_driver(), '_current_browser')()
+
+
+def _get_screenshot():
+    """Get screenshot path
+
+    :returns: path to screenshot
+    :rtype: string
+    """
+    return getattr(_get_driver(), '_get_screenshot_paths')(None)[0]
 
 
 def compare_screenshot_to_base(baseline, diff=100):
@@ -26,30 +54,24 @@ def compare_screenshot_to_base(baseline, diff=100):
         Compare screenshot to base  base_screenshot.jpg
 
     """
-    driver = BuiltIn().get_library_instance('Selenium2Library')
-    # pylint: disable=W0212
-    path = driver._get_screenshot_paths(None)[0]
+    path = _get_screenshot()
 
-    current_browser = driver._current_browser()
+    current_browser = _get_browser()
 
     if hasattr(current_browser, 'get_screenshot_as_file'):
         current_browser.get_screenshot_as_file(path)
     else:
         current_browser.save_screenshot(path)
 
-    img1 = Image.open(path)
-    img2 = Image.open(baseline)
+    img1 = Iopen(path)
+    img2 = Iopen(baseline)
     his1 = img1.histogram()
     his2 = img2.histogram()
     sqrtdiff = lambda a, b: (a - b) ** 2
-    # pylint: disable=W0141
-    rms = math.sqrt(
-        reduce(operator.add,
-               map(sqrtdiff, his1, his2)
-               ) / len(his1))
+    rms = sqrt(reduce(add, imap(sqrtdiff, his1, his2)) / len(his1))
     logger.info("RMS diff: %s" % rms)
     if rms > 0:
-        idiff = ImageChops.difference(img1, img2)
+        idiff = difference(img1, img2)
         path = path.replace(".png", ".jpg")
         idiff.save(path)
         logger.info("diff image: %s" % path)
@@ -71,18 +93,18 @@ def report_sauce_status(job_id, test_status):
         Report sauce status  ${SESSION_ID}  ${TEST_STATUS}
 
     """
-    username = os.environ.get('SAUCE_USERNAME')
-    access_key = os.environ.get('SAUCE_ACCESS_KEY')
+    username = environ.get('SAUCE_USERNAME')
+    access_key = environ.get('SAUCE_ACCESS_KEY')
 
     if not job_id:
         return u"No Sauce job id found. Skipping..."
     elif not username or not access_key:
         return u"No Sauce environment variables found. Skipping..."
 
-    token = base64.encodestring('%s:%s' % (username, access_key))[:-1]
-    body = json.dumps({'passed': test_status == 'PASS'})
+    token = encodestring('%s:%s' % (username, access_key))[:-1]
+    body = dumps({'passed': test_status == 'PASS'})
 
-    connection = httplib.HTTPConnection('saucelabs.com')
+    connection = HTTPConnection('saucelabs.com')
     connection.request('PUT', '/rest/v1/%s/jobs/%s' % (
         username, job_id), body,
         headers={'Authorization': 'Basic %s' % token}
@@ -103,9 +125,7 @@ def set_window_size(width, height):
         Set Window Size  ${800}  ${600}
 
     """
-    driver = BuiltIn().get_library_instance('Selenium2Library')
-    # pylint: disable=W0212
-    return driver._current_browser().set_window_size(int(width), int(height))
+    return _get_browser().set_window_size(int(width), int(height))
 
 
 def get_session_id():
@@ -119,10 +139,8 @@ def get_session_id():
         ${SESSION_ID} =  Get Session Id
 
     """
-    driver = BuiltIn().get_library_instance('Selenium2Library')
     try:
-        # pylint: disable=W0212
-        session_id = driver._cache.current.session_id
+        session_id = _get_browser().session_id
     except AttributeError:
         session_id = ""
     return session_id

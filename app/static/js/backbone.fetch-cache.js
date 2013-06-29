@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v0.1.7
+  backbone.fetch-cache v0.1.8
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
@@ -120,7 +120,11 @@
 
     if (!expired && (opts.cache || opts.prefill) && attributes) {
       this.set(this.parse(attributes), opts);
-      if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(this); }
+      if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(this, attributes, opts); }
+
+      // Trigger sync events
+      this.trigger('cachesync', this, attributes, opts);
+      this.trigger('sync', this, attributes, opts);
 
       // Notify progress if we're still waiting for an AJAX call to happen...
       if (opts.prefill) { promise.notify(this); }
@@ -188,6 +192,10 @@
     if (!expired && (opts.cache || opts.prefill) && attributes) {
       this[opts.reset ? 'reset' : 'set'](this.parse(attributes), opts);
       if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(this); }
+
+      // Trigger sync events
+      this.trigger('cachesync', this, attributes, opts);
+      this.trigger('sync', this, attributes, opts);
 
       // Notify progress if we're still waiting for an AJAX call to happen...
       if (opts.prefill) { promise.notify(this); }

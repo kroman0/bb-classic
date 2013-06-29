@@ -85,7 +85,8 @@ Click on ${text} in projectnav
 
 Start app
     [Documentation]  Start application.
-    Start Process  bin/dev_appserver app --skip_sdk_update_check
+    ${PRO_TEST} =  Get Environment Variable  PRO_TEST  False
+    Run Keyword If  '${PRO_TEST}' != 'True'  Start Process  bin/dev_appserver app --skip_sdk_update_check  ELSE  Start Process  bin/dev_appserver app --skip_sdk_update_check --auth_domain=Production
 
 Start Browser For Test
     [Documentation]  Start browser.

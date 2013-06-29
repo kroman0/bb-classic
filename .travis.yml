@@ -29,3 +29,4 @@ env:
   - ROBOT_BROWSER=firefox
   - ROBOT_BROWSER=chrome
   - ROBOT_BROWSER=internetexplorer
+  - PRO_TEST=True

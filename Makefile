@@ -12,16 +12,43 @@ all: run
 run:
 	bin/dev_appserver app --skip_sdk_update_check --datastore_path=app.ds
 
+prun:
+	bin/dev_appserver app --skip_sdk_update_check --datastore_path=app.ds --auth_domain=Production
+
 test:	clean
 	bin/pybot -e screenshots tests
 
+ptest:	clean
+	PRO_TEST=True bin/pybot -e screenshots tests
+
 xtest:	clean
 	xvfb-run bin/pybot -e screenshots tests
+
+pxtest:	clean
+	PRO_TEST=True xvfb-run bin/pybot -e screenshots tests
+
+test_chrome:	clean
+	ROBOT_BROWSER=chrome bin/pybot -e screenshots tests
+
+ptest_chrome:	clean
+	ROBOT_BROWSER=chrome PRO_TEST=True bin/pybot -e screenshots tests
+
+xtest_chrome:	clean
+	ROBOT_BROWSER=chrome xvfb-run bin/pybot -e screenshots tests
+
+pxtest_chrome:	clean
+	ROBOT_BROWSER=chrome PRO_TEST=True xvfb-run bin/pybot -e screenshots tests
 
 screenshots:
 	bin/pybot -i screenshots tests/
 
 xscreenshots:
+	xvfb-run bin/pybot -i screenshots tests/
+
+screenshots_chrome:
+	bin/pybot -i screenshots tests/
+
+xscreenshots_chrome:
 	xvfb-run bin/pybot -i screenshots tests/
 
 backup:
