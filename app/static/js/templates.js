@@ -88,25 +88,27 @@ templates['#project-nav'] = '<ul class="nav nav-tabs projectnav">' +
 '    <li class="pull-right"><a title="<%- view.model.name() %> project people" href="#projects/<%- view.model.id %>/people">People</a></li>' +
 '    <li class="pull-right"><a title="<%- view.model.name() %> project categories" href="#projects/<%- view.model.id %>/categories">Categories</a></li>' +
 '</ul>';
+templates['#attachment'] = '<li>' +
+'    <a href="<%- item["download-url"] %>"><%- item.name %></a>' +
+'    <small>' +
+'        <%- item["byte-size"] %>B' +
+'        <a href="#people/<%- item["person-id"] %>"><i class="icon-user"></i><%- item["author-name"] %></a>' +
+'    </small>' +
+'</li>';
+templates['#attachments'] = '<% if (item.get("attachments")) { %>' +
+'    <ul>' +
+'        <% _.each(item.get("attachments"),function (a) { %>' +
+'<%= view.itemblock(a, "#attachment") %>' +
+'        <% }) %>' +
+'    </ul>' +
+'    <% } %>';
 templates['#comment'] = '<li class="thumbnail">' +
 '    <small>' +
 '        <a href="#people/<%- item.get("author-id") %>"><i class="icon-user"></i><%- item.get("author-name") %></a>' +
 '        <abbr title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></abbr>' +
 '    </small>' +
 '    <p><%= item.get("body") %></p>' +
-'    <% if (item.get("attachments")) { %>' +
-'    <ul>' +
-'        <% _.each(item.get("attachments"),function (a) { %>' +
-'        <li>' +
-'            <a href="<%- a["download-url"] %>"><%- a.name %></a>' +
-'            <small>' +
-'                <%- a["byte-size"] %>B' +
-'                <a href="#people/<%- a["person-id"] %>"><i class="icon-user"></i><%- a["author-name"] %></a>' +
-'            </small>' +
-'        </li>' +
-'        <% }) %>' +
-'    </ul>' +
-'    <% } %>' +
+'<%= view.itemblock(item, "#attachments") %>' +
 '</li>';
 templates['#comments'] = '<% if (view.collection.isEmpty()) { %>' +
 '<div class="alert alert-info">' +
@@ -119,6 +121,11 @@ templates['#comments'] = '<% if (view.collection.isEmpty()) { %>' +
 '    <% }) %>' +
 '</ul>' +
 '<% } %>';
+templates['#time-thead'] = '<thead>' +
+'    <tr>' +
+'        <th>date</th><th>hours</th><th data-sort="person-id">person</th><th>description</th><th data-sort="id">&nbsp;</th>' +
+'    </tr>' +
+'</thead>';
 templates['#time-report'] = '<%= view.block("#header") %>' +
 '<div id="time_report" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="makereportlabel" aria-hidden="true">' +
 '<div class="modal-header">' +
@@ -182,11 +189,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
-'    <thead>' +
-'        <tr>' +
-'            <th>date</th><th>hours</th><th data-sort="person-id">person</th><th>description</th><th data-sort="id">&nbsp;</th>' +
-'        </tr>' +
-'    </thead>' +
+'    <%= view.block("#time-thead") %>' +
 '    <tbody>' +
 '        <% var prs=view.options.collections.projects;' +
 '        _.each(_.uniq(tt.pluck("project-id")), function (prid) { %>' +
@@ -475,11 +478,7 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
-'    <thead>' +
-'        <tr>' +
-'            <th>date</th><th>hours</th><th data-sort="person-id">person</th><th>description</th><th data-sort="id">&nbsp;</th>' +
-'        </tr>' +
-'    </thead>' +
+'    <%= view.block("#time-thead") %>' +
 '    <tbody>' +
 '        <tr class="addtime">' +
 '            <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
