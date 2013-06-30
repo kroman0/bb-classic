@@ -731,15 +731,6 @@ templates['#project-category'] = '<%= view.block("#header") %>' +
 '    <%= view.renderitem(item) %>' +
 '</dl>' +
 '<% } %>';
-templates['#todo'] = '<% var item=view.model;' +
-'var prid=view.options.project_id;' +
-'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(item.get("todo-list-id")); %>' +
-'<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
-'<% if (list&&list.get("tracked")) { %>' +
-'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
-'<% } %>&nbsp;' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>';
 templates['#todolist'] = '<dt>' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
 '       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %></a>' +
@@ -837,7 +828,8 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '</div>' +
 '</div>' +
 '<% } %>';
-templates['#tododo'] = '<% var list=view.options.collections.project_todo_lists.get_or_create(prid).get(item.get("todo-list-id")); %>' +
+templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-id");' +
+'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(tdlid); %>' +
 '<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
 '<% if (list&&list.get("tracked")) { %>' +
 '<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
@@ -859,7 +851,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '    <%= view.renderitem(list) %>' +
 '<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
 '    <dd>' +
-templates['#tododo'] +
+'<%= view.itemblock(item, "#todo") %>' +
 '    </dd>' +
 '<% }) %>' +
 '    <dd>' +
@@ -918,7 +910,7 @@ templates['#project-todo-item'] = '<%= view.block("#header") %>' +
 '<dl class="todoitemsholder project-todo-item">' +
 '    <%= view.renderitem(list) %>' +
 '    <dd>' +
-templates['#tododo'] +
+'<%= view.itemblock(item, "#todo") %>' +
 '    </dd>' +
 '</dl>' +
 '<% } %>';
@@ -936,7 +928,7 @@ templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<dl class="todoitemsholder project-todo-item-comments">' +
 '    <dd>' +
-templates['#tododo'] +
+'<%= view.itemblock(item, "#todo") %>' +
 '    </dd>' +
 '</dl>' +
 '<% } %>' +
