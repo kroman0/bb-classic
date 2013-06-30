@@ -71,9 +71,6 @@
             },
             block: function(template) {
                 return render(template, {'view': this});
-            },
-            renderitem: function(item) {
-                return render(item.edit ? this.itemtemplate + 'edit' : this.itemtemplate, {'item': item, 'view': this});
             }
         }),
         ProjectBBView = BBView.extend({
@@ -139,7 +136,6 @@
             return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
         },
         template: '#people',
-        itemtemplate: '#personitem',
         title: 'People'
     });
     // Projects View - projects
@@ -178,13 +174,11 @@
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
         },
         template: '#project-people',
-        itemtemplate: '#personitem',
         title: 'People'
     });
     // Person View - projects/:id/people/:pid
     bbviews.PersonView = TitleBBView.extend({
         template: '#project-person',
-        itemtemplate: '#personitem',
         nameParent: 'People'
     });
     // Time Entries View - projects/:id/time_entries
@@ -263,7 +257,6 @@
             model.save(this.parseData('.edittime[data-id=' + model.id + ']'));
             this.render();
         },
-        itemtemplate: '#time',
         template: '#project-time',
         title: 'Time'
     });
@@ -327,7 +320,6 @@
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
         },
         template: '#project-post-comments',
-        itemtemplate: '#post',
         extrapath: function() {
             return [
                 [
@@ -350,7 +342,6 @@
             return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
         },
         template: '#project-calendar-entry-comments',
-        itemtemplate: '#calendar',
         nameParent: 'Calendar',
         itemname: function() {
             var item = _.isFinite(this.cur_item) && this.options.collections.project_calendar.get_or_create(this.model.id).get(this.cur_item),
@@ -361,13 +352,11 @@
     // Posts View - projects/:id/posts
     bbviews.PostsView = ProjectBBView.extend({
         template: '#project-posts',
-        itemtemplate: '#post',
         title: 'Posts'
     });
     // Post View - projects/:id/posts/:pid
     bbviews.PostView = TitleBBView.extend({
         template: '#project-post',
-        itemtemplate: '#post',
         nameParent: 'Posts'
     });
     // Files View - projects/:id/files
@@ -380,27 +369,23 @@
             'click .project-files.previous': 'previous',
             'click .project-files.next': 'next'
         },
-        itemtemplate: '#file',
         template: '#project-files',
         title: 'Files'
     });
     // File View - projects/:id/files/:fid
     bbviews.FileView = TitleBBView.extend({
         deps: bbviews.FilesView.prototype.deps,
-        itemtemplate: '#file',
         template: '#project-file',
         nameParent: 'Files'
     });
     // Calendar View - projects/:id/calendar
     bbviews.CalendarView = ProjectBBView.extend({
         template: '#project-calendar',
-        itemtemplate: '#calendar',
         title: 'Calendar'
     });
     // Calendar Entry View - projects/:id/calendar/:cid
     bbviews.CalendarEntryView = TitleBBView.extend({
         template: '#project-calendar-entry',
-        itemtemplate: '#calendar',
         nameParent: 'Calendar'
     });
     // Categories View - projects/:id/categories
@@ -411,13 +396,11 @@
             'click .project-categories.next': 'next'
         },
         template: '#project-categories',
-        itemtemplate: '#category',
         title: 'Categories'
     });
     // Category View - projects/:id/categories/:cid
     bbviews.CategoryView = TitleBBView.extend({
         template: '#project-category',
-        itemtemplate: '#category',
         nameParent: 'Categories'
     });
     // All Person View - people/:id
@@ -446,7 +429,6 @@
             this.collection.fetch({cache: true, reset: true});
         },
         template: '#todo-lists',
-        itemtemplate: '#todolist',
         title: function() {
             if (this.collection.responsible_party) {
                 var person = this.options.collections.people && this.options.collections.people.get(this.collection.responsible_party);
@@ -477,7 +459,6 @@
     // Todo Lists View - projects/:id/todo_lists
     bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists',
-        itemtemplate: '#todolist',
         title: 'To-dos'
     });
     // Todo List View - projects/:id/todo_lists/:tlid
@@ -527,7 +508,6 @@
                 }});
         },
         template: '#project-todo-list',
-        itemtemplate: '#todolist',
         idParent: 'todo_lists',
         nameParent: 'To-dos'
     });
@@ -545,7 +525,6 @@
             return this.todos().get(this.todo_item);
         },
         template: '#project-todo-item',
-        itemtemplate: '#todolist',
         extrapath: bbviews.PostCommentsView.prototype.extrapath,
         itemname: function() {
             var list = this.cur_item && this.todo_lists.get(this.cur_item),

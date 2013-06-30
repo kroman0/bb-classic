@@ -203,7 +203,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '            <td colspan="3">&nbsp;</td>' +
 '        </tr>' +
 '        <% _.each(tt.where({"project-id":prid}), function (item) { %>' +
-'            <%= view.renderitem(item) %>' +
+'            <%= view.itemblock(item, "#time") %>' +
 '        <% }) %>' +
 '        <% }) %>' +
 '    </tbody>' +
@@ -389,7 +389,7 @@ templates['#people'] = '<%= view.block("#header") %>' +
 'if (co.isEmpty()) { %>' +
 '<ul class="media-list">' +
 '<% pp.each(function (item) { %>' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#personitem") %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } else { %>' +
@@ -410,7 +410,7 @@ templates['#people'] = '<%= view.block("#header") %>' +
 '        <% } else { %>' +
 '        <ul class="media-list">' +
 '        <% _.each(cp, function (item) { %>' +
-'            <%= view.renderitem(item) %>' +
+'            <%= view.itemblock(item, "#personitem") %>' +
 '        <% }) %>' +
 '        </ul>' +
 '        <% } %>' +
@@ -430,7 +430,7 @@ templates['#project-people'] = '<%= view.block("#header") %>' +
 'if (cc.isEmpty()) { %>' +
 '<ul class="media-list">' +
 '<% pp.each(function (item) { %>' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#personitem") %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } else { %>' +
@@ -446,7 +446,7 @@ templates['#project-people'] = '<%= view.block("#header") %>' +
 '    <div class="tab-pane fade<% if (fcoid==id) { %> in active<% } %>" id="people_c<%- id %>">' +
 '        <ul class="media-list">' +
 '        <% _.each(pp.where({"company-id":id}), function (item) { %>' +
-'            <%= view.renderitem(item) %>' +
+'            <%= view.itemblock(item, "#personitem") %>' +
 '        <% }) %>' +
 '        </ul>' +
 '    </div>' +
@@ -463,7 +463,7 @@ templates['#project-person'] = '<%= view.block("#header") %>' +
 '</div>' +
 '<% } else { %>' +
 '<ul class="media-list">' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#personitem") %>' +
 '</ul>' +
 '<% } %>';
 templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header") %>' +
@@ -500,7 +500,7 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '            </td>' +
 '        </tr>' +
 '        <% tt.each(function (item) { %>' +
-'            <%= view.renderitem(item) %>' +
+'            <%= view.itemblock(item, "#time") %>' +
 '        <% }) %>' +
 '    </tbody>' +
 '</table>' +
@@ -546,7 +546,7 @@ templates['#project-posts'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
 '<% pp.each(function (item) { %>' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#post") %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } %>';
@@ -559,7 +559,7 @@ templates['#project-post'] = '<%= view.block("#header") %>' +
 '</div>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#post") %>' +
 '</ul>' +
 '<% } %>';
 templates['#project-post-comments'] = '<%= view.block("#header") %>' +
@@ -567,7 +567,7 @@ templates['#project-post-comments'] = '<%= view.block("#header") %>' +
 '<% var item=view.options.collections.project_posts.get_or_create(view.model.id).get(view.cur_item);' +
 'if (item) { %>' +
 '<ul class="unstyled">' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#post") %>' +
 '</ul>' +
 '<% } %>' +
 '<%= view.block("#comments") %>';
@@ -611,7 +611,7 @@ templates['#project-files'] = '<%= view.block("#header") %>' +
 '<%= view.block("#pager") %>' +
 '<ul class="media-list">' +
 '<% ff.each(function (item) { %>' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#file") %>' +
 '<% }) %>' +
 '</ul>' +
 '<%= view.block("#pager") %>' +
@@ -625,7 +625,7 @@ templates['#project-file'] = '<%= view.block("#header") %>' +
 '</div>' +
 '<% } else { %>' +
 '<ul class="media-list">' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#file") %>' +
 '</ul>' +
 '<% } %>';
 templates['#calendar'] = '<li class="thumbnail">' +
@@ -670,7 +670,7 @@ templates['#project-calendar'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
 '<% cc.each(function (item) { %>' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#calendar") %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } %>';
@@ -683,7 +683,7 @@ templates['#project-calendar-entry'] = '<%= view.block("#header") %>' +
 '</div>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#calendar") %>' +
 '</ul>' +
 '<% } %>';
 templates['#project-calendar-entry-comments'] = '<%= view.block("#header") %>' +
@@ -691,7 +691,7 @@ templates['#project-calendar-entry-comments'] = '<%= view.block("#header") %>' +
 '<% var item=view.options.collections.project_calendar.get_or_create(view.model.id).get(view.cur_item);' +
 'if (item) { %>' +
 '<ul class="unstyled">' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#calendar") %>' +
 '</ul>' +
 '<% } %>' +
 '<%= view.block("#comments") %>';
@@ -714,7 +714,7 @@ templates['#project-categories'] = '<%= view.block("#header") %>' +
 '<%= view.block("#pager") %>' +
 '<dl>' +
 '<% cc.each(function (item) { %>' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#category") %>' +
 '<% }) %>' +
 '</dl>' +
 '<%= view.block("#pager") %>' +
@@ -728,7 +728,7 @@ templates['#project-category'] = '<%= view.block("#header") %>' +
 '</div>' +
 '<% } else { %>' +
 '<dl>' +
-'    <%= view.renderitem(item) %>' +
+'    <%= view.itemblock(item, "#category") %>' +
 '</dl>' +
 '<% } %>';
 templates['#todolist'] = '<dt>' +
@@ -764,7 +764,7 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '    <dd>' +
 '    <dl>' +
 '        <% _.each(td.where({"project-id":prid}), function (list) { %>' +
-'        <%= view.renderitem(list) %>' +
+'        <%= view.itemblock(list, "#todolist") %>' +
 '        <dd>' +
 '        <dl>' +
 '        <% _.each(list.get("todo-items"), function (item) { %>' +
@@ -813,7 +813,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '    <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">' +
 '        <dl>' +
 '            <% _.each(tlgroup, function (list) { %>' +
-'            <%= view.renderitem(list) %>' +
+'            <%= view.itemblock(list, "#todolist") %>' +
 '            <dd>' +
 '                <small>' +
 '                    Completed: <%- list.get("completed-count") %>' +
@@ -848,7 +848,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<div class="row-fluid">' +
 '<dl class="todoitemsholder span8 project-todo-list">' +
-'    <%= view.renderitem(list) %>' +
+'    <%= view.itemblock(list, "#todolist") %>' +
 '<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
 '    <dd>' +
 '<%= view.itemblock(item, "#todo") %>' +
@@ -908,7 +908,7 @@ templates['#project-todo-item'] = '<%= view.block("#header") %>' +
 '</div>' +
 '<% } else { %>' +
 '<dl class="todoitemsholder project-todo-item">' +
-'    <%= view.renderitem(list) %>' +
+'    <%= view.itemblock(list, "#todolist") %>' +
 '    <dd>' +
 '<%= view.itemblock(item, "#todo") %>' +
 '    </dd>' +
