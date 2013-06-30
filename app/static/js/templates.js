@@ -111,9 +111,7 @@ templates['#comment'] = '<li class="thumbnail">' +
 '<%= view.itemblock(item, "#attachments") %>' +
 '</li>';
 templates['#comments'] = '<% if (view.collection.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No comments...' +
-'</div>' +
+'<div class="alert alert-info">No comments...</div>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
 '    <% view.collection.each(function (item) { %>' +
@@ -183,9 +181,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<a href="#time_report" role="button" class="btn btn-primary" data-toggle="modal">Report</a>' +
 '<% var tt=view.collection;' +
 'if (tt.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No time entries...' +
-'</div>' +
+'<div class="alert alert-info">No time entries...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
@@ -212,9 +208,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#projects'] = '<%= view.block("#header") %>' +
 '<% var pp=view.collection; if (pp.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No projects...' +
-'</div>' +
+'<div class="alert alert-info">No projects...</div>' +
 '<% } else { %>' +
 '<div class="tabbable">' +
 '<ul class="nav nav-pills">' +
@@ -261,9 +255,7 @@ templates['#project'] = '<%= view.block("#header") %>' +
 '<% if (view.model.get("announcement")) { %><p><%= view.model.get("announcement") %></p><% } %>';
 templates['#companies'] = '<%= view.block("#header") %>' +
 '<% cc=view.collection; if (cc.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No companies...' +
-'</div>' +
+'<div class="alert alert-info">No companies...</div>' +
 '<% } else { %>' +
 '<dl>' +
 '<% cc.each(function (item) { %>' +
@@ -294,9 +286,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '    <div class="span4">' +
 '        <h2>Projects</h2>' +
 '        <% var cid = view.model.id; var pp=view.options.collections.projects; if (pp.isEmpty()) { %>' +
-'        <div class="alert alert-info">' +
-'            No projects...' +
-'        </div>' +
+'        <div class="alert alert-info">No projects...</div>' +
 '        <% } else { %>' +
 '        <ul class="unstyled">' +
 '        <% _.each(pp.filter(function(i){return i.get("company").id==cid}), function (item) { %>' +
@@ -308,9 +298,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '    <div class="span4">' +
 '        <h2>People</h2>' +
 '        <% var pp=view.options.collections.people; if (pp.isEmpty()) { %>' +
-'        <div class="alert alert-info">' +
-'            No people...' +
-'        </div>' +
+'        <div class="alert alert-info">No people...</div>' +
 '        <% } else { %>' +
 '        <ul class="unstyled">' +
 '        <% _.each(pp.filter(function(i){return i.get("company-id")==cid}), function (item) { %>' +
@@ -382,9 +370,7 @@ templates['#personitem'] = '<% var in_project=item.collection.url().indexOf("pro
 templates['#people'] = '<%= view.block("#header") %>' +
 '<% var pp=view.collection; var co=view.options.collections.companies;' +
 'if (pp.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No people...' +
-'</div>' +
+'<div class="alert alert-info">No people...</div>' +
 '<% } else {' +
 'if (co.isEmpty()) { %>' +
 '<ul class="media-list">' +
@@ -404,9 +390,7 @@ templates['#people'] = '<%= view.block("#header") %>' +
 '<% view.options.collections.companies.each(function (cc) { %>' +
 '    <div class="tab-pane fade<% if (fcoid==cc.id) { %> in active<% } %>" id="people_c<%- cc.id %>">' +
 '        <% var cp=pp.where({"company-id":cc.id}); if (_.isEmpty(cp)) { %>' +
-'        <div class="alert alert-info">' +
-'            No people in company...' +
-'        </div>' +
+'        <div class="alert alert-info">No people in company...</div>' +
 '        <% } else { %>' +
 '        <ul class="media-list">' +
 '        <% _.each(cp, function (item) { %>' +
@@ -423,9 +407,7 @@ templates['#project-people'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var pp=view.collection;  var cc=view.options.collections.companies;' +
 'if (pp.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No people...' +
-'</div>' +
+'<div class="alert alert-info">No people...</div>' +
 '<% } else {' +
 'if (cc.isEmpty()) { %>' +
 '<ul class="media-list">' +
@@ -458,9 +440,7 @@ templates['#project-person'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var pp=view.collection; var item=pp.get(view.cur_item);' +
 'if (pp.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No people...' +
-'</div>' +
+'<div class="alert alert-info">No people...</div>' +
 '<% } else { %>' +
 '<ul class="media-list">' +
 '    <%= view.itemblock(item, "#personitem") %>' +
@@ -472,9 +452,7 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 'var pp=view.options.collections.people;' +
 'var mid=view.options.mydata?view.options.mydata.id:0;' +
 'if (tt.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No time entries...' +
-'</div>' +
+'<div class="alert alert-info">No time entries...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
@@ -540,9 +518,7 @@ templates['#project-posts'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var pp=view.collection; var prid=view.model.id;' +
 'if (pp.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No posts...' +
-'</div>' +
+'<div class="alert alert-info">No posts...</div>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
 '<% pp.each(function (item) { %>' +
@@ -554,9 +530,7 @@ templates['#project-post'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var pp=view.collection; var prid=view.model.id; var item=pp.get(view.cur_item);' +
 'if (pp.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No posts...' +
-'</div>' +
+'<div class="alert alert-info">No posts...</div>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
 '    <%= view.itemblock(item, "#post") %>' +
@@ -604,9 +578,7 @@ templates['#project-files'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var ff=view.collection;' +
 'if (ff.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No files...' +
-'</div>' +
+'<div class="alert alert-info">No files...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
 '<ul class="media-list">' +
@@ -620,9 +592,7 @@ templates['#project-file'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var ff=view.collection; var item=ff.get(view.cur_item);' +
 'if (ff.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No files...' +
-'</div>' +
+'<div class="alert alert-info">No files...</div>' +
 '<% } else { %>' +
 '<ul class="media-list">' +
 '    <%= view.itemblock(item, "#file") %>' +
@@ -664,9 +634,7 @@ templates['#project-calendar'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var cc=view.collection; var prid=view.model.id;' +
 'if (cc.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No events...' +
-'</div>' +
+'<div class="alert alert-info">No events...</div>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
 '<% cc.each(function (item) { %>' +
@@ -678,9 +646,7 @@ templates['#project-calendar-entry'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);' +
 'if (cc.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No events...' +
-'</div>' +
+'<div class="alert alert-info">No events...</div>' +
 '<% } else { %>' +
 '<ul class="unstyled">' +
 '    <%= view.itemblock(item, "#calendar") %>' +
@@ -707,9 +673,7 @@ templates['#project-categories'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var cc=view.collection; var prid=view.model.id;' +
 'if (cc.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No categories...' +
-'</div>' +
+'<div class="alert alert-info">No categories...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
 '<dl>' +
@@ -723,9 +687,7 @@ templates['#project-category'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var cc=view.collection; var prid=view.model.id; var item=cc.get(view.cur_item);' +
 'if (cc.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No categories...' +
-'</div>' +
+'<div class="alert alert-info">No categories...</div>' +
 '<% } else { %>' +
 '<dl>' +
 '    <%= view.itemblock(item, "#category") %>' +
@@ -754,9 +716,7 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '    <h3><%- view.description() %> to-do items across all projects</h3>' +
 '</div>' +
 '<% if (td.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No todo lists...' +
-'</div>' +
+'<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
 '<dl>' +
 '<% _.each(_.uniq(td.pluck("project-id")),function (prid) { %>' +
@@ -795,9 +755,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
 'if (td.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No todo lists...' +
-'</div>' +
+'<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
 '<div class="tabbable row-fluid">' +
 '<ul class="nav nav-list span4 pull-right">' +
@@ -842,9 +800,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 'var pp=view.options.collections.project_people.get_or_create(view.model.id);' +
 'var ci=view.cur_item; var list=td.get(ci); var ftdst=list&&list.get("completed");' +
 'if (td.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No todo lists...' +
-'</div>' +
+'<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
 '<div class="row-fluid">' +
 '<dl class="todoitemsholder span8 project-todo-list">' +
@@ -903,9 +859,7 @@ templates['#project-todo-item'] = '<%= view.block("#header") %>' +
 'var items=todo_items.get_or_create(list_id); var list=td.get(list_id);' +
 'var item=items.get(item_id);' +
 'if (td.isEmpty()||items.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No todo items...' +
-'</div>' +
+'<div class="alert alert-info">No todo items...</div>' +
 '<% } else { %>' +
 '<dl class="todoitemsholder project-todo-item">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
@@ -922,9 +876,7 @@ templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 'var item=items.get(item_id);' +
 'var ccc=view.collection;' +
 'if (td.isEmpty()||items.isEmpty()) { %>' +
-'<div class="alert alert-info">' +
-'    No todo items...' +
-'</div>' +
+'<div class="alert alert-info">No todo items...</div>' +
 '<% } else { %>' +
 '<dl class="todoitemsholder project-todo-item-comments">' +
 '    <dd>' +
