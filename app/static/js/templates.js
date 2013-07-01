@@ -368,11 +368,11 @@ templates['#personitem'] = '<% var in_project=item.collection.url().indexOf("pro
 '    </div>' +
 '</li>';
 templates['#people'] = '<%= view.block("#header") %>' +
-'<% var pp=view.collection; var co=view.options.collections.companies;' +
+'<% var pp=view.collection; var cc=view.options.collections.companies;' +
 'if (pp.isEmpty()) { %>' +
 '<div class="alert alert-info">No people...</div>' +
 '<% } else {' +
-'if (co.isEmpty()) { %>' +
+'if (cc.isEmpty()) { %>' +
 '<ul class="media-list">' +
 '<% pp.each(function (item) { %>' +
 '    <%= view.itemblock(item, "#personitem") %>' +
@@ -382,12 +382,12 @@ templates['#people'] = '<%= view.block("#header") %>' +
 '<div class="tabbable tabs-left row-fluid">' +
 '<ul class="nav nav-tabs span3">' +
 '<% var fcoid=_.first(pp.pluck("company-id"));' +
-'   view.options.collections.companies.each(function (item) { %>' +
-'    <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#people_c<%- item.id %>" data-toggle="tab"><%- item.get("name") %></a></li>' +
+'   cc.each(function (item) { %>' +
+'    <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#people_c<%- item.id %>" data-toggle="tab"><%- item.name() %></a></li>' +
 '<% }) %>' +
 '</ul>' +
 '<div class="tab-content span8">' +
-'<% view.options.collections.companies.each(function (cc) { %>' +
+'<% cc.each(function (cc) { %>' +
 '    <div class="tab-pane fade<% if (fcoid==cc.id) { %> in active<% } %>" id="people_c<%- cc.id %>">' +
 '        <% var cp=pp.where({"company-id":cc.id}); if (_.isEmpty(cp)) { %>' +
 '        <div class="alert alert-info">No people in company...</div>' +
@@ -405,7 +405,7 @@ templates['#people'] = '<%= view.block("#header") %>' +
 '<% }} %>';
 templates['#project-people'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
-'<% var pp=view.collection;  var cc=view.options.collections.companies;' +
+'<% var pp=view.collection; var cc=view.options.collections.companies;' +
 'if (pp.isEmpty()) { %>' +
 '<div class="alert alert-info">No people...</div>' +
 '<% } else {' +
@@ -420,7 +420,7 @@ templates['#project-people'] = '<%= view.block("#header") %>' +
 '<ul class="nav nav-tabs span3">' +
 '<% var pc=_.uniq(pp.pluck("company-id")); var fcoid=_.first(pc);' +
 '_.each(pc, function (id) { %>' +
-'    <li<% if (fcoid==id) { %> class="active"<% } %>><a href="#people_c<%- id %>" data-toggle="tab"><%- cc.get(id)?cc.get(id).get("name"):id %></a></li>' +
+'    <li<% if (fcoid==id) { %> class="active"<% } %>><a href="#people_c<%- id %>" data-toggle="tab"><%- cc.get(id)?cc.get(id).name():id %></a></li>' +
 '<% }) %>' +
 '</ul>' +
 '<div class="tab-content span8">' +
