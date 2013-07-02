@@ -469,13 +469,41 @@
         events: {
             'click .project-todo-list .todo.icon-completed': 'uncomplete',
             'click .project-todo-list .todo.icon-uncompleted': 'complete',
-            'click #add_todo #add': 'addtodo'
+            'click .project-todo-list .todo.icon-pencil': 'edititem',
+            'click .project-todo-list .todo.icon-trash': 'removeitem',
+            'click .project-todo-list #reset': 'resetitem',
+            'click .project-todo-list #save': 'saveitem',
+            'click #add_todo #add': 'additem'
         },
         todos: function() {
             return this.options.collections.todo_items.get_or_create(this.cur_item);
         },
         currentTarget: function(e) {
             return this.todos().get($(e.currentTarget).data('id'));
+        },
+        edititem: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).edit = true;
+            this.render();
+        },
+        removeitem: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).destroy();
+            this.render();
+        },
+        saveitem: function(e) {
+            e.preventDefault();
+            var fdata = $(e.currentTarget).parents('form').serializeArray(),
+                data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value')),
+                model = this.currentTarget(e);
+            model.edit = false;
+            model.save(data);
+            this.render();
+        },
+        resetitem: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).edit = false;
+            this.render();
         },
         complete: function(e) {
             e.preventDefault();
@@ -494,7 +522,7 @@
                 'comments-count': 0
             }, {silent: true});
         },
-        addtodo: function(e) {
+        additem: function(e) {
             e.preventDefault();
             var fdata = $('form').serializeArray(),
                 data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value')),
