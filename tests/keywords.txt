@@ -19,6 +19,7 @@ ${base_company} =  ${base_path}company.png
 ${base_time_report} =  ${base_path}time_report.png
 ${base_todos} =  ${base_path}todos.png
 ${base_people} =  ${base_path}people.png
+${base_person} =  ${base_path}person.png
 ${base_project_overview} =  ${base_path}project_overview.png
 ${base_project_messages} =  ${base_path}project_messages.png
 ${base_project_todos} =  ${base_path}project_todos.png
@@ -84,7 +85,8 @@ Click on ${text} in projectnav
 
 Start app
     [Documentation]  Start application.
-    Start Process  bin/dev_appserver app --skip_sdk_update_check
+    ${PRO_TEST} =  Get Environment Variable  PRO_TEST  False
+    Run Keyword If  '${PRO_TEST}' != 'True'  Start Process  bin/dev_appserver app --skip_sdk_update_check  ELSE  Start Process  bin/dev_appserver app --skip_sdk_update_check --auth_domain=Production
 
 Start Browser For Test
     [Documentation]  Start browser.

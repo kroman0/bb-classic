@@ -10,9 +10,15 @@
 /*.jpg
 /*.html
 /*.xml
+/*.log
+/*.log.?
+/*.swp
 /.installed.cfg
 /bin/
+/dist/
 /develop-eggs/
 /parts/
 /docs/doctrees
 /docs/html
+/docs/Makefile
+/docs/make.bat

@@ -39,7 +39,6 @@
             collections: collections
         },
         oproject,
-        otodo,
         otime,
         Workspace = Backbone.Router.extend({
             routes: {
@@ -53,6 +52,7 @@
                 'projects/:id/time_entries/todo_items/:tiid': 'todo_time_entries',
                 'projects/:id/time_entries': 'project_time_entries',
                 'projects/:id/people': 'project_people',
+                'projects/:id/people/:pid': 'project_person',
                 'projects/:id/posts': 'project_posts',
                 'projects/:id/posts/:pid': 'project_post',
                 'projects/:id/posts/:pid/comments': 'project_post_comments',
@@ -129,7 +129,7 @@
     views.company_view = new bbviews.CompanyView(_.extend({
         model: models.company
     }, viewdata));
-    views.person_view = new bbviews.PersonView(_.extend({
+    views.person_view = new bbviews.AllPersonView(_.extend({
         model: models.person
     }, viewdata));
     oproject = _.extend({
@@ -137,6 +137,7 @@
     }, viewdata);
     views.project_view = new bbviews.ProjectView(oproject);
     views.project_people = new bbviews.PeopleView(oproject);
+    views.project_person = new bbviews.PersonView(oproject);
     views.project_categories = new bbviews.CategoriesView(oproject);
     views.project_category = new bbviews.CategoryView(oproject);
     views.project_posts = new bbviews.PostsView(oproject);
@@ -152,19 +153,10 @@
     views.todo_time_entries = new bbviews.TodoTimeEntriesView(otime);
     views.project_post_comments = new bbviews.PostCommentsView(oproject);
     views.project_calendar_entry_comments = new bbviews.CalendarEntryCommentsView(oproject);
-    views.todo = function(prid, item) {
-        if (!views.todo[item.id]) {
-            views.todo[item.id] = new bbviews.TodoView({model: item, collections: collections, project_id: prid});
-        }
-        return views.todo[item.id];
-    };
-    otodo = _.extend({
-        todo: views.todo
-    }, oproject);
-    views.project_todo_lists = new bbviews.TodoListsView(otodo);
-    views.project_todo_list = new bbviews.TodoListView(otodo);
-    views.project_todo_item = new bbviews.TodoItemView(otodo);
-    views.project_todo_item_comments = new bbviews.TodoItemCommentsView(otodo);
+    views.project_todo_lists = new bbviews.TodoListsView(oproject);
+    views.project_todo_list = new bbviews.TodoListView(oproject);
+    views.project_todo_item = new bbviews.TodoItemView(oproject);
+    views.project_todo_item_comments = new bbviews.TodoItemCommentsView(oproject);
     workspace.on('route', function(route, params) {
         var id, cur_item;
         if (_.contains(['projects', 'companies', 'people', 'time_report', 'todos'], route)) {
@@ -174,12 +166,15 @@
             set_model(id, collections.projects, views[route]);
             views[route].collection = collections[route].get_or_create(id);
             views.current = views[route].render();
-        } else if (_.contains(['project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list', 'project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
+        } else if (_.contains(['project_person', 'project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list', 'project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
             id = parseInt(params[0], 10);
             cur_item = parseInt(params[1], 10);
             set_model(id, collections.projects, views[route]);
             views[route].cur_item = cur_item;
             switch (route) {
+            case 'project_person':
+                views[route].collection = collections.project_people.get_or_create(id);
+                break;
             case 'project_calendar_entry':
                 views[route].collection = collections.project_calendar.get_or_create(id);
                 break;
@@ -283,7 +278,7 @@
 var BB = window.BB = new Backbone.Marionette.Application();
 
 Backbone.Marionette.TemplateCache.prototype.loadTemplate = function(templateId) {
-    var template = window.templates[templateId];
+    var template = window.bbtemplates[templateId];
     if (!template || template.length === 0) {
       throwError("Could not find template: '" + templateId + "'", 'NoTemplateError');
     }
@@ -324,15 +319,15 @@ BB.module('Projects', function(Projects, App, Backbone, Marionette, $, _) {
     });
     Projects.ItemView = Marionette.ItemView.extend({
         tagName: 'li',
-        template: '#oneproject-template'
+        template: '#oneproject'
     });
     Projects.EmptyView = Marionette.ItemView.extend({
-        template: '#emptyprojects-template'
+        template: '#emptyprojects'
     });
 
     Projects.View = Marionette.CompositeView.extend({
         id: 'projects',
-        template: '#projects-template',
+        template: '#projects',
         itemView: Projects.ItemView,
         emptyView: Projects.EmptyView,
         templateHelpers: function() {return {view: this}; },
@@ -355,9 +350,9 @@ BB.module('Projects', function(Projects, App, Backbone, Marionette, $, _) {
     });
     Projects.Header = Marionette.View.extend({
         className: 'page-header',
-        template: '#header1-template',
+        template: '#header1',
         render: function() {
-            this.$el.html(_.template(window.templates[this.template], this.name(), {variable: 'name'}));
+            this.$el.html(_.template(window.bbtemplates[this.template], this.name(), {variable: 'name'}));
             return this;
         },
         name: function() {
@@ -391,19 +386,19 @@ BB.module('Companies', function(Companies, App, Backbone, Marionette, $, _) {
 
     Companies.ItemView = Marionette.ItemView.extend({
         tagName: 'li',
-        template: '#onecompany-template'
+        template: '#onecompany'
     });
 
     Companies.EmptyView = Marionette.ItemView.extend({
         tagName: 'li',
-        template: '#emptycompanies-template'
+        template: '#emptycompanies'
     });
 
     Companies.View = Marionette.CompositeView.extend({
         tagName: 'ul',
         id: 'companies',
         className: 'unstyled',
-        template: '#companies-template',
+        template: '#companies',
         itemView: Companies.ItemView,
         emptyView: Companies.EmptyView,
         name: function() {
@@ -418,9 +413,9 @@ BB.module('Companies', function(Companies, App, Backbone, Marionette, $, _) {
     });
     Companies.Header = Marionette.View.extend({
         className: 'page-header',
-        template: '#header1-template',
+        template: '#header1',
         render: function() {
-            this.$el.html(_.template(window.templates[this.template], this.name(), {variable: 'name'}));
+            this.$el.html(_.template(window.bbtemplates[this.template], this.name(), {variable: 'name'}));
             return this;
         },
         name: function() {
@@ -460,17 +455,17 @@ BB.module('People', function(People, App, Backbone, Marionette, $, _) {
         templateHelpers: function() {return {item: this.model}; },
         tagName: 'li',
         className: 'media well well-small',
-        template: '#personitem-template'
+        template: '#personitem'
     });
 
     People.EmptyView = Marionette.ItemView.extend({
 //         tagName: "li",
-        template: '#emptypeople-template'
+        template: '#emptypeople'
     });
 
     People.View = Marionette.CompositeView.extend({
         id: 'people',
-        template: '#people-template',
+        template: '#people',
         itemView: People.ItemView,
         emptyView: People.EmptyView,
         templateHelpers: function() {return {view: this}; },
@@ -493,9 +488,9 @@ BB.module('People', function(People, App, Backbone, Marionette, $, _) {
     });
     People.Header = Marionette.View.extend({
         className: 'page-header',
-        template: '#header1-template',
+        template: '#header1',
         render: function() {
-            this.$el.html(_.template(window.templates[this.template], this.name(), {variable: 'name'}));
+            this.$el.html(_.template(window.bbtemplates[this.template], this.name(), {variable: 'name'}));
             return this;
         },
         name: function() {
@@ -504,13 +499,13 @@ BB.module('People', function(People, App, Backbone, Marionette, $, _) {
     });
     People.PersonView = Marionette.ItemView.extend({
         templateHelpers: function() {return {item: this.model}; },
-        template: '#person-template'
+        template: '#person'
     });
     People.PersonHeader = Marionette.View.extend({
         className: 'page-header',
-        template: '#header1-template',
+        template: '#header1',
         render: function() {
-            this.$el.html(_.template(window.templates[this.template], this.name(), {variable: 'name'}));
+            this.$el.html(_.template(window.bbtemplates[this.template], this.name(), {variable: 'name'}));
             return this;
         },
         name: function() {
@@ -566,17 +561,17 @@ BB.module('Time', function(Time, App, Backbone, Marionette, $, _) {
         templateHelpers: function() {return {item: this.model}; },
         tagName: 'tr',
         className: function() {return this.model.get('hours') > 2 ? 'warning' : undefined; },
-        template: '#time-template'
+        template: '#time'
     });
 
     Time.EmptyView = Marionette.ItemView.extend({
 //         tagName: "li",
-        template: '#emptytime-template'
+        template: '#emptytime'
     });
 
     Time.View = Marionette.CompositeView.extend({
         id: 'time-report',
-        template: '#time-report-template',
+        template: '#time-report',
         itemView: Time.ItemView,
         emptyView: Time.EmptyView,
         pagerid: 'time-report',
@@ -599,7 +594,7 @@ BB.module('Time', function(Time, App, Backbone, Marionette, $, _) {
             this.collection.fetch({cache: true});
         },
         renderpager: function() {
-            return _.template(window.templates['#pager-template'], this, {variable: 'view'});
+            return _.template(window.bbtemplates['#pager'], this, {variable: 'view'});
         },
         templateHelpers: function() {return {view: this}; },
         appendHtml: function(collectionView, itemView) {
@@ -617,9 +612,9 @@ BB.module('Time', function(Time, App, Backbone, Marionette, $, _) {
     });
     Time.Header = Marionette.View.extend({
         className: 'page-header',
-        template: '#header1-template',
+        template: '#header1',
         render: function() {
-            this.$el.html(_.template(window.templates[this.template], this.name(), {variable: 'name'}));
+            this.$el.html(_.template(window.bbtemplates[this.template], this.name(), {variable: 'name'}));
             return this;
         },
         name: function() {
@@ -672,19 +667,19 @@ BB.module('Todo', function(Todo, App, Backbone, Marionette, $, _) {
     Todo.ItemView = Marionette.ItemView.extend({
         templateHelpers: function() {return {list: this.model}; },
         tagName: 'dl',
-        template: '#todolist-template'
+        template: '#todolist'
     });
 
     Todo.EmptyView = Marionette.ItemView.extend({
         tagName: 'li',
-        template: '#emptytodos-template'
+        template: '#emptytodos'
     });
 
     Todo.View = Marionette.CompositeView.extend({
         tagName: 'ul',
         id: 'todos',
         className: 'unstyled',
-        template: '#todo-lists-template',
+        template: '#todo-lists',
         itemView: Todo.ItemView,
         emptyView: Todo.EmptyView,
         events: {
@@ -724,9 +719,9 @@ BB.module('Todo', function(Todo, App, Backbone, Marionette, $, _) {
     });
     Todo.Header = Marionette.View.extend({
         className: 'page-header',
-        template: '#header1-template',
+        template: '#header1',
         render: function() {
-            this.$el.html(_.template(window.templates[this.template], this.name(), {variable: 'name'}));
+            this.$el.html(_.template(window.bbtemplates[this.template], this.name(), {variable: 'name'}));
             return this;
         },
         name: function() {
@@ -760,10 +755,10 @@ BB.module('Base', function(Base, App, Backbone, Marionette, $, _) {
         url: '/api/me.xml'
     });
     var NavBarView = Base.NavBarView = Marionette.View.extend({
-        template: '#nav-template',
+        template: '#nav',
         className: 'navbar-inner',
         render: function() {
-            this.$el.html(_.template(window.templates[this.template], this, {variable: 'view'}));
+            this.$el.html(_.template(window.bbtemplates[this.template], this, {variable: 'view'}));
             return this;
         },
         initialize: function() {
