@@ -793,7 +793,34 @@ templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-i
 '<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
 '<% } %>&nbsp;' +
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>';
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>' +
+'<i class="todo icon-pencil" data-id="<%- item.id %>"></i>' +
+'<i class="todo icon-trash" data-id="<%- item.id %>"></i>';
+templates['#todoedit'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-id");' +
+'var pp=view.options.collections.project_people.get_or_create(view.model.id);' +
+'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(tdlid); %>' +
+'<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
+'<% if (list&&list.get("tracked")) { %>' +
+'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
+'<% } %>&nbsp;' +
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>' +
+'<i class="todo icon-pencil" data-id="<%- item.id %>"></i>' +
+'<i class="todo icon-trash" data-id="<%- item.id %>"></i>' +
+'<div id="edit_todo_wrapper"><form id="edit_todo">' +
+'<label for="todoContent">Todo content</label>' +
+'<textarea id="todoContent" name="content" required><%= item.get("content") %></textarea>' +
+'<label for="todoDueAt">Due date</label>' +
+'<input id="todoDueAt" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value="<%= item.get("due-at") %>"><br />' +
+'<label for="responsiblePerson">Responsible person</label>' +
+'<select  id="responsiblePerson" name="responsible-party">' +
+'<option value="">Nobody</option>' +
+'<% pp.each(function (i) { %><option value="<%- i.id %>" <% if (i.id==item.get("responsible-party-id")) { %>selected="selected"<% } %>><%- i.name() %></option><% }) %>' +
+'</select>' +
+'<div class="checkbox"><label><input type="checkbox" name="notify" value="true"> Notify responsible person</label></div>' +
+'<button id="save" data-id="<%- item.id %>" class="btn btn-default" title="Save"><i class="icon-ok"></i></button>' +
+'<button id="reset" data-id="<%- item.id %>" class="btn btn-default" title="Cancel"><i class="icon-off"></i></button>' +
+'</form></div>';
 templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
@@ -811,9 +838,8 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '    </dd>' +
 '<% }) %>' +
 '    <dd>' +
-'        <button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add todo</button>' +
+'        <button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add an item</button>' +
 '        <div id="add_todo_wrapper" class="collapse"><form id="add_todo">' +
-'<legend>Add todo</legend>' +
 '<label for="todoContent">Todo content</label>' +
 '<textarea id="todoContent" name="content" required></textarea>' +
 '<label for="todoDueAt">Due date</label>' +
