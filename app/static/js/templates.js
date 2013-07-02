@@ -793,6 +793,7 @@ templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-i
 '<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
 '<% } %>&nbsp;' +
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
+'<% if (_.isFinite(item.get("responsible-party-id"))) { %><i class="icon-user"></i><% } %>' +
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="icon-comment icon-white"></i><%- item.get("comments-count") %></a>' +
 '<i class="todo icon-pencil" data-id="<%- item.id %>"></i>' +
 '<i class="todo icon-trash" data-id="<%- item.id %>"></i>';
