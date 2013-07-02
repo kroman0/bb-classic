@@ -190,12 +190,12 @@
         events: {
             'click .project-time.previous': 'previous',
             'click .project-time.next': 'next',
-            'click .project-time #add': 'addtime',
-            'click .project-time #edit': 'edittime',
-            'click .project-time #remove': 'removetime',
-            'click .project-time #save': 'savetime',
-            'click .project-time #reset': 'resettime',
-            'click .project-time thead>tr>th': 'sorttime'
+            'click .project-time #add': 'additem',
+            'click .project-time #edit': 'edititem',
+            'click .project-time #remove': 'removeitem',
+            'click .project-time #save': 'saveitem',
+            'click .project-time #reset': 'resetitem',
+            'click .project-time thead>tr>th': 'sortitems'
         },
         parseData: function(selector) {
             var data = {};
@@ -211,13 +211,13 @@
                 'person-name': this.options.collections.people.get(item.get('person-id')).name()
             }, {silent: true});
         },
-        sorttime: function(e) {
+        sortitems: function(e) {
             e.preventDefault();
             var id = $(e.currentTarget).data('sort') || $(e.currentTarget).text();
             this.collection.setSorting(id, -this.collection.state.order);
             this.collection.fullCollection.sort();
         },
-        addtime: function(e) {
+        additem: function(e) {
             e.preventDefault();
             var context = this;
             this.collection.create(this.parseData('.addtime'), {
@@ -235,22 +235,22 @@
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).parents('tr').data('id'));
         },
-        edittime: function(e) {
+        edititem: function(e) {
             e.preventDefault();
             this.currentTarget(e).edit = true;
             this.render();
         },
-        resettime: function(e) {
+        resetitem: function(e) {
             e.preventDefault();
             this.currentTarget(e).edit = false;
             this.render();
         },
-        removetime: function(e) {
+        removeitem: function(e) {
             e.preventDefault();
             this.currentTarget(e).destroy();
             this.render();
         },
-        savetime: function(e) {
+        saveitem: function(e) {
             e.preventDefault();
             var model = this.currentTarget(e);
             model.edit = false;
@@ -266,12 +266,12 @@
         events: {
             'click .todo-time.previous': 'previous',
             'click .todo-time.next': 'next',
-            'click .todo-time #add': 'addtime',
-            'click .todo-time #edit': 'edittime',
-            'click .todo-time #remove': 'removetime',
-            'click .todo-time #save': 'savetime',
-            'click .todo-time #reset': 'resettime',
-            'click .todo-time thead>tr>th': 'sorttime'
+            'click .todo-time #add': 'additem',
+            'click .todo-time #edit': 'edititem',
+            'click .todo-time #remove': 'removeitem',
+            'click .todo-time #save': 'saveitem',
+            'click .todo-time #reset': 'resetitem',
+            'click .todo-time thead>tr>th': 'sortitems'
         },
         finishItem: function(item) {
             return item.set({
@@ -292,11 +292,11 @@
             'click .time-report.previous': 'previous',
             'click .time-report.next': 'next',
             'click #getreport': 'getreport',
-            'click .time-report #edit': 'edittime',
-            'click .time-report #remove': 'removetime',
-            'click .time-report #save': 'savetime',
-            'click .time-report #reset': 'resettime',
-            'click .time-report thead>tr>th': 'sorttime'
+            'click .time-report #edit': 'edititem',
+            'click .time-report #remove': 'removeitem',
+            'click .time-report #save': 'saveitem',
+            'click .time-report #reset': 'resetitem',
+            'click .time-report thead>tr>th': 'sortitems'
         },
         getreport: function(e) {
             e.preventDefault();
@@ -481,16 +481,9 @@
         currentTarget: function(e) {
             return this.todos().get($(e.currentTarget).data('id'));
         },
-        edititem: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).edit = true;
-            this.render();
-        },
-        removeitem: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).destroy();
-            this.render();
-        },
+        edititem: bbviews.TimeEntriesView.prototype.edititem,
+        resetitem: bbviews.TimeEntriesView.prototype.edititem,
+        removeitem: bbviews.TimeEntriesView.prototype.removeitem,
         saveitem: function(e) {
             e.preventDefault();
             var fdata = $(e.currentTarget).parents('form').serializeArray(),
@@ -498,11 +491,6 @@
                 model = this.currentTarget(e);
             model.edit = false;
             model.save(data);
-            this.render();
-        },
-        resetitem: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).edit = false;
             this.render();
         },
         complete: function(e) {
