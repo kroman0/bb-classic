@@ -796,17 +796,7 @@ templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-i
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>' +
 '<i class="todo icon-pencil" data-id="<%- item.id %>"></i>' +
 '<i class="todo icon-trash" data-id="<%- item.id %>"></i>';
-templates['#todoedit'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-id");' +
-'var pp=view.options.collections.project_people.get_or_create(view.model.id);' +
-'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(tdlid); %>' +
-'<i class="todo icon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
-'<% if (list&&list.get("tracked")) { %>' +
-'<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="icon-time"></i></a>' +
-'<% } %>&nbsp;' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><%- item.get("comments-count") %><i class="icon-comment icon-white"></i></a>' +
-'<i class="todo icon-pencil" data-id="<%- item.id %>"></i>' +
-'<i class="todo icon-trash" data-id="<%- item.id %>"></i>' +
+templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<div id="edit_todo_wrapper"><form id="edit_todo">' +
 '<label for="todoContent">Todo content</label>' +
 '<textarea id="todoContent" name="content" required><%= item.get("content") %></textarea>' +
