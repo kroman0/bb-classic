@@ -446,38 +446,37 @@ templates['#project-person'] = '<%= view.block("#header") %>' +
 '    <%= view.itemblock(item, "#personitem") %>' +
 '</ul>' +
 '<% } %>';
+templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view.options.mydata?view.options.mydata.id:0; %>' +
+'<tr class="addtime">' +
+'    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
+'    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>' +
+'    <td>' +
+'        <div>' +
+'            <i class="icon-user"></i><select name="person-id">' +
+'                <% pp.each(function (i) { %>' +
+'                    <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
+'                <% }) %>' +
+'            </select>' +
+'        </div>' +
+'    </td>' +
+'    <td>' +
+'        <input type="text" class="input-small" name="description">' +
+'    </td>' +
+'    <td>' +
+'        <button id="add" title="Add"><i class="icon-plus"></i></button>' +
+'    </td>' +
+'</tr>';
 templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
-'<% var tt=view.collection; var prid=view.model.id;' +
-'var pp=view.options.collections.people;' +
-'var mid=view.options.mydata?view.options.mydata.id:0;' +
-'if (tt.isEmpty()) { %>' +
+'<% if (view.collection.isEmpty()) { %>' +
 '<div class="alert alert-info">No time entries...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
 '    <%= view.block("#time-thead") %>' +
 '    <tbody>' +
-'        <tr class="addtime">' +
-'            <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
-'            <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>' +
-'            <td>' +
-'                <div>' +
-'                    <i class="icon-user"></i><select name="person-id">' +
-'                        <% pp.each(function (i) { %>' +
-'                            <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
-'                        <% }) %>' +
-'                    </select>' +
-'                </div>' +
-'            </td>' +
-'            <td>' +
-'                <input type="text" class="input-small" name="description">' +
-'            </td>' +
-'            <td>' +
-'                <button id="add" title="Add"><i class="icon-plus"></i></button>' +
-'            </td>' +
-'        </tr>' +
-'        <% tt.each(function (item) { %>' +
+'        <%= view.block("#timeadd") %>' +
+'        <% view.collection.each(function (item) { %>' +
 '            <%= view.itemblock(item, "#time") %>' +
 '        <% }) %>' +
 '    </tbody>' +
@@ -812,25 +811,10 @@ templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_
 '<button id="save" data-id="<%- item.id %>" class="btn btn-default" title="Save"><i class="icon-ok"></i></button>' +
 '<button id="reset" data-id="<%- item.id %>" class="btn btn-default" title="Cancel"><i class="icon-off"></i></button>' +
 '</form></div>';
-templates['#project-todo-list'] = '<%= view.block("#header") %>' +
-'<%= view.block("#project-nav") %>' +
-'<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
-'var pp=view.options.collections.project_people.get_or_create(view.model.id);' +
-'var ci=view.cur_item; var list=td.get(ci); var ftdst=list&&list.get("completed");' +
-'if (td.isEmpty()) { %>' +
-'<div class="alert alert-info">No todo lists...</div>' +
-'<% } else { %>' +
-'<div class="row-fluid">' +
-'<dl class="todoitemsholder span8 project-todo-list">' +
-'    <%= view.itemblock(list, "#todolist") %>' +
-'<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
-'    <dd>' +
-'<%= view.itemblock(item, "#todo") %>' +
-'    </dd>' +
-'<% }) %>' +
-'    <dd>' +
-'        <button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add an item</button>' +
-'        <div id="add_todo_wrapper" class="collapse"><form id="add_todo">' +
+templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
+'<dd>' +
+'<button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add an item</button>' +
+'<div id="add_todo_wrapper" class="collapse"><form id="add_todo">' +
 '<label for="todoContent">Todo content</label>' +
 '<textarea id="todoContent" name="content" required></textarea>' +
 '<label for="todoDueAt">Due date</label>' +
@@ -843,7 +827,23 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<div class="checkbox"><label><input type="checkbox" name="notify" value="true"> Notify responsible person</label></div>' +
 '<button id="add" class="btn btn-default" title="Add"><i class="icon-plus"></i></button>' +
 '</form></div>' +
+'</dd>';
+templates['#project-todo-list'] = '<%= view.block("#header") %>' +
+'<%= view.block("#project-nav") %>' +
+'<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
+'var ci=view.cur_item; var list=td.get(ci); var ftdst=list&&list.get("completed");' +
+'if (td.isEmpty()) { %>' +
+'<div class="alert alert-info">No todo lists...</div>' +
+'<% } else { %>' +
+'<div class="row-fluid">' +
+'<dl class="todoitemsholder span8 project-todo-list">' +
+'    <%= view.itemblock(list, "#todolist") %>' +
+'<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
+'    <dd>' +
+'<%= view.itemblock(item, "#todo") %>' +
 '    </dd>' +
+'<% }) %>' +
+'<%= view.block("#todoadd") %>' +
 '</dl>' +
 '<div class="tabbable span4 pull-right">' +
 '<ul class="nav nav-pills">' +
