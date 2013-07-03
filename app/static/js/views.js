@@ -42,7 +42,13 @@
         },
         BBView = Backbone.View.extend({
             deps: function() {
-                return this.collection.fetchonce();
+                return this.collection ? [this.collection] : [];
+            },
+            fetch: function() {
+                var i, deps = this.deps();
+                for (i in deps) {
+                    if (deps.hasOwnProperty(i) && !deps[i].fetchonce()) {break;}
+                }
             },
             title: function() {
                 return this.model.name();
@@ -64,6 +70,7 @@
             },
             render: function() {
                 this.$el.html(render(this.template, {'view': this}));
+                this.fetch();
                 return this;
             },
             itemblock: function(item, template) {
@@ -75,7 +82,7 @@
         }),
         ProjectBBView = BBView.extend({
             deps: function() {
-                return this.collection.fetchonce() && this.options.collections.projects.fetchonce();
+                return [this.collection, this.options.collections.projects];
             },
             path: function() {
                 return [
@@ -133,7 +140,7 @@
     // All People View - people
     bbviews.AllPeopleView = BBView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.companies.fetchonce();
+            return [this.collection, this.options.collections.companies];
         },
         template: '#people',
         title: 'People'
@@ -146,7 +153,7 @@
     // Project View - projects/:id
     bbviews.ProjectView = BBView.extend({
         deps: function() {
-            return this.options.collections.projects.fetchonce();
+            return [this.options.collections.projects];
         },
         path: function() {
             return ProjectBBView.prototype.path.apply(this).slice(0, -1);
@@ -161,7 +168,7 @@
     // Company View - companies/:id
     bbviews.CompanyView = BBView.extend({
         deps: function() {
-            return this.options.collections.companies.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
+            return [this.options.collections.companies, this.options.collections.projects, this.options.collections.people];
         },
         path: function() {
             return [cpath];
@@ -171,7 +178,7 @@
     // People View - projects/:id/people
     bbviews.PeopleView = ProjectBBView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.companies.fetchonce();
+            return [this.collection, this.options.collections.projects, this.options.collections.companies];
         },
         template: '#project-people',
         title: 'People'
@@ -184,7 +191,7 @@
     // Time Entries View - projects/:id/time_entries
     bbviews.TimeEntriesView = PagesBBView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce();
+            return [this.collection, this.options.collections.projects, this.options.collections.people];
         },
         pagerid: 'project-time',
         events: {
@@ -285,7 +292,7 @@
     // Time Report View - time_report
     bbviews.TimeReportView = bbviews.TimeEntriesView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
+            return [this.collection, this.options.collections.projects, this.options.collections.people, this.options.collections.companies];
         },
         pagerid: 'time-report',
         events: {
@@ -317,7 +324,7 @@
     // Post Comments View - projects/:id/posts/:pid/comments
     bbviews.PostCommentsView = TitleBBView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_posts.get_or_create(this.model.id).fetchonce();
+            return [this.collection, this.options.collections.projects, this.options.collections.project_posts.get_or_create(this.model.id)];
         },
         template: '#project-post-comments',
         extrapath: function() {
@@ -339,7 +346,7 @@
     // Calendar Entry Comments View - projects/:id/calendar/:cid/comments
     bbviews.CalendarEntryCommentsView = bbviews.PostCommentsView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.project_calendar.get_or_create(this.model.id).fetchonce();
+            return [this.collection, this.options.collections.projects, this.options.collections.project_calendar.get_or_create(this.model.id)];
         },
         template: '#project-calendar-entry-comments',
         nameParent: 'Calendar',
@@ -362,7 +369,7 @@
     // Files View - projects/:id/files
     bbviews.FilesView = PagesBBView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.options.collections.people.fetchonce() && this.options.collections.project_categories.get_or_create(this.model.id).fetchonce();
+            return [this.collection, this.options.collections.projects, this.options.collections.people, this.options.collections.project_categories.get_or_create(this.model.id)];
         },
         pagerid: 'project-files',
         events: {
@@ -406,7 +413,7 @@
     // All Person View - people/:id
     bbviews.AllPersonView = BBView.extend({
         deps: function() {
-            return this.options.collections.people.fetchonce() && this.options.collections.companies.fetchonce();
+            return [this.options.collections.people, this.options.collections.companies];
         },
         template: '#person',
         path: function() {
@@ -464,7 +471,7 @@
     // Todo List View - projects/:id/todo_lists/:tlid
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todos().fetchonce() && this.options.collections.project_people.get_or_create(this.model.id).fetchonce();
+            return [this.collection, this.options.collections.projects, this.todos(), this.options.collections.project_people.get_or_create(this.model.id)];
         },
         events: {
             'click .project-todo-list .todo.icon-completed': 'uncomplete',
@@ -531,7 +538,7 @@
     bbviews.TodoItemView = bbviews.TodoListView.extend({
         todo_item: null,
         deps: function() {
-            return this.collection.fetchonce() && this.options.collections.projects.fetchonce() && this.todo_lists.fetchonce() && this.todos().fetchonce();
+            return [this.collection, this.options.collections.projects, this.todo_lists, this.todos()];
         },
         events: {
             'click .project-todo-item .todo.icon-completed': 'uncomplete',

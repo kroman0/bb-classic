@@ -8,7 +8,6 @@
             'jquery',
             'underscore',
             'backbone',
-            'bbgeneral',
             'bbmodels',
             'bbcollections',
             'bbviews',
@@ -20,19 +19,18 @@
             root.jQuery,
             root._,
             root.Backbone,
-            root.bbgeneral,
             root.bbmodels,
             root.bbcollections,
             root.bbviews
         );
     }
-}(this, function($, _, Backbone, bbgeneral, bbmodels, bbcollections, bbviews) {
+}(this, function($, _, Backbone, bbmodels, bbcollections, bbviews) {
     'use strict';
     var i,
         models = {},
         collections = {},
         views = {},
-        onReset = bbgeneral.onReset,
+//         onReset = bbgeneral.onReset,
         viewdata = {
             el: '.content',
             collections: collections
@@ -108,11 +106,11 @@
         collection: collections.todos,
         mydata: models.mydata
     }, viewdata));
-    for (i in collections) {
-        if (collections.hasOwnProperty(i)) {
-            collections[i].on('reset', onReset);
-        }
-    }
+//     for (i in collections) {
+//         if (collections.hasOwnProperty(i)) {
+//             collections[i].on('reset', onReset);
+//         }
+//     }
     collections.project_people = new bbcollections.People();
     collections.project_categories = new bbcollections.Categories();
     collections.project_posts = new bbcollections.Posts();
@@ -194,9 +192,9 @@
             document.title = views.current.PageTitle();
         }
 //         add_hash();
-        if (views.current && views.current.deps) {
-            views.current.deps();
-        }
+//         if (views.current && views.current.deps) {
+//             views.current.deps();
+//         }
         $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
             return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
         })).addClass('active');
