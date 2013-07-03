@@ -79,6 +79,7 @@
                     return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
                 })).filter(':last').addClass('active');
                 this.fetch();
+//                 add_hash();
                 return this;
             },
             itemblock: function(item, template) {

@@ -4,7 +4,6 @@
     if (typeof root.define === 'function' && root.define.amd) {
         // AMD. Register as the bbmain module.
         root.define('bbmain', [
-            'jquery',
             'underscore',
             'backbone',
             'bbmodels',
@@ -15,7 +14,6 @@
     } else {
         // Browser globals
         root.BB = factory(
-            root.jQuery,
             root._,
             root.Backbone,
             root.bbmodels,
@@ -23,10 +21,9 @@
             root.bbviews
         );
     }
-}(this, function($, _, Backbone, bbmodels, bbcollections, bbviews) {
+}(this, function(_, Backbone, bbmodels, bbcollections, bbviews) {
     'use strict';
-    var i,
-        models = {},
+    var models = {},
         collections = {},
         views = {},
         viewdata = {
@@ -181,7 +178,6 @@
             }
             views.current = views[route].render();
         }
-//         add_hash();
     }).on('route:project_todo_item', function(id, tlid, tiid) {
         set_model(id, collections.projects, views.project_todo_item);
         views.project_todo_item.cur_item = tlid;
