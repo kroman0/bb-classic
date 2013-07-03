@@ -1,4 +1,5 @@
 /*jslint nomen: true, white: true*/
+/*global document*/
 (function(root, factory) {
     'use strict';
     if (typeof root.define === 'function' && root.define.amd) {
@@ -70,6 +71,13 @@
             },
             render: function() {
                 this.$el.html(render(this.template, {'view': this}));
+                if (this.PageTitle) {document.title = this.PageTitle();}
+                $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
+                    return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
+                })).addClass('active');
+                $(_.filter($('div.content ul.projectnav li').removeClass('active'), function(i) {
+                    return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
+                })).filter(':last').addClass('active');
                 this.fetch();
                 return this;
             },
