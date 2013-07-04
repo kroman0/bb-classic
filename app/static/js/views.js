@@ -71,6 +71,7 @@
             },
             render: function() {
                 this.$el.html(render(this.template, {'view': this}));
+                this.delegateEvents();
                 if (this.PageTitle) {document.title = this.PageTitle();}
                 $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
                     return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
@@ -498,7 +499,7 @@
             return this.todos().get($(e.currentTarget).data('id'));
         },
         edititem: bbviews.TimeEntriesView.prototype.edititem,
-        resetitem: bbviews.TimeEntriesView.prototype.edititem,
+        resetitem: bbviews.TimeEntriesView.prototype.resetitem,
         removeitem: bbviews.TimeEntriesView.prototype.removeitem,
         saveitem: function(e) {
             e.preventDefault();

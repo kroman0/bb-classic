@@ -27,7 +27,7 @@
         collections = {},
         views = {},
         viewdata = {
-            el: '.content',
+            className: 'content',
             collections: collections
         },
         oproject,
@@ -74,6 +74,9 @@
             }
             return view.model;
         },
+        set_current = function(view) {
+            Backbone.$('.container').empty().append(view.render().el);
+        },
         workspace = new Workspace();
     models.mydata = new bbmodels.MyModel();
     models.project = new bbmodels.Project();
@@ -84,7 +87,6 @@
     collections.people = new bbcollections.People();
     collections.todos = new bbcollections.TodoLists();
     collections.times = new bbcollections.TimeEntries();
-    views.current = null;
     views.projects = new bbviews.ProjectsView(_.extend({
         collection: collections.projects
     }, viewdata));
@@ -147,12 +149,12 @@
     workspace.on('route', function(route, params) {
         var id, cur_item;
         if (_.contains(['projects', 'companies', 'people', 'time_report', 'todos'], route)) {
-            views.current = views[route].render();
+            set_current(views[route]);
         } else if (_.contains(['project_people', 'project_categories', 'project_time_entries', 'project_posts', 'project_files', 'project_calendar', 'project_todo_lists'], route)) {
             id = parseInt(params[0], 10);
             set_model(id, collections.projects, views[route]);
             views[route].collection = collections[route].get_or_create(id);
-            views.current = views[route].render();
+            set_current(views[route]);
         } else if (_.contains(['project_person', 'project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list', 'project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
             id = parseInt(params[0], 10);
             cur_item = parseInt(params[1], 10);
@@ -176,33 +178,33 @@
             default:
                 views[route].collection = collections[route].get_or_create(cur_item);
             }
-            views.current = views[route].render();
+            set_current(views[route]);
         }
     }).on('route:project_todo_item', function(id, tlid, tiid) {
         set_model(id, collections.projects, views.project_todo_item);
         views.project_todo_item.cur_item = tlid;
         views.project_todo_item.todo_item = tiid;
         views.project_todo_item.collection = views.project_todo_item.todo_lists = collections.project_todo_lists.get_or_create(id);
-        views.current = views.project_todo_item.render();
+        set_current(views.project_todo_item);
     }).on('route:project_todo_item_comments', function(id, tlid, tiid) {
         set_model(id, collections.projects, views.project_todo_item_comments);
         views.project_todo_item_comments.cur_item = tlid;
         views.project_todo_item_comments.todo_item = tiid;
         views.project_todo_item_comments.todo_lists = collections.project_todo_lists.get_or_create(id);
         views.project_todo_item_comments.collection = collections.project_todo_item_comments.get_or_create(tiid);
-        views.current = views.project_todo_item_comments.render();
+        set_current(views.project_todo_item_comments);
     }).on('route:project', function(id) {
         set_model(id, collections.projects, views.project_view);
-        views.current = views.project_view.render();
+        set_current(views.project_view);
     }).on('route:company', function(id) {
         set_model(id, collections.companies, views.company_view);
-        views.current = views.company_view.render();
+        set_current(views.company_view);
     }).on('route:person', function(id) {
         set_model(id, collections.people, views.person_view);
-        views.current = views.person_view.render();
+        set_current(views.person_view);
     }).on('route:me', function() {
         views.person_view.model = models.mydata;
-        views.current = views.person_view.render();
+        set_current(views.person_view);
     }).on('route:defaultRoute', function() {
         this.navigate('projects', {
             trigger: true
