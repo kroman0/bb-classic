@@ -26,7 +26,9 @@
         onReset = bbgeneral.onReset,
         BBCollectionExtra = {
             initialize: function() {
-                this.on('all', onReset);
+                this.on('reset', onReset);
+                this.on('remove', onReset);
+                this.on('reset', onReset);
             },
             fetchonce: function() {
                 var fetched = this.fetched;
