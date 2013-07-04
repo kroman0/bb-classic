@@ -35,6 +35,22 @@
             hashpp,
             pp
         ],
+        timeevents = {
+            'click .previous': 'previous',
+            'click .next': 'next',
+            'click #edit': 'edititem',
+            'click #remove': 'removeitem',
+            'click #save': 'saveitem',
+            'click #reset': 'resetitem',
+            'click thead>tr>th': 'sortitems'
+        },
+        todoevents = {
+            'click .todo.icon-completed': 'uncomplete',
+            'click .todo.icon-uncompleted': 'complete',
+            'click .todo.icon-pencil': 'edititem',
+            'click #reset': 'resetitem',
+            'click #save': 'saveitem'
+        },
         _result = _.result,
         $ = Backbone.$,
         render = function(template, data, settings) {
@@ -109,6 +125,10 @@
             }
         }),
         PagesBBView = ProjectBBView.extend({
+            events: {
+                'click .previous': 'previous',
+                'click .next': 'next'
+            },
             previous: function(e) {
                 e.preventDefault();
                 return this.collection.hasPrevious() && this.collection.getPreviousPage();
@@ -203,16 +223,9 @@
             return [this.collection, this.options.collections.projects, this.options.collections.people];
         },
         pagerid: 'project-time',
-        events: {
-            'click .project-time.previous': 'previous',
-            'click .project-time.next': 'next',
-            'click .project-time #add': 'additem',
-            'click .project-time #edit': 'edititem',
-            'click .project-time #remove': 'removeitem',
-            'click .project-time #save': 'saveitem',
-            'click .project-time #reset': 'resetitem',
-            'click .project-time thead>tr>th': 'sortitems'
-        },
+        events: _.extend(timeevents, {
+            'click #add': 'additem'
+        }),
         parseData: function(selector) {
             var data = {};
             data.date = this.$(selector + ' [name=date]').val();
@@ -279,16 +292,6 @@
     // Todo Time Entries View - projects/:id/time_entries/todo_items/:tiid
     bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
         pagerid: 'todo-time',
-        events: {
-            'click .todo-time.previous': 'previous',
-            'click .todo-time.next': 'next',
-            'click .todo-time #add': 'additem',
-            'click .todo-time #edit': 'edititem',
-            'click .todo-time #remove': 'removeitem',
-            'click .todo-time #save': 'saveitem',
-            'click .todo-time #reset': 'resetitem',
-            'click .todo-time thead>tr>th': 'sortitems'
-        },
         finishItem: function(item) {
             return item.set({
                 'project-id': this.model.id,
@@ -304,16 +307,9 @@
             return [this.collection, this.options.collections.projects, this.options.collections.people, this.options.collections.companies];
         },
         pagerid: 'time-report',
-        events: {
-            'click .time-report.previous': 'previous',
-            'click .time-report.next': 'next',
-            'click #getreport': 'getreport',
-            'click .time-report #edit': 'edititem',
-            'click .time-report #remove': 'removeitem',
-            'click .time-report #save': 'saveitem',
-            'click .time-report #reset': 'resetitem',
-            'click .time-report thead>tr>th': 'sortitems'
-        },
+        events: _.extend(timeevents, {
+            'click #getreport': 'getreport'
+        }),
         getreport: function(e) {
             e.preventDefault();
             this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
@@ -381,10 +377,6 @@
             return [this.collection, this.options.collections.projects, this.options.collections.people, this.options.collections.project_categories.get_or_create(this.model.id)];
         },
         pagerid: 'project-files',
-        events: {
-            'click .project-files.previous': 'previous',
-            'click .project-files.next': 'next'
-        },
         template: '#project-files',
         title: 'Files'
     });
@@ -407,10 +399,6 @@
     // Categories View - projects/:id/categories
     bbviews.CategoriesView = PagesBBView.extend({
         pagerid: 'project-categories',
-        events: {
-            'click .project-categories.previous': 'previous',
-            'click .project-categories.next': 'next'
-        },
         template: '#project-categories',
         title: 'Categories'
     });
@@ -482,15 +470,10 @@
         deps: function() {
             return [this.collection, this.options.collections.projects, this.todos(), this.options.collections.project_people.get_or_create(this.model.id)];
         },
-        events: {
-            'click .todo.icon-completed': 'uncomplete',
-            'click .todo.icon-uncompleted': 'complete',
-            'click .todo.icon-pencil': 'edititem',
+        events: _.extend(todoevents, {
             'click .todo.icon-trash': 'removeitem',
-            'click #reset': 'resetitem',
-            'click #save': 'saveitem',
             'click #add_todo #add': 'additem'
-        },
+        }),
         todos: function() {
             return this.options.collections.todo_items.get_or_create(this.cur_item);
         },
@@ -551,13 +534,7 @@
         deps: function() {
             return [this.collection, this.options.collections.projects, this.todo_lists, this.todos()];
         },
-        events: {
-            'click .todo.icon-completed': 'uncomplete',
-            'click .todo.icon-uncompleted': 'complete',
-            'click .todo.icon-pencil': 'edititem',
-            'click #reset': 'resetitem',
-            'click #save': 'saveitem'
-        },
+        events: todoevents,
         currentTarget: function() {
             return this.todos().get(this.todo_item);
         },
