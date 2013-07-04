@@ -795,7 +795,7 @@ templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-i
 '<% if (_.isFinite(item.get("responsible-party-id"))) { %><i class="icon-user"></i><% } %>' +
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="icon-comment icon-white"></i><%- item.get("comments-count") %></a>' +
 '<i class="todo icon-pencil" data-id="<%- item.id %>"></i>' +
-'<i class="todo icon-trash" data-id="<%- item.id %>"></i>';
+'<% if (!_.isFinite(view.todo_item)) { %><i class="todo icon-trash" data-id="<%- item.id %>"></i><% } %>';
 templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<div id="edit_todo_wrapper"><form id="edit_todo">' +
 '<label for="todoContent">Todo content</label>' +

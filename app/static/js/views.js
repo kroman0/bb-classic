@@ -483,12 +483,12 @@
             return [this.collection, this.options.collections.projects, this.todos(), this.options.collections.project_people.get_or_create(this.model.id)];
         },
         events: {
-            'click .project-todo-list .todo.icon-completed': 'uncomplete',
-            'click .project-todo-list .todo.icon-uncompleted': 'complete',
-            'click .project-todo-list .todo.icon-pencil': 'edititem',
-            'click .project-todo-list .todo.icon-trash': 'removeitem',
-            'click .project-todo-list #reset': 'resetitem',
-            'click .project-todo-list #save': 'saveitem',
+            'click .todo.icon-completed': 'uncomplete',
+            'click .todo.icon-uncompleted': 'complete',
+            'click .todo.icon-pencil': 'edititem',
+            'click .todo.icon-trash': 'removeitem',
+            'click #reset': 'resetitem',
+            'click #save': 'saveitem',
             'click #add_todo #add': 'additem'
         },
         todos: function() {
@@ -552,8 +552,11 @@
             return [this.collection, this.options.collections.projects, this.todo_lists, this.todos()];
         },
         events: {
-            'click .project-todo-item .todo.icon-completed': 'uncomplete',
-            'click .project-todo-item .todo.icon-uncompleted': 'complete'
+            'click .todo.icon-completed': 'uncomplete',
+            'click .todo.icon-uncompleted': 'complete',
+            'click .todo.icon-pencil': 'edititem',
+            'click #reset': 'resetitem',
+            'click #save': 'saveitem'
         },
         currentTarget: function() {
             return this.todos().get(this.todo_item);
@@ -574,10 +577,6 @@
     // Todo Item Comments View - projects/:id/todo_lists/:tlid/:tiid/comments
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
         template: '#project-todo-item-comments',
-        events: {
-            'click .project-todo-item-comments .todo.icon-completed': 'uncomplete',
-            'click .project-todo-item-comments .todo.icon-uncompleted': 'complete'
-        },
         extrapath: function() {
             var bpath = bbviews.TodoItemView.prototype.extrapath.apply(this);
             return [
