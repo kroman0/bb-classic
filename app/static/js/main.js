@@ -1,14 +1,11 @@
 /*jslint nomen: true, white: true*/
-/*global document*/
 (function(root, factory) {
     'use strict';
     if (typeof root.define === 'function' && root.define.amd) {
         // AMD. Register as the bbmain module.
         root.define('bbmain', [
-            'jquery',
             'underscore',
             'backbone',
-            'bbgeneral',
             'bbmodels',
             'bbcollections',
             'bbviews',
@@ -17,23 +14,19 @@
     } else {
         // Browser globals
         root.BB = factory(
-            root.jQuery,
             root._,
             root.Backbone,
-            root.bbgeneral,
             root.bbmodels,
             root.bbcollections,
             root.bbviews
         );
     }
-}(this, function($, _, Backbone, bbgeneral, bbmodels, bbcollections, bbviews) {
+}(this, function(_, Backbone, bbmodels, bbcollections, bbviews) {
     'use strict';
-    if (Backbone.Marionette) return;
-    var i,
-        models = {},
+    if (Backbone.Marionette) {return;}
+    var models = {},
         collections = {},
         views = {},
-        onReset = bbgeneral.onReset,
         viewdata = {
             el: '.content',
             collections: collections
@@ -109,11 +102,6 @@
         collection: collections.todos,
         mydata: models.mydata
     }, viewdata));
-    for (i in collections) {
-        if (collections.hasOwnProperty(i)) {
-            collections[i].on('reset', onReset);
-        }
-    }
     collections.project_people = new bbcollections.People();
     collections.project_categories = new bbcollections.Categories();
     collections.project_posts = new bbcollections.Posts();
@@ -191,19 +179,6 @@
             }
             views.current = views[route].render();
         }
-        if (views.current) {
-            document.title = views.current.PageTitle();
-        }
-//         add_hash();
-        if (views.current && views.current.deps) {
-            views.current.deps();
-        }
-        $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
-            return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
-        })).addClass('active');
-        $(_.filter($('div.content ul.projectnav li').removeClass('active'), function(i) {
-            return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
-        })).filter(':last').addClass('active');
     }).on('route:project_todo_item', function(id, tlid, tiid) {
         set_model(id, collections.projects, views.project_todo_item);
         views.project_todo_item.cur_item = tlid;

@@ -25,6 +25,9 @@
     var bbcollections = {},
         onReset = bbgeneral.onReset,
         BBCollectionExtra = {
+            initialize: function() {
+                this.on('all', onReset);
+            },
             fetchonce: function() {
                 var fetched = this.fetched;
                 if (!fetched) {
