@@ -5,7 +5,6 @@
     if (typeof root.define === 'function' && root.define.amd) {
         // AMD. Register as the bbviews module.
         root.define('bbviews', [
-            'jquery',
             'underscore',
             'backbone',
             'bbtemplates',
@@ -16,13 +15,12 @@
     } else {
         // Browser globals
         root.bbviews = factory(
-            root.jQuery,
             root._,
             root.Backbone,
             root.bbtemplates
         );
     }
-}(this, function($, _, Backbone, bbtemplates) {
+}(this, function(_, Backbone, bbtemplates) {
     'use strict';
     var bbviews = {},
         cc = 'Companies',
@@ -38,6 +36,7 @@
             pp
         ],
         _result = _.result,
+        $ = Backbone.$,
         render = function(template, data, settings) {
             return _.template(bbtemplates[template], data, settings);
         },
