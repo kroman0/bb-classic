@@ -74,7 +74,8 @@
             return view.model;
         },
         set_current = function(view) {
-            Backbone.$('.container').empty().append(view.render().el);
+            Backbone.$('.container').empty().append(view.el);
+            view.render();
         },
         workspace = new Workspace();
     collections.projects = new bbcollections.Projects();

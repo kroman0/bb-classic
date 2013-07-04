@@ -75,7 +75,7 @@
                 $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
                     return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
                 })).addClass('active');
-                $(_.filter($('div.content ul.projectnav li').removeClass('active'), function(i) {
+                $(_.filter($('ul.projectnav li').removeClass('active'), function(i) {
                     return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
                 })).filter(':last').addClass('active');
                 this.fetch();
@@ -494,6 +494,12 @@
         todos: function() {
             return this.options.collections.todo_items.get_or_create(this.cur_item);
         },
+        parseData: function(selector) {
+            var form = $(selector).is('form') ? $(selector) : $(selector).parents('form'),
+                fdata = form.serializeArray(),
+                data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value'));
+            return data;
+        },
         currentTarget: function(e) {
             return this.todos().get($(e.currentTarget).data('id'));
         },
@@ -502,11 +508,9 @@
         removeitem: bbviews.TimeEntriesView.prototype.removeitem,
         saveitem: function(e) {
             e.preventDefault();
-            var fdata = $(e.currentTarget).parents('form').serializeArray(),
-                data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value')),
-                model = this.currentTarget(e);
+            var model = this.currentTarget(e);
             model.edit = false;
-            model.save(data);
+            model.save(this.parseData(e.currentTarget));
             this.render();
         },
         complete: function(e) {
@@ -528,10 +532,8 @@
         },
         additem: function(e) {
             e.preventDefault();
-            var fdata = $('form').serializeArray(),
-                data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value')),
-                context = this;
-            this.todos().create(data, {
+            var context = this;
+            this.todos().create(this.parseData('form#add_todo'), {
                 wait: true,
                 success: function(model) {
                     context.finishItem(model);
