@@ -1,14 +1,11 @@
 /*jslint nomen: true, white: true*/
-/*global document*/
 (function(root, factory) {
     'use strict';
     if (typeof root.define === 'function' && root.define.amd) {
         // AMD. Register as the bbmain module.
         root.define('bbmain', [
-            'jquery',
             'underscore',
             'backbone',
-            'bbgeneral',
             'bbmodels',
             'bbcollections',
             'bbviews',
@@ -17,28 +14,23 @@
     } else {
         // Browser globals
         root.BB = factory(
-            root.jQuery,
             root._,
             root.Backbone,
-            root.bbgeneral,
             root.bbmodels,
             root.bbcollections,
             root.bbviews
         );
     }
-}(this, function($, _, Backbone, bbgeneral, bbmodels, bbcollections, bbviews) {
+}(this, function(_, Backbone, bbmodels, bbcollections, bbviews) {
     'use strict';
-    var i,
-        models = {},
+    var mydata = new bbmodels.MyModel(),
         collections = {},
         views = {},
-        onReset = bbgeneral.onReset,
         viewdata = {
-            el: '.content',
+            className: 'content',
+            mydata: mydata,
             collections: collections
         },
-        oproject,
-        otime,
         Workspace = Backbone.Router.extend({
             routes: {
                 'projects': 'projects',
@@ -77,21 +69,20 @@
             if (collection.get(id)) {
                 view.model = collection.get(id);
             } else {
-                view.model.id = id;
+                view.model = new collection.model({id: id});
             }
             return view.model;
         },
+        set_current = function(view) {
+            Backbone.$('.container').empty().append(view.el);
+            view.render();
+        },
         workspace = new Workspace();
-    models.mydata = new bbmodels.MyModel();
-    models.project = new bbmodels.Project();
-    models.company = new bbmodels.Company();
-    models.person = new bbmodels.Person();
     collections.projects = new bbcollections.Projects();
     collections.companies = new bbcollections.Companies();
     collections.people = new bbcollections.People();
     collections.todos = new bbcollections.TodoLists();
     collections.times = new bbcollections.TimeEntries();
-    views.current = null;
     views.projects = new bbviews.ProjectsView(_.extend({
         collection: collections.projects
     }, viewdata));
@@ -105,14 +96,8 @@
         collection: collections.times
     }, viewdata));
     views.todos = new bbviews.TodosView(_.extend({
-        collection: collections.todos,
-        mydata: models.mydata
+        collection: collections.todos
     }, viewdata));
-    for (i in collections) {
-        if (collections.hasOwnProperty(i)) {
-            collections[i].on('reset', onReset);
-        }
-    }
     collections.project_people = new bbcollections.People();
     collections.project_categories = new bbcollections.Categories();
     collections.project_posts = new bbcollections.Posts();
@@ -125,46 +110,36 @@
     collections.project_todo_item_comments = new bbcollections.TodoComments();
     collections.project_post_comments = new bbcollections.PostComments();
     collections.project_calendar_entry_comments = new bbcollections.CalendarEntryComments();
-    views.company_view = new bbviews.CompanyView(_.extend({
-        model: models.company
-    }, viewdata));
-    views.person_view = new bbviews.AllPersonView(_.extend({
-        model: models.person
-    }, viewdata));
-    oproject = _.extend({
-        model: models.project
-    }, viewdata);
-    views.project_view = new bbviews.ProjectView(oproject);
-    views.project_people = new bbviews.PeopleView(oproject);
-    views.project_person = new bbviews.PersonView(oproject);
-    views.project_categories = new bbviews.CategoriesView(oproject);
-    views.project_category = new bbviews.CategoryView(oproject);
-    views.project_posts = new bbviews.PostsView(oproject);
-    views.project_post = new bbviews.PostView(oproject);
-    views.project_calendar = new bbviews.CalendarView(oproject);
-    views.project_calendar_entry = new bbviews.CalendarEntryView(oproject);
-    views.project_files = new bbviews.FilesView(oproject);
-    views.project_file = new bbviews.FileView(oproject);
-    otime = _.extend({
-        mydata: models.mydata
-    }, oproject);
-    views.project_time_entries = new bbviews.TimeEntriesView(otime);
-    views.todo_time_entries = new bbviews.TodoTimeEntriesView(otime);
-    views.project_post_comments = new bbviews.PostCommentsView(oproject);
-    views.project_calendar_entry_comments = new bbviews.CalendarEntryCommentsView(oproject);
-    views.project_todo_lists = new bbviews.TodoListsView(oproject);
-    views.project_todo_list = new bbviews.TodoListView(oproject);
-    views.project_todo_item = new bbviews.TodoItemView(oproject);
-    views.project_todo_item_comments = new bbviews.TodoItemCommentsView(oproject);
+    views.company_view = new bbviews.CompanyView(viewdata);
+    views.person_view = new bbviews.AllPersonView(viewdata);
+    views.project_view = new bbviews.ProjectView(viewdata);
+    views.project_people = new bbviews.PeopleView(viewdata);
+    views.project_person = new bbviews.PersonView(viewdata);
+    views.project_categories = new bbviews.CategoriesView(viewdata);
+    views.project_category = new bbviews.CategoryView(viewdata);
+    views.project_posts = new bbviews.PostsView(viewdata);
+    views.project_post = new bbviews.PostView(viewdata);
+    views.project_calendar = new bbviews.CalendarView(viewdata);
+    views.project_calendar_entry = new bbviews.CalendarEntryView(viewdata);
+    views.project_files = new bbviews.FilesView(viewdata);
+    views.project_file = new bbviews.FileView(viewdata);
+    views.project_time_entries = new bbviews.TimeEntriesView(viewdata);
+    views.todo_time_entries = new bbviews.TodoTimeEntriesView(viewdata);
+    views.project_post_comments = new bbviews.PostCommentsView(viewdata);
+    views.project_calendar_entry_comments = new bbviews.CalendarEntryCommentsView(viewdata);
+    views.project_todo_lists = new bbviews.TodoListsView(viewdata);
+    views.project_todo_list = new bbviews.TodoListView(viewdata);
+    views.project_todo_item = new bbviews.TodoItemView(viewdata);
+    views.project_todo_item_comments = new bbviews.TodoItemCommentsView(viewdata);
     workspace.on('route', function(route, params) {
         var id, cur_item;
         if (_.contains(['projects', 'companies', 'people', 'time_report', 'todos'], route)) {
-            views.current = views[route].render();
+            set_current(views[route]);
         } else if (_.contains(['project_people', 'project_categories', 'project_time_entries', 'project_posts', 'project_files', 'project_calendar', 'project_todo_lists'], route)) {
             id = parseInt(params[0], 10);
             set_model(id, collections.projects, views[route]);
             views[route].collection = collections[route].get_or_create(id);
-            views.current = views[route].render();
+            set_current(views[route]);
         } else if (_.contains(['project_person', 'project_post', 'project_file', 'project_calendar_entry', 'project_category', 'project_todo_list', 'project_calendar_entry_comments', 'project_post_comments', 'todo_time_entries'], route)) {
             id = parseInt(params[0], 10);
             cur_item = parseInt(params[1], 10);
@@ -188,61 +163,48 @@
             default:
                 views[route].collection = collections[route].get_or_create(cur_item);
             }
-            views.current = views[route].render();
+            set_current(views[route]);
         }
-        if (views.current) {
-            document.title = views.current.PageTitle();
-        }
-//         add_hash();
-        if (views.current && views.current.deps) {
-            views.current.deps();
-        }
-        $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
-            return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
-        })).addClass('active');
-        $(_.filter($('div.content ul.projectnav li').removeClass('active'), function(i) {
-            return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
-        })).filter(':last').addClass('active');
     }).on('route:project_todo_item', function(id, tlid, tiid) {
         set_model(id, collections.projects, views.project_todo_item);
         views.project_todo_item.cur_item = tlid;
         views.project_todo_item.todo_item = tiid;
         views.project_todo_item.collection = views.project_todo_item.todo_lists = collections.project_todo_lists.get_or_create(id);
-        views.current = views.project_todo_item.render();
+        set_current(views.project_todo_item);
     }).on('route:project_todo_item_comments', function(id, tlid, tiid) {
         set_model(id, collections.projects, views.project_todo_item_comments);
         views.project_todo_item_comments.cur_item = tlid;
         views.project_todo_item_comments.todo_item = tiid;
         views.project_todo_item_comments.todo_lists = collections.project_todo_lists.get_or_create(id);
         views.project_todo_item_comments.collection = collections.project_todo_item_comments.get_or_create(tiid);
-        views.current = views.project_todo_item_comments.render();
+        set_current(views.project_todo_item_comments);
     }).on('route:project', function(id) {
         set_model(id, collections.projects, views.project_view);
-        views.current = views.project_view.render();
+        set_current(views.project_view);
     }).on('route:company', function(id) {
         set_model(id, collections.companies, views.company_view);
-        views.current = views.company_view.render();
+        set_current(views.company_view);
     }).on('route:person', function(id) {
         set_model(id, collections.people, views.person_view);
-        views.current = views.person_view.render();
+        set_current(views.person_view);
     }).on('route:me', function() {
-        views.person_view.model = models.mydata;
-        views.current = views.person_view.render();
+        views.person_view.model = mydata;
+        set_current(views.person_view);
     }).on('route:defaultRoute', function() {
         this.navigate('projects', {
             trigger: true
         });
     });
     views.navbar = new bbviews.NavView({
-        model: models.mydata,
+        model: mydata,
         el: '.navbar'
     }).render();
-    models.mydata.once('sync', function() {
+    mydata.once('sync', function() {
         Backbone.history.start();
     });
-    models.mydata.fetch();
+    mydata.fetch();
     return {
-        models: models,
+        mydata: mydata,
         collections: collections,
         views: views,
         workspace: workspace

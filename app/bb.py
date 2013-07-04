@@ -417,8 +417,15 @@ def save_request(url, result):
 
 
 REQUEST2XML = {
-    rec(r".*\/time_entries.xml"): ("time-entry",),
+    # /projects/#{project_id}/time_entries.xml
+    # /todo_items/#{todo_item_id}/time_entries.xml
+    rec(r".*\/time_entries\.xml"): ("time-entry",),
+    # /time_entries/#{id}.xml
     rec(r".*\/time_entries\/\d*\.xml"): ("time-entry",),
+    # /todo_lists/#{todo_list_id}/todo_items.xml
+    rec(r".*\/todo_items\.xml"): ("todo-item",),
+    # /todo_items/#{id}.xml
+    rec(r".*\/todo_items\/\d*\.xml"): ("todo-item",),
 }
 
 
