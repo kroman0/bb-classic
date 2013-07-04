@@ -28,7 +28,7 @@
     }
 }(this, function($, _, Backbone, bbgeneral, bbmodels, bbcollections, bbviews) {
     'use strict';
-    return;
+    if (Backbone.Marionette) return;
     var i,
         models = {},
         collections = {},
