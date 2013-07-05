@@ -388,6 +388,62 @@
     });
     // Calendar View - projects/:id/calendar
     bbviews.CalendarView = ProjectBBView.extend({
+        events: {
+            'click .icon-completed': 'uncomplete',
+            'click .icon-uncompleted': 'complete',
+            'click .icon-pencil': 'edititem',
+            'click .icon-trash': 'removeitem',
+            'click .save': 'saveitem',
+            'click .reset': 'resetitem'
+        },
+        parseData: function(selector) {
+            var data = {};
+            data.title = this.$(selector + ' [name=title]').val();
+            data['start-at'] = this.$(selector + ' [name=start-at]').val();
+            data.deadline = this.$(selector + ' [name=deadline]').val();
+            data.type = this.$(selector + ' [name=type]').val();
+            return data;
+        },
+        finishItem: function(item) {
+            return item.set({
+                'project-id': this.model.id
+            }, {silent: true});
+        },
+        complete: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).complete();
+            this.render();
+        },
+        uncomplete: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).uncomplete();
+            this.render();
+        },
+        currentTarget: function(e) {
+            return this.collection.get($(e.currentTarget).data('id'));
+        },
+        edititem: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).edit = true;
+            this.render();
+        },
+        resetitem: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).edit = false;
+            this.render();
+        },
+        removeitem: function(e) {
+            e.preventDefault();
+            this.currentTarget(e).destroy();
+            this.render();
+        },
+        saveitem: function(e) {
+            e.preventDefault();
+            var model = this.currentTarget(e);
+            model.edit = false;
+            model.save(this.parseData('.editcalendar[data-id=' + model.id + ']'));
+            this.render();
+        },
         template: '#project-calendar',
         title: 'Calendar'
     });

@@ -600,7 +600,10 @@ templates['#project-file'] = '<%= view.block("#header") %>' +
 templates['#calendar'] = '<li class="thumbnail">' +
 '    <h3>' +
 '        <a <% if (item.get("type")=="Milestone" && item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
+'        <i class="badge badge-inverse"><i class="calendar icon-white icon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>"></i></i>' +
 '        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="icon-comment icon-white"></i><%- item.get("comments-count") %></a>' +
+'        <i class="icon-pencil" data-id="<%- item.id %>"></i>' +
+'        <% if (!_.isFinite(view.cur_item)) { %><i class="icon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    </h3>' +
 '    <small>' +
 '        <% if (item.get("type")=="Milestone" && item.get("responsible-party-id")) { %>' +
@@ -628,6 +631,17 @@ templates['#calendar'] = '<li class="thumbnail">' +
 '        <abbr title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></abbr>' +
 '        <% } %>' +
 '    </small>' +
+'</li>';
+templates['#calendaredit'] = '<li class="thumbnail editcalendar" data-id="<%- item.id %>">' +
+'<input type="text" name="title" placeholder="title" value="<%- item.get("title") %>">' +
+'<select name="type">' +
+'<option value="Milestone" <% if (item.get("type")=="Milestone") { %>selected="selected"<% } %>>Milestone</option>' +
+'<option value="CalendarEvent" <% if (item.get("type")=="CalendarEvent") { %>selected="selected"<% } %>>CalendarEvent</option>' +
+'</select>' +
+'<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="start-at" placeholder="YYYY-MM-DD" value="<%- item.get("start-at") %>">' +
+'<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="deadline" placeholder="YYYY-MM-DD" value="<%- item.get("deadline") %>">' +
+'<button data-id="<%- item.id %>" class="save btn btn-default" title="Save"><i class="icon-ok"></i></button>' +
+'<button data-id="<%- item.id %>" class="reset btn btn-default" title="Cancel"><i class="icon-off"></i></button>' +
 '</li>';
 templates['#project-calendar'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
