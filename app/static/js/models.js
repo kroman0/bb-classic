@@ -86,7 +86,7 @@
     bbmodels.CalendarEntry = BBModel.extend({
         mainattr: 'title',
         urlRoot: function() {
-            return '/api/projects/'+this.collection.parent_id+'/calendar_entries/';
+            return '/api/projects/' + this.collection.parent_id + '/calendar_entries/';
         },
         complete: function() {
             this.save('completed', true, {url: _.result(this, 'url').replace('.xml', '/complete.xml')});
