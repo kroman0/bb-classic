@@ -24,8 +24,8 @@ templates['#time'] = '<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> d
 '        <%- item.get("description") %>' +
 '    </td>' +
 '    <td>' +
-'        <button id="edit" title="Edit"><i class="icon-edit"></i></button>' +
-'        <button id="remove" title="Remove"><i class="icon-trash"></i></button>' +
+'        <button class="edit" title="Edit"><i class="icon-edit"></i></button>' +
+'        <button class="remove" title="Remove"><i class="icon-trash"></i></button>' +
 '    </td>' +
 '</tr>';
 templates['#timeedit'] = '<tr class="edittime" data-id="<%- item.id %>">' +
@@ -49,8 +49,8 @@ templates['#timeedit'] = '<tr class="edittime" data-id="<%- item.id %>">' +
 '        <input type="text" class="input-small" name="description" value="<%- item.get("description") %>">' +
 '    </td>' +
 '    <td>' +
-'        <button id="save" title="Save"><i class="icon-ok"></i></button>' +
-'        <button id="reset" title="Cancel"><i class="icon-off"></i></button>' +
+'        <button class="save" title="Save"><i class="icon-ok"></i></button>' +
+'        <button class="reset" title="Cancel"><i class="icon-off"></i></button>' +
 '    </td>' +
 '</tr>';
 templates['#pager'] = '<% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>' +
@@ -463,7 +463,7 @@ templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view
 '        <input type="text" class="input-small" name="description">' +
 '    </td>' +
 '    <td>' +
-'        <button id="add" title="Add"><i class="icon-plus"></i></button>' +
+'        <button class="add" title="Add"><i class="icon-plus"></i></button>' +
 '    </td>' +
 '</tr>';
 templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header") %>' +
@@ -811,24 +811,24 @@ templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-i
 '<i class="todo icon-pencil" data-id="<%- item.id %>"></i>' +
 '<% if (!_.isFinite(view.todo_item)) { %><i class="todo icon-trash" data-id="<%- item.id %>"></i><% } %>';
 templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
-'<div id="edit_todo_wrapper"><form id="edit_todo">' +
-'<label for="todoContent">Todo content</label>' +
-'<textarea id="todoContent" name="content" required><%= item.get("content") %></textarea>' +
-'<label for="todoDueAt">Due date</label>' +
-'<input id="todoDueAt" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value="<%= item.get("due-at") %>"><br />' +
-'<label for="responsiblePerson">Responsible person</label>' +
-'<select  id="responsiblePerson" name="responsible-party">' +
+'<div class="edit_todo_wrapper"><form class="edit_todo">' +
+'<label for="todoContent<%- item.id %>">Todo content</label>' +
+'<textarea id="todoContent<%- item.id %>" name="content" required><%= item.get("content") %></textarea>' +
+'<label for="todoDueAt<%- item.id %>">Due date</label>' +
+'<input id="todoDueAt<%- item.id %>" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value="<%= item.get("due-at") %>"><br />' +
+'<label for="responsiblePerson<%- item.id %>">Responsible person</label>' +
+'<select  id="responsiblePerson<%- item.id %>" name="responsible-party">' +
 '<option value="">Nobody</option>' +
 '<% pp.each(function (i) { %><option value="<%- i.id %>" <% if (i.id==item.get("responsible-party-id")) { %>selected="selected"<% } %>><%- i.name() %></option><% }) %>' +
 '</select>' +
 '<div class="checkbox"><label><input type="checkbox" name="notify" value="true"> Notify responsible person</label></div>' +
-'<button id="save" data-id="<%- item.id %>" class="btn btn-default" title="Save"><i class="icon-ok"></i></button>' +
-'<button id="reset" data-id="<%- item.id %>" class="btn btn-default" title="Cancel"><i class="icon-off"></i></button>' +
+'<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="icon-ok"></i></button>' +
+'<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="icon-off"></i></button>' +
 '</form></div>';
 templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<dd>' +
 '<button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add an item</button>' +
-'<div id="add_todo_wrapper" class="collapse"><form id="add_todo">' +
+'<div class="add_todo_wrapper" class="collapse"><form class="add_todo">' +
 '<label for="todoContent">Todo content</label>' +
 '<textarea id="todoContent" name="content" required></textarea>' +
 '<label for="todoDueAt">Due date</label>' +
@@ -839,7 +839,7 @@ templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_o
 '<% pp.each(function (i) { %><option value="<%- i.id %>"><%- i.name() %></option><% }) %>' +
 '</select>' +
 '<div class="checkbox"><label><input type="checkbox" name="notify" value="true"> Notify responsible person</label></div>' +
-'<button id="add" class="btn btn-default" title="Add"><i class="icon-plus"></i></button>' +
+'<button class="btn btn-default add" title="Add"><i class="icon-plus"></i></button>' +
 '</form></div>' +
 '</dd>';
 templates['#project-todo-list'] = '<%= view.block("#header") %>' +

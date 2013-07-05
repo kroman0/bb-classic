@@ -38,18 +38,18 @@
         timeevents = {
             'click .previous': 'previous',
             'click .next': 'next',
-            'click #edit': 'edititem',
-            'click #remove': 'removeitem',
-            'click #save': 'saveitem',
-            'click #reset': 'resetitem',
+            'click .edit': 'edititem',
+            'click .remove': 'removeitem',
+            'click .save': 'saveitem',
+            'click .reset': 'resetitem',
             'click thead>tr>th': 'sortitems'
         },
         todoevents = {
             'click .todo.icon-completed': 'uncomplete',
             'click .todo.icon-uncompleted': 'complete',
             'click .todo.icon-pencil': 'edititem',
-            'click #reset': 'resetitem',
-            'click #save': 'saveitem'
+            'click .reset': 'resetitem',
+            'click .save': 'saveitem'
         },
         _result = _.result,
         $ = Backbone.$,
@@ -224,7 +224,7 @@
         },
         pagerid: 'project-time',
         events: _.extend(timeevents, {
-            'click #add': 'additem'
+            'click .add': 'additem'
         }),
         parseData: function(selector) {
             var data = {};
@@ -528,7 +528,7 @@
         },
         events: _.extend(todoevents, {
             'click .todo.icon-trash': 'removeitem',
-            'click #add_todo #add': 'additem'
+            'click .add_todo .add': 'additem'
         }),
         todos: function() {
             return this.options.collections.todo_items.get_or_create(this.cur_item);
