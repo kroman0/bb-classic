@@ -85,7 +85,15 @@
     bbmodels.Attachment = BBModel.extend();
     bbmodels.CalendarEntry = BBModel.extend({
         mainattr: 'title',
-        urlRoot: '/api/projects/#{project_id}/calendar_entries/'
+        urlRoot: function() {
+            return '/api/projects/'+this.collection.parent_id+'/calendar_entries/';
+        },
+        complete: function() {
+            this.save('completed', true, {url: _.result(this, 'url').replace('.xml', '/complete.xml')});
+        },
+        uncomplete: function() {
+            this.save('completed', false, {url: _.result(this, 'url').replace('.xml', '/uncomplete.xml')});
+        }
     });
     bbmodels.Category = BBModel.extend({
         urlRoot: '/api/categories/'
