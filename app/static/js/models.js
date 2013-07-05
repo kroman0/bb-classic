@@ -102,15 +102,9 @@
         mainattr: 'description',
         urlRoot: '/api/time_entries/'
     });
-    bbmodels.TodoItem = BBModel.extend({
+    bbmodels.TodoItem = bbmodels.CalendarEntry.extend({
         mainattr: 'content',
-        urlRoot: '/api/todo_items/',
-        complete: function() {
-            this.save('completed', true, {url: _.result(this, 'url').replace('.xml', '/complete.xml')});
-        },
-        uncomplete: function() {
-            this.save('completed', false, {url: _.result(this, 'url').replace('.xml', '/uncomplete.xml')});
-        }
+        urlRoot: '/api/todo_items/'
     });
     bbmodels.TodoList = BBModel.extend({
         urlRoot: '/api/todo_lists/'

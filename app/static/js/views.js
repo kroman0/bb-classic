@@ -35,6 +35,21 @@
             hashpp,
             pp
         ],
+        edititem = function(e) {
+            e.preventDefault();
+            this.currentTarget(e).edit = true;
+            this.render();
+        },
+        resetitem = function(e) {
+            e.preventDefault();
+            this.currentTarget(e).edit = false;
+            this.render();
+        },
+        removeitem = function(e) {
+            e.preventDefault();
+            this.currentTarget(e).destroy();
+            this.render();
+        },
         timeevents = {
             'click .previous': 'previous',
             'click .next': 'next',
@@ -264,21 +279,9 @@
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).parents('tr').data('id'));
         },
-        edititem: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).edit = true;
-            this.render();
-        },
-        resetitem: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).edit = false;
-            this.render();
-        },
-        removeitem: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).destroy();
-            this.render();
-        },
+        edititem: edititem,
+        resetitem: resetitem,
+        removeitem: removeitem,
         saveitem: function(e) {
             e.preventDefault();
             var model = this.currentTarget(e);
@@ -422,21 +425,9 @@
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).data('id'));
         },
-        edititem: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).edit = true;
-            this.render();
-        },
-        resetitem: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).edit = false;
-            this.render();
-        },
-        removeitem: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).destroy();
-            this.render();
-        },
+        edititem: edititem,
+        resetitem: resetitem,
+        removeitem: removeitem,
         saveitem: function(e) {
             e.preventDefault();
             var model = this.currentTarget(e);
@@ -542,9 +533,9 @@
         currentTarget: function(e) {
             return this.todos().get($(e.currentTarget).data('id'));
         },
-        edititem: bbviews.TimeEntriesView.prototype.edititem,
-        resetitem: bbviews.TimeEntriesView.prototype.resetitem,
-        removeitem: bbviews.TimeEntriesView.prototype.removeitem,
+        edititem: edititem,
+        resetitem: resetitem,
+        removeitem: removeitem,
         saveitem: function(e) {
             e.preventDefault();
             var model = this.currentTarget(e);
@@ -552,16 +543,8 @@
             model.save(this.parseData(e.currentTarget));
             this.render();
         },
-        complete: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).complete();
-            this.render();
-        },
-        uncomplete: function(e) {
-            e.preventDefault();
-            this.currentTarget(e).uncomplete();
-            this.render();
-        },
+        complete: bbviews.CalendarView.prototype.complete,
+        uncomplete: bbviews.CalendarView.prototype.uncomplete,
         finishItem: function(item) {
             return item.set({
                 'completed': false,
