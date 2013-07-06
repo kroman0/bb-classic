@@ -555,7 +555,7 @@
         additem: function(e) {
             e.preventDefault();
             var context = this;
-            this.todos().create(this.parseData('form#add_todo'), {
+            this.todos().create(this.parseData('form.add_todo'), {
                 wait: true,
                 success: function(model) {
                     context.finishItem(model);
