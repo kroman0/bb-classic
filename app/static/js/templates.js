@@ -826,9 +826,8 @@ templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_
 '<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="icon-off"></i></button>' +
 '</form></div>';
 templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
-'<dd>' +
-'<button type="button" class="btn" data-toggle="collapse" data-target="#add_todo_wrapper">Add an item</button>' +
-'<div class="add_todo_wrapper" class="collapse"><form class="add_todo">' +
+'<dd><button type="button" class="btn" data-toggle="collapse" data-target=".add_todo_wrapper">Add an item</button>' +
+'<div class="add_todo_wrapper collapse"><form class="add_todo">' +
 '<label for="todoContent">Todo content</label>' +
 '<textarea id="todoContent" name="content" required></textarea>' +
 '<label for="todoDueAt">Due date</label>' +
@@ -840,8 +839,7 @@ templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_o
 '</select>' +
 '<div class="checkbox"><label><input type="checkbox" name="notify" value="true"> Notify responsible person</label></div>' +
 '<button class="btn btn-default add" title="Add"><i class="icon-plus"></i></button>' +
-'</form></div>' +
-'</dd>';
+'</form></div></dd>';
 templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
