@@ -50,6 +50,11 @@
             this.currentTarget(e).destroy();
             this.render();
         },
+        crudactions = {
+            edititem: edititem,
+            resetitem: resetitem,
+            removeitem: removeitem
+        },
         timeevents = {
             'click .previous': 'previous',
             'click .next': 'next',
@@ -279,9 +284,6 @@
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).parents('tr').data('id'));
         },
-        edititem: edititem,
-        resetitem: resetitem,
-        removeitem: removeitem,
         saveitem: function(e) {
             e.preventDefault();
             var model = this.currentTarget(e);
@@ -291,7 +293,7 @@
         },
         template: '#project-time',
         title: 'Time'
-    });
+    }).extend(crudactions);
     // Todo Time Entries View - projects/:id/time_entries/todo_items/:tiid
     bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
         pagerid: 'todo-time',
@@ -425,9 +427,6 @@
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).data('id'));
         },
-        edititem: edititem,
-        resetitem: resetitem,
-        removeitem: removeitem,
         saveitem: function(e) {
             e.preventDefault();
             var model = this.currentTarget(e);
@@ -437,7 +436,7 @@
         },
         template: '#project-calendar',
         title: 'Calendar'
-    });
+    }).extend(crudactions);
     // Calendar Entry View - projects/:id/calendar/:cid
     bbviews.CalendarEntryView = TitleBBView.extend({
         template: '#project-calendar-entry',
@@ -533,9 +532,6 @@
         currentTarget: function(e) {
             return this.todos().get($(e.currentTarget).data('id'));
         },
-        edititem: edititem,
-        resetitem: resetitem,
-        removeitem: removeitem,
         saveitem: function(e) {
             e.preventDefault();
             var model = this.currentTarget(e);
@@ -566,7 +562,7 @@
         template: '#project-todo-list',
         idParent: 'todo_lists',
         nameParent: 'To-dos'
-    });
+    }).extend(crudactions);
     // Todo Item View - projects/:id/todo_lists/:tlid/:tiid
     bbviews.TodoItemView = bbviews.TodoListView.extend({
         todo_item: null,
