@@ -55,9 +55,9 @@ an project time page
 
 user add time entry
     [Documentation]  user can add time entry
-    Wait Until Page Contains Element  css=tr.addtime button#add
+    Wait Until Page Contains Element  css=tr.addtime button.add
     Input Text  css=tr.addtime [name="description"]  added description
-    Click Button  css=tr.addtime button#add
+    Click Button  css=tr.addtime button.add
 
 page should contain added entry
     [Documentation]  added item should be present
@@ -65,11 +65,11 @@ page should contain added entry
 
 user edit time entry
     [Documentation]  user can edit time entry
-    Wait Until Page Contains Element  css=tr[data-id="0"] button#edit
-    Click Button  css=tr[data-id="0"] button#edit
+    Wait Until Page Contains Element  css=tr[data-id="0"] button.edit
+    Click Button  css=tr[data-id="0"] button.edit
     Wait Until Page Contains Element  css=tr.edittime[data-id="0"] [name="description"]
     Input Text  css=tr.edittime[data-id="0"] [name="description"]  edited description
-    Click Button  css=tr[data-id="0"] button#save
+    Click Button  css=tr[data-id="0"] button.save
 
 page should contain edited entry
     [Documentation]  edited item should be present
@@ -77,8 +77,8 @@ page should contain edited entry
 
 user delete time entry
     [Documentation]  user can delete time entry
-    Wait Until Page Contains Element  css=tr[data-id="0"] button#remove
-    Click Button  css=tr[data-id="0"] button#remove
+    Wait Until Page Contains Element  css=tr[data-id="0"] button.remove
+    Click Button  css=tr[data-id="0"] button.remove
 
 page should not contain deleted entry
     [Documentation]  deleted item should not be present
