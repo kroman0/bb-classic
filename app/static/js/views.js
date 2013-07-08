@@ -521,9 +521,7 @@
                 'project-id': this.model.id
             }, {silent: true});
         },
-        currentTarget: function(e) {
-            return this.collection.get($(e.currentTarget).data('id'));
-        },
+        currentTarget: bbviews.CalendarView.prototype.currentTarget,
         saveitem: function(e) {
             e.preventDefault();
             var model = this.currentTarget(e);
@@ -562,22 +560,11 @@
         todos: function() {
             return this.options.collections.todo_items.get_or_create(this.cur_item);
         },
-        parseData: function(selector) {
-            var form = $(selector).is('form') ? $(selector) : $(selector).parents('form'),
-                fdata = _.filter(form.serializeArray(), function(i) {return !_.isEmpty(i.value);}),
-                data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value'));
-            return data;
-        },
+        parseData: bbviews.TodoListsView.prototype.parseData,
         currentTarget: function(e) {
             return this.todos().get($(e.currentTarget).data('id'));
         },
-        saveitem: function(e) {
-            e.preventDefault();
-            var model = this.currentTarget(e);
-            model.edit = false;
-            model.save(this.parseData(e.currentTarget));
-            this.render();
-        },
+        saveitem: bbviews.TodoListsView.prototype.saveitem,
         complete: bbviews.CalendarView.prototype.complete,
         uncomplete: bbviews.CalendarView.prototype.uncomplete,
         finishItem: function(item) {
