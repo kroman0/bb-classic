@@ -525,7 +525,7 @@
         },
         parseData: function(selector) {
             var form = $(selector).is('form') ? $(selector) : $(selector).parents('form'),
-                fdata = form.serializeArray(),
+                fdata = _.filter(form.serializeArray(), function(i) {return !_.isEmpty(i.value);}),
                 data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value'));
             return data;
         },
