@@ -509,8 +509,47 @@
     // Todo Lists View - projects/:id/todo_lists
     bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists',
+        events: {
+            'click .todolist.icon-pencil': 'edititem',
+            'click .todolist.icon-trash': 'removeitem',
+            'click .add_todolist .add': 'additem',
+            'click .reset': 'resetitem',
+            'click .save': 'saveitem'
+        },
+        finishItem: function(item) {
+            return item.set({
+                'project-id': this.model.id
+            }, {silent: true});
+        },
+        currentTarget: function(e) {
+            return this.collection.get($(e.currentTarget).data('id'));
+        },
+        saveitem: function(e) {
+            e.preventDefault();
+            var model = this.currentTarget(e);
+            model.edit = false;
+            model.save(this.parseData(e.currentTarget));
+            this.render();
+        },
+        parseData: function(selector) {
+            var form = $(selector).is('form') ? $(selector) : $(selector).parents('form'),
+                fdata = _.filter(form.serializeArray(), function(i) {return !_.isEmpty(i.value);}),
+                data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value'));
+            return data;
+        },
+        additem: function(e) {
+            e.preventDefault();
+            var context = this;
+            this.collection.create(this.parseData('form.add_todolist'), {
+                wait: true,
+                success: function(model) {
+                    context.finishItem(model);
+                    context.render();
+                    return true;
+                }});
+        },
         title: 'To-dos'
-    });
+    }).extend(crudactions);
     // Todo List View - projects/:id/todo_lists/:tlid
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {

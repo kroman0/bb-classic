@@ -708,9 +708,66 @@ templates['#project-category'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#todolist'] = '<dt>' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
-'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %></a>' +
+'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="icon-lock"></i><% } %><% if (item.get("tracked")) { %><i class="icon-time"></i><% } %></a>' +
+'    <i class="todolist icon-pencil" data-id="<%- item.id %>"></i>' +
+'    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist icon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    <small><%= item.get("description") %></small>' +
 '</dt>';
+templates['#todolistedit'] = '<dt><form class="edit_todolist form-horizontal">' +
+'<div class="control-group">' +
+'<label class="control-label" for="todoName<%- item.id %>">Name</label>' +
+'<div class="controls">' +
+'<input type="text" id="todoName<%- item.id %>" name="name" value="<%- item.get("name") %>" required>' +
+'</div></div>' +
+'<div class="control-group">' +
+'<label class="control-label" for="todoDescription<%- item.id %>">Description</label>' +
+'<div class="controls">' +
+'<textarea id="todoDescription<%- item.id %>" name="description"><%= item.get("description") %></textarea>' +
+'</div></div>' +
+'<div class="control-group">' +
+'<label class="control-label" for="private<%- item.id %>">Private list</label>' +
+'<div class="controls">' +
+'<input id="private<%- item.id %>" type="checkbox" name="private" <% if (item.get("private")) { %>checked="checked"<% } %> value="true">' +
+'</div></div>' +
+'<div class="control-group">' +
+'<label class="control-label" for="tracked<%- item.id %>">Time tracked</label>' +
+'<div class="controls">' +
+'<input id="tracked<%- item.id %>" type="checkbox" name="tracked" <% if (item.get("tracked")) { %>checked="checked"<% } %> value="true">' +
+'</div></div>' +
+'<div class="control-group">' +
+'<div class="controls">' +
+'<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="icon-ok"></i></button>' +
+'<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="icon-off"></i></button>' +
+'</div></div>' +
+'</form></dt>';
+templates['#todolistadd'] = '<dt>' +
+'<button type="button" class="btn" data-toggle="collapse" data-target=".add_todolist_wrapper">Add an item</button>' +
+'<div class="add_todolist_wrapper collapse"><form class="add_todolist form-horizontal">' +
+'<div class="control-group">' +
+'<label class="control-label" for="todoName">Name</label>' +
+'<div class="controls">' +
+'<input type="text" id="todoName" name="name" value="" required>' +
+'</div></div>' +
+'<div class="control-group">' +
+'<label class="control-label" for="todoDescription">Description</label>' +
+'<div class="controls">' +
+'<textarea id="todoDescription" name="description"></textarea>' +
+'</div></div>' +
+'<div class="control-group">' +
+'<label class="control-label" for="private">Private list</label>' +
+'<div class="controls">' +
+'<input id="private" type="checkbox" name="private" value="true">' +
+'</div></div>' +
+'<div class="control-group">' +
+'<label class="control-label" for="tracked">Time tracked</label>' +
+'<div class="controls">' +
+'<input id="tracked" type="checkbox" name="tracked" value="true">' +
+'</div></div>' +
+'<div class="control-group">' +
+'<div class="controls">' +
+'<button class="btn btn-default add" title="Add"><i class="icon-plus"></i></button>' +
+'</div></div>' +
+'</form></div></dt>';
 templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '<% var td=view.collection;' +
 'var pp=view.options.collections.people;' +
@@ -793,6 +850,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '                </small>' +
 '            </dd>' +
 '            <% }) %>' +
+'            <%= view.block("#todolistadd") %>' +
 '        </dl>' +
 '    </div>' +
 '    <% }) %>' +
