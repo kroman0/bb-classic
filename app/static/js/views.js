@@ -247,12 +247,12 @@
             'click .add': 'additem'
         }),
         parseData: function(selector) {
-            var data = {};
-            data.date = this.$(selector + ' [name=date]').val();
-            data.description = this.$(selector + ' [name=description]').val();
-            data.hours = parseFloat(this.$(selector + ' [name=hours]').val(), 10);
-            data['person-id'] = parseInt(this.$(selector + ' [name=person-id]').val(), 10);
-            return data;
+            return {
+                date: this.$(selector + ' [name=date]').val(),
+                description: this.$(selector + ' [name=description]').val(),
+                hours: parseFloat(this.$(selector + ' [name=hours]').val(), 10),
+                'person-id': parseInt(this.$(selector + ' [name=person-id]').val(), 10)
+            };
         },
         finishItem: function(item) {
             return item.set({
@@ -402,12 +402,12 @@
             'click .reset': 'resetitem'
         },
         parseData: function(selector) {
-            var data = {};
-            data.title = this.$(selector + ' [name=title]').val();
-            data['start-at'] = this.$(selector + ' [name=start-at]').val();
-            data.deadline = this.$(selector + ' [name=deadline]').val();
-            data.type = this.$(selector + ' [name=type]').val();
-            return data;
+            return {
+                title: this.$(selector + ' [name=title]').val(),
+                'start-at': this.$(selector + ' [name=start-at]').val(),
+                deadline: this.$(selector + ' [name=deadline]').val(),
+                type: this.$(selector + ' [name=type]').val()
+            };
         },
         finishItem: function(item) {
             return item.set({
@@ -530,15 +530,18 @@
             this.render();
         },
         parseData: function(selector) {
-            var form = $(selector).is('form') ? $(selector) : $(selector).parents('form'),
-                fdata = _.filter(form.serializeArray(), function(i) {return !_.isEmpty(i.value);}),
-                data = _.object(_.pluck(fdata, 'name'), _.pluck(fdata, 'value'));
-            return data;
+            var form = this.$(selector).parents('form');
+            return {
+                name: form.find('[name=name]').val(),
+                description: form.find('[name=description]').val(),
+                private: form.find('[name=private]').is(':checked'),
+                tracked: form.find('[name=tracked]').is(':checked')
+            };
         },
         additem: function(e) {
             e.preventDefault();
             var context = this;
-            this.collection.create(this.parseData('form.add_todolist'), {
+            this.collection.create(this.parseData(e.currentTarget), {
                 wait: true,
                 success: function(model) {
                     context.finishItem(model);
@@ -560,7 +563,15 @@
         todos: function() {
             return this.options.collections.todo_items.get_or_create(this.cur_item);
         },
-        parseData: bbviews.TodoListsView.prototype.parseData,
+        parseData: function(selector) {
+            var form = this.$(selector).parents('form');
+            return {
+                content: form.find('[name=content]').val(),
+                'due-at': form.find('[name=due-at]').val(),
+                'responsible-party': form.find('[name=responsible-party]').val(),
+                notify: form.find('[name=notify]').is(':checked')
+            };
+        },
         currentTarget: function(e) {
             return this.todos().get($(e.currentTarget).data('id'));
         },
@@ -568,16 +579,30 @@
         complete: bbviews.CalendarView.prototype.complete,
         uncomplete: bbviews.CalendarView.prototype.uncomplete,
         finishItem: function(item) {
-            return item.set({
+            var data = {
                 'completed': false,
                 'todo-list-id': this.cur_item,
                 'comments-count': 0
-            }, {silent: true});
+            };
+            if (_.isFinite(item.get('responsible-party'))) {
+                data = _.extend(data, {
+                    'responsible-party-type': 'Person',
+                    'responsible-party-id': parseInt(item.get('responsible-party'), 10),
+                    'responsible-party-name': this.options.collections.project_people.get_or_create(this.model.id).get(item.get('responsible-party')).name()
+                });
+            } else {
+                data = _.extend(data, {
+                    'responsible-party-type': undefined,
+                    'responsible-party-id': undefined,
+                    'responsible-party-name': undefined
+                });
+            };
+            return item.set(data, {silent: true});
         },
         additem: function(e) {
             e.preventDefault();
             var context = this;
-            this.todos().create(this.parseData('form.add_todo'), {
+            this.todos().create(this.parseData(e.currentTarget), {
                 wait: true,
                 success: function(model) {
                     context.finishItem(model);
