@@ -50,6 +50,13 @@
             this.currentTarget(e).destroy();
             this.render();
         },
+        saveitem = function(e) {
+            e.preventDefault();
+            var model = this.currentTarget(e);
+            model.edit = false;
+            model.save(this.parseData(e.currentTarget));
+            this.render();
+        },
         crudactions = {
             edititem: edititem,
             resetitem: resetitem,
@@ -247,11 +254,12 @@
             'click .add': 'additem'
         }),
         parseData: function(selector) {
+            var form = this.$(selector).parents('.form');
             return {
-                date: this.$(selector + ' [name=date]').val(),
-                description: this.$(selector + ' [name=description]').val(),
-                hours: parseFloat(this.$(selector + ' [name=hours]').val(), 10),
-                'person-id': parseInt(this.$(selector + ' [name=person-id]').val(), 10)
+                date: form.find('[name=date]').val(),
+                description: form.find('[name=description]').val(),
+                hours: parseFloat(form.find('[name=hours]').val(), 10),
+                'person-id': parseInt(form.find('[name=person-id]').val(), 10)
             };
         },
         finishItem: function(item) {
@@ -276,18 +284,12 @@
             e.preventDefault();
             var view = this,
                 success = function(model) {return view.finishItem(model);};
-            this.collection.create(this.parseData('.addtime'), {wait: true, success: success});
+            this.collection.create(this.parseData(e.currentTarget), {wait: true, success: success});
         },
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).parents('tr').data('id'));
         },
-        saveitem: function(e) {
-            e.preventDefault();
-            var model = this.currentTarget(e);
-            model.edit = false;
-            model.save(this.parseData('.edittime[data-id=' + model.id + ']'));
-            this.render();
-        },
+        saveitem: saveitem,
         template: '#project-time',
         title: 'Time'
     }).extend(crudactions);
@@ -399,11 +401,12 @@
             'click .reset': 'resetitem'
         },
         parseData: function(selector) {
+            var form = this.$(selector).parents('.form');
             return {
-                title: this.$(selector + ' [name=title]').val(),
-                'start-at': this.$(selector + ' [name=start-at]').val(),
-                deadline: this.$(selector + ' [name=deadline]').val(),
-                type: this.$(selector + ' [name=type]').val()
+                title: form.find('[name=title]').val(),
+                'start-at': form.find('[name=start-at]').val(),
+                deadline: form.find('[name=deadline]').val(),
+                type: form.find('[name=type]').val()
             };
         },
         finishItem: function(item) {
@@ -424,13 +427,7 @@
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).data('id'));
         },
-        saveitem: function(e) {
-            e.preventDefault();
-            var model = this.currentTarget(e);
-            model.edit = false;
-            model.save(this.parseData('.editcalendar[data-id=' + model.id + ']'));
-            this.render();
-        },
+        saveitem: saveitem,
         template: '#project-calendar',
         title: 'Calendar'
     }).extend(crudactions);
@@ -521,15 +518,9 @@
             return true;
         },
         currentTarget: bbviews.CalendarView.prototype.currentTarget,
-        saveitem: function(e) {
-            e.preventDefault();
-            var model = this.currentTarget(e);
-            model.edit = false;
-            model.save(this.parseData(e.currentTarget));
-            this.render();
-        },
+        saveitem: saveitem,
         parseData: function(selector) {
-            var form = this.$(selector).parents('form');
+            var form = this.$(selector).parents('.form');
             return {
                 name: form.find('[name=name]').val(),
                 description: form.find('[name=description]').val(),
@@ -537,12 +528,7 @@
                 tracked: form.find('[name=tracked]').is(':checked')
             };
         },
-        additem: function(e) {
-            e.preventDefault();
-            var view = this,
-                success = function(model) {return view.finishItem(model);};
-            this.collection.create(this.parseData(e.currentTarget), {wait: true, success: success});
-        },
+        additem: bbviews.TimeEntriesView.prototype.additem,
         title: 'To-dos'
     }).extend(crudactions);
     // Todo List View - projects/:id/todo_lists/:tlid
@@ -558,7 +544,7 @@
             return this.options.collections.todo_items.get_or_create(this.cur_item);
         },
         parseData: function(selector) {
-            var form = this.$(selector).parents('form');
+            var form = this.$(selector).parents('.form');
             return {
                 content: form.find('[name=content]').val(),
                 'due-at': form.find('[name=due-at]').val(),
@@ -569,12 +555,13 @@
         currentTarget: function(e) {
             return this.todos().get($(e.currentTarget).data('id'));
         },
-        saveitem: bbviews.TodoListsView.prototype.saveitem,
+        saveitem: saveitem,
         complete: bbviews.CalendarView.prototype.complete,
         uncomplete: bbviews.CalendarView.prototype.uncomplete,
         finishItem: function(item) {
             var data = {
                 'completed': false,
+                'project-id': this.model.id,
                 'todo-list-id': this.cur_item,
                 'comments-count': 0
             };

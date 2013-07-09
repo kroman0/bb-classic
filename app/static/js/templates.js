@@ -28,7 +28,7 @@ templates['#time'] = '<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> d
 '        <button class="remove" title="Remove"><i class="icon-trash"></i></button>' +
 '    </td>' +
 '</tr>';
-templates['#timeedit'] = '<tr class="edittime" data-id="<%- item.id %>">' +
+templates['#timeedit'] = '<tr class="edittime form" data-id="<%- item.id %>">' +
 '    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>' +
 '    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>' +
 '    <td>' +
@@ -447,7 +447,7 @@ templates['#project-person'] = '<%= view.block("#header") %>' +
 '</ul>' +
 '<% } %>';
 templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view.options.mydata?view.options.mydata.id:0; %>' +
-'<tr class="addtime">' +
+'<tr class="addtime form">' +
 '    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
 '    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>' +
 '    <td>' +
@@ -713,7 +713,7 @@ templates['#todolist'] = '<dt>' +
 '    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist icon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    <small><%= item.get("description") %></small>' +
 '</dt>';
-templates['#todolistedit'] = '<dt><form class="edit_todolist form-horizontal">' +
+templates['#todolistedit'] = '<dt><form class="edit_todolist form-horizontal form">' +
 '<div class="control-group">' +
 '<label class="control-label" for="todoName<%- item.id %>">Name</label>' +
 '<div class="controls">' +
@@ -742,7 +742,7 @@ templates['#todolistedit'] = '<dt><form class="edit_todolist form-horizontal">' 
 '</form></dt>';
 templates['#todolistadd'] = '<dt>' +
 '<button type="button" class="btn" data-toggle="collapse" data-target=".add_todolist_wrapper">Add an item</button>' +
-'<div class="add_todolist_wrapper collapse"><form class="add_todolist form-horizontal">' +
+'<div class="add_todolist_wrapper collapse"><form class="add_todolist form-horizontal form">' +
 '<div class="control-group">' +
 '<label class="control-label" for="todoName">Name</label>' +
 '<div class="controls">' +
@@ -869,7 +869,7 @@ templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-i
 '<i class="todo icon-pencil" data-id="<%- item.id %>"></i>' +
 '<% if (!_.isFinite(view.todo_item)) { %><i class="todo icon-trash" data-id="<%- item.id %>"></i><% } %>';
 templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
-'<div class="edit_todo_wrapper"><form class="edit_todo form-horizontal">' +
+'<div class="edit_todo_wrapper"><form class="edit_todo form-horizontal form">' +
 '<div class="control-group">' +
 '<label class="control-label" for="todoContent<%- item.id %>">Todo content</label>' +
 '<div class="controls">' +
@@ -901,7 +901,7 @@ templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_
 '</form></div>';
 templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<dd><button type="button" class="btn" data-toggle="collapse" data-target=".add_todo_wrapper">Add an item</button>' +
-'<div class="add_todo_wrapper collapse"><form class="add_todo form-horizontal">' +
+'<div class="add_todo_wrapper collapse"><form class="add_todo form-horizontal form">' +
 '<div class="control-group">' +
 '<label class="control-label" for="todoContent">Todo content</label>' +
 '<div class="controls">' +
