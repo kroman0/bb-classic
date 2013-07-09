@@ -255,10 +255,16 @@
             };
         },
         finishItem: function(item) {
-            return item.set({
+            item.set({
                 'project-id': this.model.id,
                 'person-name': this.options.collections.people.get(item.get('person-id')).name()
             }, {silent: true});
+            if (!this.collection.fullCollection.comparator) {
+                this.collection.setSorting('id', 1);
+            }
+            this.collection.fullCollection.sort();
+            this.render();
+            return true;
         },
         sortitems: function(e) {
             e.preventDefault();
@@ -268,18 +274,9 @@
         },
         additem: function(e) {
             e.preventDefault();
-            var context = this;
-            this.collection.create(this.parseData('.addtime'), {
-                wait: true,
-                success: function(model) {
-                    context.finishItem(model);
-                    if (!context.collection.fullCollection.comparator) {
-                        context.collection.setSorting('id', 1);
-                    }
-                    context.collection.fullCollection.sort();
-                    return true;
-                }});
-            this.render();
+            var view = this,
+                success = function(model) {return view.finishItem(model);};
+            this.collection.create(this.parseData('.addtime'), {wait: true, success: success});
         },
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).parents('tr').data('id'));
@@ -517,9 +514,11 @@
             'click .save': 'saveitem'
         },
         finishItem: function(item) {
-            return item.set({
+            item.set({
                 'project-id': this.model.id
             }, {silent: true});
+            this.render();
+            return true;
         },
         currentTarget: bbviews.CalendarView.prototype.currentTarget,
         saveitem: function(e) {
@@ -540,14 +539,9 @@
         },
         additem: function(e) {
             e.preventDefault();
-            var context = this;
-            this.collection.create(this.parseData(e.currentTarget), {
-                wait: true,
-                success: function(model) {
-                    context.finishItem(model);
-                    context.render();
-                    return true;
-                }});
+            var view = this,
+                success = function(model) {return view.finishItem(model);};
+            this.collection.create(this.parseData(e.currentTarget), {wait: true, success: success});
         },
         title: 'To-dos'
     }).extend(crudactions);
@@ -596,19 +590,16 @@
                     'responsible-party-id': undefined,
                     'responsible-party-name': undefined
                 });
-            };
-            return item.set(data, {silent: true});
+            }
+            item.set(data, {silent: true});
+            this.render();
+            return true;
         },
         additem: function(e) {
             e.preventDefault();
-            var context = this;
-            this.todos().create(this.parseData(e.currentTarget), {
-                wait: true,
-                success: function(model) {
-                    context.finishItem(model);
-                    context.render();
-                    return true;
-                }});
+            var view = this,
+                success = function(model) {return view.finishItem(model);};
+            this.todos().create(this.parseData(e.currentTarget), {wait: true, success: success});
         },
         template: '#project-todo-list',
         idParent: 'todo_lists',
