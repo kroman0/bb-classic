@@ -59,8 +59,8 @@
         },
         crudactions = {
             edititem: edititem,
-            resetitem: resetitem,
-            removeitem: removeitem
+            removeitem: removeitem,
+            resetitem: resetitem
         },
         timeevents = {
             'click .edit': 'edititem',
@@ -256,20 +256,18 @@
         parseData: function(selector) {
             var form = this.$(selector).parents('.form');
             return {
-                date: form.find('[name=date]').val(),
-                description: form.find('[name=description]').val(),
-                hours: parseFloat(form.find('[name=hours]').val(), 10),
+                'date': form.find('[name=date]').val(),
+                'description': form.find('[name=description]').val(),
+                'hours': parseFloat(form.find('[name=hours]').val(), 10),
                 'person-id': parseInt(form.find('[name=person-id]').val(), 10)
             };
         },
         finishItem: function(item) {
             item.set({
-                'project-id': this.model.id,
-                'person-name': this.options.collections.people.get(item.get('person-id')).name()
+                'person-name': this.options.collections.people.get(item.get('person-id')).name(),
+                'project-id': this.model.id
             }, {silent: true});
-            if (!this.collection.fullCollection.comparator) {
-                this.collection.setSorting('id', 1);
-            }
+            if (!this.collection.fullCollection.comparator) {this.collection.setSorting('id', 1);}
             this.collection.fullCollection.sort();
             this.render();
             return true;
@@ -298,9 +296,9 @@
         pagerid: 'todo-time',
         finishItem: function(item) {
             return item.set({
+                'person-name': this.options.collections.people.get(item.get('person-id')).name(),
                 'project-id': this.model.id,
-                'todo-item-id': this.cur_item,
-                'person-name': this.options.collections.people.get(item.get('person-id')).name()
+                'todo-item-id': this.cur_item
             }, {silent: true});
         },
         template: '#todo-time'
@@ -403,10 +401,10 @@
         parseData: function(selector) {
             var form = this.$(selector).parents('.form');
             return {
-                title: form.find('[name=title]').val(),
+                'deadline': form.find('[name=deadline]').val(),
                 'start-at': form.find('[name=start-at]').val(),
-                deadline: form.find('[name=deadline]').val(),
-                type: form.find('[name=type]').val()
+                'title': form.find('[name=title]').val(),
+                'type': form.find('[name=type]').val()
             };
         },
         finishItem: function(item) {
@@ -466,7 +464,7 @@
     bbviews.TodosView = BBView.extend({
         deps: bbviews.TimeEntriesView.prototype.deps,
         events: {
-            "change select[name='target']": 'selectTarget'
+            'change select[name=target]': 'selectTarget'
         },
         selectTarget: function(e) {
             this.collection.responsible_party = $(e.target).val();
@@ -522,10 +520,10 @@
         parseData: function(selector) {
             var form = this.$(selector).parents('.form');
             return {
-                name: form.find('[name=name]').val(),
-                description: form.find('[name=description]').val(),
-                private: form.find('[name=private]').is(':checked'),
-                tracked: form.find('[name=tracked]').is(':checked')
+                'description': form.find('[name=description]').val(),
+                'name': form.find('[name=name]').val(),
+                'private': form.find('[name=private]').is(':checked'),
+                'tracked': form.find('[name=tracked]').is(':checked')
             };
         },
         additem: bbviews.TimeEntriesView.prototype.additem,
@@ -546,10 +544,10 @@
         parseData: function(selector) {
             var form = this.$(selector).parents('.form');
             return {
-                content: form.find('[name=content]').val(),
+                'content': form.find('[name=content]').val(),
                 'due-at': form.find('[name=due-at]').val(),
-                'responsible-party': form.find('[name=responsible-party]').val(),
-                notify: form.find('[name=notify]').is(':checked')
+                'notify': form.find('[name=notify]').is(':checked'),
+                'responsible-party': form.find('[name=responsible-party]').val()
             };
         },
         currentTarget: function(e) {
@@ -560,22 +558,22 @@
         uncomplete: bbviews.CalendarView.prototype.uncomplete,
         finishItem: function(item) {
             var data = {
+                'comments-count': 0,
                 'completed': false,
                 'project-id': this.model.id,
-                'todo-list-id': this.cur_item,
-                'comments-count': 0
+                'todo-list-id': this.cur_item
             };
             if (_.isFinite(item.get('responsible-party'))) {
                 data = _.extend(data, {
-                    'responsible-party-type': 'Person',
                     'responsible-party-id': parseInt(item.get('responsible-party'), 10),
-                    'responsible-party-name': this.options.collections.project_people.get_or_create(this.model.id).get(item.get('responsible-party')).name()
+                    'responsible-party-name': this.options.collections.project_people.get_or_create(this.model.id).get(item.get('responsible-party')).name(),
+                    'responsible-party-type': 'Person'
                 });
             } else {
                 data = _.extend(data, {
-                    'responsible-party-type': undefined,
                     'responsible-party-id': undefined,
-                    'responsible-party-name': undefined
+                    'responsible-party-name': undefined,
+                    'responsible-party-type': undefined
                 });
             }
             item.set(data, {silent: true});
