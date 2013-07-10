@@ -1,0 +1,121 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=15  implicit_wait=0.1
+
+Resource  keywords.txt
+
+Suite Setup  Start app
+
+Suite Teardown  Stop app
+
+Test Setup  Start Browser For Test
+
+Test Teardown  Close All Browsers and Report Status
+
+
+*** Test Cases ***
+
+User can view todos for it and other users
+    [Documentation]  User should view to-dos for it, other users and unassigned.
+    [Tags]  todo
+    Given an to-dos page
+    When select from list  target  First#1 Last
+    Then Wait Until Page Contains  First#1 Last's to-do items across all projects
+    And heading should be "First#1 Last's to-dos"
+    When select from list  target  Nobody
+    Then Wait Until Page Contains  Unassigned to-do items across all projects
+    And heading should be "Unassigned to-dos"
+
+User can add edit and delete todo lists and items
+    [Documentation]  User should add, edit and delete todo lists and items.
+    [Tags]  todo  crud  projects
+    Given an project todos page
+    When user add todo list
+    Then page should contain added todo list
+    When user edit todo list
+    Then page should contain edited todo list
+    When user delete todo list
+    Then page should not contain deleted todo list
+    When click link  css=a[href$='todo_lists/0']
+    When user add todo item
+    Then page should contain added todo item
+    When user edit todo item
+    Then page should contain edited todo item
+    When user delete todo item
+    Then page should not contain deleted todo item
+
+
+*** Keywords ***
+
+an to-dos page
+    Given an bb-classic app
+    When click on "To-Dos" link in navbar
+    Then wait for data loading
+    And heading should be "My to-dos"
+
+an project todos page
+    Given an bb-classic app
+    When click link  Name of #0
+    And click on "To-Dos" in projectnav
+    Then wait for data loading
+
+user add todo list
+    [Documentation]  user can add todo list
+    Click button  Add an item
+    Input Text  todoName  added todo list
+    Input Text  todoDescription  added descrition
+    Click Button  css=button.add
+
+page should contain added todo list
+    [Documentation]  added item should be present
+    Page should contain  added todo list
+    Page should contain  added descrition
+
+user edit todo list
+    [Documentation]  user can edit todo list
+    Click Element  css=.todolist.icon-pencil[data-id="30"]
+    Input Text  todoName30  edited todo list
+    Input Text  todoDescription30  edited descrition
+    Click Button  css=button.save
+
+page should contain edited todo list
+    [Documentation]  edited item should be present
+    Page should contain  edited todo list
+    Page should contain  edited descrition
+
+user delete todo list
+    [Documentation]  user can delete todo list
+    Click Element  css=.todolist.icon-trash[data-id="30"]
+
+page should not contain deleted todolist
+    [Documentation]  deleted item should not be present
+    Page should not contain  edited todo list
+    Page should not contain  edited description
+
+user add todo item
+    [Documentation]  user can add todo item
+    Click button  Add an item
+    Input Text  todoContent  added todo item
+    Click Button  css=button.add
+
+page should contain added todo item
+    [Documentation]  added item should be present
+    Page should contain  added todo item
+
+user edit todo item
+    [Documentation]  user can edit todo item
+    Click Element  css=.todo.icon-pencil[data-id="30"]
+    Input Text  todoContent30  edited todo item
+    Click Button  css=button.save
+
+page should contain edited todo item
+    [Documentation]  edited item should be present
+    Page should contain  edited todo item
+
+user delete todo item
+    [Documentation]  user can delete todo item
+    Click Element  css=.todo.icon-trash[data-id="30"]
+
+page should not contain deleted todoitem
+    [Documentation]  deleted item should not be present
+    Page should not contain  edited todo item
