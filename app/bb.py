@@ -426,6 +426,10 @@ REQUEST2XML = {
     rec(r".*\/todo_items\.xml"): ("todo-item",),
     # /todo_items/#{id}.xml
     rec(r".*\/todo_items\/\d*\.xml"): ("todo-item",),
+    # /projects/#{project_id}/todo_lists.xml
+    rec(r".*\/todo_lists\.xml"): ("todo-list",),
+    # /todo_lists/#{id}.xml`
+    rec(r".*\/todo_lists\/\d*\.xml"): ("todo-list",),
 }
 
 
