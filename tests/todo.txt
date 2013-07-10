@@ -68,8 +68,8 @@ user add todo list
 
 page should contain added todo list
     [Documentation]  added item should be present
-    Page should contain  added todo list
-    Page should contain  added descrition
+    Wait Until Page Contains  added todo list
+    Wait Until Page Contains  added descrition
 
 user edit todo list
     [Documentation]  user can edit todo list
@@ -80,8 +80,8 @@ user edit todo list
 
 page should contain edited todo list
     [Documentation]  edited item should be present
-    Page should contain  edited todo list
-    Page should contain  edited descrition
+    Wait Until Page Contains  edited todo list
+    Wait Until Page Contains  edited descrition
 
 user delete todo list
     [Documentation]  user can delete todo list
@@ -100,7 +100,7 @@ user add todo item
 
 page should contain added todo item
     [Documentation]  added item should be present
-    Page should contain  added todo item
+    Wait Until Page Contains  added todo item
 
 user edit todo item
     [Documentation]  user can edit todo item
@@ -110,7 +110,7 @@ user edit todo item
 
 page should contain edited todo item
     [Documentation]  edited item should be present
-    Page should contain  edited todo item
+    Wait Until Page Contains  edited todo item
 
 user delete todo item
     [Documentation]  user can delete todo item
