@@ -632,7 +632,7 @@ templates['#calendar'] = '<li class="thumbnail">' +
 '        <% } %>' +
 '    </small>' +
 '</li>';
-templates['#calendaredit'] = '<li class="thumbnail editcalendar" data-id="<%- item.id %>">' +
+templates['#calendaredit'] = '<li class="thumbnail editcalendar form" data-id="<%- item.id %>">' +
 '<input type="text" name="title" placeholder="title" value="<%- item.get("title") %>">' +
 '<select name="type">' +
 '<option value="Milestone" <% if (item.get("type")=="Milestone") { %>selected="selected"<% } %>>Milestone</option>' +
