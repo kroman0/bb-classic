@@ -1,0 +1,55 @@
+*** Settings ***
+
+Library  Selenium2Library  timeout=15  implicit_wait=0.1
+
+Resource  keywords.txt
+
+Suite Setup  Start app
+
+Suite Teardown  Stop app
+
+Test Setup  Start Browser For Test
+
+Test Teardown  Close All Browsers and Report Status
+
+
+*** Test Cases ***
+
+User can edit and delete calendar entries on project calendar page
+    [Documentation]  User should edit and delete calendar entries.
+    [Tags]  calendar  crud  projects
+    Given an project calendar page
+    When user edit calendar entry
+    Then page should contain edited entry
+    When user delete calendar entry
+    Then page should not contain deleted entry
+
+
+*** Keywords ***
+
+an project calendar page
+    Given an bb-classic app
+    When click link  Name of #0
+    And click on "Calendar" in projectnav
+    Then wait for data loading
+
+user edit calendar entry
+    [Documentation]  user can edit calendar entry
+    Wait Until Page Contains Element  css=.icon-pencil[data-id="0"]
+    Click Element  css=.icon-pencil[data-id="0"]
+    Wait Until Page Contains Element  css=.editcalendar[data-id="0"] [name="title"]
+    Input Text  css=.editcalendar[data-id="0"] [name="title"]  edited title
+    Click Button  css=[data-id="0"] button.save
+
+page should contain edited entry
+    [Documentation]  edited item should be present
+    Wait Until Page Contains  edited title
+
+user delete calendar entry
+    [Documentation]  user can delete calendar entry
+    Wait Until Page Contains Element  css=.icon-trash[data-id="0"]
+    Click Element  css=.icon-trash[data-id="0"]
+
+page should not contain deleted entry
+    [Documentation]  deleted item should not be present
+    Page should not contain  edited title
