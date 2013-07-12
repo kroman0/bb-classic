@@ -642,7 +642,7 @@
         template: '#nav',
         initialize: function() {
             this.model.bind('change', this.render, this);
-            Backbone.history.on('route', function(){
+            Backbone.history.on('route', function() {
                 $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
                     return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
                 })).addClass('active');
