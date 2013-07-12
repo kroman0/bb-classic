@@ -115,9 +115,6 @@
                 this.$el.html(render(this.template, {'view': this}));
                 this.delegateEvents();
                 if (this.PageTitle) {document.title = this.PageTitle();}
-                $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
-                    return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
-                })).addClass('active');
                 $(_.filter($('ul.projectnav li').removeClass('active'), function(i) {
                     return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
                 })).filter(':last').addClass('active');
@@ -630,9 +627,26 @@
     });
     // Nav View - no url
     bbviews.NavView = BBView.extend({
+        navitems: {
+            projects: 'Projects',
+            companies: 'Companies',
+            todos: 'To-Dos',
+            time_report: 'Time',
+            people: 'People'
+        },
+        dropdownitems: {
+            me: {icon: 'user', title: 'My profile'},
+            todos: {icon: 'tasks', title: 'My todos'},
+            time_report: {icon: 'time', title: 'My time'}
+        },
         template: '#nav',
         initialize: function() {
             this.model.bind('change', this.render, this);
+            Backbone.history.on('route', function(){
+                $(_.filter($('.navbar ul.nav li').removeClass('active'), function(i) {
+                    return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
+                })).addClass('active');
+            }, this);
         }
     });
     return bbviews;
