@@ -124,8 +124,7 @@ moment-update:
 	wget -q https://raw.github.com/timrwood/moment/master/moment.js -O app/static/js/moment.js
 
 requirejs-update:
-	wget -q http://requirejs.org/docs/release/2.1.6/comments/require.js -O app/static/js/require.js
-	wget -q http://requirejs.org/docs/release/2.1.6/minified/require.js -O app/static/js/require.min.js
+	wget -q https://raw.github.com/jrburke/requirejs/master/require.js -O app/static/js/require.js
 
 update-all: bootstrap-update bootstrap-datepicker-update backbone-update underscore-update backbone-pageable-update backbone-fetch-cache-update moment-update requirejs-update
 
