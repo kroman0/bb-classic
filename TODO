@@ -1,7 +1,10 @@
 - More tests
 - More docs
 + Edit my info - no API
-- Add/edit todo-item/list
++ Add/edit todo-item
++ Add/edit todo-list
 - Caching requests
++ Freeze events
+- Create view on demand
 
 
