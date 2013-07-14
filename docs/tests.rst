@@ -13,6 +13,12 @@ Acceptance tests
 .. robot_tests::
    :source: ../tests/times.txt
 
+.. robot_tests::
+   :source: ../tests/todo.txt
+
+.. robot_tests::
+   :source: ../tests/calendar.txt
+
 Generate screenshots
 ====================
 
