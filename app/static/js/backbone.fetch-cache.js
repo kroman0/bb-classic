@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v0.1.10
+  backbone.fetch-cache v0.1.11
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
@@ -19,11 +19,11 @@
 
   // Setup
   var superMethods = {
-        modelFetch: Backbone.Model.prototype.fetch,
-        modelSync: Backbone.Model.prototype.sync,
-        collectionFetch: Backbone.Collection.prototype.fetch
-      },
-      supportLocalStorage = typeof window.localStorage !== 'undefined';
+    modelFetch: Backbone.Model.prototype.fetch,
+    modelSync: Backbone.Model.prototype.sync,
+    collectionFetch: Backbone.Collection.prototype.fetch
+  },
+  supportLocalStorage = typeof window.localStorage !== 'undefined';
 
   Backbone.fetchCache = (Backbone.fetchCache || {});
   Backbone.fetchCache._cache = (Backbone.fetchCache._cache || {});
@@ -53,7 +53,13 @@
   }
 
   function getCacheKey(instance, opts) {
-    var url = _.isFunction(instance.url) ? instance.url() : instance.url;
+    var url;
+
+    if(opts && opts.url) {
+      url = opts.url;
+    } else {
+      url = _.isFunction(instance.url) ? instance.url() : instance.url;
+    }
 
     // Need url to use as cache key so return if we can't get it
     if(!url) { return; }
