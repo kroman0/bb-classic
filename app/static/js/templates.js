@@ -2120,19 +2120,17 @@ templates['#nav'] = '\n' +
 '<a class="brand" href="#">BB</a>' +
 '<% if (_.isFinite(view.model.id)) { %>' +
 '<ul class="nav nav-collapse">' +
-'    <li><a href="#projects">Projects</a></li>' +
-'    <li><a href="#companies">Companies</a></li>' +
-'    <li><a href="#todos">To-Dos</a></li>' +
-'    <li><a href="#time_report">Time</a></li>' +
-'    <li><a href="#people">People</a></li>' +
+'<% _.each(view.navitems, function (title, link) { %>' +
+'    <li><a href="#<%- link %>"><%- title %></a></li>' +
+'<% }) %>' +
 '</ul>' +
 '<ul class="nav pull-right">' +
 '    <li>' +
 '        <a href="#me" title="<%- view.model.get("user-name") %>" class="dropdown-toggle" data-toggle="dropdown"><%- view.model.name() %> <span class="caret"></span></a>' +
 '        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">' +
-'            <li><a href="#me"><i class="icon-user"></i> My profile</a></li>' +
-'            <li><a href="#todos"><i class="icon-tasks"></i> My todos</a></li>' +
-'            <li><a href="#time_report"><i class="icon-time"></i> My time</a></li>' +
+'            <% _.each(view.dropdownitems, function (data, link) { %>' +
+'            <li><a href="#<%- link %>"><i class="icon-<%- data.icon %>"></i> <%- data.title %></a></li>' +
+'            <% }) %>' +
 '            <li class="divider"></li>' +
 '            <li><a href="/logout"><i class="icon-eject"></i> Logout</a></li>' +
 '        </ul>' +

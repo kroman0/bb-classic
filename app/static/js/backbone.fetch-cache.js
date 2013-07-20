@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v0.1.9
+  backbone.fetch-cache v0.1.11
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
@@ -19,11 +19,11 @@
 
   // Setup
   var superMethods = {
-        modelFetch: Backbone.Model.prototype.fetch,
-        modelSync: Backbone.Model.prototype.sync,
-        collectionFetch: Backbone.Collection.prototype.fetch
-      },
-      supportLocalStorage = typeof window.localStorage !== 'undefined';
+    modelFetch: Backbone.Model.prototype.fetch,
+    modelSync: Backbone.Model.prototype.sync,
+    collectionFetch: Backbone.Collection.prototype.fetch
+  },
+  supportLocalStorage = typeof window.localStorage !== 'undefined';
 
   Backbone.fetchCache = (Backbone.fetchCache || {});
   Backbone.fetchCache._cache = (Backbone.fetchCache._cache || {});
@@ -52,14 +52,31 @@
     Backbone.fetchCache.localStorage = true;
   }
 
+  function getCacheKey(instance, opts) {
+    var url;
+
+    if(opts && opts.url) {
+      url = opts.url;
+    } else {
+      url = _.isFunction(instance.url) ? instance.url() : instance.url;
+    }
+
+    // Need url to use as cache key so return if we can't get it
+    if(!url) { return; }
+
+    if(opts && opts.data) {
+      return url + "?" + $.param(opts.data);
+    }
+    return url;
+  }
   // Shared methods
   function setCache(instance, opts, attrs) {
     opts = (opts || {});
-    var url = _.isFunction(instance.url) ? instance.url() : instance.url,
+    var key = Backbone.fetchCache.getCacheKey(instance, opts),
         expires = false;
 
     // Need url to use as cache key so return if we can't get it
-    if (!url) { return; }
+    if (!key) { return; }
 
     // Never set the cache if user has explicitly said not to
     if (opts.cache === false) { return; }
@@ -71,7 +88,7 @@
       expires = (new Date()).getTime() + ((opts.expires || 5 * 60) * 1000);
     }
 
-    Backbone.fetchCache._cache[url] = {
+    Backbone.fetchCache._cache[key] = {
       expires: expires,
       value: attrs
     };
@@ -107,8 +124,8 @@
   // Instance methods
   Backbone.Model.prototype.fetch = function(opts) {
     opts = (opts || {});
-    var url = _.isFunction(this.url) ? this.url() : this.url,
-        data = Backbone.fetchCache._cache[url],
+    var key = Backbone.fetchCache.getCacheKey(this, opts),
+        data = Backbone.fetchCache._cache[key],
         expired = false,
         attributes = false,
         promise = new $.Deferred();
@@ -163,11 +180,11 @@
         i, len;
 
     // Build up a list of keys to delete from the cache, starting with this
-    keys.push(_.isFunction(model.url) ? model.url() : model.url);
+    keys.push(Backbone.fetchCache.getCacheKey(model));
 
     // If this model has a collection, also try to delete the cache for that
     if (!!collection) {
-      keys.push(_.isFunction(collection.url) ? collection.url() : collection.url);
+      keys.push(Backbone.fetchCache.getCacheKey(collection));
     }
 
     // Empty cache for all found keys
@@ -178,8 +195,8 @@
 
   Backbone.Collection.prototype.fetch = function(opts) {
     opts = (opts || {});
-    var url = _.isFunction(this.url) ? this.url() : this.url,
-        data = Backbone.fetchCache._cache[url],
+    var key = Backbone.fetchCache.getCacheKey(this, opts),
+        data = Backbone.fetchCache._cache[key],
         expired = false,
         attributes = false,
         promise = new $.Deferred();
@@ -225,8 +242,10 @@
   getLocalStorage();
 
   // Exports
+
   Backbone.fetchCache._superMethods = superMethods;
   Backbone.fetchCache.setCache = setCache;
+  Backbone.fetchCache.getCacheKey = getCacheKey;
   Backbone.fetchCache.clearItem = clearItem;
   Backbone.fetchCache.setLocalStorage = setLocalStorage;
   Backbone.fetchCache.getLocalStorage = getLocalStorage;
