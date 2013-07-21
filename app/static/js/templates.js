@@ -275,7 +275,7 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '        <div class="span4">' +
 '            <% if (item.get("state")) { %>State: <%- item.get("state") %><br /><% } %>' +
 '            <% if (item.get("phone-number-office")) { %>Office phone: <%- item.get("phone-number-office") %><br /><% } %>' +
-'            <% if (item.get("phone-number-fax")) { %>Fax phone: <%- item.get("phone-number-fax") %><br /><% } %>' +
+'            <% if (item.get("phone-number-fax")) { %>Fax phone: <%- item.get("phone-number-fax") %><% } %>' +
 '        </div>' +
 '    </dd>' +
 '<% }) %>' +
@@ -313,14 +313,14 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        <a href="<%- view.model.get("web-address") %>"><b><%- view.model.get("web-address") %></b></a><br />' +
 '        <% } %>' +
 '        <% if (view.model.get("time-zone-id")) { %>Time zone: <%- view.model.get("time-zone-id") %><br /><% } %>' +
-'        <% if (view.model.get("locale")) { %>Locale: <%- view.model.get("locale") %><% } %>' +
+'        <% if (view.model.get("locale")) { %>Locale: <%- view.model.get("locale") %><br /><% } %>' +
 '        <% if (view.model.get("country")) { %><%- view.model.get("country") %><br /><% } %>' +
 '        <% if (view.model.get("city")) { %><%- view.model.get("city") %> <%- view.model.get("zip") %><br /><% } %>' +
 '        <% if (view.model.get("address-one")) { %><%- view.model.get("address-one") %><br /><% } %>' +
-'        <% if (view.model.get("address-two")) { %><%- view.model.get("address-two") %><% } %>' +
+'        <% if (view.model.get("address-two")) { %><%- view.model.get("address-two") %><br /><% } %>' +
 '        <% if (view.model.get("state")) { %>State: <%- view.model.get("state") %><br /><% } %>' +
 '        <% if (view.model.get("phone-number-office")) { %>Office phone: <%- view.model.get("phone-number-office") %><br /><% } %>' +
-'        <% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><br /><% } %>' +
+'        <% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><% } %>' +
 '    </div>' +
 '</div>';
 templates['#person'] = '<%= view.block("#header") %>' +
