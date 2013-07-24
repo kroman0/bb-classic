@@ -71,7 +71,7 @@ templates['#header'] = '<div class="page-header">' +
 '<ul class="breadcrumb">' +
 '<% _.each(path, function(i) { %>' +
 '    <li<% var url = i[0], title = i[1]; if (url) { %>>' +
-'    <a href="<%- url %>"><%- title %></a> <span class="divider">&gt;</span>' +
+'    <a href="<%- url %>"><%- title %></a>' +
 '    <% } else { %> class="active">' +
 '    <%- title %>' +
 '    <% } %></li>' +
