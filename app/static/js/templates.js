@@ -113,7 +113,7 @@ templates['#comment'] = '<li class="thumbnail">' +
 templates['#comments'] = '<% if (view.collection.isEmpty()) { %>' +
 '<div class="alert alert-info">No comments...</div>' +
 '<% } else { %>' +
-'<ul class="unstyled">' +
+'<ul class="list-unstyled">' +
 '    <% view.collection.each(function (item) { %>' +
 '        <%= view.itemblock(item, "#comment") %>' +
 '    <% }) %>' +
@@ -234,7 +234,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '        <div class="tab-content col-lg-8">' +
 '        <% _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">' +
-'                <ul class="unstyled">' +
+'                <ul class="list-unstyled">' +
 '                <% _.each(list, function (item) { %>' +
 '                    <li>' +
 '                        <h3><a href="#projects/<%- item.id %>"><%- item.get("name") %></a></h3>' +
@@ -288,7 +288,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        <% var cid = view.model.id; var pp=view.options.collections.projects; if (pp.isEmpty()) { %>' +
 '        <div class="alert alert-info">No projects...</div>' +
 '        <% } else { %>' +
-'        <ul class="unstyled">' +
+'        <ul class="list-unstyled">' +
 '        <% _.each(pp.filter(function(i){return i.get("company").id==cid}), function (item) { %>' +
 '            <li><i class="<%- item.icon() %>"></i>&nbsp;<a href="#projects/<%- item.id %>"><%- item.get("name") %></a></li>' +
 '        <% }) %>' +
@@ -300,7 +300,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        <% var pp=view.options.collections.people; if (pp.isEmpty()) { %>' +
 '        <div class="alert alert-info">No people...</div>' +
 '        <% } else { %>' +
-'        <ul class="unstyled">' +
+'        <ul class="list-unstyled">' +
 '        <% _.each(pp.filter(function(i){return i.get("company-id")==cid}), function (item) { %>' +
 '            <li><a href="#people/<%- item.id %>"><i class="glyphicon glyphicon-user"></i><%- item.name() %></a></li>' +
 '        <% }) %>' +
@@ -519,7 +519,7 @@ templates['#project-posts'] = '<%= view.block("#header") %>' +
 'if (pp.isEmpty()) { %>' +
 '<div class="alert alert-info">No posts...</div>' +
 '<% } else { %>' +
-'<ul class="unstyled">' +
+'<ul class="list-unstyled">' +
 '<% pp.each(function (item) { %>' +
 '    <%= view.itemblock(item, "#post") %>' +
 '<% }) %>' +
@@ -531,7 +531,7 @@ templates['#project-post'] = '<%= view.block("#header") %>' +
 'if (pp.isEmpty()) { %>' +
 '<div class="alert alert-info">No posts...</div>' +
 '<% } else { %>' +
-'<ul class="unstyled">' +
+'<ul class="list-unstyled">' +
 '    <%= view.itemblock(item, "#post") %>' +
 '</ul>' +
 '<% } %>';
@@ -539,7 +539,7 @@ templates['#project-post-comments'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var item=view.options.collections.project_posts.get_or_create(view.model.id).get(view.cur_item);' +
 'if (item) { %>' +
-'<ul class="unstyled">' +
+'<ul class="list-unstyled">' +
 '    <%= view.itemblock(item, "#post") %>' +
 '</ul>' +
 '<% } %>' +
@@ -649,7 +649,7 @@ templates['#project-calendar'] = '<%= view.block("#header") %>' +
 'if (cc.isEmpty()) { %>' +
 '<div class="alert alert-info">No events...</div>' +
 '<% } else { %>' +
-'<ul class="unstyled">' +
+'<ul class="list-unstyled">' +
 '<% cc.each(function (item) { %>' +
 '    <%= view.itemblock(item, "#calendar") %>' +
 '<% }) %>' +
@@ -661,7 +661,7 @@ templates['#project-calendar-entry'] = '<%= view.block("#header") %>' +
 'if (cc.isEmpty()) { %>' +
 '<div class="alert alert-info">No events...</div>' +
 '<% } else { %>' +
-'<ul class="unstyled">' +
+'<ul class="list-unstyled">' +
 '    <%= view.itemblock(item, "#calendar") %>' +
 '</ul>' +
 '<% } %>';
@@ -669,7 +669,7 @@ templates['#project-calendar-entry-comments'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var item=view.options.collections.project_calendar.get_or_create(view.model.id).get(view.cur_item);' +
 'if (item) { %>' +
-'<ul class="unstyled">' +
+'<ul class="list-unstyled">' +
 '    <%= view.itemblock(item, "#calendar") %>' +
 '</ul>' +
 '<% } %>' +
