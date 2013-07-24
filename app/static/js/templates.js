@@ -211,7 +211,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No projects...</div>' +
 '<% } else { %>' +
 '<div class="tabbable">' +
-'<ul class="nav nav-pills">' +
+'<ul class="nav nav-tabs">' +
 '<% var fprst=_.first(pp.pluck("status"));' +
 '   _.each(_.uniq(pp.pluck("status")), function (status) { %>' +
 '    <li class="prstatus<% if (fprst==status) { %> active<% } %> pull-right">' +
@@ -222,8 +222,8 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '<div class="tab-content">' +
 '<% _.each(pp.groupBy(function(i){ return i.get("status")}), function (plist, status) { %>' +
 '    <div class="tab-pane fade<% if (fprst==status) { %> in active<% } %>" id="projects_<%- status %>">' +
-'        <div class="tabbable row-fluid">' +
-'        <ul class="nav nav-list span4 pull-right">' +
+'        <div class="tabbable row">' +
+'        <ul class="nav nav-pills nav-stacked col-lg-4 pull-right">' +
 '        <% var fprcoid=_.first(plist).get("company").id;' +
 '        _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <li<% if (fprcoid==coid) { %> class="active"<% } %>>' +
@@ -231,7 +231,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '            </li>' +
 '        <% }) %>' +
 '        </ul>' +
-'        <div class="tab-content span8">' +
+'        <div class="tab-content col-lg-8">' +
 '        <% _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">' +
 '                <ul class="unstyled">' +
@@ -260,19 +260,19 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<dl>' +
 '<% cc.each(function (item) { %>' +
 '    <dt><h3><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></dt>' +
-'    <dd class="row-fluid thumbnail">' +
-'        <div class="span4">' +
+'    <dd class="row thumbnail">' +
+'        <div class="col-lg-4">' +
 '            <% if (item.get("web-address")) { %><a href="<%- item.get("web-address") %>"><b><%- item.get("web-address") %></b></a><br /><% } %>' +
 '            <% if (item.get("time-zone-id")) { %>Time zone: <%- item.get("time-zone-id") %><br /><% } %>' +
 '            <% if (item.get("locale")) { %>Locale: <%- item.get("locale") %><% } %>' +
 '        </div>' +
-'        <div class="span4">' +
+'        <div class="col-lg-4">' +
 '            <% if (item.get("country")) { %><%- item.get("country") %><br /><% } %>' +
 '            <% if (item.get("city")) { %><%- item.get("city") %> <%- item.get("zip") %><br /><% } %>' +
 '            <% if (item.get("address-one")) { %><%- item.get("address-one") %><br /><% } %>' +
 '            <% if (item.get("address-two")) { %><%- item.get("address-two") %><% } %>' +
 '        </div>' +
-'        <div class="span4">' +
+'        <div class="col-lg-4">' +
 '            <% if (item.get("state")) { %>State: <%- item.get("state") %><br /><% } %>' +
 '            <% if (item.get("phone-number-office")) { %>Office phone: <%- item.get("phone-number-office") %><br /><% } %>' +
 '            <% if (item.get("phone-number-fax")) { %>Fax phone: <%- item.get("phone-number-fax") %><% } %>' +
@@ -283,7 +283,7 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#company'] = '<%= view.block("#header") %>' +
 '<div class="row">' +
-'    <div class="span4">' +
+'    <div class="col-lg-4">' +
 '        <h2>Projects</h2>' +
 '        <% var cid = view.model.id; var pp=view.options.collections.projects; if (pp.isEmpty()) { %>' +
 '        <div class="alert alert-info">No projects...</div>' +
@@ -295,7 +295,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        </ul>' +
 '        <% } %>' +
 '    </div>' +
-'    <div class="span4">' +
+'    <div class="col-lg-4">' +
 '        <h2>People</h2>' +
 '        <% var pp=view.options.collections.people; if (pp.isEmpty()) { %>' +
 '        <div class="alert alert-info">No people...</div>' +
@@ -307,7 +307,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        </ul>' +
 '        <% } %>' +
 '    </div>' +
-'    <div class="span4">' +
+'    <div class="col-lg-4">' +
 '        <h2>Contact</h2>' +
 '        <% if (view.model.get("web-address")) { %>' +
 '        <a href="<%- view.model.get("web-address") %>"><b><%- view.model.get("web-address") %></b></a><br />' +
@@ -379,14 +379,14 @@ templates['#people'] = '<%= view.block("#header") %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } else { %>' +
-'<div class="tabbable tabs-left row-fluid">' +
-'<ul class="nav nav-tabs span3">' +
+'<div class="tabbable tabs-left row">' +
+'<ul class="nav nav-pills nav-stacked col-lg-4">' +
 '<% var fcoid=_.first(pp.pluck("company-id"));' +
 '   cc.each(function (item) { %>' +
 '    <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#people_c<%- item.id %>" data-toggle="tab"><%- item.name() %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'<div class="tab-content span8">' +
+'<div class="tab-content col-lg-8">' +
 '<% cc.each(function (cc) { %>' +
 '    <div class="tab-pane fade<% if (fcoid==cc.id) { %> in active<% } %>" id="people_c<%- cc.id %>">' +
 '        <% var cp=pp.where({"company-id":cc.id}); if (_.isEmpty(cp)) { %>' +
@@ -416,14 +416,14 @@ templates['#project-people'] = '<%= view.block("#header") %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } else { %>' +
-'<div class="tabbable tabs-left row-fluid">' +
-'<ul class="nav nav-tabs span3">' +
+'<div class="tabbable tabs-left row">' +
+'<ul class="nav nav-pills nav-stacked col-lg-4">' +
 '<% var pc=_.uniq(pp.pluck("company-id")); var fcoid=_.first(pc);' +
 '_.each(pc, function (id) { %>' +
 '    <li<% if (fcoid==id) { %> class="active"<% } %>><a href="#people_c<%- id %>" data-toggle="tab"><%- cc.get(id)?cc.get(id).name():id %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'<div class="tab-content span8">' +
+'<div class="tab-content col-lg-8">' +
 '<% _.each(pc, function (id) { %>' +
 '    <div class="tab-pane fade<% if (fcoid==id) { %> in active<% } %>" id="people_c<%- id %>">' +
 '        <ul class="media-list">' +
@@ -827,8 +827,8 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 'if (td.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
-'<div class="tabbable row-fluid">' +
-'<ul class="nav nav-list span4 pull-right">' +
+'<div class="tabbable row">' +
+'<ul class="nav nav-pills nav-stacked col-lg-4 pull-right">' +
 '<% var ftdst=_.first(td.pluck("completed"));' +
 '   _.each(_.uniq(td.pluck("completed")), function (status) { %>' +
 '    <li<% if (ftdst==status) { %> class="active"<% } %>>' +
@@ -836,7 +836,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '    </li>' +
 '<% }) %>' +
 '</ul>' +
-'<div class="tab-content span8">' +
+'<div class="tab-content col-lg-8">' +
 '    <% _.each(td.groupBy(function(i){ return i.get("completed")}), function (tlgroup, status) { %>' +
 '    <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">' +
 '        <dl>' +
@@ -937,8 +937,8 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 'if (td.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
-'<div class="row-fluid">' +
-'<dl class="todoitemsholder span8 project-todo-list">' +
+'<div class="row">' +
+'<dl class="todoitemsholder col-lg-8 project-todo-list">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
 '<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
 '    <dd>' +
@@ -947,8 +947,8 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<% }) %>' +
 '<%= view.block("#todoadd") %>' +
 '</dl>' +
-'<div class="tabbable span4 pull-right">' +
-'<ul class="nav nav-pills">' +
+'<div class="tabbable col-lg-4 pull-right">' +
+'<ul class="nav nav-tabs nav-justified">' +
 '<% _.each(_.uniq(td.pluck("completed")), function (status) { %>' +
 '    <li<% if (ftdst==status) { %> class="active"<% } %>>' +
 '        <a href="#todolists_<%- status %>" data-toggle="tab"><% if (status==true) { %>Finished<% } else { %>Pending<% } %></a>' +
@@ -958,7 +958,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<div class="tab-content">' +
 '<% _.each(td.groupBy(function(i){ return i.get("completed")}), function (tlgroup, status) { %>' +
 '    <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">' +
-'    <ul class="nav nav-list">' +
+'    <ul class="nav nav-pills nav-stacked">' +
 '        <% _.each(tlgroup, function (l) { %>' +
 '        <li<% if (ci==l.id) { %> class="active"<% } %>>' +
 '            <a href="#projects/<%- prid %>/todo_lists/<%- l.id %>"><%- l.get("name") %><% if (l.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %></a>' +
