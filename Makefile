@@ -118,7 +118,6 @@ backbone-pageable-update:
 
 backbone-fetch-cache-update:
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.js -O app/static/js/backbone.fetch-cache.js
-	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.min.js -O app/static/js/backbone.fetch-cache.min.js
 
 moment-update:
 	wget -q https://raw.github.com/timrwood/moment/master/moment.js -O app/static/js/moment.js
