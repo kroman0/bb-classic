@@ -35,8 +35,8 @@ an project calendar page
 
 user edit calendar entry
     [Documentation]  user can edit calendar entry
-    Wait Until Page Contains Element  css=.icon-pencil[data-id="0"]
-    Click Element  css=.icon-pencil[data-id="0"]
+    Wait Until Page Contains Element  css=.edititem[data-id="0"]
+    Click Element  css=.edititem[data-id="0"]
     Wait Until Page Contains Element  css=.editcalendar[data-id="0"] [name="title"]
     Input Text  css=.editcalendar[data-id="0"] [name="title"]  edited title
     Click Button  css=[data-id="0"] button.save
@@ -47,8 +47,8 @@ page should contain edited entry
 
 user delete calendar entry
     [Documentation]  user can delete calendar entry
-    Wait Until Page Contains Element  css=.icon-trash[data-id="0"]
-    Click Element  css=.icon-trash[data-id="0"]
+    Wait Until Page Contains Element  css=.removeitem[data-id="0"]
+    Click Element  css=.removeitem[data-id="0"]
 
 page should not contain deleted entry
     [Documentation]  deleted item should not be present
