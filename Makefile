@@ -99,8 +99,8 @@ sauce:	clean
 
 bootstrap-update:
 	wget -q http://twitter.github.com/bootstrap/assets/bootstrap.zip -O /tmp/bootstrap.zip
-	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap-responsive.min.css -d app/static/css/
-	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap.min.css -d app/static/css/
+	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap-responsive.css -d app/static/css/
+	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap.css -d app/static/css/
 	unzip -oj /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings-white.png -d app/static/img/
 	unzip -oj /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings.png -d app/static/img/
 	unzip -oj /tmp/bootstrap.zip bootstrap/js/bootstrap.js -d app/static/js/
