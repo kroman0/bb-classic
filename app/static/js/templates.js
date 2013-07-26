@@ -290,7 +290,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        <% } else { %>' +
 '        <ul class="unstyled">' +
 '        <% _.each(pp.filter(function(i){return i.get("company").id==cid}), function (item) { %>' +
-'            <li><i class="<%- item.icon() %>"></i>&nbsp;<a href="#projects/<%- item.id %>"><%- item.get("name") %></a></li>' +
+'            <li><i class="icon-project-<%- item.get("status") %>"></i>&nbsp;<a href="#projects/<%- item.id %>"><%- item.get("name") %></a></li>' +
 '        <% }) %>' +
 '        </ul>' +
 '        <% } %>' +

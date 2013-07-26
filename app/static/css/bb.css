@@ -69,3 +69,15 @@ button.remove {
 .editcalendar button {
     margin-bottom: 10px;
 }
+/* .icon-play */
+.icon-project-active {
+  background-position: -264px -72px;
+}
+/* .icon-pause */
+.icon-project-on_hold {
+  background-position: -288px -72px;
+}
+/* .icon-stop */
+.icon-project-archived {
+  background-position: -312px -72px;
+}
