@@ -99,11 +99,11 @@ sauce:	clean
 
 bootstrap-update:
 	wget -q http://twitter.github.com/bootstrap/assets/bootstrap.zip -O /tmp/bootstrap.zip
-	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap-responsive.css -d app/static/css/
-	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap.css -d app/static/css/
-	unzip -oj /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings-white.png -d app/static/img/
-	unzip -oj /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings.png -d app/static/img/
-	unzip -oj /tmp/bootstrap.zip bootstrap/js/bootstrap.js -d app/static/js/
+# 	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap-responsive.css -d app/static/css/
+# 	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap.css -d app/static/css/
+# 	unzip -oj /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings-white.png -d app/static/img/
+# 	unzip -oj /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings.png -d app/static/img/
+# 	unzip -oj /tmp/bootstrap.zip bootstrap/js/bootstrap.js -d app/static/js/
 
 bootstrap-datepicker-update:
 	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/css/datepicker.css -O app/static/css/datepicker.css
