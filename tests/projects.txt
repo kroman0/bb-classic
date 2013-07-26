@@ -57,7 +57,7 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/posts/0
     And heading should be "Title #0"
     And title should be  Title #0 - Posts - Name of #0 - Projects - Company name #0 - Companies - BB
-    When click element  css=.icon-comment
+    When click element  css=.itemcomments
     Then location should be  ${APP_URL}/#projects/0/posts/0/comments
     And heading should be "Comments"
     And title should be  Comments - Title #0 - Posts - Name of #0 - Projects - Company name #0 - Companies - BB
@@ -73,7 +73,7 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/todo_lists/0/0
     And heading should be "Todo content #0"
     And title should be  Todo content #0 - Name of #0 - To-dos - Name of #0 - Projects - Company name #0 - Companies - BB
-    When click element  css=.icon-comment
+    When click element  css=.itemcomments
     Then location should be  ${APP_URL}/#projects/0/todo_lists/0/0/comments
     And heading should be "Comments"
     And title should be  Comments - Todo content #0 - Name of #0 - To-dos - Name of #0 - Projects - Company name #0 - Companies - BB
@@ -85,7 +85,7 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/calendar/0
     And heading should be "Title #0"
     And title should be  Title #0 - Calendar - Name of #0 - Projects - Company name #0 - Companies - BB
-    When click element  css=.icon-comment
+    When click element  css=.itemcomments
     Then location should be  ${APP_URL}/#projects/0/calendar/0/comments
     And heading should be "Comments"
     And title should be  Comments - Title #0 - Calendar - Name of #0 - Projects - Company name #0 - Companies - BB

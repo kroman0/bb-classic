@@ -57,17 +57,7 @@
             }
         });
     bbmodels.Project = BBModel.extend({
-        urlRoot: '/api/projects/',
-        icon: function() {
-            switch (this.get('status')) {
-            case 'active':
-                return 'glyphicon glyphicon-play';
-            case 'archived':
-                return 'glyphicon glyphicon-stop';
-            case 'on_hold':
-                return 'glyphicon glyphicon-pause';
-            }
-        }
+        urlRoot: '/api/projects/'
     });
     bbmodels.Company = BBModel.extend({
         urlRoot: '/api/companies/'

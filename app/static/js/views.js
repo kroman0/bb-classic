@@ -74,9 +74,9 @@
         todoevents = {
             'click .reset': 'resetitem',
             'click .save': 'saveitem',
-            'click .todo.icon-completed': 'uncomplete',
-            'click .todo.icon-pencil': 'edititem',
-            'click .todo.icon-uncompleted': 'complete'
+            'click .todo.uncompleteitem': 'uncomplete',
+            'click .todo.edititem': 'edititem',
+            'click .todo.completeitem': 'complete'
         },
         _result = _.result,
         $ = Backbone.$,
@@ -388,10 +388,10 @@
     // Calendar View - projects/:id/calendar
     bbviews.CalendarView = ProjectBBView.extend({
         events: {
-            'click .icon-completed': 'uncomplete',
-            'click .icon-pencil': 'edititem',
-            'click .icon-trash': 'removeitem',
-            'click .icon-uncompleted': 'complete',
+            'click .uncompleteitem': 'uncomplete',
+            'click .edititem': 'edititem',
+            'click .removeitem': 'removeitem',
+            'click .completeitem': 'complete',
             'click .reset': 'resetitem',
             'click .save': 'saveitem'
         },
@@ -502,8 +502,8 @@
             'click .add_todolist .add': 'additem',
             'click .reset': 'resetitem',
             'click .save': 'saveitem',
-            'click .todolist.icon-pencil': 'edititem',
-            'click .todolist.icon-trash': 'removeitem'
+            'click .todolist.edititem': 'edititem',
+            'click .todolist.removeitem': 'removeitem'
         },
         finishItem: function(item) {
             item.set({
@@ -533,7 +533,7 @@
         },
         events: _.extend(todoevents, {
             'click .add_todo .add': 'additem',
-            'click .todo.icon-trash': 'removeitem'
+            'click .todo.removeitem': 'removeitem'
         }),
         todos: function() {
             return this.options.collections.todo_items.get_or_create(this.cur_item);

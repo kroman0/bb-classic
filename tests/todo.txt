@@ -73,7 +73,7 @@ page should contain added todo list
 
 user edit todo list
     [Documentation]  user can edit todo list
-    Click Element  css=.todolist.icon-pencil[data-id="30"]
+    Click Element  css=.todolist.edititem[data-id="30"]
     Input Text  todoName30  edited todo list
     Input Text  todoDescription30  edited descrition
     Click Button  css=button.save
@@ -85,7 +85,7 @@ page should contain edited todo list
 
 user delete todo list
     [Documentation]  user can delete todo list
-    Click Element  css=.todolist.icon-trash[data-id="30"]
+    Click Element  css=.todolist.removeitem[data-id="30"]
 
 page should not contain deleted todolist
     [Documentation]  deleted item should not be present
@@ -104,7 +104,7 @@ page should contain added todo item
 
 user edit todo item
     [Documentation]  user can edit todo item
-    Click Element  css=.todo.icon-pencil[data-id="30"]
+    Click Element  css=.todo.edititem[data-id="30"]
     Input Text  todoContent30  edited todo item
     Click Button  css=button.save
 
@@ -114,7 +114,7 @@ page should contain edited todo item
 
 user delete todo item
     [Documentation]  user can delete todo item
-    Click Element  css=.todo.icon-trash[data-id="30"]
+    Click Element  css=.todo.removeitem[data-id="30"]
 
 page should not contain deleted todoitem
     [Documentation]  deleted item should not be present

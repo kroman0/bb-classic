@@ -1,0 +1,83 @@
+.prstatus {
+    text-decoration: underline;
+    text-transform: capitalize;
+    text-align: center;
+}
+.glyphicon-completed:before {
+  content: "\e013";
+}
+.glyphicon-completed:hover:before {
+  content: "\e066";
+}
+.glyphicon-uncompleted:before {
+  content: "\e072";
+}
+.glyphicon-uncompleted:hover:before {
+  content: "\e067";
+}
+#makereport .add-on {
+    width: 60px;
+}
+form#makereport {
+    margin: 0;
+}
+div#time_report {
+    width: auto;
+}
+.addtime th > *,
+.edittime th > * {
+    border-radius: 0;
+    margin-bottom: 0;
+    height: 100%;
+    border-width: 0;
+    box-shadow: none;
+}
+.addtime input,
+.addtime select,
+.edittime input,
+.edittime select {
+    padding: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+    border-width: 0;
+    box-shadow: none;
+    height: 100%;
+    width: 100%;
+}
+.addtime select,
+.edittime select {
+    padding-left: 10px;
+    vertical-align: top;
+}
+.edittime input[name=description] {
+    padding-left: 18px;
+    width: 94%;
+}
+.addtime .glyphicon-user,
+.edittime .glyphicon-user,
+.edittime .glyphicon-file,
+.edittime .glyphicon-folder-close {
+    position: absolute;
+    margin-top: 2px;
+}
+.addtime button,
+.edittime button,
+button.edit,
+button.remove {
+    border: 1px solid;
+}
+.editcalendar button {
+    margin-bottom: 10px;
+}
+/* .glyphicon-play */
+.glyphicon-project-active:before {
+  content: "\e072";
+}
+/* .glyphicon-pause */
+.glyphicon-project-on_hold:before {
+  content: "\e073";
+}
+/* .glyphicon-stop */
+.glyphicon-project-archived:before {
+  content: "\e074";
+}

@@ -24,8 +24,8 @@ templates['#time'] = '<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> d
 '        <%- item.get("description") %>' +
 '    </td>' +
 '    <td>' +
-'        <button class="edit" title="Edit"><i class="glyphicon glyphicon-edit"></i></button>' +
-'        <button class="remove" title="Remove"><i class="glyphicon glyphicon-trash"></i></button>' +
+'        <button class="edit" title="Edit"><i class="edititem glyphicon glyphicon-edit"></i></button>' +
+'        <button class="remove" title="Remove"><i class="removeitem glyphicon glyphicon-trash"></i></button>' +
 '    </td>' +
 '</tr>';
 templates['#timeedit'] = '<tr class="edittime form" data-id="<%- item.id %>">' +
@@ -290,7 +290,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        <% } else { %>' +
 '        <ul class="list-unstyled">' +
 '        <% _.each(pp.filter(function(i){return i.get("company").id==cid}), function (item) { %>' +
-'            <li><i class="<%- item.icon() %>"></i>&nbsp;<a href="#projects/<%- item.id %>"><%- item.get("name") %></a></li>' +
+'            <li><i class="glyphicon glyphicon-project-<%- item.get("status") %>"></i>&nbsp;<a href="#projects/<%- item.id %>"><%- item.get("name") %></a></li>' +
 '        <% }) %>' +
 '        </ul>' +
 '        <% } %>' +
@@ -487,7 +487,7 @@ templates['#post'] = '<li class="thumbnail">' +
 '    <h3>' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %>' +
-'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="glyphicon glyphicon-comment glyphicon glyphicon-white"></i><%- item.get("comments-count") %></a>' +
+'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item.get("comments-count") %></a>' +
 '    </h3>' +
 '    <small>' +
 '        by' +
@@ -600,10 +600,10 @@ templates['#project-file'] = '<%= view.block("#header") %>' +
 templates['#calendar'] = '<li class="thumbnail">' +
 '    <h3>' +
 '        <a <% if (item.get("type")=="Milestone" && item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
-'        <i class="badge badge-inverse"><i class="calendar glyphicon glyphicon-white glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>"></i></i>' +
-'        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="glyphicon glyphicon-comment glyphicon glyphicon-white"></i><%- item.get("comments-count") %></a>' +
-'        <i class="glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
-'        <% if (!_.isFinite(view.cur_item)) { %><i class="glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
+'        <i class="badge badge-inverse"><i class="calendar glyphicon-white glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>"></i></i>' +
+'        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item.get("comments-count") %></a>' +
+'        <i class="edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
+'        <% if (!_.isFinite(view.cur_item)) { %><i class="removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    </h3>' +
 '    <small>' +
 '        <% if (item.get("type")=="Milestone" && item.get("responsible-party-id")) { %>' +
@@ -709,8 +709,8 @@ templates['#project-category'] = '<%= view.block("#header") %>' +
 templates['#todolist'] = '<dt>' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
 '       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %><% if (item.get("tracked")) { %><i class="glyphicon glyphicon-time"></i><% } %></a>' +
-'    <i class="todolist glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
-'    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
+'    <i class="todolist edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
+'    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    <small><%= item.get("description") %></small>' +
 '</dt>';
 templates['#todolistedit'] = '<dt><form class="edit_todolist form-horizontal form">' +
@@ -799,17 +799,14 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '        <dl>' +
 '        <% _.each(list.get("todo-items"), function (item) { %>' +
 '        <dd>' +
-'            <% if(false){if (item.completed) { %>' +
-'            <i class="todo-lists glyphicon glyphicon-completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
-'            <% } else { %>' +
-'            <i class="todo-lists glyphicon glyphicon-uncompleted" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
-'            <% } %>' +
+'            <% if(false){ %>' +
+'            <i class="todo-lists <%- item.get("completed")?"un":"" %>completeitem glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
 '            <% if (list.get("tracked")) { %>' +
 '            <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="glyphicon glyphicon-time"></i></a>' +
 '            <% }} %>' +
 '            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.content %></a>' +
 '            <% if(false){ %>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><i class="glyphicon glyphicon-comment glyphicon glyphicon-white"></i><%- item.get("comments-count") %></a>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item.get("comments-count") %></a>' +
 '            <% } %>' +
 '        </dd>' +
 '        <% }) %>' +
@@ -859,15 +856,15 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-id");' +
 'var list=view.options.collections.project_todo_lists.get_or_create(prid).get(tdlid); %>' +
-'<i class="todo glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
+'<i class="todo <%- item.get("completed")?"un":"" %>completeitem glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>" data-todolist-id="<%- item.get("todo-list-id") %>" data-todoitem-id="<%- item.id %>"></i>' +
 '<% if (list&&list.get("tracked")) { %>' +
 '<a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="glyphicon glyphicon-time"></i></a>' +
 '<% } %>&nbsp;' +
 '<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>"><%= item.get("content") %></a>' +
 '<% if (_.isFinite(item.get("responsible-party-id"))) { %><i class="glyphicon glyphicon-user"></i><% } %>' +
-'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="glyphicon glyphicon-comment glyphicon glyphicon-white"></i><%- item.get("comments-count") %></a>' +
-'<i class="todo glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
-'<% if (!_.isFinite(view.todo_item)) { %><i class="todo glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>';
+'<a href="#projects/<%- prid %>/todo_lists/<%- item.get("todo-list-id") %>/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item.get("comments-count") %></a>' +
+'<i class="todo edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
+'<% if (!_.isFinite(view.todo_item)) { %><i class="todo removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>';
 templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<div class="edit_todo_wrapper"><form class="edit_todo form-horizontal form">' +
 '<div class="control-group">' +
