@@ -98,12 +98,11 @@ sauce:	clean
 	ROBOT_DESIRED_CAPABILITIES=platform:Windows ROBOT_BROWSER=internetexplorer ROBOT_REMOTE_URL=http://$(SAUCE_USERNAME):$(SAUCE_ACCESS_KEY)@ondemand.saucelabs.com:80/wd/hub bin/pybot -e screenshots tests
 
 bootstrap-update:
-	wget -q http://twitter.github.com/bootstrap/assets/bootstrap.zip -O /tmp/bootstrap.zip
-	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap-responsive.css -d app/static/css/
-	unzip -oj /tmp/bootstrap.zip bootstrap/css/bootstrap.css -d app/static/css/
-	unzip -oj /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings-white.png -d app/static/img/
-	unzip -oj /tmp/bootstrap.zip bootstrap/img/glyphicons-halflings.png -d app/static/img/
-	unzip -oj /tmp/bootstrap.zip bootstrap/js/bootstrap.js -d app/static/js/
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/css/bootstrap-responsive.css -O app/static/css/bootstrap-responsive.css
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/css/bootstrap.css -O app/static/css/bootstrap.css
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/img/glyphicons-halflings-white.png -O app/static/img/glyphicons-halflings-white.png
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/img/glyphicons-halflings.png -O app/static/img/glyphicons-halflings.png
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/js/bootstrap.js -O app/static/js/bootstrap.js
 
 bootstrap-datepicker-update:
 	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/css/datepicker.css -O app/static/css/datepicker.css
