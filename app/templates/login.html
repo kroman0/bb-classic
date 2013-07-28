@@ -53,16 +53,6 @@ body {
     <![endif]-->
 </head>
 <body>
-    <div class="navbar navbar-static-top">
-        <div class="navbar-inner">
-            <a class="brand" href="#">BB</a>
-            <ul class="nav pull-right">
-                <li class="active">
-                    <a href="/login" class="active" title="Login">Login</a>
-                </li>
-            </ul>
-        </div>
-    </div>
     <div class="container">
         <div class="content">
             <form class="form-login" action="/login" method="POST">
@@ -70,9 +60,9 @@ body {
                 <div id="statusline" class="alert">
                     Please enter you credentials
                 </div>
-                <div class="input-append input-block-level">
+                <div class="input-group">
                     <input type="text" name="subdomain" placeholder="Domain" class="input-medium">
-                    <span class="add-on">.basecamphq.com</span>
+                    <span class="input-group-addon">.basecamphq.com</span>
                 </div>
                 <input type="text" name="username" placeholder="Login Name" class="input-block-level">
                 <input type="password" name="password" placeholder="Password" class="input-block-level">
