@@ -2,7 +2,7 @@
 #
 
 BASE = app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
-MIN = app/static/js/jquery.deserialize.js app/static/js/bootstrap-datepicker.js app/static/js/backbone.analytics.js
+MIN = app/static/js/jquery.deserialize.js app/static/js/backbone.analytics.js
 PYSCRIPTS = app/bb.py app/crypto.py app/keys.py tests/keywords.py
 SCRIPTS = $(BASE)
 MINIFY = $(BASE) $(MIN)
@@ -98,14 +98,15 @@ sauce:	clean
 	ROBOT_DESIRED_CAPABILITIES=platform:Windows ROBOT_BROWSER=internetexplorer ROBOT_REMOTE_URL=http://$(SAUCE_USERNAME):$(SAUCE_ACCESS_KEY)@ondemand.saucelabs.com:80/wd/hub bin/pybot -e screenshots tests
 
 bootstrap-update:
-	wget -q http://twitter.github.com/bootstrap/assets/bootstrap.zip -O /tmp/bootstrap.zip
-	unzip -oj /tmp/bootstrap.zip bootstrap/css/* -d app/static/css/
-	unzip -oj /tmp/bootstrap.zip bootstrap/img/* -d app/static/img/
-	unzip -oj /tmp/bootstrap.zip bootstrap/js/* -d app/static/js/
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/css/bootstrap-responsive.css -O app/static/css/bootstrap-responsive.css
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/css/bootstrap.css -O app/static/css/bootstrap.css
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/img/glyphicons-halflings-white.png -O app/static/img/glyphicons-halflings-white.png
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/img/glyphicons-halflings.png -O app/static/img/glyphicons-halflings.png
+	wget -q https://raw.github.com/twbs/bootstrap/master/docs/assets/js/bootstrap.js -O app/static/js/bootstrap.js
 
 bootstrap-datepicker-update:
-	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/master/js/bootstrap-datepicker.js -O app/static/js/bootstrap-datepicker.js
-	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/master/css/datepicker.css -O app/static/css/datepicker.css
+	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/css/datepicker.css -O app/static/css/datepicker.css
+	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js -O app/static/js/bootstrap-datepicker.js
 
 backbone-update:
 	wget -q http://backbonejs.org/backbone.js -O app/static/js/backbone.js
@@ -118,7 +119,6 @@ backbone-pageable-update:
 
 backbone-fetch-cache-update:
 	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.js -O app/static/js/backbone.fetch-cache.js
-	wget -q https://raw.github.com/mrappleton/backbone-fetch-cache/master/backbone.fetch-cache.min.js -O app/static/js/backbone.fetch-cache.min.js
 
 moment-update:
 	wget -q https://raw.github.com/timrwood/moment/master/moment.js -O app/static/js/moment.js
