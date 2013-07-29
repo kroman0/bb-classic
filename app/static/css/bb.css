@@ -21,9 +21,6 @@
 form#makereport {
     margin: 0;
 }
-div#time_report {
-    width: auto;
-}
 .addtime th > *,
 .edittime th > * {
     border-radius: 0;

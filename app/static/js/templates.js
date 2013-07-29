@@ -125,26 +125,28 @@ templates['#time-thead'] = '<thead>' +
 '    </tr>' +
 '</thead>';
 templates['#time-report'] = '<%= view.block("#header") %>' +
-'<div id="time_report" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="makereportlabel" aria-hidden="true">' +
+'<div id="time_report" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="makereportlabel" aria-hidden="true">' +
+'<div class="modal-dialog">' +
+'<div class="modal-content">' +
 '<div class="modal-header">' +
 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
 '<h3 id="makereportlabel">Make report</h3>' +
 '</div>' +
 '<form id="makereport">' +
 '    <div class="modal-body">' +
-'    <div class="input-prepend">' +
-'        <span class="add-on">From</span>' +
-'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="input-small" name="from" placeholder="YYYYMMDD">' +
+'    <div class="input-group">' +
+'        <span class="input-group-addon">From</span>' +
+'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="from" placeholder="YYYYMMDD">' +
 '    </div>' +
 '    <br />' +
-'    <div class="input-prepend">' +
-'        <span class="add-on">To</span>' +
-'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="input-small" name="to" placeholder="YYYYMMDD">' +
+'    <div class="input-group">' +
+'        <span class="input-group-addon">To</span>' +
+'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="to" placeholder="YYYYMMDD">' +
 '    </div>' +
 '    <br />' +
-'    <div class="input-prepend">' +
-'        <span class="add-on">For</span>' +
-'        <select name="subject_id" class="input-medium">' +
+'    <div class="input-group">' +
+'        <span class="input-group-addon">For</span>' +
+'        <select name="subject_id" class="form-control">' +
 '            <option value="">All</option>' +
 '            <% view.options.collections.people.each(function (i) { %>' +
 '                <option value="<%- i.id %>"><%- i.name() %></option>' +
@@ -152,9 +154,9 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '        </select>' +
 '    </div>' +
 '    <br />' +
-'    <div class="input-prepend">' +
-'        <span class="add-on">Project</span>' +
-'        <select name="filter_project_id" class="input-medium">' +
+'    <div class="input-group">' +
+'        <span class="input-group-addon">Project</span>' +
+'        <select name="filter_project_id" class="form-control">' +
 '            <option value="">All</option>' +
 '            <% view.options.collections.projects.each(function (i) { %>' +
 '                <option value="<%- i.id %>"><%- i.get("name") %></option>' +
@@ -162,9 +164,9 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '        </select>' +
 '    </div>' +
 '    <br />' +
-'    <div class="input-prepend">' +
-'        <span class="add-on">Company</span>' +
-'        <select name="filter_company_id" class="input-medium">' +
+'    <div class="input-group">' +
+'        <span class="input-group-addon">Company</span>' +
+'        <select name="filter_company_id" class="form-control">' +
 '            <option value="">All</option>' +
 '            <% view.options.collections.companies.each(function (i) { %>' +
 '                <option value="<%- i.id %>"><%- i.get("name") %></option>' +
@@ -177,6 +179,8 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '        <button id="getreport" type="submit" data-dismiss="modal" class="btn btn-primary">Report</button>' +
 '    </div>' +
 '</form>' +
+'</div>' +
+'</div>' +
 '</div>' +
 '<a href="#time_report" role="button" class="btn btn-primary" data-toggle="modal">Report</a>' +
 '<% var tt=view.collection;' +
