@@ -29,5 +29,5 @@ env:
   matrix: 
   - ROBOT_BROWSER=firefox
   - ROBOT_BROWSER=chrome
-  - ROBOT_BROWSER=internetexplorer ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_NUMBER,version:9
+  - ROBOT_BROWSER=internetexplorer ROBOT_DESIRED_CAPABILITIES=tunnel-identifier:$TRAVIS_JOB_NUMBER,version:9,platform:Windows 7
   - PRO_TEST=True
