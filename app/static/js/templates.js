@@ -261,10 +261,10 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<% cc=view.collection; if (cc.isEmpty()) { %>' +
 '<div class="alert alert-info">No companies...</div>' +
 '<% } else { %>' +
-'<dl>' +
+'<div>' +
 '<% cc.each(function (item) { %>' +
-'    <dt><h3><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></dt>' +
-'    <dd class="row thumbnail">' +
+'    <div class="panel"><div class="panel-heading"><h3 class="panel-title"><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></div>' +
+'    <div class="row">' +
 '        <div class="col-lg-4">' +
 '            <% if (item.get("web-address")) { %><a href="<%- item.get("web-address") %>"><b><%- item.get("web-address") %></b></a><br /><% } %>' +
 '            <% if (item.get("time-zone-id")) { %>Time zone: <%- item.get("time-zone-id") %><br /><% } %>' +
@@ -281,9 +281,9 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '            <% if (item.get("phone-number-office")) { %>Office phone: <%- item.get("phone-number-office") %><br /><% } %>' +
 '            <% if (item.get("phone-number-fax")) { %>Fax phone: <%- item.get("phone-number-fax") %><% } %>' +
 '        </div>' +
-'    </dd>' +
+'    </div></div>' +
 '<% }) %>' +
-'</dl>' +
+'</div>' +
 '<% } %>';
 templates['#company'] = '<%= view.block("#header") %>' +
 '<div class="row">' +
