@@ -90,3 +90,5 @@ Generate screenshots
     Click link  First#0 Last
     Wait for data loading
     Capture Page Screenshot  ${base_project_person}
+    Test user logout
+    Capture Page Screenshot  ${base_logout}
