@@ -103,7 +103,7 @@ COLLECTION = [{
     "first-name": "First#%s" % i,
     "hours": i % 5 * 0.5 + 0.1,
     "id": i,
-    "im-handle": "example#%s" % i,
+    "im-handle": "example%s" % i,
     "im-service": "Skype",
     "last-name": "Last",
     "locale": ["en", "ru", "ua"][i % 3],

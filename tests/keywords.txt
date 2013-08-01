@@ -96,6 +96,8 @@ Start Browser For Test
 
 Close All Browsers and Report Status
     [Documentation]  Close browser and report test status.
+#    ${UNIQ} =  Execute JavaScript  return bbgeneral.uniq_hash
+#    log  ${UNIQ}
     Close All Browsers
     Report test status
 
