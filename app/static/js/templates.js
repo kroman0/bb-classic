@@ -487,12 +487,12 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '</table>' +
 '<%= view.block("#pager") %>' +
 '<% } %>';
-templates['#post'] = '<li class="thumbnail">' +
-'    <h3>' +
+templates['#post'] = '<li class="panel">' +
+'    <div class="panel-heading"><h3 class="panel-title">' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>' +
-'        <% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %>' +
-'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item.get("comments-count") %></a>' +
-'    </h3>' +
+'        <% if (item.get("private")) { %><small class="glyphicon glyphicon-lock"></small><% } %>' +
+'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="label"><i class="itemcomments glyphicon glyphicon-comment"></i><%- item.get("comments-count") %></a>' +
+'    </h3></div>' +
 '    <small>' +
 '        by' +
 '        <a href="#people/<%- item.get("author-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("author-name") %></a>' +
@@ -504,9 +504,9 @@ templates['#post'] = '<li class="thumbnail">' +
 '    </small>' +
 '    <p><%= item.get("display-body") %></p>' +
 '    <% if (item.get("attachments")) { %>' +
-'    <ul>' +
+'    <ul class="list-group list-group-flush">' +
 '        <% _.each(item.get("attachments"),function (a) { %>' +
-'        <li>' +
+'        <li class="list-group-item">' +
 '            <a href="<%- a["download-url"] %>"><%- a.name %></a>' +
 '            <small>' +
 '                <%- a["byte-size"] %>B' +
