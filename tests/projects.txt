@@ -19,6 +19,7 @@ Projects page should contains links to projects
     [Documentation]  Projects page should contains correct links to projects if company and projects state selected.
     [Tags]  projects  boostrap
     Given an projects page
+    And wait for data loading
     When click on "Company name #0" in active state
     Then link to Name of #0 should be visible
     And link to Name of #5 should not be visible
@@ -45,6 +46,7 @@ Project navigation should work correctly
     [Documentation]  Projects navigation should change location and heading correctly.
     [Tags]  navigation  projects
     Given an projects page
+    And wait for data loading
     When click link  Name of #0
     Then location should be  ${APP_URL}/#projects/0
     And heading should be "Name of #0"
@@ -53,6 +55,7 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/posts
     And heading should be "Posts"
     And title should be  Posts - Name of #0 - Projects - Company name #0 - Companies - BB
+    And wait for data loading
     When click link  Title #0
     Then location should be  ${APP_URL}/#projects/0/posts/0
     And heading should be "Title #0"
@@ -65,10 +68,12 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/todo_lists
     And heading should be "To-dos"
     And title should be  To-dos - Name of #0 - Projects - Company name #0 - Companies - BB
+    And wait for data loading
     When click link  css=a[href$='todo_lists/0']
     Then location should be  ${APP_URL}/#projects/0/todo_lists/0
     And heading should be "Name of #0"
     And title should be  Name of #0 - To-dos - Name of #0 - Projects - Company name #0 - Companies - BB
+    And wait for data loading
     When click link  Todo content #0
     Then location should be  ${APP_URL}/#projects/0/todo_lists/0/0
     And heading should be "Todo content #0"
@@ -81,6 +86,7 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/calendar
     And heading should be "Calendar"
     And title should be  Calendar - Name of #0 - Projects - Company name #0 - Companies - BB
+    And wait for data loading
     When click link  Title #0
     Then location should be  ${APP_URL}/#projects/0/calendar/0
     And heading should be "Title #0"
@@ -97,6 +103,7 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/files
     And heading should be "Files"
     And title should be  Files - Name of #0 - Projects - Company name #0 - Companies - BB
+    And wait for data loading
     When click link  css=a[href$='files/0']
     Then location should be  ${APP_URL}/#projects/0/files/0
     And heading should be "Name of #0"
@@ -105,6 +112,7 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/categories
     And heading should be "Categories"
     And title should be  Categories - Name of #0 - Projects - Company name #0 - Companies - BB
+    And wait for data loading
     When click link  css=a[href$='categories/0']
     Then location should be  ${APP_URL}/#projects/0/categories/0
     And heading should be "Name of #0"
@@ -113,6 +121,7 @@ Project navigation should work correctly
     Then location should be  ${APP_URL}/#projects/0/people
     And heading should be "People"
     And title should be  People - Name of #0 - Projects - Company name #0 - Companies - BB
+    And wait for data loading
     When click link  First#0 Last
     Then location should be  ${APP_URL}/#projects/0/people/0
     And heading should be "First#0 Last"
@@ -124,8 +133,7 @@ Project navigation should work correctly
 an projects page
     [Documentation]  Go to projects page.
     Given Test user login
-    When click link  Projects
-    Then wait for data loading
+    Then click link  Projects
 
 click on ${text} in ${state} state
     [Documentation]  Click on link in state block.
