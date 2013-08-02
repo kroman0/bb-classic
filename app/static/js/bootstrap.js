@@ -235,7 +235,7 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
   $.fn.button = function (option) {
     return this.each(function () {
       var $this   = $(this)
-      var data    = $this.data('button')
+      var data    = $this.data('bs.button')
       var options = typeof option == 'object' && option
 
       if (!data) $this.data('bs.button', (data = new Button(this, options)))
@@ -1313,6 +1313,8 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
     var $tip = this.tip()
     var e    = $.Event('hide.bs.' + this.type)
 
+    function complete() { $tip.detach() }
+
     this.$element.trigger(e)
 
     if (e.isDefaultPrevented()) return
@@ -1321,9 +1323,9 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
 
     $.support.transition && this.$tip.hasClass('fade') ?
       $tip
-        .one($.support.transition.end, $tip.detach)
+        .one($.support.transition.end, complete)
         .emulateTransitionEnd(150) :
-      $tip.detach()
+      complete()
 
     this.$element.trigger('hidden.bs.' + this.type)
 
@@ -1507,10 +1509,6 @@ if (!jQuery) { throw new Error("Bootstrap requires jQuery") }
   Popover.prototype.tip = function () {
     if (!this.$tip) this.$tip = $(this.options.template)
     return this.$tip
-  }
-
-  Popover.prototype.destroy = function () {
-    this.hide().$element.off('.' + this.type).removeData(this.type)
   }
 
 
