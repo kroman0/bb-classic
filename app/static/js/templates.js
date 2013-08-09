@@ -1018,7 +1018,6 @@ templates['#nav'] = '<div class="container">' +
 '    <li><a href="#<%- link %>"><%- title %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'</div>' +
 '<ul class="nav navbar-nav pull-right">' +
 '    <li>' +
 '        <a href="#me" title="<%- view.model.get("user-name") %>" class="dropdown-toggle" data-toggle="dropdown"><%- view.model.name() %> <span class="caret"></span></a>' +
@@ -1031,6 +1030,7 @@ templates['#nav'] = '<div class="container">' +
 '        </ul>' +
 '    </li>' +
 '</ul>' +
+'</div>' +
 '</div>';
 return templates;
 }));
