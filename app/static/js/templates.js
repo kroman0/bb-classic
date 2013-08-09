@@ -227,7 +227,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '<% _.each(pp.groupBy(function(i){ return i.get("status")}), function (plist, status) { %>' +
 '    <div class="tab-pane fade<% if (fprst==status) { %> in active<% } %>" id="projects_<%- status %>">' +
 '        <div class="tabbable row">' +
-'        <ul class="nav nav-pills nav-stacked col-lg-4 pull-right">' +
+'        <ul class="nav nav-pills nav-stacked col-lg-4 col-lg-push-8 col-sm-6 col-6">' +
 '        <% var fprcoid=_.first(plist).get("company").id;' +
 '        _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <li<% if (fprcoid==coid) { %> class="active"<% } %>>' +
@@ -235,7 +235,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '            </li>' +
 '        <% }) %>' +
 '        </ul>' +
-'        <div class="tab-content col-lg-8">' +
+'        <div class="tab-content col-lg-8 col-lg-pull-4 col-sm-6 col-6">' +
 '        <% _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">' +
 '                <ul class="list-unstyled">' +
@@ -1006,13 +1006,12 @@ templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 '<% } %>' +
 '<%= view.block("#comments") %>';
 templates['#nav'] = '<div class="container">' +
-'<a class="navbar-brand" href="#">BB</a>' +
-'<% if (_.isFinite(view.model.id)) { %>' +
 '<button data-target=".navbar-responsive-collapse" data-toggle="collapse" class="navbar-toggle" type="button">' +
 '    <span class="icon-bar"></span>' +
 '    <span class="icon-bar"></span>' +
 '    <span class="icon-bar"></span>' +
 '</button>' +
+'<a class="navbar-brand" href="#">BB</a>' +
 '<div class="nav-collapse collapse navbar-responsive-collapse">' +
 '<ul class="nav navbar-nav">' +
 '<% _.each(view.navitems, function (title, link) { %>' +
@@ -1032,13 +1031,6 @@ templates['#nav'] = '<div class="container">' +
 '        </ul>' +
 '    </li>' +
 '</ul>' +
-'<% } else { %>' +
-'<ul class="nav navbar-nav pull-right">' +
-'    <li>' +
-'        <a href="/login" title="Login">Login</a>' +
-'    </li>' +
-'</ul>' +
-'<% } %>' +
 '</div>';
 return templates;
 }));
