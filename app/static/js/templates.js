@@ -491,7 +491,7 @@ templates['#post'] = '<li class="panel">' +
 '    <div class="panel-heading"><h3 class="panel-title">' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <% if (item.get("private")) { %><small class="glyphicon glyphicon-lock"></small><% } %>' +
-'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="label"><i class="itemcomments glyphicon glyphicon-comment"></i><%- item.get("comments-count") %></a>' +
+'        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment"></i><%- item.get("comments-count") %></a>' +
 '    </h3></div>' +
 '    <small>' +
 '        by' +
