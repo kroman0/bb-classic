@@ -17,9 +17,11 @@
         root.bbviews = factory(
             root._,
             root.Backbone,
+//             root.bbgeneral,
             root.bbtemplates
         );
     }
+// }(this, function(_, Backbone, bbgeneral, bbtemplates) {
 }(this, function(_, Backbone, bbtemplates) {
     'use strict';
     var bbviews = {},
@@ -119,7 +121,7 @@
                     return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
                 })).filter(':last').addClass('active');
                 this.fetch();
-//                 add_hash();
+//                 bbgeneral.add_hash();
                 return this;
             },
             itemblock: function(item, template) {

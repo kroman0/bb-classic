@@ -6,5 +6,5 @@
 - Caching requests
 + Freeze events
 - Create view on demand
-
+- Project navigation should work correctly - [u'todolists_true', u'todolists_false', u'projects/0/files/']
 
