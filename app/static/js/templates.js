@@ -710,14 +710,14 @@ templates['#project-category'] = '<%= view.block("#header") %>' +
 '    <%= view.itemblock(item, "#category") %>' +
 '</dl>' +
 '<% } %>';
-templates['#todolist'] = '<dt>' +
+templates['#todolist'] = '<div class="panel-heading">' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
 '       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %><% if (item.get("tracked")) { %><i class="glyphicon glyphicon-time"></i><% } %></a>' +
 '    <i class="todolist edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
 '    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    <small><%= item.get("description") %></small>' +
-'</dt>';
-templates['#todolistedit'] = '<dt><form class="edit_todolist form-horizontal form">' +
+'</div>';
+templates['#todolistedit'] = '<div class="panel-heading"><form class="edit_todolist form-horizontal form">' +
 '<div class="control-group">' +
 '<label class="control-label" for="todoName<%- item.id %>">Name</label>' +
 '<div class="controls">' +
@@ -743,9 +743,10 @@ templates['#todolistedit'] = '<dt><form class="edit_todolist form-horizontal for
 '<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
 '<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</div></div>' +
-'</form></dt>';
-templates['#todolistadd'] = '<dt>' +
+'</form></div>';
+templates['#todolistadd'] = '<div class="panel-heading">' +
 '<button type="button" class="btn" data-toggle="collapse" data-target=".add_todolist_wrapper">Add an item</button>' +
+'</div>' +
 '<div class="add_todolist_wrapper collapse"><form class="add_todolist form-horizontal form">' +
 '<div class="control-group">' +
 '<label class="control-label" for="todoName">Name</label>' +
@@ -771,7 +772,7 @@ templates['#todolistadd'] = '<dt>' +
 '<div class="controls">' +
 '<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</div></div>' +
-'</form></div></dt>';
+'</form></div>';
 templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '<% var td=view.collection;' +
 'var pp=view.options.collections.people;' +
@@ -795,14 +796,11 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '<dl>' +
 '<% _.each(_.uniq(td.pluck("project-id")),function (prid) { %>' +
 '    <dt><a href="#projects/<%- prid %>/todo_lists"><%- prs.get(prid)?prs.get(prid).get("name"):prid %></a></dt>' +
-'    <dd>' +
-'    <dl>' +
-'        <% _.each(td.where({"project-id":prid}), function (list) { %>' +
-'        <%= view.itemblock(list, "#todolist") %>' +
-'        <dd>' +
-'        <dl>' +
+'    <% _.each(td.where({"project-id":prid}), function (list) { %>' +
+'    <dd class="panel"><%= view.itemblock(list, "#todolist") %>' +
+'    <ul class="list-group list-group-flush">' +
 '        <% _.each(list.get("todo-items"), function (item) { %>' +
-'        <dd>' +
+'        <li class="list-group-item">' +
 '            <% if(false){ %>' +
 '            <i class="todo-lists <%- item.get("completed")?"un":"" %>completeitem glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
 '            <% if (list.get("tracked")) { %>' +
@@ -812,13 +810,10 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '            <% if(false){ %>' +
 '            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item.get("comments-count") %></a>' +
 '            <% } %>' +
-'        </dd>' +
+'        </li>' +
 '        <% }) %>' +
-'        </dl>' +
-'        </dd>' +
-'        <% }) %>' +
-'    </dl>' +
-'    </dd>' +
+'    </ul></dd>' +
+'    <% }) %>' +
 '<% }) %>' +
 '</dl>' +
 '<% } %>';
@@ -840,19 +835,20 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '<div class="tab-content col-lg-8">' +
 '    <% _.each(td.groupBy(function(i){ return i.get("completed")}), function (tlgroup, status) { %>' +
 '    <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">' +
-'        <dl>' +
+'        <ul class="list-unstyled">' +
 '            <% _.each(tlgroup, function (list) { %>' +
+'            <li class="panel">' +
 '            <%= view.itemblock(list, "#todolist") %>' +
-'            <dd>' +
-'                <small>' +
-'                    Completed: <%- list.get("completed-count") %>' +
-'                    <br />' +
-'                    Uncompleted: <%- list.get("uncompleted-count") %>' +
-'                </small>' +
-'            </dd>' +
+'                <ul class="list-inline">' +
+'                    <li>Completed: <%- list.get("completed-count") %></li>' +
+'                    <li>Uncompleted: <%- list.get("uncompleted-count") %></li>' +
+'                </ul>' +
+'            </li>' +
 '            <% }) %>' +
+'            <li class="panel">' +
 '            <%= view.block("#todolistadd") %>' +
-'        </dl>' +
+'            </li>' +
+'        </ul>' +
 '    </div>' +
 '    <% }) %>' +
 '</div>' +
@@ -901,7 +897,7 @@ templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_
 '</div></div>' +
 '</form></div>';
 templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
-'<dd><button type="button" class="btn" data-toggle="collapse" data-target=".add_todo_wrapper">Add an item</button>' +
+'<div class="panel-footer"><button type="button" class="btn" data-toggle="collapse" data-target=".add_todo_wrapper">Add an item</button>' +
 '<div class="add_todo_wrapper collapse"><form class="add_todo form-horizontal form">' +
 '<div class="control-group">' +
 '<label class="control-label" for="todoContent">Todo content</label>' +
@@ -930,7 +926,7 @@ templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_o
 '<div class="controls">' +
 '<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</div></div>' +
-'</form></div></dd>';
+'</form></div></div>';
 templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
 '<% var td=view.collection; var todo_items=view.options.collections.todo_items; var prid=view.model.id;' +
@@ -939,15 +935,19 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
 '<div class="row">' +
-'<dl class="todoitemsholder col-lg-8 project-todo-list">' +
+'<ul class="list-unstyled todoitemsholder col-lg-8 project-todo-list">' +
+'    <li class="panel">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
+'    <ul class="list-group">' +
 '<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
-'    <dd>' +
+'    <li class="list-group-item">' +
 '<%= view.itemblock(item, "#todo") %>' +
-'    </dd>' +
+'    </li>' +
 '<% }) %>' +
+'</ul>' +
 '<%= view.block("#todoadd") %>' +
-'</dl>' +
+'    </li>' +
+'</ul>' +
 '<div class="tabbable col-lg-4 pull-right">' +
 '<ul class="nav nav-tabs nav-justified">' +
 '<% _.each(_.uniq(td.pluck("completed")), function (status) { %>' +
@@ -981,11 +981,9 @@ templates['#project-todo-item'] = '<%= view.block("#header") %>' +
 'if (td.isEmpty()||items.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo items...</div>' +
 '<% } else { %>' +
-'<dl class="todoitemsholder project-todo-item">' +
+'<div class="panel todoitemsholder project-todo-item">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
-'    <dd>' +
 '<%= view.itemblock(item, "#todo") %>' +
-'    </dd>' +
 '</dl>' +
 '<% } %>';
 templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
@@ -998,13 +996,13 @@ templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 'if (td.isEmpty()||items.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo items...</div>' +
 '<% } else { %>' +
-'<dl class="todoitemsholder project-todo-item-comments">' +
-'    <dd>' +
+'<div class="panel todoitemsholder project-todo-item-comments">' +
+'    <div class="panel-heading">' +
 '<%= view.itemblock(item, "#todo") %>' +
-'    </dd>' +
-'</dl>' +
-'<% } %>' +
-'<%= view.block("#comments") %>';
+'    </div>' +
+'<%= view.block("#comments") %>' +
+'</div>' +
+'<% } %>';
 templates['#nav'] = '<div class="container">' +
 '<button data-target=".navbar-responsive-collapse" data-toggle="collapse" class="navbar-toggle" type="button">' +
 '    <span class="icon-bar"></span>' +
