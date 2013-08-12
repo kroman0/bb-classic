@@ -102,7 +102,7 @@ templates['#attachments'] = '<% if (item.get("attachments")) { %>' +
 '        <% }) %>' +
 '    </ul>' +
 '    <% } %>';
-templates['#comment'] = '<li class="thumbnail">' +
+templates['#comment'] = '<li class="list-group-item">' +
 '    <small>' +
 '        <a href="#people/<%- item.get("author-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("author-name") %></a>' +
 '        <abbr title="<%- item.get("created-at") %>"><%- moment(item.get("created-at")).format("LLL") %></abbr>' +
@@ -113,7 +113,7 @@ templates['#comment'] = '<li class="thumbnail">' +
 templates['#comments'] = '<% if (view.collection.isEmpty()) { %>' +
 '<div class="alert alert-info">No comments...</div>' +
 '<% } else { %>' +
-'<ul class="list-unstyled">' +
+'<ul class="list-group">' +
 '    <% view.collection.each(function (item) { %>' +
 '        <%= view.itemblock(item, "#comment") %>' +
 '    <% }) %>' +
@@ -504,7 +504,7 @@ templates['#post'] = '<li class="panel">' +
 '    </small>' +
 '    <p><%= item.get("display-body") %></p>' +
 '    <% if (item.get("attachments")) { %>' +
-'    <ul class="list-group list-group-flush">' +
+'    <ul class="list-group">' +
 '        <% _.each(item.get("attachments"),function (a) { %>' +
 '        <li class="list-group-item">' +
 '            <a href="<%- a["download-url"] %>"><%- a.name %></a>' +
@@ -546,8 +546,8 @@ templates['#project-post-comments'] = '<%= view.block("#header") %>' +
 '<ul class="list-unstyled">' +
 '    <%= view.itemblock(item, "#post") %>' +
 '</ul>' +
-'<% } %>' +
-'<%= view.block("#comments") %>';
+'<%= view.block("#comments") %>' +
+'<% } %>';
 templates['#file'] = '<% var prid=view.model.id; var pp=view.options.collections.people;' +
 'var cc=view.options.collections.project_categories.get_or_create(prid); %>' +
 '<li class="media well well-small">' +
@@ -676,8 +676,8 @@ templates['#project-calendar-entry-comments'] = '<%= view.block("#header") %>' +
 '<ul class="list-unstyled">' +
 '    <%= view.itemblock(item, "#calendar") %>' +
 '</ul>' +
-'<% } %>' +
-'<%= view.block("#comments") %>';
+'<%= view.block("#comments") %>' +
+'<% } %>';
 templates['#category'] = '<dt>' +
 '    <h3>' +
 '        <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.id %>"><%- item.get("name") %></a>' +
@@ -798,7 +798,7 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '    <dt><a href="#projects/<%- prid %>/todo_lists"><%- prs.get(prid)?prs.get(prid).get("name"):prid %></a></dt>' +
 '    <% _.each(td.where({"project-id":prid}), function (list) { %>' +
 '    <dd class="panel"><%= view.itemblock(list, "#todolist") %>' +
-'    <ul class="list-group list-group-flush">' +
+'    <ul class="list-group">' +
 '        <% _.each(list.get("todo-items"), function (item) { %>' +
 '        <li class="list-group-item">' +
 '            <% if(false){ %>' +
@@ -1000,8 +1000,8 @@ templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 '    <div class="panel-heading">' +
 '<%= view.itemblock(item, "#todo") %>' +
 '    </div>' +
-'<%= view.block("#comments") %>' +
 '</div>' +
+'<%= view.block("#comments") %>' +
 '<% } %>';
 templates['#nav'] = '<div class="container">' +
 '<button data-target=".navbar-responsive-collapse" data-toggle="collapse" class="navbar-toggle" type="button">' +
