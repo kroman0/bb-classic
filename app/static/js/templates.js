@@ -601,14 +601,14 @@ templates['#project-file'] = '<%= view.block("#header") %>' +
 '    <%= view.itemblock(item, "#file") %>' +
 '</ul>' +
 '<% } %>';
-templates['#calendar'] = '<li class="thumbnail">' +
-'    <h3>' +
+templates['#calendar'] = '<li class="panel">' +
+'    <div class="panel-heading"><h3 class="panel-title">' +
 '        <a <% if (item.get("type")=="Milestone" && item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <i class="badge badge-inverse"><i class="calendar glyphicon-white glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>"></i></i>' +
 '        <a href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item.get("comments-count") %></a>' +
 '        <i class="edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
 '        <% if (!_.isFinite(view.cur_item)) { %><i class="removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
-'    </h3>' +
+'    </h3></div>' +
 '    <small>' +
 '        <% if (item.get("type")=="Milestone" && item.get("responsible-party-id")) { %>' +
 '        <a href="#<%- item.get("responsible-party-type")=="Company"?"companies":"people" %>/<%- item.get("responsible-party-id") %>"><% if (item.get("responsible-party-type")=="Person") { %><i class="glyphicon glyphicon-user"></i><% } %><%- item.get("responsible-party-name") %></a><br />' +
@@ -636,7 +636,7 @@ templates['#calendar'] = '<li class="thumbnail">' +
 '        <% } %>' +
 '    </small>' +
 '</li>';
-templates['#calendaredit'] = '<li class="thumbnail editcalendar form" data-id="<%- item.id %>">' +
+templates['#calendaredit'] = '<li class="panel editcalendar form" data-id="<%- item.id %>">' +
 '<input type="text" name="title" placeholder="title" value="<%- item.get("title") %>">' +
 '<select name="type">' +
 '<option value="Milestone" <% if (item.get("type")=="Milestone") { %>selected="selected"<% } %>>Milestone</option>' +
