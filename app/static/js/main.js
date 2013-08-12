@@ -74,7 +74,7 @@
             return view.model;
         },
         set_current = function(view) {
-            Backbone.$('.container').empty().append(view.el);
+            Backbone.$('.view.container').empty().append(view.el);
             view.render();
         },
         workspace = new Workspace();

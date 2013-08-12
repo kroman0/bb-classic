@@ -8,7 +8,7 @@ Links
 
 - [GAE](https://bb-classic.appspot.com/)
 - [RTD](https://bb-classic.readthedocs.org/)
-- [![Build Status](https://travis-ci.org/kroman0/bb-classic.png?branch=master)](https://travis-ci.org/kroman0/bb-classic)
+- [![Build Status](https://travis-ci.org/kroman0/bb-classic.png?branch=b3)](https://travis-ci.org/kroman0/bb-classic)
 - [![Selenium Test Status](https://saucelabs.com/buildstatus/bb-classic)](https://saucelabs.com/u/bb-classic)
 
 Installation
