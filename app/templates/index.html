@@ -19,11 +19,13 @@
     <link href="/static/css/bb.css" rel="stylesheet" media="screen">
 </head>
 <body>
-    <div class="navbar navbar-static-top"></div>
+    <div class="navbar navbar-static-top" role="navigation"></div>
     <div class="container view">
         <div class="content">
             <div class="progress progress-striped active">
-                <div class="progress-bar" style="width: 100%;"></div>
+                <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
         </div>
     </div>
