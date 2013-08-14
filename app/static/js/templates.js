@@ -983,8 +983,12 @@ templates['#project-todo-item'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<div class="panel todoitemsholder project-todo-item">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
-'<%= view.itemblock(item, "#todo") %>' +
-'</dl>' +
+'    <ul class="list-group">' +
+'    <li class="list-group-item">' +
+'    <%= view.itemblock(item, "#todo") %>' +
+'    </li>' +
+'    </ul>' +
+'</div>' +
 '<% } %>';
 templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
@@ -996,11 +1000,11 @@ templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 'if (td.isEmpty()||items.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo items...</div>' +
 '<% } else { %>' +
-'<div class="panel todoitemsholder project-todo-item-comments">' +
-'    <div class="panel-heading">' +
+'<ul class="list-group todoitemsholder project-todo-item-comments">' +
+'    <li class="list-group-item">' +
 '<%= view.itemblock(item, "#todo") %>' +
-'    </div>' +
-'</div>' +
+'    </li>' +
+'</ul>' +
 '<%= view.block("#comments") %>' +
 '<% } %>';
 templates['#nav'] = '<div class="container">' +
