@@ -1008,27 +1008,29 @@ templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 '<%= view.block("#comments") %>' +
 '<% } %>';
 templates['#nav'] = '<div class="container">' +
+'<div class="navbar-header">' +
 '<button data-target=".navbar-responsive-collapse" data-toggle="collapse" class="navbar-toggle" type="button">' +
 '    <span class="icon-bar"></span>' +
 '    <span class="icon-bar"></span>' +
 '    <span class="icon-bar"></span>' +
 '</button>' +
 '<a class="navbar-brand" href="#">BB</a>' +
-'<div class="nav-collapse collapse navbar-responsive-collapse">' +
+'</div>' +
+'<div class="collapse navbar-collapse navbar-responsive-collapse">' +
 '<ul class="nav navbar-nav">' +
 '<% _.each(view.navitems, function (title, link) { %>' +
 '    <li><a href="#<%- link %>"><%- title %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'<ul class="nav navbar-nav pull-right">' +
+'<ul class="nav navbar-nav navbar-right">' +
 '    <li>' +
 '        <a href="#me" title="<%- view.model.get("user-name") %>" class="dropdown-toggle" data-toggle="dropdown"><%- view.model.name() %> <span class="caret"></span></a>' +
 '        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">' +
 '            <% _.each(view.dropdownitems, function (data, link) { %>' +
-'            <li><a href="#<%- link %>"><i class="glyphicon glyphicon-<%- data.icon %>"></i> <%- data.title %></a></li>' +
+'            <li role="presentation"><a role="menuitem" href="#<%- link %>"><i class="glyphicon glyphicon-<%- data.icon %>"></i> <%- data.title %></a></li>' +
 '            <% }) %>' +
-'            <li class="divider"></li>' +
-'            <li><a href="/logout"><i class="glyphicon glyphicon-eject"></i> Logout</a></li>' +
+'            <li role="presentation" class="divider"></li>' +
+'            <li role="presentation"><a role="menuitem" href="/logout"><i class="glyphicon glyphicon-eject"></i> Logout</a></li>' +
 '        </ul>' +
 '    </li>' +
 '</ul>' +
