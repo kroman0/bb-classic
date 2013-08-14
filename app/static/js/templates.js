@@ -227,7 +227,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '<% _.each(pp.groupBy(function(i){ return i.get("status")}), function (plist, status) { %>' +
 '    <div class="tab-pane fade<% if (fprst==status) { %> in active<% } %>" id="projects_<%- status %>">' +
 '        <div class="tabbable row">' +
-'        <ul class="nav nav-pills nav-stacked col-lg-4 col-lg-push-8 col-sm-6 col-6">' +
+'        <ul class="nav nav-pills nav-stacked col-lg-4 col-lg-push-8 col-sm-6 col-xs-6">' +
 '        <% var fprcoid=_.first(plist).get("company").id;' +
 '        _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <li<% if (fprcoid==coid) { %> class="active"<% } %>>' +
@@ -235,7 +235,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '            </li>' +
 '        <% }) %>' +
 '        </ul>' +
-'        <div class="tab-content col-lg-8 col-lg-pull-4 col-sm-6 col-6">' +
+'        <div class="tab-content col-lg-8 col-lg-pull-4 col-sm-6 col-xs-6">' +
 '        <% _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">' +
 '                <ul class="list-unstyled">' +
@@ -265,21 +265,21 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<% cc.each(function (item) { %>' +
 '    <div class="panel"><div class="panel-heading"><h3 class="panel-title"><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></div>' +
 '    <div class="row">' +
-'        <div class="col-lg-4">' +
+'        <div class="col-lg-4 col-sm-4 col-md-4">' +
 '            <% if (item.get("web-address")) { %><a href="<%- item.get("web-address") %>"><b><%- item.get("web-address") %></b></a><br /><% } %>' +
 '            <% if (item.get("time-zone-id")) { %>Time zone: <%- item.get("time-zone-id") %><br /><% } %>' +
 '            <% if (item.get("locale")) { %>Locale: <%- item.get("locale") %><% } %>' +
 '        </div>' +
-'        <div class="col-lg-4">' +
+'        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-6">' +
 '            <% if (item.get("country")) { %><%- item.get("country") %><br /><% } %>' +
 '            <% if (item.get("city")) { %><%- item.get("city") %> <%- item.get("zip") %><br /><% } %>' +
 '            <% if (item.get("address-one")) { %><%- item.get("address-one") %><br /><% } %>' +
 '            <% if (item.get("address-two")) { %><%- item.get("address-two") %><% } %>' +
 '        </div>' +
-'        <div class="col-lg-4">' +
+'        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-6">' +
 '            <% if (item.get("state")) { %>State: <%- item.get("state") %><br /><% } %>' +
-'            <% if (item.get("phone-number-office")) { %>Office phone: <%- item.get("phone-number-office") %><br /><% } %>' +
-'            <% if (item.get("phone-number-fax")) { %>Fax phone: <%- item.get("phone-number-fax") %><% } %>' +
+'            <% if (item.get("phone-number-office")) { %>Office: <%- item.get("phone-number-office") %><br /><% } %>' +
+'            <% if (item.get("phone-number-fax")) { %>Fax: <%- item.get("phone-number-fax") %><% } %>' +
 '        </div>' +
 '    </div></div>' +
 '<% }) %>' +
@@ -287,7 +287,7 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#company'] = '<%= view.block("#header") %>' +
 '<div class="row">' +
-'    <div class="col-lg-4">' +
+'    <div class="col-lg-4 col-sm-4 col-md-4">' +
 '        <h2>Projects</h2>' +
 '        <% var cid = view.model.id; var pp=view.options.collections.projects; if (pp.isEmpty()) { %>' +
 '        <div class="alert alert-info">No projects...</div>' +
@@ -299,7 +299,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        </ul>' +
 '        <% } %>' +
 '    </div>' +
-'    <div class="col-lg-4">' +
+'    <div class="col-lg-4 col-sm-4 col-md-4 col-xs-6">' +
 '        <h2>People</h2>' +
 '        <% var pp=view.options.collections.people; if (pp.isEmpty()) { %>' +
 '        <div class="alert alert-info">No people...</div>' +
@@ -311,7 +311,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        </ul>' +
 '        <% } %>' +
 '    </div>' +
-'    <div class="col-lg-4">' +
+'    <div class="col-lg-4 col-sm-4 col-md-4 col-xs-6">' +
 '        <h2>Contact</h2>' +
 '        <% if (view.model.get("web-address")) { %>' +
 '        <a href="<%- view.model.get("web-address") %>"><b><%- view.model.get("web-address") %></b></a><br />' +
@@ -323,8 +323,8 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        <% if (view.model.get("address-one")) { %><%- view.model.get("address-one") %><br /><% } %>' +
 '        <% if (view.model.get("address-two")) { %><%- view.model.get("address-two") %><br /><% } %>' +
 '        <% if (view.model.get("state")) { %>State: <%- view.model.get("state") %><br /><% } %>' +
-'        <% if (view.model.get("phone-number-office")) { %>Office phone: <%- view.model.get("phone-number-office") %><br /><% } %>' +
-'        <% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><% } %>' +
+'        <% if (view.model.get("phone-number-office")) { %>Office: <%- view.model.get("phone-number-office") %><br /><% } %>' +
+'        <% if (view.model.get("phone-number-fax")) { %>Fax: <%- view.model.get("phone-number-fax") %><% } %>' +
 '    </div>' +
 '</div>';
 templates['#person'] = '<%= view.block("#header") %>' +
@@ -340,10 +340,10 @@ templates['#person'] = '<%= view.block("#header") %>' +
 '    <% } %>' +
 '    <br />' +
 '<% } %>' +
-'<% if (view.model.get("phone-number-office")) { %>Office phone: <%- view.model.get("phone-number-office") %><br /><% } %>' +
-'<% if (view.model.get("phone-number-mobile")) { %>Mobile phone: <%- view.model.get("phone-number-mobile") %><br /><% } %>' +
-'<% if (view.model.get("phone-number-home")) { %>Home phone: <%- view.model.get("phone-number-home") %><br /><% } %>' +
-'<% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><br /><% } %>' +
+'<% if (view.model.get("phone-number-office")) { %>Office: <%- view.model.get("phone-number-office") %><br /><% } %>' +
+'<% if (view.model.get("phone-number-mobile")) { %>Mobile: <%- view.model.get("phone-number-mobile") %><br /><% } %>' +
+'<% if (view.model.get("phone-number-home")) { %>Home: <%- view.model.get("phone-number-home") %><br /><% } %>' +
+'<% if (view.model.get("phone-number-fax")) { %>Fax: <%- view.model.get("phone-number-fax") %><br /><% } %>' +
 '<% if (view.model.get("time-zone-name")) { %>Time zone: <%- view.model.get("time-zone-name") %><% } %>';
 templates['#personitem'] = '<% var in_project=item.collection.url().indexOf("projects")!==-1 %>' +
 '<li class="media well well-small">' +
@@ -364,10 +364,10 @@ templates['#personitem'] = '<% var in_project=item.collection.url().indexOf("pro
 '            <% } %>' +
 '            <br />' +
 '        <% } %>' +
-'        <% if (item.get("phone-number-office")) { %>Office phone: <%- item.get("phone-number-office") %><br /><% } %>' +
-'        <% if (item.get("phone-number-mobile")) { %>Mobile phone: <%- item.get("phone-number-mobile") %><br /><% } %>' +
-'        <% if (item.get("phone-number-home")) { %>Home phone: <%- item.get("phone-number-home") %><br /><% } %>' +
-'        <% if (item.get("phone-number-fax")) { %>Fax phone: <%- item.get("phone-number-fax") %><br /><% } %>' +
+'        <% if (item.get("phone-number-office")) { %>Office: <%- item.get("phone-number-office") %><br /><% } %>' +
+'        <% if (item.get("phone-number-mobile")) { %>Mobile: <%- item.get("phone-number-mobile") %><br /><% } %>' +
+'        <% if (item.get("phone-number-home")) { %>Home: <%- item.get("phone-number-home") %><br /><% } %>' +
+'        <% if (item.get("phone-number-fax")) { %>Fax: <%- item.get("phone-number-fax") %><br /><% } %>' +
 '        <% if (item.get("time-zone-name")) { %>Time zone: <%- item.get("time-zone-name") %><% } %>' +
 '    </div>' +
 '</li>';
