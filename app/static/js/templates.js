@@ -227,7 +227,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '<% _.each(pp.groupBy(function(i){ return i.get("status")}), function (plist, status) { %>' +
 '    <div class="tab-pane fade<% if (fprst==status) { %> in active<% } %>" id="projects_<%- status %>">' +
 '        <div class="tabbable row">' +
-'        <ul class="nav nav-pills nav-stacked col-lg-4 col-lg-push-8 col-sm-6 col-xs-6">' +
+'        <ul class="nav nav-pills nav-stacked col-lg-3 col-lg-push-9 col-md-4 col-md-push-8 col-sm-5 col-sm-push-7">' +
 '        <% var fprcoid=_.first(plist).get("company").id;' +
 '        _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <li<% if (fprcoid==coid) { %> class="active"<% } %>>' +
@@ -235,7 +235,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '            </li>' +
 '        <% }) %>' +
 '        </ul>' +
-'        <div class="tab-content col-lg-8 col-lg-pull-4 col-sm-6 col-xs-6">' +
+'        <div class="tab-content col-lg-9 col-lg-pull-3 col-md-8 col-md-pull-4 col-sm-7 col-sm-pull-5">' +
 '        <% _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">' +
 '                <ul class="list-unstyled">' +
