@@ -421,13 +421,13 @@ templates['#project-people'] = '<%= view.block("#header") %>' +
 '</ul>' +
 '<% } else { %>' +
 '<div class="tabbable tabs-left row">' +
-'<ul class="nav nav-pills nav-stacked col-lg-4">' +
+'<ul class="nav nav-pills nav-stacked col-lg-3 col-md-4 col-sm-5 col-xs-6">' +
 '<% var pc=_.uniq(pp.pluck("company-id")); var fcoid=_.first(pc);' +
 '_.each(pc, function (id) { %>' +
 '    <li<% if (fcoid==id) { %> class="active"<% } %>><a href="#people_c<%- id %>" data-toggle="tab"><%- cc.get(id)?cc.get(id).name():id %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'<div class="tab-content col-lg-8">' +
+'<div class="tab-content col-lg-9 col-md-8 col-sm-7 col-xs-6">' +
 '<% _.each(pc, function (id) { %>' +
 '    <div class="tab-pane fade<% if (fcoid==id) { %> in active<% } %>" id="people_c<%- id %>">' +
 '        <ul class="media-list">' +
