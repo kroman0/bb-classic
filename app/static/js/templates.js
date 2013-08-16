@@ -814,7 +814,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
 '<div class="tabbable row">' +
-'<ul class="nav nav-pills nav-stacked col-lg-4 pull-right">' +
+'<ul class="nav nav-pills nav-stacked col-lg-3 col-lg-push-9 col-md-4 col-md-push-8 col-sm-5 col-sm-push-7">' +
 '<% var ftdst=_.first(td.pluck("completed"));' +
 '   _.each(_.uniq(td.pluck("completed")), function (status) { %>' +
 '    <li<% if (ftdst==status) { %> class="active"<% } %>>' +
@@ -822,7 +822,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '    </li>' +
 '<% }) %>' +
 '</ul>' +
-'<div class="tab-content col-lg-8">' +
+'<div class="tab-content col-lg-9 col-lg-pull-3 col-md-8 col-md-pull-4 col-sm-7 col-sm-pull-5">' +
 '    <% _.each(td.groupBy(function(i){ return i.get("completed")}), function (tlgroup, status) { %>' +
 '    <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">' +
 '        <ul class="list-unstyled">' +
@@ -925,7 +925,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
 '<div class="row">' +
-'<ul class="list-unstyled todoitemsholder col-lg-8 project-todo-list">' +
+'<ul class="list-unstyled todoitemsholder project-todo-list col-lg-9 col-md-8 col-sm-7">' +
 '    <li class="panel">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
@@ -938,7 +938,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<%= view.block("#todoadd") %>' +
 '    </li>' +
 '</ul>' +
-'<div class="tabbable col-lg-4 pull-right">' +
+'<div class="tabbable col-lg-3 col-md-4 col-sm-5">' +
 '<ul class="nav nav-tabs nav-justified">' +
 '<% _.each(_.uniq(td.pluck("completed")), function (status) { %>' +
 '    <li<% if (ftdst==status) { %> class="active"<% } %>>' +
