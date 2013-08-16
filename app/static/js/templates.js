@@ -346,7 +346,7 @@ templates['#person'] = '<%= view.block("#header") %>' +
 '<% if (view.model.get("phone-number-fax")) { %>Fax: <%- view.model.get("phone-number-fax") %><br /><% } %>' +
 '<% if (view.model.get("time-zone-name")) { %>Time zone: <%- view.model.get("time-zone-name") %><% } %>';
 templates['#personitem'] = '<% var in_project=item.collection.url().indexOf("projects")!==-1 %>' +
-'<li class="media well well-small">' +
+'<li class="media well well-sm">' +
 '    <a class="pull-right" href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>"><img class="media-object img-polaroid" src="<%- item.get("avatar-url") %>" alt="<%- item.name() %>"></a>' +
 '    <div class="media-body">' +
 '        <h4 class="media-heading">' +
@@ -384,13 +384,13 @@ templates['#people'] = '<%= view.block("#header") %>' +
 '</ul>' +
 '<% } else { %>' +
 '<div class="tabbable tabs-left row">' +
-'<ul class="nav nav-pills nav-stacked col-lg-4">' +
+'<ul class="nav nav-pills nav-stacked col-lg-3 col-md-4 col-sm-5 col-xs-6">' +
 '<% var fcoid=_.first(pp.pluck("company-id"));' +
 '   cc.each(function (item) { %>' +
 '    <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#people_c<%- item.id %>" data-toggle="tab"><%- item.name() %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'<div class="tab-content col-lg-8">' +
+'<div class="tab-content col-lg-9 col-md-8 col-sm-7 col-xs-6">' +
 '<% cc.each(function (cc) { %>' +
 '    <div class="tab-pane fade<% if (fcoid==cc.id) { %> in active<% } %>" id="people_c<%- cc.id %>">' +
 '        <% var cp=pp.where({"company-id":cc.id}); if (_.isEmpty(cp)) { %>' +
