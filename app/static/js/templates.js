@@ -679,12 +679,13 @@ templates['#project-calendar-entry-comments'] = '<%= view.block("#header") %>' +
 '<%= view.block("#comments") %>' +
 '<% } %>';
 templates['#category'] = '<dt>' +
-'    <h3>' +
-'        <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.id %>"><%- item.get("name") %></a>' +
-'    </h3>' +
+'    <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.id %>"><%- item.get("name") %></a>' +
 '</dt>' +
 '<dd>' +
-'    <%- item.get("type") %><br />Elements: <%- item.get("elements-count") %>' +
+'    <ul class="list-inline">' +
+'         <li>Type: <%- item.get("type") %></li>' +
+'         <li>Elements: <%- item.get("elements-count") %></li>' +
+'    </ul>' +
 '</dd>';
 templates['#project-categories'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
@@ -693,7 +694,7 @@ templates['#project-categories'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No categories...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
-'<dl>' +
+'<dl class="dl-horizontal">' +
 '<% cc.each(function (item) { %>' +
 '    <%= view.itemblock(item, "#category") %>' +
 '<% }) %>' +
