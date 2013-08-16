@@ -95,13 +95,13 @@ templates['#attachment'] = '<li>' +
 '        <a href="#people/<%- item["person-id"] %>"><i class="glyphicon glyphicon-user"></i><%- item["author-name"] %></a>' +
 '    </small>' +
 '</li>';
-templates['#attachments'] = '<% if (item.get("attachments")) { %>' +
+templates['#attachments'] = '<% var attachments=item.get("attachments"); if (attachments && attachments.length) { %>' +
 '    <ul>' +
-'        <% _.each(item.get("attachments"),function (a) { %>' +
+'        <% _.each((attachments),function (a) { %>' +
 '<%= view.itemblock(a, "#attachment") %>' +
 '        <% }) %>' +
 '    </ul>' +
-'    <% } %>';
+'<% } %>';
 templates['#comment'] = '<li class="list-group-item">' +
 '    <small>' +
 '        <a href="#people/<%- item.get("author-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("author-name") %></a>' +
@@ -264,7 +264,7 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<div>' +
 '<% cc.each(function (item) { %>' +
 '    <div class="panel"><div class="panel-heading"><h3 class="panel-title"><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></div>' +
-'    <div class="row">' +
+'    <div class="panel-body row">' +
 '        <div class="col-lg-4 col-sm-4 col-md-4">' +
 '            <% if (item.get("web-address")) { %><a href="<%- item.get("web-address") %>"><b><%- item.get("web-address") %></b></a><br /><% } %>' +
 '            <% if (item.get("time-zone-id")) { %>Time zone: <%- item.get("time-zone-id") %><br /><% } %>' +
@@ -493,7 +493,7 @@ templates['#post'] = '<li class="panel">' +
 '        <% if (item.get("private")) { %><small class="glyphicon glyphicon-lock"></small><% } %>' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment"></i><%- item.get("comments-count") %></a>' +
 '    </h3></div>' +
-'    <small>' +
+'    <div class="panel-body"><small>' +
 '        by' +
 '        <a href="#people/<%- item.get("author-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("author-name") %></a>' +
 '        <% if (item.get("category-id")) { %>' +
@@ -503,19 +503,8 @@ templates['#post'] = '<li class="panel">' +
 '        on: <abbr title="<%- item.get("posted-on") %>"><%- moment(item.get("posted-on")).format("LLL") %></abbr>' +
 '    </small>' +
 '    <p><%= item.get("display-body") %></p>' +
-'    <% if (item.get("attachments")) { %>' +
-'    <ul class="list-group">' +
-'        <% _.each(item.get("attachments"),function (a) { %>' +
-'        <li class="list-group-item">' +
-'            <a href="<%- a["download-url"] %>"><%- a.name %></a>' +
-'            <small>' +
-'                <%- a["byte-size"] %>B' +
-'                <a href="#people/<%- a["person-id"] %>"><i class="glyphicon glyphicon-user"></i><%- a["author-name"] %></a>' +
-'            </small>' +
-'        </li>' +
-'        <% }) %>' +
-'    </ul>' +
-'    <% } %>' +
+'    <%= view.itemblock(item, "#attachments") %>' +
+'    </div>' +
 '</li>';
 templates['#project-posts'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
@@ -609,7 +598,7 @@ templates['#calendar'] = '<li class="panel">' +
 '        <i class="edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
 '        <% if (!_.isFinite(view.cur_item)) { %><i class="removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    </h3></div>' +
-'    <small>' +
+'    <div class="panel-body"><small>' +
 '        <% if (item.get("type")=="Milestone" && item.get("responsible-party-id")) { %>' +
 '        <a href="#<%- item.get("responsible-party-type")=="Company"?"companies":"people" %>/<%- item.get("responsible-party-id") %>"><% if (item.get("responsible-party-type")=="Person") { %><i class="glyphicon glyphicon-user"></i><% } %><%- item.get("responsible-party-name") %></a><br />' +
 '        <% } %>' +
@@ -634,7 +623,7 @@ templates['#calendar'] = '<li class="panel">' +
 '        at' +
 '        <abbr title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></abbr>' +
 '        <% } %>' +
-'    </small>' +
+'    </small></div>' +
 '</li>';
 templates['#calendaredit'] = '<li class="panel editcalendar form" data-id="<%- item.id %>">' +
 '<input type="text" name="title" placeholder="title" value="<%- item.get("title") %>">' +
