@@ -35,10 +35,10 @@ my info be visible
     [Documentation]  Check if page contains user info.
     Page should contain element  link=name@domain.com
     Page should contain element  link=example
-    Page should contain  Mobile phone: +000 (00) 000-0000
-    Page should contain  Home phone: +000 (00) 000-0001
-    Page should contain  Fax phone: +000 (00) 000-0002
-    Page should contain  Office phone: +000 (00) 000-0003
+    Page should contain  Mobile: +000 (00) 000-0000
+    Page should contain  Home: +000 (00) 000-0001
+    Page should contain  Fax: +000 (00) 000-0002
+    Page should contain  Office: +000 (00) 000-0003
     Page should contain  Time zone: Europe/Kiev
 #    Capture Page Screenshot  mypage.png
 #    Compare screenshot to base  ${base_mypage}
