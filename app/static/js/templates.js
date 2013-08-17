@@ -95,13 +95,13 @@ templates['#attachment'] = '<li>' +
 '        <a href="#people/<%- item["person-id"] %>"><i class="glyphicon glyphicon-user"></i><%- item["author-name"] %></a>' +
 '    </small>' +
 '</li>';
-templates['#attachments'] = '<% if (item.get("attachments")) { %>' +
+templates['#attachments'] = '<% var attachments=item.get("attachments"); if (attachments && attachments.length) { %>' +
 '    <ul>' +
-'        <% _.each(item.get("attachments"),function (a) { %>' +
+'        <% _.each((attachments),function (a) { %>' +
 '<%= view.itemblock(a, "#attachment") %>' +
 '        <% }) %>' +
 '    </ul>' +
-'    <% } %>';
+'<% } %>';
 templates['#comment'] = '<li class="list-group-item">' +
 '    <small>' +
 '        <a href="#people/<%- item.get("author-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("author-name") %></a>' +
@@ -227,7 +227,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '<% _.each(pp.groupBy(function(i){ return i.get("status")}), function (plist, status) { %>' +
 '    <div class="tab-pane fade<% if (fprst==status) { %> in active<% } %>" id="projects_<%- status %>">' +
 '        <div class="tabbable row">' +
-'        <ul class="nav nav-pills nav-stacked col-lg-4 col-lg-push-8 col-sm-6 col-6">' +
+'        <ul class="nav nav-pills nav-stacked col-lg-3 col-lg-push-9 col-md-4 col-md-push-8 col-sm-5 col-sm-push-7">' +
 '        <% var fprcoid=_.first(plist).get("company").id;' +
 '        _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <li<% if (fprcoid==coid) { %> class="active"<% } %>>' +
@@ -235,7 +235,7 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '            </li>' +
 '        <% }) %>' +
 '        </ul>' +
-'        <div class="tab-content col-lg-8 col-lg-pull-4 col-sm-6 col-6">' +
+'        <div class="tab-content col-lg-9 col-lg-pull-3 col-md-8 col-md-pull-4 col-sm-7 col-sm-pull-5">' +
 '        <% _.each(_.groupBy(plist, function(item){ return item.get("company").id}), function (list, coid) { %>' +
 '            <div class="tab-pane fade<% if (fprcoid==coid) { %> in active<% } %>" id="projects_<%- status %>_<%- coid %>">' +
 '                <ul class="list-unstyled">' +
@@ -264,22 +264,22 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<div>' +
 '<% cc.each(function (item) { %>' +
 '    <div class="panel"><div class="panel-heading"><h3 class="panel-title"><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></div>' +
-'    <div class="row">' +
-'        <div class="col-lg-4">' +
+'    <div class="panel-body row">' +
+'        <div class="col-lg-4 col-sm-4 col-md-4">' +
 '            <% if (item.get("web-address")) { %><a href="<%- item.get("web-address") %>"><b><%- item.get("web-address") %></b></a><br /><% } %>' +
 '            <% if (item.get("time-zone-id")) { %>Time zone: <%- item.get("time-zone-id") %><br /><% } %>' +
 '            <% if (item.get("locale")) { %>Locale: <%- item.get("locale") %><% } %>' +
 '        </div>' +
-'        <div class="col-lg-4">' +
+'        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-6">' +
 '            <% if (item.get("country")) { %><%- item.get("country") %><br /><% } %>' +
 '            <% if (item.get("city")) { %><%- item.get("city") %> <%- item.get("zip") %><br /><% } %>' +
 '            <% if (item.get("address-one")) { %><%- item.get("address-one") %><br /><% } %>' +
 '            <% if (item.get("address-two")) { %><%- item.get("address-two") %><% } %>' +
 '        </div>' +
-'        <div class="col-lg-4">' +
+'        <div class="col-lg-4 col-sm-4 col-md-4 col-xs-6">' +
 '            <% if (item.get("state")) { %>State: <%- item.get("state") %><br /><% } %>' +
-'            <% if (item.get("phone-number-office")) { %>Office phone: <%- item.get("phone-number-office") %><br /><% } %>' +
-'            <% if (item.get("phone-number-fax")) { %>Fax phone: <%- item.get("phone-number-fax") %><% } %>' +
+'            <% if (item.get("phone-number-office")) { %>Office: <%- item.get("phone-number-office") %><br /><% } %>' +
+'            <% if (item.get("phone-number-fax")) { %>Fax: <%- item.get("phone-number-fax") %><% } %>' +
 '        </div>' +
 '    </div></div>' +
 '<% }) %>' +
@@ -287,7 +287,7 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#company'] = '<%= view.block("#header") %>' +
 '<div class="row">' +
-'    <div class="col-lg-4">' +
+'    <div class="col-lg-4 col-sm-4 col-md-4">' +
 '        <h2>Projects</h2>' +
 '        <% var cid = view.model.id; var pp=view.options.collections.projects; if (pp.isEmpty()) { %>' +
 '        <div class="alert alert-info">No projects...</div>' +
@@ -299,7 +299,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        </ul>' +
 '        <% } %>' +
 '    </div>' +
-'    <div class="col-lg-4">' +
+'    <div class="col-lg-4 col-sm-4 col-md-4 col-xs-6">' +
 '        <h2>People</h2>' +
 '        <% var pp=view.options.collections.people; if (pp.isEmpty()) { %>' +
 '        <div class="alert alert-info">No people...</div>' +
@@ -311,7 +311,7 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        </ul>' +
 '        <% } %>' +
 '    </div>' +
-'    <div class="col-lg-4">' +
+'    <div class="col-lg-4 col-sm-4 col-md-4 col-xs-6">' +
 '        <h2>Contact</h2>' +
 '        <% if (view.model.get("web-address")) { %>' +
 '        <a href="<%- view.model.get("web-address") %>"><b><%- view.model.get("web-address") %></b></a><br />' +
@@ -323,8 +323,8 @@ templates['#company'] = '<%= view.block("#header") %>' +
 '        <% if (view.model.get("address-one")) { %><%- view.model.get("address-one") %><br /><% } %>' +
 '        <% if (view.model.get("address-two")) { %><%- view.model.get("address-two") %><br /><% } %>' +
 '        <% if (view.model.get("state")) { %>State: <%- view.model.get("state") %><br /><% } %>' +
-'        <% if (view.model.get("phone-number-office")) { %>Office phone: <%- view.model.get("phone-number-office") %><br /><% } %>' +
-'        <% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><% } %>' +
+'        <% if (view.model.get("phone-number-office")) { %>Office: <%- view.model.get("phone-number-office") %><br /><% } %>' +
+'        <% if (view.model.get("phone-number-fax")) { %>Fax: <%- view.model.get("phone-number-fax") %><% } %>' +
 '    </div>' +
 '</div>';
 templates['#person'] = '<%= view.block("#header") %>' +
@@ -340,13 +340,13 @@ templates['#person'] = '<%= view.block("#header") %>' +
 '    <% } %>' +
 '    <br />' +
 '<% } %>' +
-'<% if (view.model.get("phone-number-office")) { %>Office phone: <%- view.model.get("phone-number-office") %><br /><% } %>' +
-'<% if (view.model.get("phone-number-mobile")) { %>Mobile phone: <%- view.model.get("phone-number-mobile") %><br /><% } %>' +
-'<% if (view.model.get("phone-number-home")) { %>Home phone: <%- view.model.get("phone-number-home") %><br /><% } %>' +
-'<% if (view.model.get("phone-number-fax")) { %>Fax phone: <%- view.model.get("phone-number-fax") %><br /><% } %>' +
+'<% if (view.model.get("phone-number-office")) { %>Office: <%- view.model.get("phone-number-office") %><br /><% } %>' +
+'<% if (view.model.get("phone-number-mobile")) { %>Mobile: <%- view.model.get("phone-number-mobile") %><br /><% } %>' +
+'<% if (view.model.get("phone-number-home")) { %>Home: <%- view.model.get("phone-number-home") %><br /><% } %>' +
+'<% if (view.model.get("phone-number-fax")) { %>Fax: <%- view.model.get("phone-number-fax") %><br /><% } %>' +
 '<% if (view.model.get("time-zone-name")) { %>Time zone: <%- view.model.get("time-zone-name") %><% } %>';
 templates['#personitem'] = '<% var in_project=item.collection.url().indexOf("projects")!==-1 %>' +
-'<li class="media well well-small">' +
+'<li class="media well well-sm">' +
 '    <a class="pull-right" href="#<%- in_project ? "projects/" + item.get("project-id") + "/" : "" %>people/<%- item.id %>" title="<%- item.name() %>"><img class="media-object img-polaroid" src="<%- item.get("avatar-url") %>" alt="<%- item.name() %>"></a>' +
 '    <div class="media-body">' +
 '        <h4 class="media-heading">' +
@@ -364,10 +364,10 @@ templates['#personitem'] = '<% var in_project=item.collection.url().indexOf("pro
 '            <% } %>' +
 '            <br />' +
 '        <% } %>' +
-'        <% if (item.get("phone-number-office")) { %>Office phone: <%- item.get("phone-number-office") %><br /><% } %>' +
-'        <% if (item.get("phone-number-mobile")) { %>Mobile phone: <%- item.get("phone-number-mobile") %><br /><% } %>' +
-'        <% if (item.get("phone-number-home")) { %>Home phone: <%- item.get("phone-number-home") %><br /><% } %>' +
-'        <% if (item.get("phone-number-fax")) { %>Fax phone: <%- item.get("phone-number-fax") %><br /><% } %>' +
+'        <% if (item.get("phone-number-office")) { %>Office: <%- item.get("phone-number-office") %><br /><% } %>' +
+'        <% if (item.get("phone-number-mobile")) { %>Mobile: <%- item.get("phone-number-mobile") %><br /><% } %>' +
+'        <% if (item.get("phone-number-home")) { %>Home: <%- item.get("phone-number-home") %><br /><% } %>' +
+'        <% if (item.get("phone-number-fax")) { %>Fax: <%- item.get("phone-number-fax") %><br /><% } %>' +
 '        <% if (item.get("time-zone-name")) { %>Time zone: <%- item.get("time-zone-name") %><% } %>' +
 '    </div>' +
 '</li>';
@@ -384,13 +384,13 @@ templates['#people'] = '<%= view.block("#header") %>' +
 '</ul>' +
 '<% } else { %>' +
 '<div class="tabbable tabs-left row">' +
-'<ul class="nav nav-pills nav-stacked col-lg-4">' +
+'<ul class="nav nav-pills nav-stacked col-lg-3 col-md-4 col-sm-5 col-xs-6">' +
 '<% var fcoid=_.first(pp.pluck("company-id"));' +
 '   cc.each(function (item) { %>' +
 '    <li<% if (fcoid==item.id) { %> class="active"<% } %>><a href="#people_c<%- item.id %>" data-toggle="tab"><%- item.name() %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'<div class="tab-content col-lg-8">' +
+'<div class="tab-content col-lg-9 col-md-8 col-sm-7 col-xs-6">' +
 '<% cc.each(function (cc) { %>' +
 '    <div class="tab-pane fade<% if (fcoid==cc.id) { %> in active<% } %>" id="people_c<%- cc.id %>">' +
 '        <% var cp=pp.where({"company-id":cc.id}); if (_.isEmpty(cp)) { %>' +
@@ -421,13 +421,13 @@ templates['#project-people'] = '<%= view.block("#header") %>' +
 '</ul>' +
 '<% } else { %>' +
 '<div class="tabbable tabs-left row">' +
-'<ul class="nav nav-pills nav-stacked col-lg-4">' +
+'<ul class="nav nav-pills nav-stacked col-lg-3 col-md-4 col-sm-5 col-xs-6">' +
 '<% var pc=_.uniq(pp.pluck("company-id")); var fcoid=_.first(pc);' +
 '_.each(pc, function (id) { %>' +
 '    <li<% if (fcoid==id) { %> class="active"<% } %>><a href="#people_c<%- id %>" data-toggle="tab"><%- cc.get(id)?cc.get(id).name():id %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'<div class="tab-content col-lg-8">' +
+'<div class="tab-content col-lg-9 col-md-8 col-sm-7 col-xs-6">' +
 '<% _.each(pc, function (id) { %>' +
 '    <div class="tab-pane fade<% if (fcoid==id) { %> in active<% } %>" id="people_c<%- id %>">' +
 '        <ul class="media-list">' +
@@ -493,7 +493,7 @@ templates['#post'] = '<li class="panel">' +
 '        <% if (item.get("private")) { %><small class="glyphicon glyphicon-lock"></small><% } %>' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>/comments" title="<%- item.get("comments-count") %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment"></i><%- item.get("comments-count") %></a>' +
 '    </h3></div>' +
-'    <small>' +
+'    <div class="panel-body"><small>' +
 '        by' +
 '        <a href="#people/<%- item.get("author-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("author-name") %></a>' +
 '        <% if (item.get("category-id")) { %>' +
@@ -503,19 +503,8 @@ templates['#post'] = '<li class="panel">' +
 '        on: <abbr title="<%- item.get("posted-on") %>"><%- moment(item.get("posted-on")).format("LLL") %></abbr>' +
 '    </small>' +
 '    <p><%= item.get("display-body") %></p>' +
-'    <% if (item.get("attachments")) { %>' +
-'    <ul class="list-group">' +
-'        <% _.each(item.get("attachments"),function (a) { %>' +
-'        <li class="list-group-item">' +
-'            <a href="<%- a["download-url"] %>"><%- a.name %></a>' +
-'            <small>' +
-'                <%- a["byte-size"] %>B' +
-'                <a href="#people/<%- a["person-id"] %>"><i class="glyphicon glyphicon-user"></i><%- a["author-name"] %></a>' +
-'            </small>' +
-'        </li>' +
-'        <% }) %>' +
-'    </ul>' +
-'    <% } %>' +
+'    <%= view.itemblock(item, "#attachments") %>' +
+'    </div>' +
 '</li>';
 templates['#project-posts'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
@@ -609,7 +598,7 @@ templates['#calendar'] = '<li class="panel">' +
 '        <i class="edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
 '        <% if (!_.isFinite(view.cur_item)) { %><i class="removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    </h3></div>' +
-'    <small>' +
+'    <div class="panel-body"><small>' +
 '        <% if (item.get("type")=="Milestone" && item.get("responsible-party-id")) { %>' +
 '        <a href="#<%- item.get("responsible-party-type")=="Company"?"companies":"people" %>/<%- item.get("responsible-party-id") %>"><% if (item.get("responsible-party-type")=="Person") { %><i class="glyphicon glyphicon-user"></i><% } %><%- item.get("responsible-party-name") %></a><br />' +
 '        <% } %>' +
@@ -634,7 +623,7 @@ templates['#calendar'] = '<li class="panel">' +
 '        at' +
 '        <abbr title="<%- item.get("completed-at") %>"><%- moment(item.get("completed-at")).format("LLL") %></abbr>' +
 '        <% } %>' +
-'    </small>' +
+'    </small></div>' +
 '</li>';
 templates['#calendaredit'] = '<li class="panel editcalendar form" data-id="<%- item.id %>">' +
 '<input type="text" name="title" placeholder="title" value="<%- item.get("title") %>">' +
@@ -679,12 +668,13 @@ templates['#project-calendar-entry-comments'] = '<%= view.block("#header") %>' +
 '<%= view.block("#comments") %>' +
 '<% } %>';
 templates['#category'] = '<dt>' +
-'    <h3>' +
-'        <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.id %>"><%- item.get("name") %></a>' +
-'    </h3>' +
+'    <a href="#projects/<%- item.get("project-id") %>/categories/<%- item.id %>"><%- item.get("name") %></a>' +
 '</dt>' +
 '<dd>' +
-'    <%- item.get("type") %><br />Elements: <%- item.get("elements-count") %>' +
+'    <ul class="list-inline">' +
+'         <li>Type: <%- item.get("type") %></li>' +
+'         <li>Elements: <%- item.get("elements-count") %></li>' +
+'    </ul>' +
 '</dd>';
 templates['#project-categories'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
@@ -693,7 +683,7 @@ templates['#project-categories'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No categories...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
-'<dl>' +
+'<dl class="dl-horizontal">' +
 '<% cc.each(function (item) { %>' +
 '    <%= view.itemblock(item, "#category") %>' +
 '<% }) %>' +
@@ -824,7 +814,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
 '<div class="tabbable row">' +
-'<ul class="nav nav-pills nav-stacked col-lg-4 pull-right">' +
+'<ul class="nav nav-pills nav-stacked col-lg-3 col-lg-push-9 col-md-4 col-md-push-8 col-sm-5 col-sm-push-7">' +
 '<% var ftdst=_.first(td.pluck("completed"));' +
 '   _.each(_.uniq(td.pluck("completed")), function (status) { %>' +
 '    <li<% if (ftdst==status) { %> class="active"<% } %>>' +
@@ -832,7 +822,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '    </li>' +
 '<% }) %>' +
 '</ul>' +
-'<div class="tab-content col-lg-8">' +
+'<div class="tab-content col-lg-9 col-lg-pull-3 col-md-8 col-md-pull-4 col-sm-7 col-sm-pull-5">' +
 '    <% _.each(td.groupBy(function(i){ return i.get("completed")}), function (tlgroup, status) { %>' +
 '    <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">' +
 '        <ul class="list-unstyled">' +
@@ -935,7 +925,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
 '<div class="row">' +
-'<ul class="list-unstyled todoitemsholder col-lg-8 project-todo-list">' +
+'<ul class="list-unstyled todoitemsholder project-todo-list col-lg-9 col-md-8 col-sm-7">' +
 '    <li class="panel">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
@@ -948,7 +938,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<%= view.block("#todoadd") %>' +
 '    </li>' +
 '</ul>' +
-'<div class="tabbable col-lg-4 pull-right">' +
+'<div class="tabbable col-lg-3 col-md-4 col-sm-5">' +
 '<ul class="nav nav-tabs nav-justified">' +
 '<% _.each(_.uniq(td.pluck("completed")), function (status) { %>' +
 '    <li<% if (ftdst==status) { %> class="active"<% } %>>' +
@@ -983,8 +973,12 @@ templates['#project-todo-item'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<div class="panel todoitemsholder project-todo-item">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
-'<%= view.itemblock(item, "#todo") %>' +
-'</dl>' +
+'    <ul class="list-group">' +
+'    <li class="list-group-item">' +
+'    <%= view.itemblock(item, "#todo") %>' +
+'    </li>' +
+'    </ul>' +
+'</div>' +
 '<% } %>';
 templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
@@ -996,35 +990,37 @@ templates['#project-todo-item-comments'] = '<%= view.block("#header") %>' +
 'if (td.isEmpty()||items.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo items...</div>' +
 '<% } else { %>' +
-'<div class="panel todoitemsholder project-todo-item-comments">' +
-'    <div class="panel-heading">' +
+'<ul class="list-group todoitemsholder project-todo-item-comments">' +
+'    <li class="list-group-item">' +
 '<%= view.itemblock(item, "#todo") %>' +
-'    </div>' +
-'</div>' +
+'    </li>' +
+'</ul>' +
 '<%= view.block("#comments") %>' +
 '<% } %>';
 templates['#nav'] = '<div class="container">' +
+'<div class="navbar-header">' +
 '<button data-target=".navbar-responsive-collapse" data-toggle="collapse" class="navbar-toggle" type="button">' +
 '    <span class="icon-bar"></span>' +
 '    <span class="icon-bar"></span>' +
 '    <span class="icon-bar"></span>' +
 '</button>' +
 '<a class="navbar-brand" href="#">BB</a>' +
-'<div class="nav-collapse collapse navbar-responsive-collapse">' +
+'</div>' +
+'<div class="collapse navbar-collapse navbar-responsive-collapse">' +
 '<ul class="nav navbar-nav">' +
 '<% _.each(view.navitems, function (title, link) { %>' +
 '    <li><a href="#<%- link %>"><%- title %></a></li>' +
 '<% }) %>' +
 '</ul>' +
-'<ul class="nav navbar-nav pull-right">' +
+'<ul class="nav navbar-nav navbar-right">' +
 '    <li>' +
 '        <a href="#me" title="<%- view.model.get("user-name") %>" class="dropdown-toggle" data-toggle="dropdown"><%- view.model.name() %> <span class="caret"></span></a>' +
 '        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">' +
 '            <% _.each(view.dropdownitems, function (data, link) { %>' +
-'            <li><a href="#<%- link %>"><i class="glyphicon glyphicon-<%- data.icon %>"></i> <%- data.title %></a></li>' +
+'            <li role="presentation"><a role="menuitem" href="#<%- link %>"><i class="glyphicon glyphicon-<%- data.icon %>"></i> <%- data.title %></a></li>' +
 '            <% }) %>' +
-'            <li class="divider"></li>' +
-'            <li><a href="/logout"><i class="glyphicon glyphicon-eject"></i> Logout</a></li>' +
+'            <li role="presentation" class="divider"></li>' +
+'            <li role="presentation"><a role="menuitem" href="/logout"><i class="glyphicon glyphicon-eject"></i> Logout</a></li>' +
 '        </ul>' +
 '    </li>' +
 '</ul>' +

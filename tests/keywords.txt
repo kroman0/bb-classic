@@ -134,7 +134,6 @@ Test user logout
     [Documentation]  Logout.
     Click link  First Last
     Click link  Logout
-    Click link  log in
 
 Start browser
     [Documentation]  Prepare environment and start browser.
