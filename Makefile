@@ -102,12 +102,10 @@ bootstrap-update:
 	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/css/bootstrap.min.css -O app/static/css/bootstrap.min.css
 	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/js/bootstrap.js -O app/static/js/bootstrap.js
 	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/js/bootstrap.min.js -O app/static/js/bootstrap.min.js
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/css/bootstrap-glyphicons.css -O app/static/css/bootstrap-glyphicons.css
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.eot -O app/static/fonts/glyphiconshalflings-regular.eot
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.otf -O app/static/fonts/glyphiconshalflings-regular.otf
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.svg -O app/static/fonts/glyphiconshalflings-regular.svg
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.ttf -O app/static/fonts/glyphiconshalflings-regular.ttf
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.woff -O app/static/fonts/glyphiconshalflings-regular.woff
+	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/fonts/glyphicons-halflings-regular.eot -O app/static/fonts/glyphicons-halflings-regular.eot
+	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/fonts/glyphicons-halflings-regular.svg -O app/static/fonts/glyphicons-halflings-regular.svg
+	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/fonts/glyphicons-halflings-regular.ttf -O app/static/fonts/glyphicons-halflings-regular.ttf
+	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/fonts/glyphicons-halflings-regular.woff -O app/static/fonts/glyphicons-halflings-regular.woff
 
 bootstrap-datepicker-update:
 	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/css/datepicker.css -O app/static/css/datepicker.css
