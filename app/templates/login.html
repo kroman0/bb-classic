@@ -45,7 +45,7 @@ body {
         <div class="content">
             <form class="form-login" action="/login" method="POST">
                 <h1 class="form-login-heading">Log in</h1>
-                <div id="statusline" class="alert">
+                <div id="statusline" class="alert alert-warning">
                     Please enter you credentials
                 </div>
                 <div class="input-group">
@@ -90,10 +90,10 @@ body {
         var status_line = $('#statusline');
         if (valid) {
           status_line.text('Login...');
-          status_line.addClass('alert-info').removeClass('alert-error');;
+          status_line.addClass('alert-info').removeClass('alert-danger').removeClass('alert-warning');
         } else {
           status_line.text('Please enter all fields!');
-          status_line.addClass('alert-error');
+          status_line.addClass('alert-danger').removeClass('alert-warning');
           return false;
         }
 
@@ -110,10 +110,10 @@ body {
           error: function(req, textStatus) {
             if (req.status === 401) {
               status_line.text('Unable to log-in!');
-              status_line.removeClass('alert-info').addClass('alert-error');
+              status_line.removeClass('alert-info').addClass('alert-danger');
             } else {
               status_line.text('Problems with server response.');
-              status_line.removeClass('alert-info').addClass('alert-error');
+              status_line.removeClass('alert-info').addClass('alert-danger');
             }
           },
         });
