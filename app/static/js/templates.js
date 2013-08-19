@@ -263,7 +263,7 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<div>' +
 '<% cc.each(function (item) { %>' +
-'    <div class="panel"><div class="panel-heading"><h3 class="panel-title"><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></div>' +
+'    <div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title"><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></div>' +
 '    <div class="panel-body row">' +
 '        <div class="col-lg-4 col-sm-4 col-md-4">' +
 '            <% if (item.get("web-address")) { %><a href="<%- item.get("web-address") %>"><b><%- item.get("web-address") %></b></a><br /><% } %>' +
@@ -487,7 +487,7 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '</table>' +
 '<%= view.block("#pager") %>' +
 '<% } %>';
-templates['#post'] = '<li class="panel">' +
+templates['#post'] = '<li class="panel panel-default">' +
 '    <div class="panel-heading"><h3 class="panel-title">' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <% if (item.get("private")) { %><small class="glyphicon glyphicon-lock"></small><% } %>' +
@@ -590,7 +590,7 @@ templates['#project-file'] = '<%= view.block("#header") %>' +
 '    <%= view.itemblock(item, "#file") %>' +
 '</ul>' +
 '<% } %>';
-templates['#calendar'] = '<li class="panel">' +
+templates['#calendar'] = '<li class="panel panel-default">' +
 '    <div class="panel-heading"><h3 class="panel-title">' +
 '        <a <% if (item.get("type")=="Milestone" && item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <i class="badge badge-inverse"><i class="calendar glyphicon-white glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>"></i></i>' +
@@ -783,11 +783,11 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '<% if (td.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
-'<dl>' +
+'<dl class="dl-horizontal">' +
 '<% _.each(_.uniq(td.pluck("project-id")),function (prid) { %>' +
 '    <dt><a href="#projects/<%- prid %>/todo_lists"><%- prs.get(prid)?prs.get(prid).get("name"):prid %></a></dt>' +
 '    <% _.each(td.where({"project-id":prid}), function (list) { %>' +
-'    <dd class="panel"><%= view.itemblock(list, "#todolist") %>' +
+'    <dd class="panel panel-default"><%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
 '        <% _.each(list.get("todo-items"), function (item) { %>' +
 '        <li class="list-group-item">' +
@@ -827,7 +827,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '    <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">' +
 '        <ul class="list-unstyled">' +
 '            <% _.each(tlgroup, function (list) { %>' +
-'            <li class="panel">' +
+'            <li class="panel panel-default">' +
 '            <%= view.itemblock(list, "#todolist") %>' +
 '                <ul class="list-inline">' +
 '                    <li>Completed: <%- list.get("completed-count") %></li>' +
@@ -835,7 +835,7 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '                </ul>' +
 '            </li>' +
 '            <% }) %>' +
-'            <li class="panel">' +
+'            <li class="panel panel-default">' +
 '            <%= view.block("#todolistadd") %>' +
 '            </li>' +
 '        </ul>' +
@@ -926,7 +926,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<div class="row">' +
 '<ul class="list-unstyled todoitemsholder project-todo-list col-lg-9 col-md-8 col-sm-7">' +
-'    <li class="panel">' +
+'    <li class="panel panel-default">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
 '<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
@@ -1020,7 +1020,7 @@ templates['#nav'] = '<div class="container">' +
 '            <li role="presentation"><a role="menuitem" href="#<%- link %>"><i class="glyphicon glyphicon-<%- data.icon %>"></i> <%- data.title %></a></li>' +
 '            <% }) %>' +
 '            <li role="presentation" class="divider"></li>' +
-'            <li role="presentation"><a role="menuitem" href="/logout"><i class="glyphicon glyphicon-eject"></i> Logout</a></li>' +
+'            <li role="presentation"><a role="menuitem" href="/logout"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>' +
 '        </ul>' +
 '    </li>' +
 '</ul>' +
