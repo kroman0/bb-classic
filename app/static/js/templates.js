@@ -712,28 +712,28 @@ templates['#todolist'] = '<div class="panel-heading">' +
 '    <small><%= item.get("description") %></small>' +
 '</div>';
 templates['#todolistedit'] = '<div class="panel-heading"><form class="edit_todolist form-horizontal form">' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoName<%- item.id %>">Name</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoName<%- item.id %>">Name</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input type="text" id="todoName<%- item.id %>" name="name" value="<%- item.get("name") %>" required>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoDescription<%- item.id %>">Description</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoDescription<%- item.id %>">Description</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<textarea id="todoDescription<%- item.id %>" name="description"><%= item.get("description") %></textarea>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="private<%- item.id %>">Private list</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="private<%- item.id %>">Private list</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="private<%- item.id %>" type="checkbox" name="private" <% if (item.get("private")) { %>checked="checked"<% } %> value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="tracked<%- item.id %>">Time tracked</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="tracked<%- item.id %>">Time tracked</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="tracked<%- item.id %>" type="checkbox" name="tracked" <% if (item.get("tracked")) { %>checked="checked"<% } %> value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
 '<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
 '<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</div></div>' +
@@ -741,29 +741,29 @@ templates['#todolistedit'] = '<div class="panel-heading"><form class="edit_todol
 templates['#todolistadd'] = '<div class="panel-heading">' +
 '<button type="button" class="btn" data-toggle="collapse" data-target=".add_todolist_wrapper">Add an item</button>' +
 '</div>' +
-'<div class="add_todolist_wrapper collapse"><form class="add_todolist form-horizontal form">' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoName">Name</label>' +
-'<div class="controls">' +
+'<div class="panel-body add_todolist_wrapper collapse"><form class="add_todolist form-horizontal form">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoName">Name</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input type="text" id="todoName" name="name" value="" required>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoDescription">Description</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoDescription">Description</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<textarea id="todoDescription" name="description"></textarea>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="private">Private list</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="private">Private list</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="private" type="checkbox" name="private" value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="tracked">Time tracked</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="tracked">Time tracked</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="tracked" type="checkbox" name="tracked" value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
 '<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</div></div>' +
 '</form></div>';
@@ -863,31 +863,31 @@ templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-i
 '<% if (!_.isFinite(view.todo_item)) { %><i class="todo removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>';
 templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<div class="edit_todo_wrapper"><form class="edit_todo form-horizontal form">' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoContent<%- item.id %>">Todo content</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoContent<%- item.id %>">Todo content</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<textarea id="todoContent<%- item.id %>" name="content" required><%= item.get("content") %></textarea>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoDueAt<%- item.id %>">Due date</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoDueAt<%- item.id %>">Due date</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="todoDueAt<%- item.id %>" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value="<%= item.get("due-at") %>">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="responsiblePerson<%- item.id %>">Responsible person</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="responsiblePerson<%- item.id %>">Responsible person</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<select  id="responsiblePerson<%- item.id %>" name="responsible-party">' +
 '<option value="">Nobody</option>' +
 '<% pp.each(function (i) { %><option value="<%- i.id %>" <% if (i.id==item.get("responsible-party-id")) { %>selected="selected"<% } %>><%- i.name() %></option><% }) %>' +
 '</select>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="notify<%- item.id %>">Notify responsible person</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="notify<%- item.id %>">Notify responsible person</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="notify<%- item.id %>" type="checkbox" name="notify" value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
 '<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
 '<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</div></div>' +
@@ -895,31 +895,31 @@ templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_
 templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<div class="panel-footer"><button type="button" class="btn" data-toggle="collapse" data-target=".add_todo_wrapper">Add an item</button>' +
 '<div class="add_todo_wrapper collapse"><form class="add_todo form-horizontal form">' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoContent">Todo content</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoContent">Todo content</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<textarea id="todoContent" name="content" required></textarea>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoDueAt">Due date</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoDueAt">Due date</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="todoDueAt" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value="">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="responsiblePerson">Responsible person</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="responsiblePerson">Responsible person</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<select  id="responsiblePerson" name="responsible-party">' +
 '<option value="">Nobody</option>' +
 '<% pp.each(function (i) { %><option value="<%- i.id %>"><%- i.name() %></option><% }) %>' +
 '</select>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="notify">Notify responsible person</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="notify">Notify responsible person</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="notify" type="checkbox" name="notify" value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
 '<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</div></div>' +
 '</form></div></div>';
