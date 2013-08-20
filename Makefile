@@ -98,14 +98,14 @@ sauce:	clean
 	ROBOT_DESIRED_CAPABILITIES=platform:Windows ROBOT_BROWSER=internetexplorer ROBOT_REMOTE_URL=http://$(SAUCE_USERNAME):$(SAUCE_ACCESS_KEY)@ondemand.saucelabs.com:80/wd/hub bin/pybot -e screenshots tests
 
 bootstrap-update:
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/css/bootstrap.css -O app/static/css/bootstrap.css
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/css/bootstrap.min.css -O app/static/css/bootstrap.min.css
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/js/bootstrap.js -O app/static/js/bootstrap.js
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/js/bootstrap.min.js -O app/static/js/bootstrap.min.js
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/fonts/glyphicons-halflings-regular.eot -O app/static/fonts/glyphicons-halflings-regular.eot
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/fonts/glyphicons-halflings-regular.svg -O app/static/fonts/glyphicons-halflings-regular.svg
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/fonts/glyphicons-halflings-regular.ttf -O app/static/fonts/glyphicons-halflings-regular.ttf
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/fonts/glyphicons-halflings-regular.woff -O app/static/fonts/glyphicons-halflings-regular.woff
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/css/bootstrap.css -O app/static/css/bootstrap.css
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/css/bootstrap.min.css -O app/static/css/bootstrap.min.css
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/js/bootstrap.js -O app/static/js/bootstrap.js
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/js/bootstrap.min.js -O app/static/js/bootstrap.min.js
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.eot -O app/static/fonts/glyphicons-halflings-regular.eot
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.svg -O app/static/fonts/glyphicons-halflings-regular.svg
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.ttf -O app/static/fonts/glyphicons-halflings-regular.ttf
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.woff -O app/static/fonts/glyphicons-halflings-regular.woff
 
 bootstrap-datepicker-update:
 	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/css/datepicker.css -O app/static/css/datepicker.css
