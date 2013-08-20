@@ -188,6 +188,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No time entries...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
+'<div class="table-responsive">' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
 '    <%= view.block("#time-thead") %>' +
 '    <tbody>' +
@@ -208,6 +209,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '        <% }) %>' +
 '    </tbody>' +
 '</table>' +
+'</div>' +
 '<%= view.block("#pager") %>' +
 '<% } %>';
 templates['#projects'] = '<%= view.block("#header") %>' +
@@ -476,6 +478,7 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '<div class="alert alert-info">No time entries...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
+'<div class="table-responsive">' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
 '    <%= view.block("#time-thead") %>' +
 '    <tbody>' +
@@ -485,6 +488,7 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '        <% }) %>' +
 '    </tbody>' +
 '</table>' +
+'</div>' +
 '<%= view.block("#pager") %>' +
 '<% } %>';
 templates['#post'] = '<li class="panel panel-default">' +
