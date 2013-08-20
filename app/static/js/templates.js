@@ -829,10 +829,12 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '            <% _.each(tlgroup, function (list) { %>' +
 '            <li class="panel panel-default">' +
 '            <%= view.itemblock(list, "#todolist") %>' +
+'            <div class="panel-body">' +
 '                <ul class="list-inline">' +
 '                    <li>Completed: <%- list.get("completed-count") %></li>' +
 '                    <li>Uncompleted: <%- list.get("uncompleted-count") %></li>' +
 '                </ul>' +
+'            </div>' +
 '            </li>' +
 '            <% }) %>' +
 '            <li class="panel panel-default">' +
@@ -971,7 +973,7 @@ templates['#project-todo-item'] = '<%= view.block("#header") %>' +
 'if (td.isEmpty()||items.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo items...</div>' +
 '<% } else { %>' +
-'<div class="panel todoitemsholder project-todo-item">' +
+'<div class="panel panel-default todoitemsholder project-todo-item">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
 '    <li class="list-group-item">' +
