@@ -11,9 +11,9 @@
 }(this, function() {
 'use strict';
 var templates = {};
-templates['#time'] = '<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> data-id="<%- item.id %>">' +
+templates['#time'] = '<tr data-id="<%- item.id %>">' +
 '    <td><%- item.get("date") %></td>' +
-'    <td><%- item.get("hours") %></td>' +
+'    <td <% if(item.get("hours")>2){ %>class="warning"<% } %>><%- item.get("hours") %></td>' +
 '    <td><a title="<%- item.get("person-name") %>" href="#people/<%- item.get("person-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("person-name") %></a></td>' +
 '    <td>' +
 '        <% if (item.get("todo-item-id")) { %>' +
