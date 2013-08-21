@@ -3,6 +3,9 @@
     text-transform: capitalize;
     text-align: center;
 }
+.projectnav {
+    margin-bottom: 10px;
+}
 .glyphicon-completed:before {
   content: "\e013";
 }
