@@ -28,7 +28,7 @@ templates['#time'] = '<tr data-id="<%- item.id %>">' +
 '        <button class="remove" title="Remove"><i class="removeitem glyphicon glyphicon-trash"></i></button>' +
 '    </td>' +
 '</tr>';
-templates['#timeedit'] = '<tr class="edittime form" data-id="<%- item.id %>">' +
+templates['#timeedit'] = '<tr class="edittime form" role="form" data-id="<%- item.id %>">' +
 '    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>' +
 '    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>' +
 '    <td>' +
@@ -132,7 +132,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
 '<h3 id="makereportlabel">Make report</h3>' +
 '</div>' +
-'<form id="makereport">' +
+'<form role="form" id="makereport">' +
 '    <div class="modal-body">' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">From</span>' +
@@ -453,7 +453,7 @@ templates['#project-person'] = '<%= view.block("#header") %>' +
 '</ul>' +
 '<% } %>';
 templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view.options.mydata?view.options.mydata.id:0; %>' +
-'<tr class="addtime form">' +
+'<tr class="addtime form" role="form">' +
 '    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
 '    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>' +
 '    <td>' +
@@ -629,7 +629,7 @@ templates['#calendar'] = '<li class="panel panel-default">' +
 '        <% } %>' +
 '    </small></div>' +
 '</li>';
-templates['#calendaredit'] = '<li class="panel editcalendar form" data-id="<%- item.id %>">' +
+templates['#calendaredit'] = '<li class="panel editcalendar form" role="form" data-id="<%- item.id %>">' +
 '<input type="text" name="title" placeholder="title" value="<%- item.get("title") %>">' +
 '<select name="type">' +
 '<option value="Milestone" <% if (item.get("type")=="Milestone") { %>selected="selected"<% } %>>Milestone</option>' +
@@ -711,7 +711,7 @@ templates['#todolist'] = '<div class="panel-heading">' +
 '    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
 '    <small><%= item.get("description") %></small>' +
 '</div>';
-templates['#todolistedit'] = '<div class="panel-heading"><form class="edit_todolist form-horizontal form">' +
+templates['#todolistedit'] = '<div class="panel-heading"><form role="form" class="edit_todolist form-horizontal form">' +
 '<div class="form-group">' +
 '<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoName<%- item.id %>">Name</label>' +
 '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
@@ -741,7 +741,7 @@ templates['#todolistedit'] = '<div class="panel-heading"><form class="edit_todol
 templates['#todolistadd'] = '<div class="panel-heading">' +
 '<button type="button" class="btn" data-toggle="collapse" data-target=".add_todolist_wrapper">Add an item</button>' +
 '</div>' +
-'<div class="panel-body add_todolist_wrapper collapse"><form class="add_todolist form-horizontal form">' +
+'<div class="panel-body add_todolist_wrapper collapse"><form role="form" class="add_todolist form-horizontal form">' +
 '<div class="form-group">' +
 '<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoName">Name</label>' +
 '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
@@ -862,7 +862,7 @@ templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-i
 '<i class="todo edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
 '<% if (!_.isFinite(view.todo_item)) { %><i class="todo removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>';
 templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
-'<div class="edit_todo_wrapper"><form class="edit_todo form-horizontal form">' +
+'<div class="edit_todo_wrapper"><form role="form" class="edit_todo form-horizontal form">' +
 '<div class="form-group">' +
 '<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoContent<%- item.id %>">Todo content</label>' +
 '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
@@ -894,7 +894,7 @@ templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_
 '</form></div>';
 templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<div class="panel-footer"><button type="button" class="btn" data-toggle="collapse" data-target=".add_todo_wrapper">Add an item</button>' +
-'<div class="add_todo_wrapper collapse"><form class="add_todo form-horizontal form">' +
+'<div class="add_todo_wrapper collapse"><form role="form" class="add_todo form-horizontal form">' +
 '<div class="form-group">' +
 '<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoContent">Todo content</label>' +
 '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
