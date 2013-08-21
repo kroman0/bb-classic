@@ -629,14 +629,26 @@ templates['#calendar'] = '<li class="panel panel-default">' +
 '        <% } %>' +
 '    </small></div>' +
 '</li>';
-templates['#calendaredit'] = '<li class="panel editcalendar form" role="form" data-id="<%- item.id %>">' +
-'<input type="text" name="title" placeholder="title" value="<%- item.get("title") %>">' +
-'<select name="type">' +
+templates['#calendaredit'] = '<li class="panel panel-default editcalendar form form-inline" role="form" data-id="<%- item.id %>">' +
+'<div class="form-group">' +
+'<label class="sr-only" for="title<%- item.id %>">Title</label>' +
+'<input type="text" name="title" class="form-control" id="title<%- item.id %>" placeholder="title" value="<%- item.get("title") %>">' +
+'</div>' +
+'<div class="form-group">' +
+'<label class="sr-only" for="type<%- item.id %>">Event type</label>' +
+'<select class="form-control" id="type<%- item.id %>" name="type">' +
 '<option value="Milestone" <% if (item.get("type")=="Milestone") { %>selected="selected"<% } %>>Milestone</option>' +
 '<option value="CalendarEvent" <% if (item.get("type")=="CalendarEvent") { %>selected="selected"<% } %>>CalendarEvent</option>' +
 '</select>' +
-'<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="start-at" placeholder="YYYY-MM-DD" value="<%- item.get("start-at") %>">' +
-'<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="deadline" placeholder="YYYY-MM-DD" value="<%- item.get("deadline") %>">' +
+'</div>' +
+'<div class="form-group">' +
+'<label class="sr-only" for="start<%- item.id %>">Start at</label>' +
+'<input class="form-control" id="start<%- item.id %>" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="start-at" placeholder="YYYY-MM-DD" value="<%- item.get("start-at") %>">' +
+'</div>' +
+'<div class="form-group">' +
+'<label class="sr-only" for="end<%- item.id %>">Deadline</label>' +
+'<input class="form-control" id="end<%- item.id %>" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="deadline" placeholder="YYYY-MM-DD" value="<%- item.get("deadline") %>">' +
+'</div>' +
 '<button data-id="<%- item.id %>" class="save btn btn-default" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
 '<button data-id="<%- item.id %>" class="reset btn btn-default" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</li>';

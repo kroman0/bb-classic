@@ -66,9 +66,6 @@ button.edit,
 button.remove {
     border: 1px solid;
 }
-.editcalendar button {
-    margin-bottom: 10px;
-}
 /* .glyphicon-play */
 .glyphicon-project-active:before {
   content: "\e072";
