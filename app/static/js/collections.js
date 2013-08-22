@@ -110,7 +110,7 @@
                 return '/api/' + this.parent + '/' + this.parent_id + '/time_entries.xml';
             }
             if (this.filter_report) {
-                return '/api/time_entries/report.xml?' + this.filter_report;
+                return '/api/time_entries/report.xml?' + Backbone.$.param(this.filter_report);
             }
             return '/api/time_entries/report.xml';
         },

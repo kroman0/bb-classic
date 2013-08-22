@@ -133,23 +133,24 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<h3 id="makereportlabel">Make report</h3>' +
 '</div>' +
 '<form role="form" id="makereport">' +
+'<% var refilter=view.getreport_filter() %>' +
 '    <div class="modal-body">' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">From</span>' +
-'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="from" placeholder="YYYYMMDD">' +
+'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="from" placeholder="YYYYMMDD" value="<%= refilter.from || "" %>">' +
 '    </div>' +
 '    <br />' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">To</span>' +
-'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="to" placeholder="YYYYMMDD">' +
+'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="to" placeholder="YYYYMMDD" value="<%= refilter.to || "" %>">' +
 '    </div>' +
 '    <br />' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">For</span>' +
 '        <select name="subject_id" class="form-control">' +
-'            <option value="">All</option>' +
+'            <option value="" <% if (_.isUndefined(refilter.subject_id)) { %>selected="selected"<% } %>>All</option>' +
 '            <% view.options.collections.people.each(function (i) { %>' +
-'                <option value="<%- i.id %>"><%- i.name() %></option>' +
+'                <option value="<%- i.id %>" <% if (i.id==refilter.subject_id) { %>selected="selected"<% } %>><%- i.name() %></option>' +
 '            <% }) %>' +
 '        </select>' +
 '    </div>' +
@@ -157,9 +158,9 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">Project</span>' +
 '        <select name="filter_project_id" class="form-control">' +
-'            <option value="">All</option>' +
+'            <option value="" <% if (_.isUndefined(refilter.filter_project_id)) { %>selected="selected"<% } %>>All</option>' +
 '            <% view.options.collections.projects.each(function (i) { %>' +
-'                <option value="<%- i.id %>"><%- i.get("name") %></option>' +
+'                <option value="<%- i.id %>" <% if (i.id==refilter.filter_project_id) { %>selected="selected"<% } %>><%- i.get("name") %></option>' +
 '            <% }) %>' +
 '        </select>' +
 '    </div>' +
@@ -167,9 +168,9 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">Company</span>' +
 '        <select name="filter_company_id" class="form-control">' +
-'            <option value="">All</option>' +
+'            <option value="" <% if (_.isUndefined(refilter.filter_company_id)) { %>selected="selected"<% } %>>All</option>' +
 '            <% view.options.collections.companies.each(function (i) { %>' +
-'                <option value="<%- i.id %>"><%- i.get("name") %></option>' +
+'                <option value="<%- i.id %>" <% if (i.id==refilter.filter_company_id) { %>selected="selected"<% } %>><%- i.get("name") %></option>' +
 '            <% }) %>' +
 '        </select>' +
 '    </div>' +

@@ -311,21 +311,17 @@
         events: _.extend(timeevents, {
             'click #getreport': 'getreport'
         }),
+        getreport_filter: function() {
+            return _.object(_.pluck(this.collection.filter_report, 'name'), _.pluck(this.collection.filter_report, 'value'));
+        },
         getreport: function(e) {
             e.preventDefault();
-            this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
+            this.collection.filter_report = _.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; });
             this.collection.fetch({cache: true, reset: true});
         },
         template: '#time-report',
         path: false,
-        title: 'Time report',
-        render: function() {
-            BBViewProto.render.apply(this);
-            if (this.collection.filter_report) {
-                this.$el.find('form#makereport').deserialize(this.collection.filter_report);
-            }
-            return this;
-        }
+        title: 'Time report'
     });
     // Post Comments View - projects/:id/posts/:pid/comments
     bbviews.PostCommentsView = TitleBBView.extend({
