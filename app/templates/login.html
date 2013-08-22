@@ -29,32 +29,34 @@ body {
     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
     box-shadow: 0 1px 2px rgba(0,0,0,.05);
 }
-.form-login .input-block-level,
-.form-login .input-group {
-    margin-bottom: 10px;
-}
-.form-login input[type="text"],
-.form-login input[type="password"] {
-    font-size: 16px;
-    padding: 7px 9px;
-}
     </style>
 </head>
 <body>
     <div class="container">
         <div class="content">
-            <form class="form-login" action="/login" method="POST">
+            <form class="form-login" role="form" action="/login" method="POST">
                 <h1 class="form-login-heading">Log in</h1>
                 <div id="statusline" class="alert alert-warning">
                     Please enter you credentials
                 </div>
-                <div class="input-group">
-                    <input type="text" name="subdomain" placeholder="Domain" class="input-medium form-control">
-                    <span class="input-group-addon">.basecamphq.com</span>
+                <div class="form-group">
+                    <label class="sr-only" for="subdomain">Subdomain</label>
+                    <div class="input-group">
+                        <input id="subdomain" type="text" name="subdomain" placeholder="Domain" class="input-lg form-control">
+                        <span class="input-group-addon">.basecamphq.com</span>
+                    </div>
                 </div>
-                <input type="text" name="username" placeholder="Login Name" class="input-block-level form-control">
-                <input type="password" name="password" placeholder="Password" class="input-block-level form-control">
-                <button type="submit" class="btn btn-large btn-primary">Log in</button>
+                <div class="form-group">
+                    <label class="sr-only" for="username">Subdomain</label>
+                    <input id="username" type="text" name="username" placeholder="Login Name" class="input-lg input-block-level form-control">
+                </div>
+                <div class="form-group">
+                    <label class="sr-only" for="password">Subdomain</label>
+                    <input id="password" type="password" name="password" placeholder="Password" class="input-lg input-block-level form-control">
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-lg btn-primary">Log in</button>
+                </div>
             </form>
         </div>
     </div>
@@ -76,24 +78,24 @@ body {
 <script type="text/javascript" >
     $(function () {
       $('form.form-login').submit(function (e) {
-        var form = $(this);
-
-        // validate values of input fields
-        var fields = ['password', 'username', 'subdomain'];
-        var valid = true;
-        for (var i=0; i<fields.length; i++) {
+        var form = $(this),
+            // validate values of input fields
+            fields = ['password', 'username', 'subdomain'],
+            valid = true,
+            i;
+        for (i=0; i<fields.length; i++) {
           if ($('input[name="'+fields[i]+'"]').val() === '') {
+            $('input[name="'+fields[i]+'"]').parents('.form-group').removeClass('has-success').addClass('has-error');
             valid = false;
-            break;
+          } else {
+            $('input[name="'+fields[i]+'"]').parents('.form-group').removeClass('has-error').addClass('has-success');
           }
         };
         var status_line = $('#statusline');
         if (valid) {
-          status_line.text('Login...');
-          status_line.addClass('alert-info').removeClass('alert-danger').removeClass('alert-warning');
+          status_line.text('Login...').removeClass('alert-danger').removeClass('alert-warning').addClass('alert-info');
         } else {
-          status_line.text('Please enter all fields!');
-          status_line.addClass('alert-danger').removeClass('alert-warning');
+          status_line.text('Please enter all fields!').removeClass('alert-warning').addClass('alert-danger');
           return false;
         }
 
@@ -102,18 +104,18 @@ body {
           url: '/login',
           data: form.serialize(),
           success: function(data, textStatus) {
-            status_line.text('Success!');
-            status_line.removeClass('alert-info').addClass('alert-success');
+            status_line.text('Success!').removeClass('alert-info').addClass('alert-success');
             // go to the main page
             window.location = '/';
           },
           error: function(req, textStatus) {
             if (req.status === 401) {
-              status_line.text('Unable to log-in!');
-              status_line.removeClass('alert-info').addClass('alert-danger');
+              status_line.text('Unable to log-in!').removeClass('alert-info').addClass('alert-danger');
+              for (i=0; i<fields.length; i++) {
+                $('input[name="'+fields[i]+'"]').parents('.form-group').removeClass('has-success').addClass('has-error');
+              }
             } else {
-              status_line.text('Problems with server response.');
-              status_line.removeClass('alert-info').addClass('alert-danger');
+              status_line.text('Problems with server response.').removeClass('alert-info').addClass('alert-danger');
             }
           },
         });
