@@ -190,8 +190,7 @@
                 });
                 return bpath;
             }
-        }),
-        BBViewProto = BBView.prototype;
+        });
     // All People View - people
     bbviews.AllPeopleView = BBView.extend({
         deps: function() {
