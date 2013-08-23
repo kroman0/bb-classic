@@ -15,43 +15,36 @@ templates['#time'] = '<tr data-id="<%- item.id %>">' +
 '    <td><%- item.get("date") %></td>' +
 '    <td <% if(item.get("hours")>2){ %>class="warning"<% } %>><%- item.get("hours") %></td>' +
 '    <td><a title="<%- item.get("person-name") %>" href="#people/<%- item.get("person-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("person-name") %></a></td>' +
-'    <td>' +
+'    <td><nobr>' +
 '        <% if (item.get("todo-item-id")) { %>' +
 '            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="glyphicon glyphicon-file"></i></a>' +
 '        <% } else { %>' +
 '            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="glyphicon glyphicon-folder-close"></i></a>' +
 '        <% } %>' +
 '        <%- item.get("description") %>' +
-'    </td>' +
-'    <td>' +
+'    </nobr></td>' +
+'    <td><nobr>' +
 '        <button class="edit" title="Edit"><i class="edititem glyphicon glyphicon-edit"></i></button>' +
 '        <button class="remove" title="Remove"><i class="removeitem glyphicon glyphicon-trash"></i></button>' +
-'    </td>' +
+'    </nobr></td>' +
 '</tr>';
 templates['#timeedit'] = '<tr class="edittime form" role="form" data-id="<%- item.id %>">' +
-'    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>' +
-'    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>' +
+'    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="form-control input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>' +
+'    <td><input type="text" class="form-control input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>' +
 '    <td>' +
-'        <div>' +
-'            <i class="glyphicon glyphicon-user"></i><select name="person-id">' +
-'                <% view.options.collections.people.each(function (i) { %>' +
-'                    <option value="<%- i.id %>" <% if (i.id==item.get("person-id")) { %>selected="selected"<% } %>><%- i.name() %></option>' +
-'                <% }) %>' +
-'            </select>' +
-'        </div>' +
+'        <select name="person-id" class="form-control">' +
+'            <% view.options.collections.people.each(function (i) { %>' +
+'                <option value="<%- i.id %>" <% if (i.id==item.get("person-id")) { %>selected="selected"<% } %>><%- i.name() %></option>' +
+'            <% }) %>' +
+'        </select>' +
 '    </td>' +
 '    <td>' +
-'        <% if (item.get("todo-item-id")) { %>' +
-'            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="glyphicon glyphicon-file"></i></a>' +
-'        <% } else { %>' +
-'            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="glyphicon glyphicon-folder-close"></i></a>' +
-'        <% } %>' +
-'        <input type="text" class="input-small" name="description" value="<%- item.get("description") %>">' +
+'        <input type="text" class="form-control input-small" name="description" value="<%- item.get("description") %>">' +
 '    </td>' +
-'    <td>' +
+'    <td><nobr>' +
 '        <button class="save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
 '        <button class="reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
-'    </td>' +
+'    </nobr></td>' +
 '</tr>';
 templates['#pager'] = '<% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>' +
 '<ul class="pager">' +
@@ -455,19 +448,17 @@ templates['#project-person'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view.options.mydata?view.options.mydata.id:0; %>' +
 '<tr class="addtime form" role="form">' +
-'    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
-'    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>' +
-'    <td>' +
-'        <div>' +
-'            <i class="glyphicon glyphicon-user"></i><select name="person-id">' +
-'                <% pp.each(function (i) { %>' +
-'                    <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
-'                <% }) %>' +
-'            </select>' +
-'        </div>' +
+'    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="form-control input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
+'    <td><input type="text" class="form-control input-small" name="hours" placeholder="hours" value="0"></td>' +
+'    <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2">' +
+'        <select class="form-control" name="person-id">' +
+'            <% pp.each(function (i) { %>' +
+'                <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
+'            <% }) %>' +
+'        </select>' +
 '    </td>' +
-'    <td>' +
-'        <input type="text" class="input-small" name="description">' +
+'    <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">' +
+'        <input type="text" class="form-control input-small" name="description">' +
 '    </td>' +
 '    <td>' +
 '        <button class="add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
