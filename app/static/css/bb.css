@@ -3,7 +3,8 @@
     text-transform: capitalize;
     text-align: center;
 }
-.projectnav {
+.projectnav,
+.projectsnav {
     margin-bottom: 10px;
 }
 .glyphicon-completed:before {

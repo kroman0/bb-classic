@@ -218,10 +218,10 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No projects...</div>' +
 '<% } else { %>' +
 '<div class="tabbable">' +
-'<ul class="nav nav-tabs">' +
+'<ul class="nav nav-tabs projectsnav">' +
 '<% var fprst=_.first(pp.pluck("status"));' +
 '   _.each(_.uniq(pp.pluck("status")), function (status) { %>' +
-'    <li class="prstatus<% if (fprst==status) { %> active<% } %> pull-right">' +
+'    <li class="prstatus pull-right <%- fprst==status?"active":"" %>">' +
 '        <a href="#projects_<%- status %>" data-toggle="tab"><%- status %></a>' +
 '    </li>' +
 '<% }) %>' +
