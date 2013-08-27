@@ -799,15 +799,12 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '    <ul class="list-group">' +
 '        <% _.each(list.get("todo-items"), function (item) { %>' +
 '        <li class="list-group-item">' +
-'            <% if(false){ %>' +
-'            <i class="todo-lists <%- item.get("completed")?"un":"" %>completeitem glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
+'            <i class="todo-lists <%- item.completed?"un":"" %>completeitem glyphicon glyphicon-<%- item.completed?"":"un" %>completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>" data-id="<%- item.id %>"></i>' +
 '            <% if (list.get("tracked")) { %>' +
 '            <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="glyphicon glyphicon-time"></i></a>' +
-'            <% }} %>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.content %></a>' +
-'            <% if(false){ %>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item.get("comments-count") %></a>' +
 '            <% } %>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.content %></a>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item["comments-count"] %></a>' +
 '        </li>' +
 '        <% }) %>' +
 '    </ul></dd>' +
