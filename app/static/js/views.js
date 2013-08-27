@@ -184,10 +184,8 @@
             },
             extrapath: [],
             path: function() {
-                var bpath = _result(this, 'basepath'), epath = _result(this, 'extrapath');
-                _.each(epath, function(i) {
-                    return bpath.push(i);
-                });
+                var bpath = _result(this, 'basepath');
+                _.each(_result(this, 'extrapath'), function(i) {bpath.push(i);});
                 return bpath;
             }
         });
@@ -458,7 +456,20 @@
     bbviews.TodosView = BBView.extend({
         deps: bbviews.TimeEntriesView.prototype.deps,
         events: {
+            'click .todo-lists.completeitem': 'complete',
             'change select[name=target]': 'selectTarget'
+        },
+        complete: function(e) {
+            e.preventDefault();
+            var target = $(e.currentTarget),
+                id = target.data('id'),
+                item = new this.options.collections.todo_items.model({id: id}),
+                tid = target.data('todolistId'),
+                titem = this.collection.get(tid),
+                items = _.where(titem.get('todo-items'), {id: id});
+            item.complete();
+            _.each(items, function(i) {i.completed = true;});
+            this.render();
         },
         selectTarget: function(e) {
             this.collection.responsible_party = $(e.target).val();
