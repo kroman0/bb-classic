@@ -777,9 +777,9 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 'var prs=view.options.collections.projects;' +
 'var party=view.collection.responsible_party;' +
 'var mid=party==null?view.options.mydata.id:view.collection.responsible_party; %>' +
-'<div>' +
-'    <div class="pull-right">Show items assigned to:' +
-'        <select name="target">' +
+'<div class="clearfix">' +
+'    <div class="pull-right"><label for="target" class="form-label">Show items assigned to:</label>' +
+'        <select class="form-control" id="target" name="target">' +
 '            <option value="" <% if (party=="") { %>selected="selected"<% } %>>Nobody</option>' +
 '            <% pp.each(function (i) { %>' +
 '                <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
@@ -792,12 +792,14 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
 '<dl class="dl-horizontal">' +
-'<% _.each(_.uniq(td.pluck("project-id")),function (prid) { %>' +
+'<% _.each(td.groupBy("project-id"), function (todos, prid) {' +
+'var items=_.filter(todos, function(i){return _.where(i.get("todo-items"),{"completed":false}).length});' +
+'if (items.length) { %>' +
 '    <dt><a href="#projects/<%- prid %>/todo_lists"><%- prs.get(prid)?prs.get(prid).get("name"):prid %></a></dt>' +
-'    <% _.each(td.where({"project-id":prid}), function (list) { %>' +
+'    <% _.each(items, function (list) { %>' +
 '    <dd class="panel panel-default"><%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
-'        <% _.each(list.get("todo-items"), function (item) { %>' +
+'        <% _.each(_.where(list.get("todo-items"),{"completed":false}), function (item) { %>' +
 '        <li class="list-group-item">' +
 '            <i class="todo-lists <%- item.completed?"un":"" %>completeitem glyphicon glyphicon-<%- item.completed?"":"un" %>completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>" data-id="<%- item.id %>"></i>' +
 '            <% if (list.get("tracked")) { %>' +
@@ -809,7 +811,7 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '        <% }) %>' +
 '    </ul></dd>' +
 '    <% }) %>' +
-'<% }) %>' +
+'<% }}) %>' +
 '</dl>' +
 '<% } %>';
 templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
