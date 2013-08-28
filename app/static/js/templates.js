@@ -710,9 +710,13 @@ templates['#project-category'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#todolist'] = '<div class="panel-heading">' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
-'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %><% if (item.get("tracked")) { %><i class="glyphicon glyphicon-time"></i><% } %></a>' +
+'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %></a>' +
+'    <% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %>' +
+'    <% if (false && item.get("tracked")) { %><i class="glyphicon glyphicon-time"></i><% } %>' +
+'    <% if (!_.isFinite(view.cur_item)) { %>' +
 '    <i class="todolist edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
-'    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
+'    <i class="todolist removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i>' +
+'    <% } %>' +
 '    <small><%= item.get("description") %></small>' +
 '</div>';
 templates['#todolistedit'] = '<div class="panel-heading"><form role="form" class="edit_todolist form-horizontal form">' +

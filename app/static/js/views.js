@@ -454,6 +454,7 @@
     });
     // Todos View - todos
     bbviews.TodosView = BBView.extend({
+        cur_item: 1,
         deps: bbviews.TimeEntriesView.prototype.deps,
         events: {
             'click .todo-lists.completeitem': 'complete',
