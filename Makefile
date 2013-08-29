@@ -108,8 +108,8 @@ bootstrap-update:
 	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.woff -O app/static/fonts/glyphicons-halflings-regular.woff
 
 bootstrap-datepicker-update:
-	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/css/datepicker.css -O app/static/css/datepicker.css
-	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js -O app/static/js/bootstrap-datepicker.js
+	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/master/css/datepicker.css -O app/static/css/datepicker.css
+	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/master/js/bootstrap-datepicker.js -O app/static/js/bootstrap-datepicker.js
 
 backbone-update:
 	wget -q http://backbonejs.org/backbone.js -O app/static/js/backbone.js
