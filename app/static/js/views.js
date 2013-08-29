@@ -17,14 +17,39 @@
         root.bbviews = factory(
             root._,
             root.Backbone,
-//             root.bbgeneral,
             root.bbtemplates
         );
     }
-// }(this, function(_, Backbone, bbgeneral, bbtemplates) {
 }(this, function(_, Backbone, bbtemplates) {
     'use strict';
     var bbviews = {},
+//         uniq_hash = bbviews.uniq_hash = [],
+//         add_hash = function () {
+//             if(window.BB && window.BB.workspace){
+//                 var h,
+//                     rs = /^[#\/]|\s+$/g,
+//                     rr = _.map(_.filter(_.keys(window.BB.workspace.routes),function(i){
+//                         return i.indexOf("*")===-1;
+//                     }),function(i){
+//                         return window.BB.workspace._routeToRegExp(i);
+//                     }),
+//                     cur_hashs = _.uniq(_.map(Backbone.$("a"), function (i) {
+//                         return i.hash.replace(rs,'');
+//                     })),
+//                     inroutes = function(routes, hash) {
+//                         return _.every(routes,function(i){
+//                             return !i.test(hash);
+//                         });
+//                     };
+//                 while ((h = cur_hashs.pop())) {
+//                     if (inroutes(rr,h)) {
+//                         if (uniq_hash.indexOf(h) === -1) {
+//                             uniq_hash.push(h);
+//                         }
+//                     }
+//                 }
+//             }
+//         },
         cc = 'Companies',
         hashcc = '#' + cc.toLowerCase(),
         cpath = [
@@ -121,7 +146,7 @@
                     return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
                 })).filter(':last').addClass('active');
                 this.fetch();
-//                 bbgeneral.add_hash();
+//                 add_hash();
                 return this;
             },
             itemblock: function(item, template) {

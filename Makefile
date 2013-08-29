@@ -1,7 +1,7 @@
 #!/usr/bin/make
 #
 
-BASE = app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+BASE = app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
 MIN = app/static/js/jquery.deserialize.js app/static/js/backbone.analytics.js
 PYSCRIPTS = app/bb.py app/crypto.py app/keys.py tests/keywords.py
 SCRIPTS = $(BASE)
