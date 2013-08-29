@@ -99,9 +99,7 @@ sauce:	clean
 
 bootstrap-update:
 	wget -q https://raw.github.com/twbs/bootstrap/master/dist/css/bootstrap.css -O app/static/css/bootstrap.css
-	wget -q https://raw.github.com/twbs/bootstrap/master/dist/css/bootstrap.min.css -O app/static/css/bootstrap.min.css
 	wget -q https://raw.github.com/twbs/bootstrap/master/dist/js/bootstrap.js -O app/static/js/bootstrap.js
-	wget -q https://raw.github.com/twbs/bootstrap/master/dist/js/bootstrap.min.js -O app/static/js/bootstrap.min.js
 	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.eot -O app/static/fonts/glyphicons-halflings-regular.eot
 	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.svg -O app/static/fonts/glyphicons-halflings-regular.svg
 	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.ttf -O app/static/fonts/glyphicons-halflings-regular.ttf
