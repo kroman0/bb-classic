@@ -1,7 +1,7 @@
 #!/usr/bin/make
 #
 
-BASE = app/static/js/general.js app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
+BASE = app/static/js/models.js app/static/js/collections.js app/static/js/templates.js app/static/js/views.js app/static/js/main.js
 MIN = app/static/js/jquery.deserialize.js app/static/js/backbone.analytics.js
 PYSCRIPTS = app/bb.py app/crypto.py app/keys.py tests/keywords.py
 SCRIPTS = $(BASE)
@@ -98,20 +98,16 @@ sauce:	clean
 	ROBOT_DESIRED_CAPABILITIES=platform:Windows ROBOT_BROWSER=internetexplorer ROBOT_REMOTE_URL=http://$(SAUCE_USERNAME):$(SAUCE_ACCESS_KEY)@ondemand.saucelabs.com:80/wd/hub bin/pybot -e screenshots tests
 
 bootstrap-update:
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/css/bootstrap.css -O app/static/css/bootstrap.css
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/css/bootstrap.min.css -O app/static/css/bootstrap.min.css
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/js/bootstrap.js -O app/static/js/bootstrap.js
-	wget -q https://raw.github.com/twbs/bootstrap/3.0.0-wip/dist/js/bootstrap.min.js -O app/static/js/bootstrap.min.js
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/css/bootstrap-glyphicons.css -O app/static/css/bootstrap-glyphicons.css
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.eot -O app/static/fonts/glyphiconshalflings-regular.eot
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.otf -O app/static/fonts/glyphiconshalflings-regular.otf
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.svg -O app/static/fonts/glyphiconshalflings-regular.svg
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.ttf -O app/static/fonts/glyphiconshalflings-regular.ttf
-	wget -q https://raw.github.com/twbs/bootstrap-glyphicons/gh-pages/fonts/glyphiconshalflings-regular.woff -O app/static/fonts/glyphiconshalflings-regular.woff
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/css/bootstrap.css -O app/static/css/bootstrap.css
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/js/bootstrap.js -O app/static/js/bootstrap.js
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.eot -O app/static/fonts/glyphicons-halflings-regular.eot
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.svg -O app/static/fonts/glyphicons-halflings-regular.svg
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.ttf -O app/static/fonts/glyphicons-halflings-regular.ttf
+	wget -q https://raw.github.com/twbs/bootstrap/master/dist/fonts/glyphicons-halflings-regular.woff -O app/static/fonts/glyphicons-halflings-regular.woff
 
 bootstrap-datepicker-update:
-	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/css/datepicker.css -O app/static/css/datepicker.css
-	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/1.1.3/js/bootstrap-datepicker.js -O app/static/js/bootstrap-datepicker.js
+	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/master/css/datepicker.css -O app/static/css/datepicker.css
+	wget -q https://raw.github.com/eternicode/bootstrap-datepicker/master/js/bootstrap-datepicker.js -O app/static/js/bootstrap-datepicker.js
 
 backbone-update:
 	wget -q http://backbonejs.org/backbone.js -O app/static/js/backbone.js

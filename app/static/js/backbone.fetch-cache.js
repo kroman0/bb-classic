@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v1.0.0
+  backbone.fetch-cache v1.1.0
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
@@ -8,14 +8,14 @@
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module and set browser global
-    define(['underscore', 'backbone'], function (_, Backbone) {
-      return (root.Backbone = factory(_, Backbone));
+    define(['underscore', 'backbone', 'jquery'], function (_, Backbone, $) {
+      return (root.Backbone = factory(_, Backbone, $));
     });
   } else {
     // Browser globals
-    root.Backbone = factory(root._, root.Backbone);
+    root.Backbone = factory(root._, root.Backbone, root.jQuery);
   }
-}(this, function (_, Backbone) {
+}(this, function (_, Backbone, $) {
 
   // Setup
   var superMethods = {
@@ -23,7 +23,20 @@
     modelSync: Backbone.Model.prototype.sync,
     collectionFetch: Backbone.Collection.prototype.fetch
   },
-  supportLocalStorage = typeof window.localStorage !== 'undefined';
+  supportLocalStorage = (function() {
+    var supported = typeof window.localStorage !== 'undefined';
+    if (supported) {
+      try {
+        // impossible to write on some platforms when private browsing is on and
+        // throws an exception = local storage not supported.
+        localStorage.setItem("test_support", "test_support");
+        localStorage.removeItem("test_support");
+      } catch (e) {
+        supported = false;
+      }
+    }
+    return supported;
+  })();
 
   Backbone.fetchCache = (Backbone.fetchCache || {});
   Backbone.fetchCache._cache = (Backbone.fetchCache._cache || {});
@@ -157,7 +170,7 @@
         if (opts.prefill) { deferred.notify(self); }
         // ...finish and return if we're not
         else {
-          if (_.isFunction(opts.success)) { opts.success(self); }
+          if (_.isFunction(opts.success)) { opts.success(self, attributes, opts); }
           deferred.resolve(self);
         }
       });
@@ -236,7 +249,7 @@
         if (opts.prefill) { deferred.notify(self); }
         // ...finish and return if we're not
         else {
-          if (_.isFunction(opts.success)) { opts.success(self); }
+          if (_.isFunction(opts.success)) { opts.success(self, attributes, opts); }
           deferred.resolve(self);
         }
       });

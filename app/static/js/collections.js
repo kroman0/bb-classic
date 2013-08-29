@@ -7,7 +7,6 @@
             'underscore',
             'backbone',
             'backbonepageable',
-            'bbgeneral',
             'bbmodels'
         ], factory);
     } else {
@@ -16,14 +15,15 @@
             root._,
             root.Backbone,
             root.Backbone.PageableCollection,
-            root.bbgeneral,
             root.bbmodels
         );
     }
-}(this, function(_, Backbone, PageableCollection, bbgeneral, bbmodels) {
+}(this, function(_, Backbone, PageableCollection, bbmodels) {
     'use strict';
     var bbcollections = {},
-        onReset = bbgeneral.onReset,
+        onReset = function() {
+            Backbone.history.loadUrl();
+        },
         BBCollectionExtra = {
             initialize: function() {
                 this.on('reset', onReset);
@@ -110,7 +110,7 @@
                 return '/api/' + this.parent + '/' + this.parent_id + '/time_entries.xml';
             }
             if (this.filter_report) {
-                return '/api/time_entries/report.xml?' + this.filter_report;
+                return '/api/time_entries/report.xml?' + Backbone.$.param(this.filter_report);
             }
             return '/api/time_entries/report.xml';
         },

@@ -131,6 +131,8 @@ COLLECTION = [{
     "todo-item-id": i % 5,
     "todo-items": [{
         "id": x,
+        "comments-count": x,
+        "completed": [False, False, True][x % 3],
         "content": "Todo content #%s" % x,
     } for x in range(i % 5)],
     "todo-list-id": i % 5,

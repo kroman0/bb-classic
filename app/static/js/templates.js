@@ -11,47 +11,40 @@
 }(this, function() {
 'use strict';
 var templates = {};
-templates['#time'] = '<tr <% if(item.get("hours")>2){ %>class="warning"<% } %> data-id="<%- item.id %>">' +
+templates['#time'] = '<tr data-id="<%- item.id %>">' +
 '    <td><%- item.get("date") %></td>' +
-'    <td><%- item.get("hours") %></td>' +
+'    <td <% if(item.get("hours")>2){ %>class="warning"<% } %>><%- item.get("hours") %></td>' +
 '    <td><a title="<%- item.get("person-name") %>" href="#people/<%- item.get("person-id") %>"><i class="glyphicon glyphicon-user"></i><%- item.get("person-name") %></a></td>' +
-'    <td>' +
+'    <td><nobr>' +
 '        <% if (item.get("todo-item-id")) { %>' +
 '            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="glyphicon glyphicon-file"></i></a>' +
 '        <% } else { %>' +
 '            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="glyphicon glyphicon-folder-close"></i></a>' +
 '        <% } %>' +
 '        <%- item.get("description") %>' +
-'    </td>' +
-'    <td>' +
+'    </nobr></td>' +
+'    <td><nobr>' +
 '        <button class="edit" title="Edit"><i class="edititem glyphicon glyphicon-edit"></i></button>' +
 '        <button class="remove" title="Remove"><i class="removeitem glyphicon glyphicon-trash"></i></button>' +
-'    </td>' +
+'    </nobr></td>' +
 '</tr>';
-templates['#timeedit'] = '<tr class="edittime form" data-id="<%- item.id %>">' +
-'    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>' +
-'    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>' +
+templates['#timeedit'] = '<tr class="edittime form" role="form" data-id="<%- item.id %>">' +
+'    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="form-control input-small" name="date" placeholder="YYYY-MM-DD" value="<%- item.get("date") %>"></td>' +
+'    <td><input type="text" class="form-control input-small" name="hours" placeholder="hours" value="<%- item.get("hours") %>"></td>' +
 '    <td>' +
-'        <div>' +
-'            <i class="glyphicon glyphicon-user"></i><select name="person-id">' +
-'                <% view.options.collections.people.each(function (i) { %>' +
-'                    <option value="<%- i.id %>" <% if (i.id==item.get("person-id")) { %>selected="selected"<% } %>><%- i.name() %></option>' +
-'                <% }) %>' +
-'            </select>' +
-'        </div>' +
+'        <select name="person-id" class="form-control">' +
+'            <% view.options.collections.people.each(function (i) { %>' +
+'                <option value="<%- i.id %>" <% if (i.id==item.get("person-id")) { %>selected="selected"<% } %>><%- i.name() %></option>' +
+'            <% }) %>' +
+'        </select>' +
 '    </td>' +
 '    <td>' +
-'        <% if (item.get("todo-item-id")) { %>' +
-'            <a title="Todo time" href="#projects/<%- item.get("project-id") %>/time_entries/todo_items/<%- item.get("todo-item-id") %>"><i class="glyphicon glyphicon-file"></i></a>' +
-'        <% } else { %>' +
-'            <a title="Project time" href="#projects/<%- item.get("project-id") %>/time_entries"><i class="glyphicon glyphicon-folder-close"></i></a>' +
-'        <% } %>' +
-'        <input type="text" class="input-small" name="description" value="<%- item.get("description") %>">' +
+'        <input type="text" class="form-control input-small" name="description" value="<%- item.get("description") %>">' +
 '    </td>' +
-'    <td>' +
+'    <td><nobr>' +
 '        <button class="save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
 '        <button class="reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
-'    </td>' +
+'    </nobr></td>' +
 '</tr>';
 templates['#pager'] = '<% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>' +
 '<ul class="pager">' +
@@ -132,24 +125,25 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>' +
 '<h3 id="makereportlabel">Make report</h3>' +
 '</div>' +
-'<form id="makereport">' +
+'<form role="form" id="makereport">' +
+'<% var refilter=view.getreport_filter() %>' +
 '    <div class="modal-body">' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">From</span>' +
-'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="from" placeholder="YYYYMMDD">' +
+'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="from" placeholder="YYYYMMDD" value="<%= refilter.from || "" %>">' +
 '    </div>' +
 '    <br />' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">To</span>' +
-'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="to" placeholder="YYYYMMDD">' +
+'        <input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyymmdd" type="text" class="form-control" name="to" placeholder="YYYYMMDD" value="<%= refilter.to || "" %>">' +
 '    </div>' +
 '    <br />' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">For</span>' +
 '        <select name="subject_id" class="form-control">' +
-'            <option value="">All</option>' +
+'            <option value="" <% if (_.isUndefined(refilter.subject_id)) { %>selected="selected"<% } %>>All</option>' +
 '            <% view.options.collections.people.each(function (i) { %>' +
-'                <option value="<%- i.id %>"><%- i.name() %></option>' +
+'                <option value="<%- i.id %>" <% if (i.id==refilter.subject_id) { %>selected="selected"<% } %>><%- i.name() %></option>' +
 '            <% }) %>' +
 '        </select>' +
 '    </div>' +
@@ -157,9 +151,9 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">Project</span>' +
 '        <select name="filter_project_id" class="form-control">' +
-'            <option value="">All</option>' +
+'            <option value="" <% if (_.isUndefined(refilter.filter_project_id)) { %>selected="selected"<% } %>>All</option>' +
 '            <% view.options.collections.projects.each(function (i) { %>' +
-'                <option value="<%- i.id %>"><%- i.get("name") %></option>' +
+'                <option value="<%- i.id %>" <% if (i.id==refilter.filter_project_id) { %>selected="selected"<% } %>><%- i.get("name") %></option>' +
 '            <% }) %>' +
 '        </select>' +
 '    </div>' +
@@ -167,9 +161,9 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '    <div class="input-group">' +
 '        <span class="input-group-addon">Company</span>' +
 '        <select name="filter_company_id" class="form-control">' +
-'            <option value="">All</option>' +
+'            <option value="" <% if (_.isUndefined(refilter.filter_company_id)) { %>selected="selected"<% } %>>All</option>' +
 '            <% view.options.collections.companies.each(function (i) { %>' +
-'                <option value="<%- i.id %>"><%- i.get("name") %></option>' +
+'                <option value="<%- i.id %>" <% if (i.id==refilter.filter_company_id) { %>selected="selected"<% } %>><%- i.get("name") %></option>' +
 '            <% }) %>' +
 '        </select>' +
 '    </div>' +
@@ -188,6 +182,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No time entries...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
+'<div class="table-responsive">' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
 '    <%= view.block("#time-thead") %>' +
 '    <tbody>' +
@@ -208,6 +203,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '        <% }) %>' +
 '    </tbody>' +
 '</table>' +
+'</div>' +
 '<%= view.block("#pager") %>' +
 '<% } %>';
 templates['#projects'] = '<%= view.block("#header") %>' +
@@ -215,10 +211,10 @@ templates['#projects'] = '<%= view.block("#header") %>' +
 '<div class="alert alert-info">No projects...</div>' +
 '<% } else { %>' +
 '<div class="tabbable">' +
-'<ul class="nav nav-tabs">' +
+'<ul class="nav nav-tabs projectsnav">' +
 '<% var fprst=_.first(pp.pluck("status"));' +
 '   _.each(_.uniq(pp.pluck("status")), function (status) { %>' +
-'    <li class="prstatus<% if (fprst==status) { %> active<% } %> pull-right">' +
+'    <li class="prstatus pull-right <%- fprst==status?"active":"" %>">' +
 '        <a href="#projects_<%- status %>" data-toggle="tab"><%- status %></a>' +
 '    </li>' +
 '<% }) %>' +
@@ -263,7 +259,7 @@ templates['#companies'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<div>' +
 '<% cc.each(function (item) { %>' +
-'    <div class="panel"><div class="panel-heading"><h3 class="panel-title"><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></div>' +
+'    <div class="panel panel-default"><div class="panel-heading"><h3 class="panel-title"><a href="#companies/<%- item.id %>"><%- item.get("name") %></a></h3></div>' +
 '    <div class="panel-body row">' +
 '        <div class="col-lg-4 col-sm-4 col-md-4">' +
 '            <% if (item.get("web-address")) { %><a href="<%- item.get("web-address") %>"><b><%- item.get("web-address") %></b></a><br /><% } %>' +
@@ -451,20 +447,18 @@ templates['#project-person'] = '<%= view.block("#header") %>' +
 '</ul>' +
 '<% } %>';
 templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view.options.mydata?view.options.mydata.id:0; %>' +
-'<tr class="addtime form">' +
-'    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
-'    <td><input type="text" class="input-small" name="hours" placeholder="hours" value="0"></td>' +
-'    <td>' +
-'        <div>' +
-'            <i class="glyphicon glyphicon-user"></i><select name="person-id">' +
-'                <% pp.each(function (i) { %>' +
-'                    <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
-'                <% }) %>' +
-'            </select>' +
-'        </div>' +
+'<tr class="addtime form" role="form">' +
+'    <td><input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="form-control input-small" name="date" placeholder="YYYY-MM-DD" value="<%- moment().format("YYYY-MM-DD") %>"></td>' +
+'    <td><input type="text" class="form-control input-small" name="hours" placeholder="hours" value="0"></td>' +
+'    <td class="col-xs-2 col-sm-2 col-md-2 col-lg-2">' +
+'        <select class="form-control" name="person-id">' +
+'            <% pp.each(function (i) { %>' +
+'                <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
+'            <% }) %>' +
+'        </select>' +
 '    </td>' +
-'    <td>' +
-'        <input type="text" class="input-small" name="description">' +
+'    <td class="col-xs-6 col-sm-6 col-md-6 col-lg-6">' +
+'        <input type="text" class="form-control input-small" name="description">' +
 '    </td>' +
 '    <td>' +
 '        <button class="add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
@@ -476,6 +470,7 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '<div class="alert alert-info">No time entries...</div>' +
 '<% } else { %>' +
 '<%= view.block("#pager") %>' +
+'<div class="table-responsive">' +
 '<table class="table table-hover table-condensed table-bordered <%- view.pagerid %>">' +
 '    <%= view.block("#time-thead") %>' +
 '    <tbody>' +
@@ -485,9 +480,10 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '        <% }) %>' +
 '    </tbody>' +
 '</table>' +
+'</div>' +
 '<%= view.block("#pager") %>' +
 '<% } %>';
-templates['#post'] = '<li class="panel">' +
+templates['#post'] = '<li class="panel panel-default">' +
 '    <div class="panel-heading"><h3 class="panel-title">' +
 '        <a href="#projects/<%- item.get("project-id") %>/posts/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <% if (item.get("private")) { %><small class="glyphicon glyphicon-lock"></small><% } %>' +
@@ -590,7 +586,7 @@ templates['#project-file'] = '<%= view.block("#header") %>' +
 '    <%= view.itemblock(item, "#file") %>' +
 '</ul>' +
 '<% } %>';
-templates['#calendar'] = '<li class="panel">' +
+templates['#calendar'] = '<li class="panel panel-default">' +
 '    <div class="panel-heading"><h3 class="panel-title">' +
 '        <a <% if (item.get("type")=="Milestone" && item.get("completed")) { %>class="muted" <% } %>href="#projects/<%- item.get("project-id") %>/calendar/<%- item.id %>"><%- item.get("title") %></a>' +
 '        <i class="badge badge-inverse"><i class="calendar glyphicon-white glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-id="<%- item.id %>"></i></i>' +
@@ -625,14 +621,26 @@ templates['#calendar'] = '<li class="panel">' +
 '        <% } %>' +
 '    </small></div>' +
 '</li>';
-templates['#calendaredit'] = '<li class="panel editcalendar form" data-id="<%- item.id %>">' +
-'<input type="text" name="title" placeholder="title" value="<%- item.get("title") %>">' +
-'<select name="type">' +
+templates['#calendaredit'] = '<li class="panel panel-default editcalendar form form-inline" role="form" data-id="<%- item.id %>">' +
+'<div class="form-group">' +
+'<label class="sr-only" for="title<%- item.id %>">Title</label>' +
+'<input type="text" name="title" class="form-control" id="title<%- item.id %>" placeholder="title" value="<%- item.get("title") %>">' +
+'</div>' +
+'<div class="form-group">' +
+'<label class="sr-only" for="type<%- item.id %>">Event type</label>' +
+'<select class="form-control" id="type<%- item.id %>" name="type">' +
 '<option value="Milestone" <% if (item.get("type")=="Milestone") { %>selected="selected"<% } %>>Milestone</option>' +
 '<option value="CalendarEvent" <% if (item.get("type")=="CalendarEvent") { %>selected="selected"<% } %>>CalendarEvent</option>' +
 '</select>' +
-'<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="start-at" placeholder="YYYY-MM-DD" value="<%- item.get("start-at") %>">' +
-'<input data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="deadline" placeholder="YYYY-MM-DD" value="<%- item.get("deadline") %>">' +
+'</div>' +
+'<div class="form-group">' +
+'<label class="sr-only" for="start<%- item.id %>">Start at</label>' +
+'<input class="form-control" id="start<%- item.id %>" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="start-at" placeholder="YYYY-MM-DD" value="<%- item.get("start-at") %>">' +
+'</div>' +
+'<div class="form-group">' +
+'<label class="sr-only" for="end<%- item.id %>">Deadline</label>' +
+'<input class="form-control" id="end<%- item.id %>" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="deadline" placeholder="YYYY-MM-DD" value="<%- item.get("deadline") %>">' +
+'</div>' +
 '<button data-id="<%- item.id %>" class="save btn btn-default" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
 '<button data-id="<%- item.id %>" class="reset btn btn-default" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</li>';
@@ -702,34 +710,38 @@ templates['#project-category'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#todolist'] = '<div class="panel-heading">' +
 '    <a <% if (item.get("completed")) { %>class="muted"<% } %>' +
-'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %><% if (item.get("tracked")) { %><i class="glyphicon glyphicon-time"></i><% } %></a>' +
+'       href="#projects/<%- item.get("project-id") %>/todo_lists/<%- item.id %>"><%- item.get("name") %></a>' +
+'    <% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %>' +
+'    <% if (false && item.get("tracked")) { %><i class="glyphicon glyphicon-time"></i><% } %>' +
+'    <% if (!_.isFinite(view.cur_item)) { %>' +
 '    <i class="todolist edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
-'    <% if (!_.isFinite(view.cur_item)) { %><i class="todolist removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>' +
+'    <i class="todolist removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i>' +
+'    <% } %>' +
 '    <small><%= item.get("description") %></small>' +
 '</div>';
-templates['#todolistedit'] = '<div class="panel-heading"><form class="edit_todolist form-horizontal form">' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoName<%- item.id %>">Name</label>' +
-'<div class="controls">' +
+templates['#todolistedit'] = '<div class="panel-heading"><form role="form" class="edit_todolist form-horizontal form">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoName<%- item.id %>">Name</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input type="text" id="todoName<%- item.id %>" name="name" value="<%- item.get("name") %>" required>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoDescription<%- item.id %>">Description</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoDescription<%- item.id %>">Description</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<textarea id="todoDescription<%- item.id %>" name="description"><%= item.get("description") %></textarea>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="private<%- item.id %>">Private list</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="private<%- item.id %>">Private list</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="private<%- item.id %>" type="checkbox" name="private" <% if (item.get("private")) { %>checked="checked"<% } %> value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="tracked<%- item.id %>">Time tracked</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="tracked<%- item.id %>">Time tracked</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="tracked<%- item.id %>" type="checkbox" name="tracked" <% if (item.get("tracked")) { %>checked="checked"<% } %> value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
 '<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
 '<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</div></div>' +
@@ -737,29 +749,29 @@ templates['#todolistedit'] = '<div class="panel-heading"><form class="edit_todol
 templates['#todolistadd'] = '<div class="panel-heading">' +
 '<button type="button" class="btn" data-toggle="collapse" data-target=".add_todolist_wrapper">Add an item</button>' +
 '</div>' +
-'<div class="add_todolist_wrapper collapse"><form class="add_todolist form-horizontal form">' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoName">Name</label>' +
-'<div class="controls">' +
+'<div class="panel-body add_todolist_wrapper collapse"><form role="form" class="add_todolist form-horizontal form">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoName">Name</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input type="text" id="todoName" name="name" value="" required>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoDescription">Description</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoDescription">Description</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<textarea id="todoDescription" name="description"></textarea>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="private">Private list</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="private">Private list</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="private" type="checkbox" name="private" value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="tracked">Time tracked</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="tracked">Time tracked</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="tracked" type="checkbox" name="tracked" value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
 '<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</div></div>' +
 '</form></div>';
@@ -769,9 +781,9 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 'var prs=view.options.collections.projects;' +
 'var party=view.collection.responsible_party;' +
 'var mid=party==null?view.options.mydata.id:view.collection.responsible_party; %>' +
-'<div>' +
-'    <div class="pull-right">Show items assigned to:' +
-'        <select name="target">' +
+'<div class="clearfix">' +
+'    <div class="pull-right"><label for="target" class="form-label">Show items assigned to:</label>' +
+'        <select class="form-control" id="target" name="target">' +
 '            <option value="" <% if (party=="") { %>selected="selected"<% } %>>Nobody</option>' +
 '            <% pp.each(function (i) { %>' +
 '                <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
@@ -783,28 +795,27 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '<% if (td.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo lists...</div>' +
 '<% } else { %>' +
-'<dl>' +
-'<% _.each(_.uniq(td.pluck("project-id")),function (prid) { %>' +
+'<dl class="dl-horizontal">' +
+'<% _.each(td.groupBy("project-id"), function (todos, prid) {' +
+'var items=_.filter(todos, function(i){return _.where(i.get("todo-items"),{"completed":false}).length});' +
+'if (items.length) { %>' +
 '    <dt><a href="#projects/<%- prid %>/todo_lists"><%- prs.get(prid)?prs.get(prid).get("name"):prid %></a></dt>' +
-'    <% _.each(td.where({"project-id":prid}), function (list) { %>' +
-'    <dd class="panel"><%= view.itemblock(list, "#todolist") %>' +
+'    <% _.each(items, function (list) { %>' +
+'    <dd class="panel panel-default"><%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
-'        <% _.each(list.get("todo-items"), function (item) { %>' +
+'        <% _.each(_.where(list.get("todo-items"),{"completed":false}), function (item) { %>' +
 '        <li class="list-group-item">' +
-'            <% if(false){ %>' +
-'            <i class="todo-lists <%- item.get("completed")?"un":"" %>completeitem glyphicon glyphicon-<%- item.get("completed")?"":"un" %>completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>"></i>' +
+'            <i class="todo-lists <%- item.completed?"un":"" %>completeitem glyphicon glyphicon-<%- item.completed?"":"un" %>completed" data-todolist-id="<%- list.id %>" data-todoitem-id="<%- item.id %>" data-id="<%- item.id %>"></i>' +
 '            <% if (list.get("tracked")) { %>' +
 '            <a href="#projects/<%- prid %>/time_entries/todo_items/<%- item.id %>"><i class="glyphicon glyphicon-time"></i></a>' +
-'            <% }} %>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.content %></a>' +
-'            <% if(false){ %>' +
-'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item.get("comments-count") %></a>' +
 '            <% } %>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>"><%= item.content %></a>' +
+'            <a href="#projects/<%- prid %>/todo_lists/<%- list.id %>/<%- item.id %>/comments" title="<%- item["comments-count"] %> comments" class="badge badge-inverse"><i class="itemcomments glyphicon glyphicon-comment glyphicon-white"></i><%- item["comments-count"] %></a>' +
 '        </li>' +
 '        <% }) %>' +
 '    </ul></dd>' +
 '    <% }) %>' +
-'<% }) %>' +
+'<% }}) %>' +
 '</dl>' +
 '<% } %>';
 templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
@@ -827,15 +838,17 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '    <div class="tab-pane fade<% if (ftdst+""==status) { %> in active<% } %>" id="todolists_<%- status %>">' +
 '        <ul class="list-unstyled">' +
 '            <% _.each(tlgroup, function (list) { %>' +
-'            <li class="panel">' +
+'            <li class="panel panel-default">' +
 '            <%= view.itemblock(list, "#todolist") %>' +
+'            <div class="panel-body">' +
 '                <ul class="list-inline">' +
 '                    <li>Completed: <%- list.get("completed-count") %></li>' +
 '                    <li>Uncompleted: <%- list.get("uncompleted-count") %></li>' +
 '                </ul>' +
+'            </div>' +
 '            </li>' +
 '            <% }) %>' +
-'            <li class="panel">' +
+'            <li class="panel panel-default">' +
 '            <%= view.block("#todolistadd") %>' +
 '            </li>' +
 '        </ul>' +
@@ -856,64 +869,64 @@ templates['#todo'] = '<% var prid=view.model.id; var tdlid=item.get("todo-list-i
 '<i class="todo edititem glyphicon glyphicon-pencil" data-id="<%- item.id %>"></i>' +
 '<% if (!_.isFinite(view.todo_item)) { %><i class="todo removeitem glyphicon glyphicon-trash" data-id="<%- item.id %>"></i><% } %>';
 templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
-'<div class="edit_todo_wrapper"><form class="edit_todo form-horizontal form">' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoContent<%- item.id %>">Todo content</label>' +
-'<div class="controls">' +
+'<div class="edit_todo_wrapper"><form role="form" class="edit_todo form-horizontal form">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoContent<%- item.id %>">Todo content</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<textarea id="todoContent<%- item.id %>" name="content" required><%= item.get("content") %></textarea>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoDueAt<%- item.id %>">Due date</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoDueAt<%- item.id %>">Due date</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="todoDueAt<%- item.id %>" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value="<%= item.get("due-at") %>">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="responsiblePerson<%- item.id %>">Responsible person</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="responsiblePerson<%- item.id %>">Responsible person</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<select  id="responsiblePerson<%- item.id %>" name="responsible-party">' +
 '<option value="">Nobody</option>' +
 '<% pp.each(function (i) { %><option value="<%- i.id %>" <% if (i.id==item.get("responsible-party-id")) { %>selected="selected"<% } %>><%- i.name() %></option><% }) %>' +
 '</select>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="notify<%- item.id %>">Notify responsible person</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="notify<%- item.id %>">Notify responsible person</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="notify<%- item.id %>" type="checkbox" name="notify" value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
 '<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
 '<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '</div></div>' +
 '</form></div>';
 templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +
 '<div class="panel-footer"><button type="button" class="btn" data-toggle="collapse" data-target=".add_todo_wrapper">Add an item</button>' +
-'<div class="add_todo_wrapper collapse"><form class="add_todo form-horizontal form">' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoContent">Todo content</label>' +
-'<div class="controls">' +
+'<div class="add_todo_wrapper collapse"><form role="form" class="add_todo form-horizontal form">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoContent">Todo content</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<textarea id="todoContent" name="content" required></textarea>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="todoDueAt">Due date</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoDueAt">Due date</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="todoDueAt" data-provide="datepicker" data-date-autoclose="true" data-date-format="yyyy-mm-dd" type="text" class="input-small" name="due-at" placeholder="YYYY-MM-DD" value="">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="responsiblePerson">Responsible person</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="responsiblePerson">Responsible person</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<select  id="responsiblePerson" name="responsible-party">' +
 '<option value="">Nobody</option>' +
 '<% pp.each(function (i) { %><option value="<%- i.id %>"><%- i.name() %></option><% }) %>' +
 '</select>' +
 '</div></div>' +
-'<div class="control-group">' +
-'<label class="control-label" for="notify">Notify responsible person</label>' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="notify">Notify responsible person</label>' +
+'<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
 '<input id="notify" type="checkbox" name="notify" value="true">' +
 '</div></div>' +
-'<div class="control-group">' +
-'<div class="controls">' +
+'<div class="form-group">' +
+'<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
 '<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</div></div>' +
 '</form></div></div>';
@@ -926,7 +939,7 @@ templates['#project-todo-list'] = '<%= view.block("#header") %>' +
 '<% } else { %>' +
 '<div class="row">' +
 '<ul class="list-unstyled todoitemsholder project-todo-list col-lg-9 col-md-8 col-sm-7">' +
-'    <li class="panel">' +
+'    <li class="panel panel-default">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
 '<% view.options.collections.todo_items.get_or_create(ci).each(function (item) { %>' +
@@ -971,7 +984,7 @@ templates['#project-todo-item'] = '<%= view.block("#header") %>' +
 'if (td.isEmpty()||items.isEmpty()) { %>' +
 '<div class="alert alert-info">No todo items...</div>' +
 '<% } else { %>' +
-'<div class="panel todoitemsholder project-todo-item">' +
+'<div class="panel panel-default todoitemsholder project-todo-item">' +
 '    <%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
 '    <li class="list-group-item">' +
@@ -1020,7 +1033,7 @@ templates['#nav'] = '<div class="container">' +
 '            <li role="presentation"><a role="menuitem" href="#<%- link %>"><i class="glyphicon glyphicon-<%- data.icon %>"></i> <%- data.title %></a></li>' +
 '            <% }) %>' +
 '            <li role="presentation" class="divider"></li>' +
-'            <li role="presentation"><a role="menuitem" href="/logout"><i class="glyphicon glyphicon-eject"></i> Logout</a></li>' +
+'            <li role="presentation"><a role="menuitem" href="/logout"><i class="glyphicon glyphicon-log-out"></i> Logout</a></li>' +
 '        </ul>' +
 '    </li>' +
 '</ul>' +

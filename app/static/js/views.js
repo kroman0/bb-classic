@@ -17,14 +17,39 @@
         root.bbviews = factory(
             root._,
             root.Backbone,
-//             root.bbgeneral,
             root.bbtemplates
         );
     }
-// }(this, function(_, Backbone, bbgeneral, bbtemplates) {
 }(this, function(_, Backbone, bbtemplates) {
     'use strict';
     var bbviews = {},
+//         uniq_hash = bbviews.uniq_hash = [],
+//         add_hash = function () {
+//             if(window.BB && window.BB.workspace){
+//                 var h,
+//                     rs = /^[#\/]|\s+$/g,
+//                     rr = _.map(_.filter(_.keys(window.BB.workspace.routes),function(i){
+//                         return i.indexOf("*")===-1;
+//                     }),function(i){
+//                         return window.BB.workspace._routeToRegExp(i);
+//                     }),
+//                     cur_hashs = _.uniq(_.map(Backbone.$("a"), function (i) {
+//                         return i.hash.replace(rs,'');
+//                     })),
+//                     inroutes = function(routes, hash) {
+//                         return _.every(routes,function(i){
+//                             return !i.test(hash);
+//                         });
+//                     };
+//                 while ((h = cur_hashs.pop())) {
+//                     if (inroutes(rr,h)) {
+//                         if (uniq_hash.indexOf(h) === -1) {
+//                             uniq_hash.push(h);
+//                         }
+//                     }
+//                 }
+//             }
+//         },
         cc = 'Companies',
         hashcc = '#' + cc.toLowerCase(),
         cpath = [
@@ -121,7 +146,7 @@
                     return $(i).find('a:visible')[0] && document.location.hash.indexOf($(i).find('a:visible')[0].hash) !== -1;
                 })).filter(':last').addClass('active');
                 this.fetch();
-//                 bbgeneral.add_hash();
+//                 add_hash();
                 return this;
             },
             itemblock: function(item, template) {
@@ -184,14 +209,11 @@
             },
             extrapath: [],
             path: function() {
-                var bpath = _result(this, 'basepath'), epath = _result(this, 'extrapath');
-                _.each(epath, function(i) {
-                    return bpath.push(i);
-                });
+                var bpath = _result(this, 'basepath');
+                _.each(_result(this, 'extrapath'), function(i) {bpath.push(i);});
                 return bpath;
             }
-        }),
-        BBViewProto = BBView.prototype;
+        });
     // All People View - people
     bbviews.AllPeopleView = BBView.extend({
         deps: function() {
@@ -311,21 +333,17 @@
         events: _.extend(timeevents, {
             'click #getreport': 'getreport'
         }),
+        getreport_filter: function() {
+            return _.object(_.pluck(this.collection.filter_report, 'name'), _.pluck(this.collection.filter_report, 'value'));
+        },
         getreport: function(e) {
             e.preventDefault();
-            this.collection.filter_report = $.param(_.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; }));
+            this.collection.filter_report = _.filter(this.$('form#makereport').serializeArray(), function(i) {return i.value; });
             this.collection.fetch({cache: true, reset: true});
         },
         template: '#time-report',
         path: false,
-        title: 'Time report',
-        render: function() {
-            BBViewProto.render.apply(this);
-            if (this.collection.filter_report) {
-                this.$el.find('form#makereport').deserialize(this.collection.filter_report);
-            }
-            return this;
-        }
+        title: 'Time report'
     });
     // Post Comments View - projects/:id/posts/:pid/comments
     bbviews.PostCommentsView = TitleBBView.extend({
@@ -461,9 +479,23 @@
     });
     // Todos View - todos
     bbviews.TodosView = BBView.extend({
+        cur_item: 1,
         deps: bbviews.TimeEntriesView.prototype.deps,
         events: {
+            'click .todo-lists.completeitem': 'complete',
             'change select[name=target]': 'selectTarget'
+        },
+        complete: function(e) {
+            e.preventDefault();
+            var target = $(e.currentTarget),
+                id = target.data('id'),
+                item = new this.options.collections.todo_items.model({id: id}),
+                tid = target.data('todolistId'),
+                titem = this.collection.get(tid),
+                items = _.where(titem.get('todo-items'), {id: id});
+            item.complete();
+            _.each(items, function(i) {i.completed = true;});
+            this.render();
         },
         selectTarget: function(e) {
             this.collection.responsible_party = $(e.target).val();
