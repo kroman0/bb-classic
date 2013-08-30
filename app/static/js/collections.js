@@ -26,16 +26,10 @@
             Backbone.history.loadUrl();
             $('.spinner').addClass('off');
         },
-        fetch = Backbone.Collection.prototype.fetch,
         BBCollectionExtra = {
             initialize: function() {
                 this.on('reset', onReset);
                 this.on('remove', onReset);
-                this.on('reset', onReset);
-            },
-            fetch: function(options) {
-                $('.spinner').removeClass('off');
-                return fetch.call(this, options);
             },
             fetchonce: function() {
                 var fetched = this.fetched;
@@ -50,12 +44,23 @@
                     this[id] = this.clone();
                     this[id].parent_id = id;
                     this[id].on('reset', onReset);
+                    this[id].on('remove', onReset);
                 }
                 return this[id];
             }
         },
-        BBCollection = Backbone.Collection.extend(BBCollectionExtra),
-        BBPCollection = PageableCollection.extend(BBCollectionExtra),
+        BBCollection = Backbone.Collection.extend(BBCollectionExtra).extend({
+            fetch: function(options) {
+                $('.spinner').removeClass('off');
+                return Backbone.Collection.prototype.fetch.call(this, options);
+            }
+        }),
+        BBPCollection = PageableCollection.extend(BBCollectionExtra).extend({
+            fetch: function(options) {
+                $('.spinner').removeClass('off');
+                return PageableCollection.prototype.fetch.call(this, options);
+            }
+        }),
         PBBCollection = BBCollection.extend({
             parent_id: null // project id
         }),
