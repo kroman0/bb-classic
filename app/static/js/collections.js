@@ -21,14 +21,21 @@
 }(this, function(_, Backbone, PageableCollection, bbmodels) {
     'use strict';
     var bbcollections = {},
+        $ = Backbone.$,
         onReset = function() {
             Backbone.history.loadUrl();
+            $('.spinner').addClass('off');
         },
+        fetch = Backbone.Collection.prototype.fetch,
         BBCollectionExtra = {
             initialize: function() {
                 this.on('reset', onReset);
                 this.on('remove', onReset);
                 this.on('reset', onReset);
+            },
+            fetch: function(options) {
+                $('.spinner').removeClass('off');
+                return fetch.call(this, options);
             },
             fetchonce: function() {
                 var fetched = this.fetched;
