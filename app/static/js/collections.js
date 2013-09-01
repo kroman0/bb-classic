@@ -47,20 +47,14 @@
                     this[id].on('remove', onReset);
                 }
                 return this[id];
+            },
+            sync: function(method, model, options) {
+                $('.spinner').removeClass('off');
+                return Backbone.sync.apply(this, method, model, options);
             }
         },
-        BBCollection = Backbone.Collection.extend(BBCollectionExtra).extend({
-            fetch: function(options) {
-                $('.spinner').removeClass('off');
-                return Backbone.Collection.prototype.fetch.call(this, options);
-            }
-        }),
-        BBPCollection = PageableCollection.extend(BBCollectionExtra).extend({
-            fetch: function(options) {
-                $('.spinner').removeClass('off');
-                return PageableCollection.prototype.fetch.call(this, options);
-            }
-        }),
+        BBCollection = Backbone.Collection.extend(BBCollectionExtra),
+        BBPCollection = PageableCollection.extend(BBCollectionExtra),
         PBBCollection = BBCollection.extend({
             parent_id: null // project id
         }),
