@@ -50,7 +50,7 @@
             },
             sync: function(method, model, options) {
                 $('.spinner').removeClass('off');
-                return Backbone.sync.apply(this, method, model, options);
+                return Backbone.sync.call(this, method, model, options);
             }
         },
         BBCollection = Backbone.Collection.extend(BBCollectionExtra),
