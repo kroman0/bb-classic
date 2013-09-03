@@ -535,7 +535,7 @@ templates['#project-post-comments'] = '<%= view.block("#header") %>' +
 '<% } %>';
 templates['#file'] = '<% var prid=view.model.id; var pp=view.options.collections.people;' +
 'var cc=view.options.collections.project_categories.get_or_create(prid); %>' +
-'<li class="media well well-small">' +
+'<li class="media well well-sm">' +
 '    <h3>' +
 '        <a href="#projects/<%- prid %>/files/<%- item.id %>"><%- item.get("name") %><% if (item.get("private")) { %><i class="glyphicon glyphicon-lock"></i><% } %></a>' +
 '    </h3>' +
