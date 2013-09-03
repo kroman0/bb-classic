@@ -650,11 +650,13 @@ templates['#project-calendar'] = '<%= view.block("#header") %>' +
 'if (cc.isEmpty()) { %>' +
 '<div class="alert alert-info">No events...</div>' +
 '<% } else { %>' +
+'<%= view.block("#pager") %>' +
 '<ul class="list-unstyled">' +
 '<% cc.each(function (item) { %>' +
 '    <%= view.itemblock(item, "#calendar") %>' +
 '<% }) %>' +
 '</ul>' +
+'<%= view.block("#pager") %>' +
 '<% } %>';
 templates['#project-calendar-entry'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +
@@ -690,13 +692,11 @@ templates['#project-categories'] = '<%= view.block("#header") %>' +
 'if (cc.isEmpty()) { %>' +
 '<div class="alert alert-info">No categories...</div>' +
 '<% } else { %>' +
-'<%= view.block("#pager") %>' +
 '<dl class="dl-horizontal">' +
 '<% cc.each(function (item) { %>' +
 '    <%= view.itemblock(item, "#category") %>' +
 '<% }) %>' +
 '</dl>' +
-'<%= view.block("#pager") %>' +
 '<% } %>';
 templates['#project-category'] = '<%= view.block("#header") %>' +
 '<%= view.block("#project-nav") %>' +

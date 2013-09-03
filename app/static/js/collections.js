@@ -88,9 +88,12 @@
         },
         model: bbmodels.Attachment
     });
-    bbcollections.Calendar = PBBCollection.extend({
+    bbcollections.Calendar = PBBPCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/calendar_entries.xml';
+        },
+        state: {
+            pageSize: 5
         },
         model: bbmodels.CalendarEntry
     });
