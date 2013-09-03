@@ -799,7 +799,7 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '<% _.each(td.groupBy("project-id"), function (todos, prid) {' +
 'var items=_.filter(todos, function(i){return _.where(i.get("todo-items"),{"completed":false}).length});' +
 'if (items.length) { %>' +
-'    <dt><a href="#projects/<%- prid %>/todo_lists"><%- prs.get(prid)?prs.get(prid).get("name"):prid %></a></dt>' +
+'    <dt><h3><a href="#projects/<%- prid %>/todo_lists"><%- prs.get(prid)?prs.get(prid).get("name"):prid %></a></h3></dt>' +
 '    <% _.each(items, function (list) { %>' +
 '    <dd class="panel panel-default"><%= view.itemblock(list, "#todolist") %>' +
 '    <ul class="list-group">' +
