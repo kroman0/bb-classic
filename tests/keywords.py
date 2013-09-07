@@ -113,19 +113,19 @@ def report_sauce_status(job_id, test_status):
     return connection.getresponse().status
 
 
-def set_window_size(width, height):
-    """Sets the `width` and `height` of the current window to the specified
-    values.
-
-    :param string|int width: [required] window width
-    :param string|int height: [required] window height
-
-    Example::
-
-        Set Window Size  ${800}  ${600}
-
-    """
-    return _get_browser().set_window_size(int(width), int(height))
+#def set_window_size(width, height):
+#    """Sets the `width` and `height` of the current window to the specified
+#    values.
+#
+#    :param string|int width: [required] window width
+#    :param string|int height: [required] window height
+#
+#    Example::
+#
+#        Set Window Size  ${800}  ${600}
+#
+#    """
+#    return _get_browser().set_window_size(int(width), int(height))
 
 
 def get_session_id():
