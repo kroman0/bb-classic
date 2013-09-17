@@ -379,7 +379,7 @@ templates['#people'] = '<%= view.block("#header") %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } else { %>' +
-'<div class="tabbable tabs-left row">' +
+'<div class="tabbable row">' +
 '<ul class="nav nav-pills nav-stacked col-lg-3 col-md-4 col-sm-5 col-xs-6">' +
 '<% var fcoid=_.first(pp.pluck("company-id"));' +
 '   cc.each(function (item) { %>' +
@@ -416,7 +416,7 @@ templates['#project-people'] = '<%= view.block("#header") %>' +
 '<% }) %>' +
 '</ul>' +
 '<% } else { %>' +
-'<div class="tabbable tabs-left row">' +
+'<div class="tabbable row">' +
 '<ul class="nav nav-pills nav-stacked col-lg-3 col-md-4 col-sm-5 col-xs-6">' +
 '<% var pc=_.uniq(pp.pluck("company-id")); var fcoid=_.first(pc);' +
 '_.each(pc, function (id) { %>' +
