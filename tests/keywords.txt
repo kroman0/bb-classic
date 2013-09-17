@@ -111,13 +111,13 @@ Stop app
 
 Reload Page Until
     [Arguments]  @{condition}
-    [Documentation]  Reload page 10 times until condition wil be true.
+    [Documentation]  Reload page 10 times until condition will be true.
     :FOR  ${try}  IN RANGE  10
     \   ${status}=  Run Keyword And Ignore Error  @{condition}
     \   ${raise error}=  Set Variable If  ${status}[0]=='PASS'  'False'  'True'
     \   Run Keyword If  ${status}[0]=='PASS'  Exit For Loop
-    \   Sleep  1
-    \   Reload Page
+    \   Sleep  1  Waiting for loading server
+    \   Go to  ${APP_URL}
     Run Keyword If  ${raise error}=="True"  Fail  "${condition}"
 
 Test user login
@@ -127,7 +127,7 @@ Test user login
     Input Text  name=username  test
     Input Password  name=password  test
     Click button  Log in
-    Sleep  2
+    Sleep  2  Waiting for loading app
     Wait Until Page Contains  First Last  15 sec
 
 Test user logout
