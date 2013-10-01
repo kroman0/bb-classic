@@ -2569,6 +2569,10 @@ input[type="button"].btn-block {
   content: "\e032";
 }
 
+.glyphicon-lock:before {
+  content: "\e033";
+}
+
 .glyphicon-flag:before {
   content: "\e034";
 }
@@ -2609,8 +2613,16 @@ input[type="button"].btn-block {
   content: "\e043";
 }
 
+.glyphicon-bookmark:before {
+  content: "\e044";
+}
+
 .glyphicon-print:before {
   content: "\e045";
+}
+
+.glyphicon-camera:before {
+  content: "\e046";
 }
 
 .glyphicon-font:before {
@@ -2825,6 +2837,10 @@ input[type="button"].btn-block {
   content: "\e103";
 }
 
+.glyphicon-fire:before {
+  content: "\e104";
+}
+
 .glyphicon-eye-open:before {
   content: "\e105";
 }
@@ -2839,6 +2855,10 @@ input[type="button"].btn-block {
 
 .glyphicon-plane:before {
   content: "\e108";
+}
+
+.glyphicon-calendar:before {
+  content: "\e109";
 }
 
 .glyphicon-random:before {
@@ -2893,6 +2913,10 @@ input[type="button"].btn-block {
   content: "\e122";
 }
 
+.glyphicon-bell:before {
+  content: "\e123";
+}
+
 .glyphicon-certificate:before {
   content: "\e124";
 }
@@ -2941,6 +2965,10 @@ input[type="button"].btn-block {
   content: "\e135";
 }
 
+.glyphicon-wrench:before {
+  content: "\e136";
+}
+
 .glyphicon-tasks:before {
   content: "\e137";
 }
@@ -2949,12 +2977,20 @@ input[type="button"].btn-block {
   content: "\e138";
 }
 
+.glyphicon-briefcase:before {
+  content: "\e139";
+}
+
 .glyphicon-fullscreen:before {
   content: "\e140";
 }
 
 .glyphicon-dashboard:before {
   content: "\e141";
+}
+
+.glyphicon-paperclip:before {
+  content: "\e142";
 }
 
 .glyphicon-heart-empty:before {
@@ -2967,6 +3003,10 @@ input[type="button"].btn-block {
 
 .glyphicon-phone:before {
   content: "\e145";
+}
+
+.glyphicon-pushpin:before {
+  content: "\e146";
 }
 
 .glyphicon-usd:before {
@@ -3175,46 +3215,6 @@ input[type="button"].btn-block {
 
 .glyphicon-tree-deciduous:before {
   content: "\e200";
-}
-
-.glyphicon-briefcase:before {
-  content: "\1f4bc";
-}
-
-.glyphicon-calendar:before {
-  content: "\1f4c5";
-}
-
-.glyphicon-pushpin:before {
-  content: "\1f4cc";
-}
-
-.glyphicon-paperclip:before {
-  content: "\1f4ce";
-}
-
-.glyphicon-camera:before {
-  content: "\1f4f7";
-}
-
-.glyphicon-lock:before {
-  content: "\1f512";
-}
-
-.glyphicon-bell:before {
-  content: "\1f514";
-}
-
-.glyphicon-bookmark:before {
-  content: "\1f516";
-}
-
-.glyphicon-fire:before {
-  content: "\1f525";
-}
-
-.glyphicon-wrench:before {
-  content: "\1f527";
 }
 
 .caret {
@@ -3860,6 +3860,13 @@ textarea.input-group-sm > .input-group-btn > .btn {
   border-color: #428bca;
 }
 
+.nav .open > a .caret,
+.nav .open > a:hover .caret,
+.nav .open > a:focus .caret {
+  border-top-color: #2a6496;
+  border-bottom-color: #2a6496;
+}
+
 .nav .nav-divider {
   height: 1px;
   margin: 9px 0;
@@ -3965,6 +3972,13 @@ textarea.input-group-sm > .input-group-btn > .btn {
 .nav-pills > li.active > a:focus {
   color: #ffffff;
   background-color: #428bca;
+}
+
+.nav-pills > li.active > a .caret,
+.nav-pills > li.active > a:hover .caret,
+.nav-pills > li.active > a:focus .caret {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
 }
 
 .nav-stacked > li {
