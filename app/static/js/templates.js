@@ -780,13 +780,13 @@ templates['#todo-lists'] = '<%= view.block("#header") %>' +
 'var pp=view.options.collections.people;' +
 'var prs=view.options.collections.projects;' +
 'var party=view.collection.responsible_party;' +
-'var mid=party==null?view.options.mydata.id:view.collection.responsible_party; %>' +
+'var mid=party==null?view.options.mydata.id:party; %>' +
 '<div class="clearfix">' +
 '    <div class="pull-right"><label for="target" class="form-label">Show items assigned to:</label>' +
 '        <select class="form-control" id="target" name="target">' +
 '            <option value="" <% if (party=="") { %>selected="selected"<% } %>>Nobody</option>' +
 '            <% pp.each(function (i) { %>' +
-'                <option value="<%- i.id %>" <% if (i.id==mid) { %>selected="selected"<% } %>><%- i.name() %></option>' +
+'                <option value="<%- i.id %>" <% if (i.id==mid && mid!=="") { %>selected="selected"<% } %>><%- i.name() %></option>' +
 '            <% }) %>' +
 '        </select>' +
 '    </div>' +
