@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v1.1.1
+  backbone.fetch-cache v1.1.2
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
@@ -141,7 +141,7 @@
 
   // Instance methods
   Backbone.Model.prototype.fetch = function(opts) {
-    opts = (opts || {});
+    opts = _.defaults(opts || {}, { parse: true });
     var key = Backbone.fetchCache.getCacheKey(this, opts),
         data = Backbone.fetchCache._cache[key],
         expired = false,
@@ -150,7 +150,7 @@
         self = this;
 
     function setData() {
-      self.set(self.parse(attributes), opts);
+      self.set(attributes, opts);
       if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(self, attributes, opts); }
 
       // Trigger sync events
@@ -227,7 +227,7 @@
   };
 
   Backbone.Collection.prototype.fetch = function(opts) {
-    opts = (opts || {});
+    opts = _.defaults(opts || {}, { parse: true });
     var key = Backbone.fetchCache.getCacheKey(this, opts),
         data = Backbone.fetchCache._cache[key],
         expired = false,
@@ -236,7 +236,7 @@
         self = this;
 
     function setData() {
-      self[opts.reset ? 'reset' : 'set'](self.parse(attributes), opts);
+      self[opts.reset ? 'reset' : 'set'](attributes, opts);
       if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(self); }
 
       // Trigger sync events
