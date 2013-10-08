@@ -46,16 +46,21 @@ templates['#timeedit'] = '<tr class="edittime form" role="form" data-id="<%- ite
 '        <button class="reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
 '    </nobr></td>' +
 '</tr>';
-templates['#pager'] = '<% if(view.collection.hasPrevious() || view.collection.hasNext()){ %>' +
-'<ul class="pager">' +
+templates['#pager'] = '<ul class="pager">' +
 '    <li class="<%- view.pagerid %> previous<% if(!view.collection.hasPrevious()){ %> disabled<% } %>">' +
 '        <a href="#">&larr; Previous Page</a>' +
 '    </li>' +
 '    <li class="<%- view.pagerid %> next<% if(!view.collection.hasNext()){ %> disabled<% } %>">' +
 '        <a href="#">Next Page &rarr;</a>' +
 '    </li>' +
-'</ul>' +
-'<% } %>';
+'    <li class="<%- view.pagerid %>">' +
+'        <form class="form-inline" role="form">' +
+'            <div class="checkbox">' +
+'                <label><input id="pages" type="checkbox" name="pages" <% if (view.collection.state.pageSize==25) { %>checked="checked"<% } %>> pages</label>' +
+'            </div>' +
+'        </form>' +
+'    </li>' +
+'</ul>';
 templates['#header'] = '<div class="page-header">' +
 '    <h1><%- view.PageHeader() %></h1>' +
 '</div>' +

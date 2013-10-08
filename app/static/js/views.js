@@ -89,22 +89,25 @@
             removeitem: removeitem,
             resetitem: resetitem
         },
-        timeevents = {
-            'click .edit': 'edititem',
-            'click .next': 'next',
-            'click .previous': 'previous',
-            'click .remove': 'removeitem',
+        editevents = {
             'click .reset': 'resetitem',
-            'click .save': 'saveitem',
-            'click thead>tr>th': 'sortitems'
+            'click .save': 'saveitem'
         },
-        todoevents = {
-            'click .reset': 'resetitem',
-            'click .save': 'saveitem',
+        pagesevents = {
+            'click #pages': 'switch_pages',
+            'click .next': 'next',
+            'click .previous': 'previous'
+        },
+        timeevents = _.extend(editevents, _.extend(pagesevents, {
+            'click .edit': 'edititem',
+            'click .remove': 'removeitem',
+            'click thead>tr>th': 'sortitems'
+        })),
+        todoevents = _.extend(editevents, {
             'click .todo.uncompleteitem': 'uncomplete',
             'click .todo.edititem': 'edititem',
             'click .todo.completeitem': 'complete'
-        },
+        }),
         _result = _.result,
         $ = Backbone.$,
         render = function(template, data, settings) {
@@ -176,9 +179,10 @@
             }
         }),
         PagesBBView = ProjectBBView.extend({
-            events: {
-                'click .next': 'next',
-                'click .previous': 'previous'
+            events: pagesevents,
+            switch_pages: function(e) {
+                e.preventDefault();
+                return this.collection.state.pageSize > 25 ? this.collection.setPageSize(25, {first: true}) : this.collection.setPageSize(1e9);
             },
             previous: function(e) {
                 e.preventDefault();
@@ -407,14 +411,12 @@
     });
     // Calendar View - projects/:id/calendar
     bbviews.CalendarView = ProjectBBView.extend({
-        events: {
+        events: _.extend(editevents, {
             'click .uncompleteitem': 'uncomplete',
             'click .edititem': 'edititem',
             'click .removeitem': 'removeitem',
-            'click .completeitem': 'complete',
-            'click .reset': 'resetitem',
-            'click .save': 'saveitem'
-        },
+            'click .completeitem': 'complete'
+        }),
         parseData: function(selector) {
             var form = this.$(selector).parents('.form');
             return {
@@ -532,13 +534,11 @@
     // Todo Lists View - projects/:id/todo_lists
     bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists',
-        events: {
+        events: _.extend(editevents, {
             'click .add_todolist .add': 'additem',
-            'click .reset': 'resetitem',
-            'click .save': 'saveitem',
             'click .todolist.edititem': 'edititem',
             'click .todolist.removeitem': 'removeitem'
-        },
+        }),
         finishItem: function(item) {
             item.set({
                 'project-id': this.model.id
