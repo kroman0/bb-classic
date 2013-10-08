@@ -98,12 +98,13 @@
             'click .next': 'next',
             'click .previous': 'previous'
         },
-        timeevents = _.extend(editevents, _.extend(pagesevents, {
+        _extend = _.extend,
+        timeevents = _extend(editevents, _extend(pagesevents, {
             'click .edit': 'edititem',
             'click .remove': 'removeitem',
             'click thead>tr>th': 'sortitems'
         })),
-        todoevents = _.extend(editevents, {
+        todoevents = _extend(editevents, {
             'click .todo.uncompleteitem': 'uncomplete',
             'click .todo.edititem': 'edititem',
             'click .todo.completeitem': 'complete'
@@ -275,7 +276,7 @@
             return [this.collection, this.options.collections.projects, this.options.collections.people];
         },
         pagerid: 'project-time',
-        events: _.extend(timeevents, {
+        events: _extend(timeevents, {
             'click .add': 'additem'
         }),
         parseData: function(selector) {
@@ -334,7 +335,7 @@
             return [this.collection, this.options.collections.projects, this.options.collections.people, this.options.collections.companies];
         },
         pagerid: 'time-report',
-        events: _.extend(timeevents, {
+        events: _extend(timeevents, {
             'click #getreport': 'getreport'
         }),
         getreport_filter: function() {
@@ -411,7 +412,7 @@
     });
     // Calendar View - projects/:id/calendar
     bbviews.CalendarView = ProjectBBView.extend({
-        events: _.extend(editevents, {
+        events: _extend(editevents, {
             'click .uncompleteitem': 'uncomplete',
             'click .edititem': 'edititem',
             'click .removeitem': 'removeitem',
@@ -534,7 +535,7 @@
     // Todo Lists View - projects/:id/todo_lists
     bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists',
-        events: _.extend(editevents, {
+        events: _extend(editevents, {
             'click .add_todolist .add': 'additem',
             'click .todolist.edititem': 'edititem',
             'click .todolist.removeitem': 'removeitem'
@@ -565,7 +566,7 @@
         deps: function() {
             return [this.collection, this.options.collections.projects, this.todos(), this.options.collections.project_people.get_or_create(this.model.id)];
         },
-        events: _.extend(todoevents, {
+        events: _extend(todoevents, {
             'click .add_todo .add': 'additem',
             'click .todo.removeitem': 'removeitem'
         }),
@@ -595,13 +596,13 @@
                 'todo-list-id': this.cur_item
             };
             if (_.isFinite(item.get('responsible-party'))) {
-                data = _.extend(data, {
+                data = _extend(data, {
                     'responsible-party-id': parseInt(item.get('responsible-party'), 10),
                     'responsible-party-name': this.options.collections.project_people.get_or_create(this.model.id).get(item.get('responsible-party')).name(),
                     'responsible-party-type': 'Person'
                 });
             } else {
-                data = _.extend(data, {
+                data = _extend(data, {
                     'responsible-party-id': undefined,
                     'responsible-party-name': undefined,
                     'responsible-party-type': undefined
