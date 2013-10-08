@@ -81,8 +81,17 @@
             e.preventDefault();
             var model = this.currentTarget(e);
             model.edit = false;
-            model.save(this.parseData(e.currentTarget));
+            model.save(this.parseData(this.$(e.currentTarget).parents('.form')));
             this.render();
+        },
+        additem = function(e) {
+            e.preventDefault();
+            var view = this,
+                success = function(model) {return view.finishItem(model);};
+            this.addcollection().create(this.parseData(this.$(e.currentTarget).parents('.form')), {wait: true, success: success});
+        },
+        todos = function() {
+            return this.options.collections.todo_items.get_or_create(this.cur_item);
         },
         crudactions = {
             edititem: edititem,
@@ -279,8 +288,7 @@
         events: _extend(timeevents, {
             'click .add': 'additem'
         }),
-        parseData: function(selector) {
-            var form = this.$(selector).parents('.form');
+        parseData: function(form) {
             return {
                 'date': form.find('[name=date]').val(),
                 'description': form.find('[name=description]').val(),
@@ -304,12 +312,10 @@
             this.collection.setSorting(id, -this.collection.state.order);
             this.collection.fullCollection.sort();
         },
-        additem: function(e) {
-            e.preventDefault();
-            var view = this,
-                success = function(model) {return view.finishItem(model);};
-            this.collection.create(this.parseData(e.currentTarget), {wait: true, success: success});
+        addcollection: function() {
+            return this.collection;
         },
+        additem: additem,
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).parents('tr').data('id'));
         },
@@ -418,8 +424,7 @@
             'click .removeitem': 'removeitem',
             'click .completeitem': 'complete'
         }),
-        parseData: function(selector) {
-            var form = this.$(selector).parents('.form');
+        parseData: function(form) {
             return {
                 'deadline': form.find('[name=deadline]').val(),
                 'start-at': form.find('[name=start-at]').val(),
@@ -549,8 +554,7 @@
         },
         currentTarget: bbviews.CalendarView.prototype.currentTarget,
         saveitem: saveitem,
-        parseData: function(selector) {
-            var form = this.$(selector).parents('.form');
+        parseData: function(form) {
             return {
                 'description': form.find('[name=description]').val(),
                 'name': form.find('[name=name]').val(),
@@ -558,7 +562,8 @@
                 'tracked': form.find('[name=tracked]').is(':checked')
             };
         },
-        additem: bbviews.TimeEntriesView.prototype.additem,
+        addcollection: bbviews.TimeEntriesView.prototype.addcollection,
+        additem: additem,
         title: 'To-dos'
     }).extend(crudactions);
     // Todo List View - projects/:id/todo_lists/:tlid
@@ -570,11 +575,8 @@
             'click .add_todo .add': 'additem',
             'click .todo.removeitem': 'removeitem'
         }),
-        todos: function() {
-            return this.options.collections.todo_items.get_or_create(this.cur_item);
-        },
-        parseData: function(selector) {
-            var form = this.$(selector).parents('.form');
+        todos: todos,
+        parseData: function(form) {
             return {
                 'content': form.find('[name=content]').val(),
                 'due-at': form.find('[name=due-at]').val(),
@@ -612,12 +614,8 @@
             this.render();
             return true;
         },
-        additem: function(e) {
-            e.preventDefault();
-            var view = this,
-                success = function(model) {return view.finishItem(model);};
-            this.todos().create(this.parseData(e.currentTarget), {wait: true, success: success});
-        },
+        addcollection: todos,
+        additem: additem,
         template: '#project-todo-list',
         idParent: 'todo_lists',
         nameParent: 'To-dos'
