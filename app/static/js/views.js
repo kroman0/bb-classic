@@ -81,30 +81,43 @@
             e.preventDefault();
             var model = this.currentTarget(e);
             model.edit = false;
-            model.save(this.parseData(e.currentTarget));
+            model.save(this.parseData(this.$(e.currentTarget).parents('.form')));
             this.render();
+        },
+        additem = function(e) {
+            e.preventDefault();
+            var view = this,
+                success = function(model) {return view.finishItem(model);};
+            this.addcollection().create(this.parseData(this.$(e.currentTarget).parents('.form')), {wait: true, success: success});
+        },
+        todos = function() {
+            return this.options.collections.todo_items.get_or_create(this.cur_item);
         },
         crudactions = {
             edititem: edititem,
             removeitem: removeitem,
             resetitem: resetitem
         },
-        timeevents = {
-            'click .edit': 'edititem',
-            'click .next': 'next',
-            'click .previous': 'previous',
-            'click .remove': 'removeitem',
+        editevents = {
             'click .reset': 'resetitem',
-            'click .save': 'saveitem',
-            'click thead>tr>th': 'sortitems'
+            'click .save': 'saveitem'
         },
-        todoevents = {
-            'click .reset': 'resetitem',
-            'click .save': 'saveitem',
+        pagesevents = {
+            'click #pages': 'switch_pages',
+            'click .next': 'next',
+            'click .previous': 'previous'
+        },
+        _extend = _.extend,
+        timeevents = _extend(editevents, _extend(pagesevents, {
+            'click .edit': 'edititem',
+            'click .remove': 'removeitem',
+            'click thead>tr>th': 'sortitems'
+        })),
+        todoevents = _extend(editevents, {
             'click .todo.uncompleteitem': 'uncomplete',
             'click .todo.edititem': 'edititem',
             'click .todo.completeitem': 'complete'
-        },
+        }),
         _result = _.result,
         $ = Backbone.$,
         render = function(template, data, settings) {
@@ -176,9 +189,10 @@
             }
         }),
         PagesBBView = ProjectBBView.extend({
-            events: {
-                'click .next': 'next',
-                'click .previous': 'previous'
+            events: pagesevents,
+            switch_pages: function(e) {
+                e.preventDefault();
+                return this.collection.state.pageSize > 25 ? this.collection.setPageSize(25, {first: true}) : this.collection.setPageSize(1e9);
             },
             previous: function(e) {
                 e.preventDefault();
@@ -271,11 +285,10 @@
             return [this.collection, this.options.collections.projects, this.options.collections.people];
         },
         pagerid: 'project-time',
-        events: _.extend(timeevents, {
+        events: _extend(timeevents, {
             'click .add': 'additem'
         }),
-        parseData: function(selector) {
-            var form = this.$(selector).parents('.form');
+        parseData: function(form) {
             return {
                 'date': form.find('[name=date]').val(),
                 'description': form.find('[name=description]').val(),
@@ -299,12 +312,10 @@
             this.collection.setSorting(id, -this.collection.state.order);
             this.collection.fullCollection.sort();
         },
-        additem: function(e) {
-            e.preventDefault();
-            var view = this,
-                success = function(model) {return view.finishItem(model);};
-            this.collection.create(this.parseData(e.currentTarget), {wait: true, success: success});
+        addcollection: function() {
+            return this.collection;
         },
+        additem: additem,
         currentTarget: function(e) {
             return this.collection.get($(e.currentTarget).parents('tr').data('id'));
         },
@@ -330,7 +341,7 @@
             return [this.collection, this.options.collections.projects, this.options.collections.people, this.options.collections.companies];
         },
         pagerid: 'time-report',
-        events: _.extend(timeevents, {
+        events: _extend(timeevents, {
             'click #getreport': 'getreport'
         }),
         getreport_filter: function() {
@@ -407,16 +418,13 @@
     });
     // Calendar View - projects/:id/calendar
     bbviews.CalendarView = ProjectBBView.extend({
-        events: {
+        events: _extend(editevents, {
             'click .uncompleteitem': 'uncomplete',
             'click .edititem': 'edititem',
             'click .removeitem': 'removeitem',
-            'click .completeitem': 'complete',
-            'click .reset': 'resetitem',
-            'click .save': 'saveitem'
-        },
-        parseData: function(selector) {
-            var form = this.$(selector).parents('.form');
+            'click .completeitem': 'complete'
+        }),
+        parseData: function(form) {
             return {
                 'deadline': form.find('[name=deadline]').val(),
                 'start-at': form.find('[name=start-at]').val(),
@@ -532,13 +540,11 @@
     // Todo Lists View - projects/:id/todo_lists
     bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists',
-        events: {
+        events: _extend(editevents, {
             'click .add_todolist .add': 'additem',
-            'click .reset': 'resetitem',
-            'click .save': 'saveitem',
             'click .todolist.edititem': 'edititem',
             'click .todolist.removeitem': 'removeitem'
-        },
+        }),
         finishItem: function(item) {
             item.set({
                 'project-id': this.model.id
@@ -548,8 +554,7 @@
         },
         currentTarget: bbviews.CalendarView.prototype.currentTarget,
         saveitem: saveitem,
-        parseData: function(selector) {
-            var form = this.$(selector).parents('.form');
+        parseData: function(form) {
             return {
                 'description': form.find('[name=description]').val(),
                 'name': form.find('[name=name]').val(),
@@ -557,7 +562,8 @@
                 'tracked': form.find('[name=tracked]').is(':checked')
             };
         },
-        additem: bbviews.TimeEntriesView.prototype.additem,
+        addcollection: bbviews.TimeEntriesView.prototype.addcollection,
+        additem: additem,
         title: 'To-dos'
     }).extend(crudactions);
     // Todo List View - projects/:id/todo_lists/:tlid
@@ -565,15 +571,12 @@
         deps: function() {
             return [this.collection, this.options.collections.projects, this.todos(), this.options.collections.project_people.get_or_create(this.model.id)];
         },
-        events: _.extend(todoevents, {
+        events: _extend(todoevents, {
             'click .add_todo .add': 'additem',
             'click .todo.removeitem': 'removeitem'
         }),
-        todos: function() {
-            return this.options.collections.todo_items.get_or_create(this.cur_item);
-        },
-        parseData: function(selector) {
-            var form = this.$(selector).parents('.form');
+        todos: todos,
+        parseData: function(form) {
             return {
                 'content': form.find('[name=content]').val(),
                 'due-at': form.find('[name=due-at]').val(),
@@ -595,13 +598,13 @@
                 'todo-list-id': this.cur_item
             };
             if (_.isFinite(item.get('responsible-party'))) {
-                data = _.extend(data, {
+                data = _extend(data, {
                     'responsible-party-id': parseInt(item.get('responsible-party'), 10),
                     'responsible-party-name': this.options.collections.project_people.get_or_create(this.model.id).get(item.get('responsible-party')).name(),
                     'responsible-party-type': 'Person'
                 });
             } else {
-                data = _.extend(data, {
+                data = _extend(data, {
                     'responsible-party-id': undefined,
                     'responsible-party-name': undefined,
                     'responsible-party-type': undefined
@@ -611,12 +614,8 @@
             this.render();
             return true;
         },
-        additem: function(e) {
-            e.preventDefault();
-            var view = this,
-                success = function(model) {return view.finishItem(model);};
-            this.todos().create(this.parseData(e.currentTarget), {wait: true, success: success});
-        },
+        addcollection: todos,
+        additem: additem,
         template: '#project-todo-list',
         idParent: 'todo_lists',
         nameParent: 'To-dos'

@@ -12,7 +12,6 @@
     -moz-transition: opacity 0.5s ease-out;
     -o-transition: opacity 0.5s ease-out;
     transition: opacity 0.5s ease-out;
-    height: 34px;
     color: #428bca;
     font-size: 28px;
 }

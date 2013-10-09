@@ -30,6 +30,9 @@ pxtest:	clean
 test_chrome:	clean
 	ROBOT_BROWSER=chrome bin/pybot -e screenshots tests
 
+test_phantomjs:	clean
+	ROBOT_BROWSER=phantomjs bin/pybot -e screenshots tests
+
 ptest_chrome:	clean
 	ROBOT_BROWSER=chrome PRO_TEST=True bin/pybot -e screenshots tests
 
