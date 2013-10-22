@@ -124,6 +124,9 @@
             return _.template(bbtemplates[template], data, settings);
         },
         BBView = Backbone.View.extend({
+            initialize: function(options) {
+                this.options = options;
+            },
             deps: function() {
                 return this.collection ? [this.collection] : [];
             },
