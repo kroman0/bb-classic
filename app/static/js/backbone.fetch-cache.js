@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v1.1.2
+  backbone.fetch-cache v1.2.0
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
@@ -150,6 +150,10 @@
         self = this;
 
     function setData() {
+      if (opts.parse) {
+        attributes = self.parse(attributes, opts);
+      }
+
       self.set(attributes, opts);
       if (_.isFunction(opts.prefillSuccess)) { opts.prefillSuccess(self, attributes, opts); }
 
@@ -213,7 +217,7 @@
         i, len;
 
     // Build up a list of keys to delete from the cache, starting with this
-    keys.push(Backbone.fetchCache.getCacheKey(model));
+    keys.push(Backbone.fetchCache.getCacheKey(model, options));
 
     // If this model has a collection, also try to delete the cache for that
     if (!!collection) {
