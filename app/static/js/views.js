@@ -306,8 +306,7 @@
             }, {silent: true});
             if (!this.collection.fullCollection.comparator) {this.collection.setSorting('id', 1);}
             this.collection.fullCollection.sort();
-            this.render();
-            return true;
+            return this.render();
         },
         sortitems: function(e) {
             e.preventDefault();
@@ -552,8 +551,7 @@
             item.set({
                 'project-id': this.model.id
             }, {silent: true});
-            this.render();
-            return true;
+            return this.render();
         },
         currentTarget: bbviews.CalendarView.prototype.currentTarget,
         saveitem: saveitem,
@@ -614,8 +612,7 @@
                 });
             }
             item.set(data, {silent: true});
-            this.render();
-            return true;
+            return this.render();
         },
         addcollection: todos,
         additem: additem,
