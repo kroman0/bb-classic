@@ -55,9 +55,9 @@ an project time page
 
 user add time entry
     [Documentation]  user can add time entry
-    Wait Until Page Contains Element  css=tr.addtime button.add
+    Wait Until Page Contains Element  css=tr.addtime button.additem
     Input Text  css=tr.addtime [name="description"]  added description
-    Click Button  css=tr.addtime button.add
+    Click Button  css=tr.addtime button.additem
 
 page should contain added entry
     [Documentation]  added item should be present

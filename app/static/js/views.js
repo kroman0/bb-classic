@@ -63,32 +63,31 @@
             pp
         ],
         edititem = function(e) {
-            e.preventDefault();
             this.currentTarget(e).edit = true;
             this.render();
         },
         resetitem = function(e) {
-            e.preventDefault();
             this.currentTarget(e).edit = false;
             this.render();
         },
         removeitem = function(e) {
-            e.preventDefault();
             this.currentTarget(e).destroy();
             this.render();
         },
         saveitem = function(e) {
-            e.preventDefault();
             var model = this.currentTarget(e);
             model.edit = false;
             model.save(this.parseData(this.$(e.currentTarget).parents('.form')));
             this.render();
         },
         additem = function(e) {
-            e.preventDefault();
             var view = this,
-                success = function(model) {return view.finishItem(model);};
-            this.addcollection().create(this.parseData(this.$(e.currentTarget).parents('.form')), {wait: true, success: success});
+                success = function(model) {view.in_progress = false; return view.finishItem(model);};
+//             if (view.in_progress) {
+//                 return view;
+//             };
+//             view.in_progress = true;
+            return this.addcollection().create(this.parseData(this.$(e.currentTarget).parents('.form')), {wait: true, success: success});
         },
         todos = function() {
             return this.options.collections.todo_items.get_or_create(this.cur_item);
@@ -289,7 +288,7 @@
         },
         pagerid: 'project-time',
         events: _extend(timeevents, {
-            'click .add': 'additem'
+            'click .additem': 'additem'
         }),
         parseData: function(form) {
             return {
@@ -309,7 +308,6 @@
             return this.render();
         },
         sortitems: function(e) {
-            e.preventDefault();
             var id = $(e.currentTarget).data('sort') || $(e.currentTarget).text();
             this.collection.setSorting(id, -this.collection.state.order);
             this.collection.fullCollection.sort();
@@ -440,12 +438,10 @@
             }, {silent: true});
         },
         complete: function(e) {
-            e.preventDefault();
             this.currentTarget(e).complete();
             this.render();
         },
         uncomplete: function(e) {
-            e.preventDefault();
             this.currentTarget(e).uncomplete();
             this.render();
         },
@@ -496,7 +492,6 @@
             'change select[name=target]': 'selectTarget'
         },
         complete: function(e) {
-            e.preventDefault();
             var target = $(e.currentTarget),
                 id = target.data('id'),
                 item = new this.options.collections.todo_items.model({id: id}),
@@ -543,7 +538,7 @@
     bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists',
         events: _extend(editevents, {
-            'click .add_todolist .add': 'additem',
+            'click .add_todolist .additem': 'additem',
             'click .todolist.edititem': 'edititem',
             'click .todolist.removeitem': 'removeitem'
         }),
@@ -573,7 +568,7 @@
             return [this.collection, this.options.collections.projects, this.todos(), this.options.collections.project_people.get_or_create(this.model.id)];
         },
         events: _extend(todoevents, {
-            'click .add_todo .add': 'additem',
+            'click .add_todo .additem': 'additem',
             'click .todo.removeitem': 'removeitem'
         }),
         todos: todos,

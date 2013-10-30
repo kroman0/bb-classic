@@ -466,7 +466,7 @@ templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view
 '<input type="text" class="form-control" name="description">' +
 '</td>' +
 '<td>' +
-'<button class="add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
+'<button class="additem" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</td>' +
 '</tr>';
 templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header") %>' +
@@ -777,7 +777,7 @@ templates['#todolistadd'] = '<div class="panel-heading">' +
 '</div></div>' +
 '<div class="form-group">' +
 '<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
-'<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
+'<span class="btn btn-default additem" title="Add"><i class="glyphicon glyphicon-plus"></i></span>' +
 '</div></div>' +
 '</form></div>';
 templates['#todo-lists'] = '<%= view.block("#header") %>' +
@@ -932,7 +932,7 @@ templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_o
 '</div></div>' +
 '<div class="form-group">' +
 '<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
-'<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
+'<span class="btn btn-default additem" title="Add"><i class="glyphicon glyphicon-plus"></i></span>' +
 '</div></div>' +
 '</form></div></div>';
 templates['#project-todo-list'] = '<%= view.block("#header") %>' +

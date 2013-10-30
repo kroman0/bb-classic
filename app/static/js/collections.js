@@ -97,7 +97,7 @@
         },
         model: bbmodels.CalendarEntry
     });
-    bbcollections.Categories = BBPCollection.extend({
+    bbcollections.Categories = PBBCollection.extend({
         url: function() {
             return '/api/projects/' + this.parent_id + '/categories.xml';
         },

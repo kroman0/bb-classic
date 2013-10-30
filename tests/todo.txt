@@ -64,7 +64,7 @@ user add todo list
     Click button  Add an item
     Input Text  todoName  added todo list
     Input Text  todoDescription  added descrition
-    Click Button  css=button.add
+    Click Element  css=.additem
 
 page should contain added todo list
     [Documentation]  added item should be present
@@ -96,7 +96,7 @@ user add todo item
     [Documentation]  user can add todo item
     Click button  Add an item
     Input Text  todoContent  added todo item
-    Click Button  css=button.add
+    Click Element  css=.additem
 
 page should contain added todo item
     [Documentation]  added item should be present
