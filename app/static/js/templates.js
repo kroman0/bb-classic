@@ -122,6 +122,13 @@ templates['#time-thead'] = '<thead>' +
 '<th>date</th><th>hours</th><th data-sort="person-id">person</th><th>description</th><th data-sort="id">&nbsp;</th>' +
 '</tr>' +
 '</thead>';
+templates['#time-total'] = '<tr class="info">' +
+'<td>Total</td>' +
+'<td>' +
+'<%- Math.round(100*_.reduce(view.collection.pluck("hours"),function(memo, num) { return memo + num; }, 0))/100 %>' +
+'</td>' +
+'<td colspan="3">&nbsp;</td>' +
+'</tr>';
 templates['#time-report'] = '<%= view.block("#header") %>' +
 '<div id="time_report" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="makereportlabel" aria-hidden="true">' +
 '<div class="modal-dialog">' +
@@ -206,6 +213,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<%= view.itemblock(item, "#time") %>' +
 '<% }) %>' +
 '<% }) %>' +
+'<%= view.block("#time-total") %>' +
 '</tbody>' +
 '</table>' +
 '</div>' +
@@ -483,6 +491,7 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '<% view.collection.each(function (item) { %>' +
 '<%= view.itemblock(item, "#time") %>' +
 '<% }) %>' +
+'<%= view.block("#time-total") %>' +
 '</tbody>' +
 '</table>' +
 '</div>' +
