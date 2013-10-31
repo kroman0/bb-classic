@@ -86,13 +86,11 @@ templates['#project-nav'] = '<ul class="nav nav-tabs projectnav">' +
 '<li class="pull-right"><a title="<%- view.model.name() %> project people" href="#projects/<%- view.model.id %>/people">People</a></li>' +
 '<li class="pull-right"><a title="<%- view.model.name() %> project categories" href="#projects/<%- view.model.id %>/categories">Categories</a></li>' +
 '</ul>';
-templates['#attachment'] = '<li>' +
-'<a href="<%- item["download-url"] %>"><%- item.name %></a>' +
-'<small>' +
-'<%- item["byte-size"] %>B' +
-'<a href="#people/<%- item["person-id"] %>"><i class="glyphicon glyphicon-user"></i><%- item["author-name"] %></a>' +
-'</small>' +
-'</li>';
+templates['#attachment'] = '<li><ul class="list-inline">' +
+'<li><a href="<%- item["download-url"] %>"><%- item.name %></a></li>' +
+'<li><small><%- item["byte-size"] %>B</small></li>' +
+'<li><small><a href="#people/<%- item["person-id"] %>"><i class="glyphicon glyphicon-user"></i><%- item["author-name"] %></a></small></li>' +
+'</ul></li>';
 templates['#attachments'] = '<% var attachments=item.get("attachments"); if (attachments && attachments.length) { %>' +
 '<ul>' +
 '<% _.each((attachments),function (a) { %>' +
