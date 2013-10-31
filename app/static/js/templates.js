@@ -56,7 +56,7 @@ templates['#pager'] = '<ul class="pager">' +
 '<li class="<%- view.pagerid %>">' +
 '<form class="form-inline" role="form">' +
 '<div class="checkbox">' +
-'<label><input id="pages" type="checkbox" name="pages" <% if (view.collection.state.pageSize==25) { %>checked="checked"<% } %>> pages</label>' +
+'<label><nobr><input id="pages" type="checkbox" name="pages" <% if (view.collection.state.pageSize==25) { %>checked="checked"<% } %>> pages</nobr></label>' +
 '</div>' +
 '</form>' +
 '</li>' +

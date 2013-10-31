@@ -108,6 +108,9 @@ button.edit,
 button.remove {
     border: 1px solid;
 }
+.pager .checkbox input {
+    float: none;
+}
 /* .glyphicon-play */
 .glyphicon-project-active:before {
   content: "\e072";
