@@ -56,7 +56,7 @@ templates['#pager'] = '<ul class="pager">' +
 '<li class="<%- view.pagerid %>">' +
 '<form class="form-inline" role="form">' +
 '<div class="checkbox">' +
-'<label><input id="pages" type="checkbox" name="pages" <% if (view.collection.state.pageSize==25) { %>checked="checked"<% } %>> pages</label>' +
+'<label><nobr><input id="pages" type="checkbox" name="pages" <% if (view.collection.state.pageSize==25) { %>checked="checked"<% } %>> pages</nobr></label>' +
 '</div>' +
 '</form>' +
 '</li>' +
@@ -87,9 +87,9 @@ templates['#project-nav'] = '<ul class="nav nav-tabs projectnav">' +
 '<li class="pull-right"><a title="<%- view.model.name() %> project categories" href="#projects/<%- view.model.id %>/categories">Categories</a></li>' +
 '</ul>';
 templates['#attachment'] = '<li>' +
-'<a href="<%- item["download-url"] %>"><%- item.name %></a>' +
+'<a href="<%- item["download-url"] %>"><%- item.name %></a>&nbsp;' +
 '<small>' +
-'<%- item["byte-size"] %>B' +
+'<%- item["byte-size"] %>B&nbsp;' +
 '<a href="#people/<%- item["person-id"] %>"><i class="glyphicon glyphicon-user"></i><%- item["author-name"] %></a>' +
 '</small>' +
 '</li>';
@@ -122,6 +122,13 @@ templates['#time-thead'] = '<thead>' +
 '<th>date</th><th>hours</th><th data-sort="person-id">person</th><th>description</th><th data-sort="id">&nbsp;</th>' +
 '</tr>' +
 '</thead>';
+templates['#time-total'] = '<tr class="info">' +
+'<td>Total</td>' +
+'<td>' +
+'<%- Math.round(100*_.reduce(view.collection.pluck("hours"),function(memo, num) { return memo + num; }, 0))/100 %>' +
+'</td>' +
+'<td colspan="3">&nbsp;</td>' +
+'</tr>';
 templates['#time-report'] = '<%= view.block("#header") %>' +
 '<div id="time_report" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="makereportlabel" aria-hidden="true">' +
 '<div class="modal-dialog">' +
@@ -206,6 +213,7 @@ templates['#time-report'] = '<%= view.block("#header") %>' +
 '<%= view.itemblock(item, "#time") %>' +
 '<% }) %>' +
 '<% }) %>' +
+'<%= view.block("#time-total") %>' +
 '</tbody>' +
 '</table>' +
 '</div>' +
@@ -466,7 +474,7 @@ templates['#timeadd'] = '<% var pp=view.options.collections.people; var mid=view
 '<input type="text" class="form-control" name="description">' +
 '</td>' +
 '<td>' +
-'<button class="add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
+'<button class="additem" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
 '</td>' +
 '</tr>';
 templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header") %>' +
@@ -483,6 +491,7 @@ templates['#project-time'] = templates['#todo-time'] = '<%= view.block("#header"
 '<% view.collection.each(function (item) { %>' +
 '<%= view.itemblock(item, "#time") %>' +
 '<% }) %>' +
+'<%= view.block("#time-total") %>' +
 '</tbody>' +
 '</table>' +
 '</div>' +
@@ -777,7 +786,7 @@ templates['#todolistadd'] = '<div class="panel-heading">' +
 '</div></div>' +
 '<div class="form-group">' +
 '<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
-'<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
+'<span class="btn btn-default additem" title="Add"><i class="glyphicon glyphicon-plus"></i></span>' +
 '</div></div>' +
 '</form></div>';
 templates['#todo-lists'] = '<%= view.block("#header") %>' +
@@ -932,7 +941,7 @@ templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_o
 '</div></div>' +
 '<div class="form-group">' +
 '<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
-'<button class="btn btn-default add" title="Add"><i class="glyphicon glyphicon-plus"></i></button>' +
+'<span class="btn btn-default additem" title="Add"><i class="glyphicon glyphicon-plus"></i></span>' +
 '</div></div>' +
 '</form></div></div>';
 templates['#project-todo-list'] = '<%= view.block("#header") %>' +
