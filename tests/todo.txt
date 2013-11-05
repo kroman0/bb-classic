@@ -76,7 +76,7 @@ user edit todo list
     Click Element  css=.todolist.edititem[data-id="30"]
     Input Text  todoName30  edited todo list
     Input Text  todoDescription30  edited descrition
-    Click Button  css=button.save
+    Click Element  css=.save
 
 page should contain edited todo list
     [Documentation]  edited item should be present
@@ -106,7 +106,7 @@ user edit todo item
     [Documentation]  user can edit todo item
     Click Element  css=.todo.edititem[data-id="30"]
     Input Text  todoContent30  edited todo item
-    Click Button  css=button.save
+    Click Element  css=.save
 
 page should contain edited todo item
     [Documentation]  edited item should be present
