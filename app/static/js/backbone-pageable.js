@@ -1,5 +1,5 @@
 /*
-  backbone-pageable 1.3.2
+  backbone-pageable 1.4.1
   http://github.com/wyuenho/backbone-pageable
 
   Copyright (c) 2013 Jimmy Yuen Ho Wong
@@ -322,7 +322,7 @@
         var fullCollection = this.fullCollection;
 
         if (comparator && options.full) {
-          delete this.comparator;
+          this.comparator = null;
           fullCollection.comparator = comparator;
         }
 
