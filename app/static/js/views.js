@@ -319,7 +319,7 @@
         template: '#project-time',
         title: 'Time'
     }).extend(crudactions);
-    // Todo Time Entries View - projects/:id/time_entries/todo_items/:tiid
+    // To-do Time Entries View - projects/:id/time_entries/todo_items/:tiid
     bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
         pagerid: 'todo-time',
         finishItem: function(item) {
@@ -530,7 +530,7 @@
             return 'All';
         }
     });
-    // Todo Lists View - projects/:id/todo_lists
+    // To-do Lists View - projects/:id/todo_lists
     bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists',
         events: _extend({
@@ -558,7 +558,7 @@
         additem: additem,
         title: 'To-dos'
     }).extend(crudactions);
-    // Todo List View - projects/:id/todo_lists/:tlid
+    // To-do List View - projects/:id/todo_lists/:tlid
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
             return [this.collection, this.options.collections.projects, this.todos(), this.options.collections.project_people.get_or_create(this.model.id)];
@@ -611,7 +611,7 @@
         idParent: 'todo_lists',
         nameParent: 'To-dos'
     }).extend(crudactions);
-    // Todo Item View - projects/:id/todo_lists/:tlid/:tiid
+    // To-do Item View - projects/:id/todo_lists/:tlid/:tiid
     bbviews.TodoItemView = bbviews.TodoListView.extend({
         todo_item: null,
         deps: function() {
@@ -634,7 +634,7 @@
             return itemtitle;
         }
     });
-    // Todo Item Comments View - projects/:id/todo_lists/:tlid/:tiid/comments
+    // To-do Item Comments View - projects/:id/todo_lists/:tlid/:tiid/comments
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
         template: '#project-todo-item-comments',
         extrapath: function() {
