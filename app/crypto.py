@@ -81,7 +81,7 @@ class AddkeyPage(BaseHandler):
     * :http:post:`/addkey` - `AddkeyPage POST <#crypto.AddkeyPage.action>`_
     """
 
-    action = keys.rotate  # GET/POST request action
+    action = lambda self: keys.rotate()  # GET/POST request action
 
 
 class GenkeysPage(BaseHandler):
@@ -91,7 +91,7 @@ class GenkeysPage(BaseHandler):
     * :http:post:`/genkeys` - `GenkeysPage POST <#crypto.GenkeysPage.action>`_
     """
 
-    action = keys.refresh  # GET/POST request action
+    action = lambda self: keys.refresh()  # GET/POST request action
 
 
 APPLICATION = webapp.WSGIApplication([
