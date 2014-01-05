@@ -1,5 +1,5 @@
 /*!
-  backbone.fetch-cache v1.2.0
+  backbone.fetch-cache v1.3.0
   by Andy Appleton - https://github.com/mrappleton/backbone-fetch-cache.git
  */
 
@@ -61,6 +61,10 @@
     Backbone.fetchCache.setLocalStorage();
   };
 
+  Backbone.fetchCache.getLocalStorageKey = function() {
+    return 'backboneCache';
+  };
+
   if (typeof Backbone.fetchCache.localStorage === 'undefined') {
     Backbone.fetchCache.localStorage = true;
   }
@@ -111,6 +115,7 @@
   }
 
   function clearItem(key) {
+    if (_.isFunction(key)) { key = key(); }
     delete Backbone.fetchCache._cache[key];
     Backbone.fetchCache.setLocalStorage();
   }
@@ -118,7 +123,7 @@
   function setLocalStorage() {
     if (!supportLocalStorage || !Backbone.fetchCache.localStorage) { return; }
     try {
-      localStorage.setItem('backboneCache', JSON.stringify(Backbone.fetchCache._cache));
+      localStorage.setItem(Backbone.fetchCache.getLocalStorageKey(), JSON.stringify(Backbone.fetchCache._cache));
     } catch (err) {
       var code = err.code || err.number || err.message;
       if (code === 22) {
@@ -131,7 +136,7 @@
 
   function getLocalStorage() {
     if (!supportLocalStorage || !Backbone.fetchCache.localStorage) { return; }
-    var json = localStorage.getItem('backboneCache') || '{}';
+    var json = localStorage.getItem(Backbone.fetchCache.getLocalStorageKey()) || '{}';
     Backbone.fetchCache._cache = JSON.parse(json);
   }
 
