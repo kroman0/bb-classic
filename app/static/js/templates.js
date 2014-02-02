@@ -756,14 +756,14 @@ templates['#todolistedit'] = '<div class="panel-heading"><form role="form" class
 '</div></div>' +
 '<div class="form-group">' +
 '<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
-'<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
-'<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
+'<span data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></span>' +
+'<span data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></span>' +
 '</div></div>' +
 '</form></div>';
 templates['#todolistadd'] = '<div class="panel-heading">' +
 '<button type="button" class="btn btn-default" data-toggle="collapse" data-target=".add_todolist_wrapper">Add an item</button>' +
 '</div>' +
-'<div class="panel-body add_todolist_wrapper collapse"><form role="form" class="add_todolist form-horizontal form">' +
+'<div class="panel-body add_todolist_wrapper collapse"><div role="form" class="add_todolist form-horizontal form">' +
 '<div class="form-group">' +
 '<label class="control-label col-lg-4 col-md-4 col-sm-4 col-xs-4" for="todoName">Name</label>' +
 '<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">' +
@@ -788,7 +788,7 @@ templates['#todolistadd'] = '<div class="panel-heading">' +
 '<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
 '<span class="btn btn-default additem" title="Add"><i class="glyphicon glyphicon-plus"></i></span>' +
 '</div></div>' +
-'</form></div>';
+'</div></div>';
 templates['#todo-lists'] = '<%= view.block("#header") %>' +
 '<% var td=view.collection;' +
 'var pp=view.options.collections.people;' +
@@ -862,12 +862,14 @@ templates['#project-todo-lists'] = '<%= view.block("#header") %>' +
 '</div>' +
 '</li>' +
 '<% }) %>' +
+'</ul>' +
+'</div>' +
+'<% }) %>' +
+'<ul class="list-unstyled">' +
 '<li class="panel panel-default">' +
 '<%= view.block("#todolistadd") %>' +
 '</li>' +
 '</ul>' +
-'</div>' +
-'<% }) %>' +
 '</div>' +
 '</div>' +
 '<% } %>';
@@ -909,8 +911,8 @@ templates['#todoedit'] = '<% var pp=view.options.collections.project_people.get_
 '</div></div>' +
 '<div class="form-group">' +
 '<div class="col-lg-offset-4 col-lg-8 col-md-offset-4 col-md-8 col-sm-offset-4 col-sm-8">' +
-'<button data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></button>' +
-'<button data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></button>' +
+'<span data-id="<%- item.id %>" class="btn btn-default save" title="Save"><i class="glyphicon glyphicon-ok"></i></span>' +
+'<span data-id="<%- item.id %>" class="btn btn-default reset" title="Cancel"><i class="glyphicon glyphicon-off"></i></span>' +
 '</div></div>' +
 '</form></div>';
 templates['#todoadd'] = '<% var pp=view.options.collections.project_people.get_or_create(view.model.id); %>' +

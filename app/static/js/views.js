@@ -64,29 +64,25 @@
         ],
         edititem = function(e) {
             this.currentTarget(e).edit = true;
-            this.render();
+            return this.render();
         },
         resetitem = function(e) {
             this.currentTarget(e).edit = false;
-            this.render();
+            return this.render();
         },
         removeitem = function(e) {
-            this.currentTarget(e).destroy();
-            this.render();
+            e.preventDefault();
+            return this.currentTarget(e).destroy();
         },
         saveitem = function(e) {
             var model = this.currentTarget(e);
             model.edit = false;
             model.save(this.parseData(this.$(e.currentTarget).parents('.form')));
-            this.render();
+            return this.render();
         },
         additem = function(e) {
             var view = this,
-                success = function(model) {view.in_progress = false; return view.finishItem(model);};
-//             if (view.in_progress) {
-//                 return view;
-//             };
-//             view.in_progress = true;
+                success = function(model) {return view.finishItem(model);};
             return this.addcollection().create(this.parseData(this.$(e.currentTarget).parents('.form')), {wait: true, success: success});
         },
         todos = function() {
@@ -107,16 +103,16 @@
             'click .previous': 'previous'
         },
         _extend = _.extend,
-        timeevents = _extend(editevents, _extend(pagesevents, {
+        timeevents = _extend(_extend({
             'click .edit': 'edititem',
             'click .remove': 'removeitem',
             'click thead>tr>th': 'sortitems'
-        })),
-        todoevents = _extend(editevents, {
+        }, pagesevents), editevents),
+        todoevents = _extend({
             'click .todo.uncompleteitem': 'uncomplete',
             'click .todo.edititem': 'edititem',
             'click .todo.completeitem': 'complete'
-        }),
+        }, editevents),
         _result = _.result,
         $ = Backbone.$,
         render = function(template, data, settings) {
@@ -287,9 +283,9 @@
             return [this.collection, this.options.collections.projects, this.options.collections.people];
         },
         pagerid: 'project-time',
-        events: _extend(timeevents, {
+        events: _extend({
             'click .additem': 'additem'
-        }),
+        }, timeevents),
         parseData: function(form) {
             return {
                 'date': form.find('[name=date]').val(),
@@ -323,7 +319,7 @@
         template: '#project-time',
         title: 'Time'
     }).extend(crudactions);
-    // Todo Time Entries View - projects/:id/time_entries/todo_items/:tiid
+    // To-do Time Entries View - projects/:id/time_entries/todo_items/:tiid
     bbviews.TodoTimeEntriesView = bbviews.TimeEntriesView.extend({
         pagerid: 'todo-time',
         finishItem: function(item) {
@@ -341,9 +337,9 @@
             return [this.collection, this.options.collections.projects, this.options.collections.people, this.options.collections.companies];
         },
         pagerid: 'time-report',
-        events: _extend(timeevents, {
+        events: _extend({
             'click #getreport': 'getreport'
-        }),
+        }, timeevents),
         getreport_filter: function() {
             return _.object(_.pluck(this.collection.filter_report, 'name'), _.pluck(this.collection.filter_report, 'value'));
         },
@@ -418,12 +414,12 @@
     });
     // Calendar View - projects/:id/calendar
     bbviews.CalendarView = ProjectBBView.extend({
-        events: _extend(editevents, {
+        events: _extend({
             'click .uncompleteitem': 'uncomplete',
             'click .edititem': 'edititem',
             'click .removeitem': 'removeitem',
             'click .completeitem': 'complete'
-        }),
+        }, editevents),
         parseData: function(form) {
             return {
                 'deadline': form.find('[name=deadline]').val(),
@@ -534,14 +530,14 @@
             return 'All';
         }
     });
-    // Todo Lists View - projects/:id/todo_lists
+    // To-do Lists View - projects/:id/todo_lists
     bbviews.TodoListsView = ProjectBBView.extend({
         template: '#project-todo-lists',
-        events: _extend(editevents, {
+        events: _extend({
             'click .add_todolist .additem': 'additem',
             'click .todolist.edititem': 'edititem',
             'click .todolist.removeitem': 'removeitem'
-        }),
+        }, editevents),
         finishItem: function(item) {
             item.set({
                 'project-id': this.model.id
@@ -562,15 +558,15 @@
         additem: additem,
         title: 'To-dos'
     }).extend(crudactions);
-    // Todo List View - projects/:id/todo_lists/:tlid
+    // To-do List View - projects/:id/todo_lists/:tlid
     bbviews.TodoListView = TitleBBView.extend({
         deps: function() {
             return [this.collection, this.options.collections.projects, this.todos(), this.options.collections.project_people.get_or_create(this.model.id)];
         },
-        events: _extend(todoevents, {
+        events: _extend({
             'click .add_todo .additem': 'additem',
             'click .todo.removeitem': 'removeitem'
-        }),
+        }, todoevents),
         todos: todos,
         parseData: function(form) {
             return {
@@ -615,7 +611,7 @@
         idParent: 'todo_lists',
         nameParent: 'To-dos'
     }).extend(crudactions);
-    // Todo Item View - projects/:id/todo_lists/:tlid/:tiid
+    // To-do Item View - projects/:id/todo_lists/:tlid/:tiid
     bbviews.TodoItemView = bbviews.TodoListView.extend({
         todo_item: null,
         deps: function() {
@@ -638,7 +634,7 @@
             return itemtitle;
         }
     });
-    // Todo Item Comments View - projects/:id/todo_lists/:tlid/:tiid/comments
+    // To-do Item Comments View - projects/:id/todo_lists/:tlid/:tiid/comments
     bbviews.TodoItemCommentsView = bbviews.TodoItemView.extend({
         template: '#project-todo-item-comments',
         extrapath: function() {
