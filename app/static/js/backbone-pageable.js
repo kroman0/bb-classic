@@ -275,13 +275,13 @@
        @param {-1|1} [options.state.order] The order to use for sorting. Specify
        -1 for ascending order and 1 for descending order.
 
-       @param {Object} [options.queryParam]
+       @param {Object} [options.queryParams]
     */
     constructor: function (models, options) {
 
       BBColProto.constructor.apply(this, arguments);
 
-      options = options || {};
+      options = this.options = _clone(options) || {};
 
       var mode = this.mode = options.mode || this.mode || PageableProto.mode;
 
@@ -338,6 +338,17 @@
       }
 
       this._initState = _clone(this.state);
+    },
+
+    /**
+       Makes a clone of this Backbone.PageableCollection instance by using the
+       options originally supplied to the constructor.
+
+       @return {Backbone.PageableCollection}
+     */
+    clone: function () {
+      return new this.constructor((this.fullCollection || this).toJSON(),
+                                  _clone(this.options));
     },
 
     /**
