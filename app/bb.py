@@ -76,8 +76,8 @@ COLLECTION = [{
     "commented-at": "%d-%.2d-%.2d" % (i % 12 + 2001, i % 12 + 1, i % 30 + 1),
     "comments-count": i,
     "company": {
-            "id": i % 5,
-            "name": "Company name #%s" % (i % 5)
+        "id": i % 5,
+        "name": "Company name #%s" % (i % 5)
     },
     "company-id": i % 5,
     "completed": [False, False, True][i % 3],
@@ -151,6 +151,7 @@ NODE_ONE = lambda x: x.nodeType == 1
 
 
 class GetSubjectException(Exception):
+
     """ Exception on get subject_id
     """
 
@@ -169,7 +170,7 @@ def absolute_url(subdomain, relative_url='', params='', query='', fragment=''):
     if type(query) == dict:
         query = urlencode(query)
     return urlunparse(('https', '%s.%s' % (subdomain, DOMAIN),
-                      relative_url, params, query, fragment))
+                       relative_url, params, query, fragment))
 
 
 def get_headers(username, password):
@@ -211,6 +212,7 @@ def get_subject_id(username, password, subdomain):
 
 
 class CacheInfo(db.Model):
+
     """ Model for the cached response.
 
     Attributes:
@@ -231,6 +233,7 @@ class CacheInfo(db.Model):
 
 
 class BaseRequestHandler(webapp2.RequestHandler):
+
     """ Base Request Handler
     """
     username = None
@@ -252,17 +255,21 @@ class BaseRequestHandler(webapp2.RequestHandler):
         """
         is_sessioned = False
         if 'ssid' in self.request.cookies:
-            data = crypto.decode_data(self.request.cookies['ssid'])
-            if data:
+            ssid = self.request.cookies['ssid']
+            try:
+                (self.username, self.password, self.sub_id,
+                 self.subdomain) = crypto.decode_data(ssid)
+            except crypto.DecodeError:
+                pass
+            else:
                 is_sessioned = True
-                self.username, self.password, self.sub_id, \
-                    self.subdomain = data
         return is_sessioned
 
 
 def authenticated(func):
     """ decorator for check authentication
     """
+
     def wrapper(self):
         """ wrapper for the function
         """
@@ -273,6 +280,7 @@ def authenticated(func):
 
 
 class MainPage(BaseRequestHandler):
+
     """ Main Page Handler
 
     * :http:get:`/` - `MainPage GET <#bb.MainPage.get>`_
@@ -287,11 +295,13 @@ class MainPage(BaseRequestHandler):
 
 
 class LoginPage(BaseRequestHandler):
+
     """ Login Page Handler
 
     * :http:get:`/login` - `LoginPage GET <#bb.LoginPage.get>`_
     * :http:post:`/login` - `LoginPage POST <#bb.LoginPage.post>`_
     """
+
     def get(self):
         """ GET request
         """
@@ -330,10 +340,12 @@ class LoginPage(BaseRequestHandler):
 
 
 class LogoutPage(BaseRequestHandler):
+
     """ Logout Page Handler
 
     * :http:get:`/logout` - `LogoutPage GET <#bb.LogoutPage.get>`_
     """
+
     def get(self):
         """ GET request
         """
@@ -475,6 +487,7 @@ def dict2xml(data, tags):
 
 
 class CrossDomain(BaseRequestHandler):
+
     """ Cross Domain Handler
 
     * :http:put:`/api/.*` - `CrossDomain PUT <#bb.CrossDomain.put>`_
@@ -482,6 +495,7 @@ class CrossDomain(BaseRequestHandler):
     * :http:delete:`/api/.*` - `CrossDomain DELETE <#bb.CrossDomain.delete>`_
     * :http:get:`/api/.*` - `CrossDomain GET <#bb.CrossDomain.get>`_
     """
+
     def fetch_request(self, method, data=None):
         """ Fetch request
 

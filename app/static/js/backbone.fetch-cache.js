@@ -40,6 +40,8 @@
 
   Backbone.fetchCache = (Backbone.fetchCache || {});
   Backbone.fetchCache._cache = (Backbone.fetchCache._cache || {});
+  // Global flag to enable/disable caching
+  Backbone.fetchCache.enabled = true;
 
   Backbone.fetchCache.priorityFn = function(a, b) {
     if (!a || !a.expires || !b || !b.expires) {
@@ -146,6 +148,10 @@
 
   // Instance methods
   Backbone.Model.prototype.fetch = function(opts) {
+    //Bypass caching if it's not enabled
+    if(!Backbone.fetchCache.enabled) {
+      return superMethods.modelFetch.apply(this, arguments);
+    }
     opts = _.defaults(opts || {}, { parse: true });
     var key = Backbone.fetchCache.getCacheKey(this, opts),
         data = Backbone.fetchCache._cache[key],
@@ -213,7 +219,8 @@
   // like they are being updated.
   Backbone.Model.prototype.sync = function(method, model, options) {
     // Only empty the cache if we're doing a create, update, patch or delete.
-    if (method === 'read') {
+    // or caching is not enabled
+    if (method === 'read' || !Backbone.fetchCache.enabled) {
       return superMethods.modelSync.apply(this, arguments);
     }
 
@@ -236,6 +243,11 @@
   };
 
   Backbone.Collection.prototype.fetch = function(opts) {
+    // Bypass caching if it's not enabled
+    if(!Backbone.fetchCache.enabled) {
+      return superMethods.collectionFetch.apply(this, arguments);
+    }
+
     opts = _.defaults(opts || {}, { parse: true });
     var key = Backbone.fetchCache.getCacheKey(this, opts),
         data = Backbone.fetchCache._cache[key],

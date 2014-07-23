@@ -16,6 +16,12 @@ import keys
 # ARC4/XOR require two instances to encode/decode
 
 
+class DecodeError(Exception):
+    """ Decode Error
+    """
+    pass
+
+
 def encrypt(source, key):
     """ encrypt
     """
@@ -39,7 +45,7 @@ def decode_data(source, delimiter='\n'):
                 return tuple(values[1:])
         except (TypeError, IndexError):
             break
-    return None
+    raise DecodeError
 
 
 def encode_data(values, delimiter='\n'):
