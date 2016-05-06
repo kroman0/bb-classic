@@ -107,9 +107,9 @@ Close All Browsers and Report Status
 Stop app
     [Documentation]  Stop application.
     Run  pkill -f dev_appserver
-    ${out} =  Read Process Output
+    ${out} =  Wait For Process
     Append to file  app.log  ${out}
-    Stop All Processes
+    Terminate All Processes
 
 Reload Page Until
     [Arguments]  @{condition}
