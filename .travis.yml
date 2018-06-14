@@ -4,7 +4,7 @@ addons:
   sauce_connect: true
 before_install: 
 - pip install Pillow pycrypto
-- pip install -U setuptools
+- pip install -U setuptools==7.0
 python: "2.7"
 script: 
 - make test
